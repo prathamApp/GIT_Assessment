@@ -1,0 +1,32 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pratham.assessment.admin_pannel.PushOrAssign.PushDataActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_assign"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_80sdp"
+            android:layout_margin="@dimen/_20sdp"
+            android:layout_weight="1"
+            android:background="@drawable/correct_bg"
+            android:text="Assign Groups"
+            android:textSize="@dimen/_10sdp" />
+
+        <Button
+            android:id="@+id/btn_push"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_80sdp"
+            android:layout_margin="@dimen/_20sdp"
+           android:layout_weight="1"
+            android:background="@drawable/correct_bg"
+            android:text="Push Data"
+            android:textSize="@dimen/_10sdp" />
+    </LinearLayout>
+</FrameLayout>

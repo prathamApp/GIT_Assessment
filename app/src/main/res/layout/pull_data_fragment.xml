@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="4"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:id="@+id/rg_programs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbtn_hybrid_learning"
+                    style="@style/CustomRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="@string/hybrid_learning" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_readindia"
+                    style="@style/CustomRadioButton"
+                    android:text="@string/read_india" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_second_chance"
+                    style="@style/CustomRadioButton"
+                    android:enabled="true"
+                    android:text="@string/second_chance" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_ece"
+                    style="@style/CustomRadioButton"
+                    android:enabled="true"
+                    android:text="@string/ECE" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_pratham_institute"
+                    style="@style/CustomRadioButton"
+                    android:text="@string/pratham_institute" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_urbanProgram"
+                    style="@style/CustomRadioButton"
+                    android:text="@string/urbon_program" />
+            </RadioGroup>
+
+            <!-- <Spinner
+                 android:id="@+id/spinner_village"
+                 style="@style/spinner_style"
+                 android:background="@drawable/gradient_spinner_selectprogram"
+                 android:layout_width="350dp"
+                 android:layout_height="50dp"
+                 android:layout_below="@id/spinner_LL"
+                 android:entries="@array/village"
+                 android:layout_centerHorizontal="true"
+                 android:layout_marginTop="30dp" />
+
+             <Space
+                 android:layout_width="match_parent"
+                 android:layout_height="10dp"
+                 android:layout_below="@id/spinner_village" />-->
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView">
+
+        <Spinner
+            android:id="@+id/stateSpinner"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:autofillHints="Select State"
+            android:background="@drawable/gradient_spinner"
+            android:visibility="visible" />
+
+        <Spinner
+            android:id="@+id/blockSpinner"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:autofillHints="Select Block"
+            android:background="@drawable/gradient_spinner" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="249dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_style"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+</android.support.constraint.ConstraintLayout>
