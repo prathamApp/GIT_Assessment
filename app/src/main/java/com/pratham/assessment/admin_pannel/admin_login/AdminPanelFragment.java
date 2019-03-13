@@ -13,10 +13,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 
 import com.pratham.assessment.Assessment_Utility;
+import com.pratham.assessment.MenuActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.PullData.PullDataFragment;
 import com.pratham.assessment.admin_pannel.PushOrAssign.PushOrAssignFragment;
@@ -36,6 +38,9 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
 
     @BindView(R.id.password)
     android.support.design.widget.TextInputEditText passwordET;
+
+    @BindView(R.id.chk_start_assessment)
+    CheckBox startAssessment;
 
     @Override
     public void onAttach(Context context) {
@@ -63,7 +68,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
 
     @OnClick(R.id.btn_login)
     public void loginCheck() {
-        adminPanelPresenter.checkLogin(getUserName(), getPassword());
+        adminPanelPresenter.checkLogin(getUserName(), getPassword(), startAssessment.isChecked());
         userNameET.getText().clear();
         passwordET.getText().clear();
     }
@@ -129,9 +134,14 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     }
 
     @Override
-    public void onLoginSuccess() {
-        Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
-                null, PushOrAssignFragment.class.getSimpleName());
+    public void onLoginSuccess(boolean startAssessment) {
+        if (!startAssessment)
+            Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
+                    null, PushOrAssignFragment.class.getSimpleName());
+        else startActivity(new Intent(getActivity(), MenuActivity.class));
+            /*Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
+                    null, PushOrAssignFragment.class.getSimpleName());
+*/
     }
 
     @Override

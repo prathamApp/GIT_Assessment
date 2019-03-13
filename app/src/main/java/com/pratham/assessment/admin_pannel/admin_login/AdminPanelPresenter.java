@@ -20,7 +20,7 @@ public class AdminPanelPresenter implements AdminPanelContract.AdminPanelPresent
     }
 
     @Override
-    public void checkLogin(String userName, String password) {
+    public void checkLogin(String userName, String password, boolean checked) {
         // if user name and password are admin then navigate to Download activity otherWise admin activity
 
         if (userName.equals("admin") && password.equals("admin")) {
@@ -29,7 +29,7 @@ public class AdminPanelPresenter implements AdminPanelContract.AdminPanelPresent
             // assign push logic
             Crl loggedCrl = AppDatabase.getDatabaseInstance(context).getCrlDao().checkUserValidation(userName, password);
             if (loggedCrl != null) {
-                adminPanelView.onLoginSuccess();
+                adminPanelView.onLoginSuccess(checked);
             } else {
                 //userNAme and password may be wrong
                 adminPanelView.onLoginFail();

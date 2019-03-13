@@ -4,6 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <CheckBox
+        android:id="@+id/chk_start_assessment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:layout_centerHorizontal="true"
+        android:text="Start Assessment" />
+
     <LinearLayout
         android:id="@+id/login_credential"
         android:layout_width="match_parent"
@@ -63,8 +71,8 @@
         android:layout_below="@+id/login_credential"
         android:orientation="horizontal"
         android:paddingLeft="150dp"
-        android:paddingRight="150dp"
-        android:paddingTop="20dp">
+        android:paddingTop="20dp"
+        android:paddingRight="150dp">
 
         <Button
             android:id="@+id/btn_login"

@@ -14,4 +14,17 @@ public class MainActivity extends AppCompatActivity {
         Assessment_Utility.showFragment(this, new AdminPanelFragment(), R.id.frame_attendance,
                 null, AdminPanelFragment.class.getSimpleName());
     }
+    @Override
+    public void onBackPressed() {
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 1) {
+            finish();
+        } else {
+            if (getFragmentManager().getBackStackEntryCount() > 1) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
+        }
+    }
 }

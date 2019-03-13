@@ -50,6 +50,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.pratham.assessment.group_selection.SelectGroupActivity;
 import com.pratham.assessment.interfaces.SDCardUtil;
 
 import java.io.BufferedReader;
@@ -263,13 +264,13 @@ public class Assessment_Utility {
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
                     .commit();
-        } /*else if (mActivity instanceof SelectWordGameActivity && TAG.equals("AllWordsFragment")) {
-            ((SelectWordGameActivity) mActivity).getSupportFragmentManager()
+        } else if (mActivity instanceof SelectGroupActivity ) {
+            ((SelectGroupActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
                     .commit();
-        } */
+        }
 
 
     }
@@ -398,16 +399,15 @@ public class Assessment_Utility {
     }
 
 
-   /* public static int getRandomAvatar(Context context) {
+    public static int getRandomAvatar(Context context) {
         Integer[] drawables = {R.drawable.b1, R.drawable.b2, R.drawable.b3,
                 R.drawable.g1, R.drawable.g2, R.drawable.g3};
         int a = drawables[new Random().nextInt(drawables.length)];
         return a;
-       *//* String[] avatars = context.getResources().getStringArray(R.array.avatars);
+       /* String[] avatars = context.getResources().getStringArray(R.array.avatars);
         String word = avatars[new Random().nextInt(avatars.length)];
-        return word;*//*
+        return word;*/
     }
-*/
     public static String getDeviceSerialID() {
         return Build.SERIAL;
     }

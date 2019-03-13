@@ -23,10 +23,12 @@ import android.widget.Toast;
 import com.pratham.assessment.Assessment_Constants;
 import com.pratham.assessment.Assessment_Utility;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.SelectAgeGroupDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Village;
+import com.pratham.assessment.group_selection.SelectGroupActivity;
 
 import org.json.JSONException;
 
@@ -370,7 +372,7 @@ public class Activity_AssignGroups extends AppCompatActivity {
                                     isAssigned = true;
                                     Toast.makeText(Activity_AssignGroups.this, " Groups Assigned Successfully !!!", Toast.LENGTH_SHORT).show();
                                     progress.dismiss();
-                               //     startActivity(new Intent(Activity_AssignGroups.this, AdminControlsActivity.class));
+                                    startActivity(new Intent(Activity_AssignGroups.this, SelectGroupActivity.class));
 
                                     onBackPressed();
                                 }
