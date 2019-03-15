@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/chat_bg"
-    tools:context="com.pratham.assessment.MainActivity">
+    tools:context="com.pratham.assessment.ui.login.MainActivity">
 
     <RelativeLayout
         android:id="@+id/topPanel"

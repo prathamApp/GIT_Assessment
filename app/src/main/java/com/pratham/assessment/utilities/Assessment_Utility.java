@@ -1,4 +1,4 @@
-package com.pratham.assessment;
+package com.pratham.assessment.utilities;
 
 import android.animation.TimeInterpolator;
 import android.app.Activity;
@@ -50,8 +50,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.pratham.assessment.group_selection.SelectGroupActivity;
+import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.R;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.interfaces.SDCardUtil;
+import com.pratham.assessment.ui.login.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

@@ -1,17 +1,16 @@
-package com.pratham.assessment.group_selection;
+package com.pratham.assessment.ui.login.group_selection;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.pratham.assessment.Assessment_Constants;
-import com.pratham.assessment.Assessment_Utility;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.SelectAgeGroupDialog;
-import com.pratham.assessment.group_selection.fragment_select_group.FragmentSelectGroup;
+import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup;
 
 public class SelectGroupActivity extends AppCompatActivity {
 

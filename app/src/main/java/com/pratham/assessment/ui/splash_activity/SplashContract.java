@@ -1,4 +1,4 @@
-package com.pratham.assessment.splash_activity;
+package com.pratham.assessment.ui.splash_activity;
 
 
 import com.pratham.assessment.database.AppDatabase;

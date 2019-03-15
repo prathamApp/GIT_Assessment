@@ -1,4 +1,4 @@
-package com.pratham.assessment.splash_activity.async;
+package com.pratham.assessment.async;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,7 +9,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.Attendance;

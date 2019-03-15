@@ -1,19 +1,15 @@
-package com.pratham.assessment;
+package com.pratham.assessment.ui.login_menu;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 
-import com.pratham.assessment.group_selection.SelectGroupActivity;
+import com.pratham.assessment.BaseActivity;
+import com.pratham.assessment.R;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

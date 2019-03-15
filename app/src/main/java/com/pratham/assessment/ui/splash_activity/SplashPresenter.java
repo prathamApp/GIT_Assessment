@@ -1,4 +1,4 @@
-package com.pratham.assessment.splash_activity;
+package com.pratham.assessment.ui.splash_activity;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.pratham.assessment.Assessment_Utility;
+import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;

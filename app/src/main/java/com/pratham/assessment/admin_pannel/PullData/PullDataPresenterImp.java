@@ -9,9 +9,9 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.pratham.assessment.APIs;
+import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.R;
 import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.database.AppDatabase;
@@ -32,11 +32,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static com.pratham.assessment.APIs.ECE;
-import static com.pratham.assessment.APIs.PI;
-import static com.pratham.assessment.APIs.RI;
-import static com.pratham.assessment.APIs.SC;
-import static com.pratham.assessment.APIs.UP;
+import static com.pratham.assessment.utilities.APIs.ECE;
+import static com.pratham.assessment.utilities.APIs.PI;
+import static com.pratham.assessment.utilities.APIs.RI;
+import static com.pratham.assessment.utilities.APIs.SC;
+import static com.pratham.assessment.utilities.APIs.UP;
 
 /**
  * Created by PEF on 20/11/2018.

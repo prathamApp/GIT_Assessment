@@ -1,8 +1,10 @@
-package com.pratham.assessment;
+package com.pratham.assessment.ui.login;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment;
 
 public class MainActivity extends AppCompatActivity {

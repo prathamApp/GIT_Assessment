@@ -20,15 +20,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
 
-import com.pratham.assessment.Assessment_Constants;
-import com.pratham.assessment.Assessment_Utility;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
-import com.pratham.assessment.custom.SelectAgeGroupDialog;
 import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Village;
-import com.pratham.assessment.group_selection.SelectGroupActivity;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 
 import org.json.JSONException;
 

@@ -1,4 +1,4 @@
-package com.pratham.assessment.group_selection.fragment_child_attendance;
+package com.pratham.assessment.ui.login.group_selection.fragment_child_attendance;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -18,13 +18,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
 import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.Assessment_Constants;
-import com.pratham.assessment.Assessment_Utility;
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
 import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.database.AppDatabase;
@@ -182,7 +182,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             startSession(checkedStds);
             presentActivity(v);
             Toast.makeText(getActivity(), "Success...", Toast.LENGTH_SHORT).show();
-            // startActivity(new Intent(getActivity(), ChooseLevelActivity.class));
+            startActivity(new Intent(getActivity(), ChooseAssessmentActivity.class));
         } else {
             Toast.makeText(getContext(), "Please Select Students !", Toast.LENGTH_SHORT).show();
         }

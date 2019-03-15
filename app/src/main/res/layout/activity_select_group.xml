@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pratham.assessment.group_selection.SelectGroupActivity">
+    tools:context=".ui.login.group_selection.SelectGroupActivity">
 
     <FrameLayout
         android:id="@+id/frame_group"

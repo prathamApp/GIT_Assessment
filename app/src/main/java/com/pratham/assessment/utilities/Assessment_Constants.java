@@ -1,4 +1,4 @@
-package com.pratham.assessment;
+package com.pratham.assessment.utilities;
 
 public class Assessment_Constants {
     public static String STORING_IN;

@@ -1,46 +1,24 @@
-package com.pratham.assessment.splash_activity;
+package com.pratham.assessment.ui.splash_activity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 
-import com.pratham.assessment.MainActivity;
+import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.R;
-import com.pratham.assessment.SplashSupportActivity;
+import com.pratham.assessment.utilities.SplashSupportActivity;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.interfaces.PermissionResult;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

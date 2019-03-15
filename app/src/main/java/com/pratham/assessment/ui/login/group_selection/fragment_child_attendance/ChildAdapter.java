@@ -1,4 +1,4 @@
-package com.pratham.assessment.group_selection.fragment_child_attendance;
+package com.pratham.assessment.ui.login.group_selection.fragment_child_attendance;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

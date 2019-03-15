@@ -1,4 +1,4 @@
-package com.pratham.assessment.group_selection.fragment_select_group;
+package com.pratham.assessment.ui.login.group_selection.fragment_select_group;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -15,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.pratham.assessment.Assessment_Constants;
-import com.pratham.assessment.Assessment_Utility;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Student;
-import com.pratham.assessment.group_selection.fragment_child_attendance.FragmentChildAttendance;
+import com.pratham.assessment.ui.login.group_selection.fragment_child_attendance.FragmentChildAttendance;
 
 import java.util.ArrayList;
 

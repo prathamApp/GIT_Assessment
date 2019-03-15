@@ -1,4 +1,4 @@
-package com.pratham.assessment;
+package com.pratham.assessment.utilities;
 
 import android.content.Context;
 import android.content.Intent;
