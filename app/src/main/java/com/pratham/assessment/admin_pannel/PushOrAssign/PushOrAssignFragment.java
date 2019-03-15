@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.pratham.assessment.R;
-import com.pratham.assessment.splash_activity.async.PushDataToServer;
+import com.pratham.assessment.async.PushDataToServer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

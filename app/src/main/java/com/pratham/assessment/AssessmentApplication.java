@@ -12,21 +12,18 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
 
 
 /**

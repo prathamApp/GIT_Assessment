@@ -17,6 +17,7 @@ import com.pratham.assessment.dao.StudentDao;
 import com.pratham.assessment.dao.VillageDao;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.Attendance;
+import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Modal_Log;
@@ -27,7 +28,7 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.Village;
 
 
-@Database(entities = {Crl.class,  Student.class, Score.class, Session.class, Attendance.class, Status.class,  Village.class, Groups.class, Assessment.class, Modal_Log.class}, version = 1)
+@Database(entities = {Crl.class,  Student.class, Score.class, Session.class, Attendance.class, Status.class,  Village.class, Groups.class, Assessment.class, Modal_Log.class, ContentTable.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -45,13 +46,13 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract AttendanceDao getAttendanceDao();
 
-
     public abstract VillageDao getVillageDao();
 
     public abstract GroupDao getGroupsDao();
 
     public abstract LogDao getLogsDao();
 
+    public abstract ContentTable getContentTableDao();
 
     //new
     public abstract StatusDao getStatusDao();

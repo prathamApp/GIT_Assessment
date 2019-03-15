@@ -6,9 +6,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.BaseActivity;
-import com.pratham.assessment.MainActivity;
+import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.R;
 
 import butterknife.ButterKnife;

@@ -17,8 +17,8 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 
-import com.pratham.assessment.Assessment_Utility;
-import com.pratham.assessment.MenuActivity;
+import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.ui.login_menu.MenuActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.PullData.PullDataFragment;
 import com.pratham.assessment.admin_pannel.PushOrAssign.PushOrAssignFragment;

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pratham.assessment.splash_activity.SplashActivity">
+    tools:context=".ui.splash_activity.SplashActivity">
 
     <RelativeLayout
         android:id="@+id/temppp"
