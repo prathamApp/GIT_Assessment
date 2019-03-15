@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 
-import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.utilities.SplashSupportActivity;
 import com.pratham.assessment.database.AppDatabase;

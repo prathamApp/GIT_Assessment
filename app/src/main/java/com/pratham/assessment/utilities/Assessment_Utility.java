@@ -54,7 +54,6 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.interfaces.SDCardUtil;
-import com.pratham.assessment.ui.login.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

@@ -187,7 +187,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 */
   /*  @Override
     public void pushData() {
-        new PushDataToServer(context).execute();
+        new PushDataToServerold(context).execute();
     }
 */
     @Override
