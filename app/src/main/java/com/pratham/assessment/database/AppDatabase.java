@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.pratham.assessment.dao.AssessmentDao;
 import com.pratham.assessment.dao.AttendanceDao;
+import com.pratham.assessment.dao.ContentTableDao;
 import com.pratham.assessment.dao.CrlDao;
 import com.pratham.assessment.dao.GroupDao;
 import com.pratham.assessment.dao.LogDao;
@@ -52,7 +53,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract LogDao getLogsDao();
 
-    public abstract ContentTable getContentTableDao();
+    public abstract ContentTableDao getContentTableDao();
 
     //new
     public abstract StatusDao getStatusDao();
