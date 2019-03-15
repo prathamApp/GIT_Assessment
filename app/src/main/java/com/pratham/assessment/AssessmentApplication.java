@@ -49,7 +49,7 @@ public class AssessmentApplication extends Application {
     public static String VEDIO_PATH;
     public static String MUSIC_PATH;
     public static String FILE_PATH;
-    public static String pradigiPath = "";
+    public static String assessPath = "";
 //    OkHttpClient okHttpClient;
 
     static {
@@ -71,9 +71,10 @@ public class AssessmentApplication extends Application {
 //        FastSave.init(getApplicationContext());
 
 //        sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
-//        pradigiPath = Assessment_Utility.getInternalPath(this);
+        assessPath = Assessment_Utility.getInternalPath(this);
+        makeDir();
 //        if (Assessment_Constants.SMART_PHONE)
-//            Assessment_Constants.ext_path = pradigiPath;
+//            Assessment_Constants.ext_path = assessPath;
 
 
 /*        bgMusic = MediaPlayer.create(this, R.raw.bg_sound);
@@ -87,7 +88,7 @@ public class AssessmentApplication extends Application {
         });*/
 //        bubble_mp = MediaPlayer.create(this, R.raw.click);
         wiseF = new WiseFy.Brains(getApplicationContext()).logging(true).getSmarts();
-        setCOSPath();
+//        setCOSPath();
 //        sendFileStates = new HashMap<String, FileState>();
 //        recieveFileStates = new HashMap<String, FileState>();
 //        okHttpClient = new OkHttpClient().newBuilder()
@@ -96,6 +97,13 @@ public class AssessmentApplication extends Application {
 //                .writeTimeout(10, TimeUnit.SECONDS)
 //                .build();
 //        AndroidNetworking.initialize(getApplicationContext(), okHttpClient);
+
+    }
+
+    private void makeDir() {
+        String folder = assessPath+ "/" + ".Assessment";
+        File f = new File(folder);
+        if (!f.exists()) f.mkdirs();
 
     }
 

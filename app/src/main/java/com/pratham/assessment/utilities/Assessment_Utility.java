@@ -13,6 +13,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +25,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.IntRange;
 import android.support.v4.app.Fragment;
@@ -53,7 +55,6 @@ import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
-import com.pratham.assessment.interfaces.SDCardUtil;
 import com.pratham.assessment.ui.login.MainActivity;
 
 import java.io.BufferedReader;
@@ -108,6 +109,34 @@ public class Assessment_Utility {
     public static int dp2px(Context context, float value) {
         final float scale = context.getResources().getDisplayMetrics().densityDpi;
         return (int) (value * (scale / 160) + 0.5f);
+    }
+
+    public static int dpToPx(int dp, Context context) {
+        Resources r = context.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public boolean getSdCardPath(Context context) {
+        ArrayList<String> base_path = SDCardUtil.getExtSdCardPaths(context);
+        String fpath;
+        if (base_path.size() > 0) {
+            String path = base_path.get(0).replace("[", "");
+            path = path.replace("]", "");
+            fpath = path;
+        } else
+            fpath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+        File file = new File(fpath + "/.LLA/English/cos_database");
+
+        if (file.exists()) {
+            Assessment_Constants.ext_path = fpath + "/";
+            Log.d("getSD", "getSdCardPath: " + Assessment_Constants.ext_path);
+            Assessment_Constants.SD_CARD_Content = true;
+            return true;
+        } else {
+            Assessment_Constants.SD_CARD_Content = false;
+            return false;
+        }
     }
 
     public static boolean isDataConnectionAvailable(Context context) {

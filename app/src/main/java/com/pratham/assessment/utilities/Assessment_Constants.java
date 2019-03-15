@@ -1,8 +1,16 @@
 package com.pratham.assessment.utilities;
 
 public class Assessment_Constants {
+    public static final String INITIAL_ENTRIES = "initial_entries";
+    public static final String KEY_ASSET_COPIED = "key_asset_copied";
+    public static final String KEY_MENU_COPIED = "KEY_MENU_COPIED";
+    public static boolean SD_CARD_Content = false;
     public static String STORING_IN;
+    public static String ext_path="";
 
+    public static String CERTIFICATE_LBL = "certificate_lbl";
+    public static final String PREFS_VERSION = "com.pratham.assessment";
+    public static final String CURRENT_VERSION = "App Version";
 
     public static final String PRATHAM_KOLIBRI_HOTSPOT = "prathamkolibri";
     public static String FACILITY_ID = "facility_id";

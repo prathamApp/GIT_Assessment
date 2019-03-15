@@ -1,4 +1,4 @@
-package com.pratham.assessment.interfaces;
+package com.pratham.assessment.utilities;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

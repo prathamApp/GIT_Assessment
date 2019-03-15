@@ -10,35 +10,31 @@ import com.pratham.assessment.database.AppDatabase;
 public interface SplashContract {
 
     interface SplashView {
-
-       /* void startApp();
+        void startApp();
 
         void showUpdateDialog();
 
         void showButton();
 
+        void gotoNextActivity();
 
+        void showProgressDialog();
 
-        void showBottomFragment();
-
-
-*/
-        void gotoNextActivity(); void showProgressDialog();  void dismissProgressDialog();
+        void dismissProgressDialog();
     }
 
     interface SplashPresenter {
+        void checkVersion();
 
-        /*  void checkVersion();
+        void doInitialEntries(AppDatabase appDatabase);
 
-          void pushData();
+        void versionObtained(String latestVersion);
 
+        void copyZipAndPopulateMenu();
 
-          void copyZipAndPopulateMenu();
+        void pushData();
 
-          void versionObtained(String latestVersion);
-
-          void copyDataBase();*/        void doInitialEntries(AppDatabase appDatabase);
-
+        void copyDataBase();
     }
 
 }

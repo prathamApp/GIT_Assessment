@@ -1,29 +1,62 @@
 package com.pratham.assessment.ui.splash_activity;
 
+import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-
-import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.R;
-import com.pratham.assessment.utilities.SplashSupportActivity;
 import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
-
+import com.pratham.assessment.ui.login.MainActivity;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.utilities.PermissionUtils;
+import com.pratham.assessment.utilities.SplashSupportActivity;
+import org.greenrobot.eventbus.EventBus;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 
-public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult {
+
+public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying {
 
     @BindView(R.id.btn_start)
     Button btn_start_game;
@@ -56,19 +89,33 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         context = SplashActivity.this;
         btn_start_game.setVisibility(View.GONE);
         iv_logo_pradigi.setVisibility(View.GONE);
-        // bgMusic = MediaPlayer.create(this, R.raw.bg_sound);
-        // bgMusic.setLooping(true);
         initiateApp();
-        splashPresenter.doInitialEntries(AppDatabase.getDatabaseInstance(this));
-
     }
 
     public void initiateApp() {
+
+        String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
+                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                PermissionUtils.Manifest_RECORD_AUDIO,
+                PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                PermissionUtils.Manifest_ACCESS_FINE_LOCATION
+        };
+
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            if (!isPermissionsGranted(SplashActivity.this, permissionArray)) {
+                askCompactPermissions(permissionArray, SplashActivity.this);
+            } else {
+                splashPresenter.checkVersion();
+            }
+        } else {
+            splashPresenter.checkVersion();
+        }
+
         //bgMusic.start();
-        //    ImageViewAnimatedChange(this, iv_logo);
+//        ImageViewAnimatedChange(this, iv_logo);
     }
 
-    /*public void ImageViewAnimatedChange(Context c, final ImageView iv_logo) {
+/*    public void ImageViewAnimatedChange(Context c, final ImageView iv_logo) {
         final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.zoom_in_new);
         anim_in.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -140,19 +187,27 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             }
         });
         iv_logo_pradigi.setAnimation(anim_in);
-    }
-*/
-  /*  @Override
+    }*/
+
+    @Override
     public void showButton() {
         new Handler().postDelayed(new Runnable() {
             @Override
-            public void run() {
-                splashPresenter.copyZipAndPopulateMenu();
+            public void run() { 
+//                Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();
+//                if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false) ) {
+//                    if (!Assessment_Constants.SD_CARD_Content)
+                        splashPresenter.copyZipAndPopulateMenu();
+//                    else
+//                        splashPresenter.populateSDCardMenu();
+//                }
+//                else
+//                    gotoNextActivity();
             }
         }, 2000);
-    }*/
+    }
 
-   /* @Override
+    @Override
     public void showUpdateDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Upgrade to a better version !");
@@ -162,28 +217,25 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             public void onClick(DialogInterface dialog, int which) {
                 //Click button action
                 dialog.dismiss();
-                if (COS_Utility.isDataConnectionAvailable(SplashActivity.this)) {
+                if (Assessment_Utility.isDataConnectionAvailable(SplashActivity.this)) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.pratham.cityofstories")));
                     finish();
                 } else {
-                    COS_Utility.showAlertDialogue(SplashActivity.this, "No internet connection! Try updating later.");
+                    Assessment_Utility.showAlertDialogue(SplashActivity.this, "No internet connection! Try updating later.");
                     startApp();
                 }
             }
         });
         builder.show();
     }
-*/
-/*
+
     @Override
     public void startApp() {
         createDataBase();
-        if (COS_Constants.SMART_PHONE) {
+/*        if (Assessment_Constants.SMART_PHONE && !Assessment_Constants.SD_CARD_Content) {
             splashPresenter.pushData();
-        }
-
+        }*/
     }
-*/
 
     /*public void getSdCardPath() {
         CharSequence c = "";
@@ -209,8 +261,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 fpath = Environment.getExternalStorageDirectory().getAbsolutePath();
             fpath = fpath + "/.LLA/English/";
             File file = new File(fpath);
-            COS_Constants.ext_path = fpath;
-            Log.d("getSD", "getSdCardPath: " + COS_Constants.ext_path);
+            Assessment_Constants.ext_path = fpath;
+            Log.d("getSD", "getSdCardPath: " + Assessment_Constants.ext_path);
             if (file.exists())
                 updateSdCardPath(fpath);
             else {
@@ -230,8 +282,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
-                    COS_Constants.ext_path = path;
-                    Log.d("$path", "\n\n\n\n\n\n\n\n\n\nPATH: " + COS_Constants.ext_path + "\n\n\n\n\n\n\\n\n\n\n");
+                    Assessment_Constants.ext_path = path;
+                    Log.d("$path", "\n\n\n\n\n\n\n\n\n\nPATH: " + Assessment_Constants.ext_path + "\n\n\n\n\n\n\\n\n\n\n");
                     appDatabase.getStatusDao().updateValue("SdCardPath", "" + path);
                     BackupDatabase.backup(SplashActivity.this);
                     return null;
@@ -262,7 +314,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Override
     protected void onPause() {
         super.onPause();
-        /*if ((fragmentBottomOpenFlg && fragmentBottomPauseFlg) ||
+        if ((fragmentBottomOpenFlg && fragmentBottomPauseFlg) ||
                 (fragmentBottomOpenFlg && fragmentAddStudentOpenFlg && fragmentBottomPauseFlg && fragmentAddStudentPauseFlg)) {
             try {
                 if (bgMusic != null && bgMusic.isPlaying()) {
@@ -284,51 +336,49 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     @Override
     public void onBackPressed() {
-        // showExitDialog();
+        showExitDialog();
     }
 
-    /* public void showExitDialog() {
-         final Dialog dialog = new Dialog(context);
-         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-         dialog.setContentView(R.layout.exit_dialog);
-         dialog.setCanceledOnTouchOutside(false);
-         TextView title = dialog.findViewById(R.id.dia_title);
-         Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
-         Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
+    public void showExitDialog() {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.exit_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView title = dialog.findViewById(R.id.dia_title);
+        Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
+        Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
 
-         title.setText("Do you want to exit?");
-         restart_btn.setText("Yes");
-         exit_btn.setText("No");
-         dialog.show();
+        title.setText("Do you want to exit?");
+        restart_btn.setText("Yes");
+        exit_btn.setText("No");
+        dialog.show();
 
-         exit_btn.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (COS_Constants.SMART_PHONE)
-                     showBottomFragment();
-                 dialog.dismiss();
-             }
-         });
+        exit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
-         restart_btn.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 finishAffinity();
-                 dialog.dismiss();
-             }
-         });
-     }
- */
+        restart_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishAffinity();
+                dialog.dismiss();
+            }
+        });
+    }
+
     @Override
     public void permissionGranted() {
         Log.d("Splash", "permissionGranted: HAHAHAHAHAHA");
-//        splashPresenter.checkVersion();
+        splashPresenter.checkVersion();
     }
 
     @Override
@@ -339,94 +389,92 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public void permissionForeverDenied() {
     }
 
-    /* public void createDataBase() {
-         try {
-             boolean dbExist = checkDataBase();
-             if (!dbExist) {
-                 try {
-                     appDatabase = Room.databaseBuilder(this,
-                             AppDatabase.class, AppDatabase.DB_NAME)
-                             .allowMainThreadQueries()
-                             .addCallback(new RoomDatabase.Callback() {
-                                 @Override
-                                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                                     super.onCreate(db);
-                                 }
-                             })
-                             .build();
-                     if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/cos_database").exists()) {
-                         try {
-                             splashPresenter.copyDataBase();
-                         } catch (Exception e) {
-                             e.printStackTrace();
-                         }
-                     } else {
-                         showButton();
-                         //populateMenu();
-                     }
-                 } catch (Exception e) {
-                     e.printStackTrace();
-                 }
-             } else {
-                 appDatabase = Room.databaseBuilder(this,
-                         AppDatabase.class, AppDatabase.DB_NAME)
-                         .allowMainThreadQueries()
-                         .build();
-                 showButton();
- //                getSdCardPath();
-             }
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
-     }
-
-     private boolean checkDataBase() {
-         SQLiteDatabase checkDB = null;
-         try {
-             checkDB = SQLiteDatabase.openDatabase(getDatabasePath(AppDatabase.DB_NAME).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
-         } catch (Exception e) {
-         }
-         if (checkDB != null) {
-             checkDB.close();
-         }
-         return checkDB != null ? true : false;
-     }
- */
-    @Override
-    public void gotoNextActivity() {
-      /*  if (COS_Constants.SMART_PHONE) {
-            COS_Constants.ext_path = COSApplication.pradigiPath + "/.LLA/English/";
-            dismissProgressDialog();
-            showBottomFragment();
-        } else {*/
-//            dismissProgressDialog();
-        startActivity(new Intent(context, MainActivity.class));
-        finish();
-        /*}*/
+    public void createDataBase() {
+        try {
+            boolean dbExist = checkDataBase();
+            if (!dbExist) {
+                try {
+                    appDatabase = Room.databaseBuilder(this,
+                            AppDatabase.class, AppDatabase.DB_NAME)
+                            .allowMainThreadQueries()
+                            .addCallback(new RoomDatabase.Callback() {
+                                @Override
+                                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                                    super.onCreate(db);
+                                }
+                            })
+                            .build();
+/*                    if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/cos_database").exists()) {
+                        try {
+                            splashPresenter.copyDataBase();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {*/
+                        showButton();
+                        //populateMenu();
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                appDatabase = Room.databaseBuilder(this,
+                        AppDatabase.class, AppDatabase.DB_NAME)
+                        .allowMainThreadQueries()
+                        .build();
+                showButton();
+//                getSdCardPath();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    /*
-        @Override
-        public void showBottomFragment() {
-            fragmentBottomOpenFlg = true;
-            firstPause = false;
-            BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
-            bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+    private boolean checkDataBase() {
+        SQLiteDatabase checkDB = null;
+        try {
+            checkDB = SQLiteDatabase.openDatabase(getDatabasePath(AppDatabase.DB_NAME).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
+        } catch (Exception e) {
         }
+        if (checkDB != null) {
+            checkDB.close();
+        }
+        return checkDB != null ? true : false;
+    }
 
-        @Override
-        public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                onBackPressed();
-                return true;
-            }
-            return super.onKeyUp(keyCode, objEvent);
+    @Override
+    public void gotoNextActivity() {
+/*        if (Assessment_Constants.SMART_PHONE && !Assessment_Constants.SD_CARD_Content) {
+            Assessment_Constants.ext_path = COSApplication.assessPath + "/.LLA/English/";*/
+            dismissProgressDialog();
+/*            showBottomFragment();
+        } else {
+            dismissProgressDialog();*/
+            startActivity(new Intent(context, MainActivity.class));
+/*        }*/
+    }
+
+/*    @Override
+    public void showBottomFragment() {
+        fragmentBottomOpenFlg = true;
+        firstPause = false;
+        BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
+        bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+    }*/
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+            return true;
         }
-    */
+        return super.onKeyUp(keyCode, objEvent);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        /*try {
+/*        try {
             if (!bgMusic.isPlaying()) {
                 bgMusic = MediaPlayer.create(this, R.raw.bg_sound);
                 bgMusic.setLooping(true);
@@ -441,12 +489,11 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 bgMusic.start();
             }
         } catch (Exception e) {
-        }
-        EventBus.getDefault().post("reload");*/
+        }*/
+        EventBus.getDefault().post("reload");
     }
 
-
-   /* @Override
+    @Override
     public void copyingExisting() {
     }
 
@@ -457,6 +504,4 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Override
     public void failedCopyingExisting() {
     }
-*/
-
 }

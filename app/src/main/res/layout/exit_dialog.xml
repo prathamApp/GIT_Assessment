@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_250sdp"
+    android:layout_height="@dimen/_140sdp"
+    android:paddingBottom="@dimen/_15sdp"
+    android:layout_gravity="center"
+    android:background="@color/colorPrimaryLight">
+
+    <TextView
+        android:id="@+id/dia_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_70sdp"
+        android:fontFamily="sans-serif"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:gravity="center"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:layout_alignParentTop="true"
+        android:text="What do you want to do?"
+        android:textStyle="bold|italic"
+        android:textSize="@dimen/_20sdp" />
+
+    <Button
+        android:id="@+id/dia_btn_restart"
+        android:layout_width= "@dimen/_90sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:text="Restart"
+        android:elevation="5dp"
+        android:textSize="@dimen/_12sdp"
+        android:background="@drawable/ripple_effect"/>
+    <Button
+        android:id="@+id/dia_btn_exit"
+        android:layout_width= "@dimen/_80sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:text="Exit"
+        android:elevation="5dp"
+        android:textSize="@dimen/_12sdp"
+        android:background="@drawable/ripple_effect"
+        />
+
+    <ImageButton
+        android:id="@+id/exit_ib"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:padding="@dimen/_3sdp"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>
