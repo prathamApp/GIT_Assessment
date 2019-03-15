@@ -123,6 +123,7 @@ public class FragmentSelectGroup extends Fragment implements ContractGroup {
     @Override
     public void onResume() {
         super.onResume();
+//        groupAdapter.notifyDataSetChanged();
     }
 
     public void setGroups(ArrayList<Groups> groups) {

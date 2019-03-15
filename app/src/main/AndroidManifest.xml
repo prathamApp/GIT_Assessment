@@ -27,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.choose_assessment.ChooseAssessmentActivity"></activity>
+        <activity android:name=".ui.choose_assessment.ECEActivity"></activity>
+        <activity android:name=".ui.choose_assessment.ChooseAssessmentActivity" />
         <activity
             android:name=".ui.splash_activity.SplashActivity"
             android:screenOrientation="portrait">
@@ -37,6 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.login.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".admin_pannel.PushOrAssign.Activity_AssignGroups"
             android:screenOrientation="portrait" />

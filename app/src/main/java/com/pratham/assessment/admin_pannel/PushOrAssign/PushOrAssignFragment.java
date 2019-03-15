@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.async.PushDataToServerold;
 
 import butterknife.BindView;
@@ -60,7 +61,7 @@ public class PushOrAssignFragment extends Fragment {
         /*Intent intent = new Intent(getActivity(), PushDataActivity.class);
         startActivityForResult(intent, 1);
         getActivity().startActivity(intent);*/
-        new PushDataToServerold(getActivity()).execute();
+        new PushDataToServer(getActivity()).execute();
 
     }
 }

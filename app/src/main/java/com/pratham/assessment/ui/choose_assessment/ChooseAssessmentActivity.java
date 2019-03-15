@@ -1,5 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,5 +12,8 @@ public class ChooseAssessmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_assessment);
+        startActivity(new Intent(this, ECEActivity.class));
+
+
     }
 }

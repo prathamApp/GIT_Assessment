@@ -498,13 +498,13 @@ public class PushDataToServer extends AsyncTask {
                                             ((MainActivity) context).onResponseGet();
                                         }
                                     }).create().show();
-                            // setPushFlag();
+                             setPushFlag();
                         }
 
                         @Override
                         public void onError(ANError anError) {
                             new AlertDialog.Builder(context)
-                                    .setMessage("Data pushed Failed")
+                                    .setMessage("Data push failed")
                                     .setCancelable(false)
                                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                         @Override

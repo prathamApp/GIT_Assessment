@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements DataPushListener 
     public void onBackPressed() {
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (fragments == 1) {
-            finish();
+            finishAffinity();
         } else {
             if (getFragmentManager().getBackStackEntryCount() > 1) {
                 getFragmentManager().popBackStack();
