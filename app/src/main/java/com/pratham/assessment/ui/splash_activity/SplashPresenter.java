@@ -2,7 +2,6 @@ package com.pratham.assessment.ui.splash_activity;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -37,7 +36,6 @@ import com.pratham.assessment.services.LocationService;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.FileUtils;
-import com.pratham.assessment.utilities.SDCardUtil;
 
 import net.lingala.zip4j.core.ZipFile;
 
@@ -53,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import static android.content.Context.ACTIVITY_SERVICE;
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 import static com.pratham.assessment.ui.splash_activity.SplashActivity.appDatabase;
@@ -73,24 +72,27 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
     public void checkVersion() {
         String currentVersion = Assessment_Utility.getCurrentVersion(context);
         String updatedVersion = sharedPreferences.getString(CURRENT_VERSION, "-1");
-        if (updatedVersion.equalsIgnoreCase("-1")) {
-            if (Assessment_Utility.isDataConnectionAvailable(context)) {
-                try {
-                    new GetLatestVersion(this).execute().get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else splashView.startApp();
-        } else {
-            if (updatedVersion != null && currentVersion != null && isCurrentVersionEqualsPlayStoreVersion(currentVersion, updatedVersion)) {
-                splashView.showUpdateDialog();
-            } else
-                splashView.startApp();
-        }
+        if (updatedVersion != null) {
+            if (updatedVersion.equalsIgnoreCase("-1")) {
+                if (Assessment_Utility.isDataConnectionAvailable(context)) {
+                    try {
+                        new GetLatestVersion(this).execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else splashView.startApp();
+            } else {
+                if (updatedVersion != null && currentVersion != null && isCurrentVersionEqualsPlayStoreVersion(currentVersion, updatedVersion)) {
+                    splashView.showUpdateDialog();
+                } else
+                    splashView.startApp();
+            }
+        } else splashView.startApp();
+
     }
 
     @Override
@@ -530,7 +532,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                     folder_file = new File(Assessment_Constants.ext_path);
                 else
 */
-                    folder_file = new File(AssessmentApplication.assessPath);
+                folder_file = new File(AssessmentApplication.assessPath);
 //                    folder_file = new File(AssessmentApplication.assessPath + "/.LLA/English/");
                 if (folder_file.exists()) {
                     Log.d("-CT-", "doInBackground Assessment_Constants.ext_path: " + Assessment_Constants.ext_path);
@@ -563,7 +565,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                         detail.setParentId(content_cursor.getString(content_cursor.getColumnIndex("parentId")));
                                         detail.setContentType(content_cursor.getString(content_cursor.getColumnIndex("contentType")));
 //                                        if (!Assessment_Constants.SMART_PHONE)
-                                            detail.setOnSDCard(true);
+                                        detail.setOnSDCard(true);
 /*                                        else
                                             detail.setOnSDCard(false);*/
                                         contents.add(detail);

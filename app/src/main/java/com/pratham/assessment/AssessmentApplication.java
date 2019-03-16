@@ -25,6 +25,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import static com.pratham.assessment.utilities.Assessment_Constants.PREFS_VERSION;
+
 
 /**
  * Created by Pravin on 2 Feb 2018.
@@ -70,7 +72,7 @@ public class AssessmentApplication extends Application {
         }
 //        FastSave.init(getApplicationContext());
 
-//        sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
         assessPath = Assessment_Utility.getInternalPath(this);
         makeDir();
 //        if (Assessment_Constants.SMART_PHONE)
