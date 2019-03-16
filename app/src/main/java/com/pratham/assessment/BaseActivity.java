@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 
 
 import com.pratham.assessment.database.AppDatabase;
@@ -57,6 +58,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         super.onCreate(savedInstanceState);
 
         audioManager = (AudioManager) getSystemService(this.AUDIO_SERVICE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        ButtonClickSound = MediaPlayer.create(this, R.raw.click);//new MediaPlayer instance
 
 //        ttsService = new TTSService(getApplication());

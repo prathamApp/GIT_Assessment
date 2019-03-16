@@ -23,7 +23,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
 
     private Context mContext;
     private int lastPos = -1;
-    private List<ContentTable> gamesViewList;
+    private List<ContentTable> assessmentViewList;
     ChoseAssessmentClicked assessmentClicked;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -41,9 +41,9 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         }
     }
 
-    public ChooseAssessmentAdapter(Context mContext, List<ContentTable> gamesViewList, ChoseAssessmentClicked assessmentClicked) {
+    public ChooseAssessmentAdapter(Context mContext, List<ContentTable> assessmentViewList, ChoseAssessmentClicked assessmentClicked) {
         this.mContext = mContext;
-        this.gamesViewList = gamesViewList;
+        this.assessmentViewList = assessmentViewList;
         this.assessmentClicked = assessmentClicked;
     }
 
@@ -57,13 +57,13 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         //final ContentView gamesList = gamesViewList.get(position);
-        final ContentTable gamesList = gamesViewList.get(position);
+        final ContentTable assessList = assessmentViewList.get(position);
 
         Animation animation = null;
         animation = AnimationUtils.loadAnimation(mContext, R.anim.item_fall_down);
         animation.setDuration(500);
 
-        holder.title.setText(gamesList.getNodeTitle());
+        holder.title.setText(assessList.getNodeTitle());
 
         holder.iv_download.setVisibility(View.GONE);
         RequestOptions requestOptions = new RequestOptions();
@@ -71,15 +71,14 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         requestOptions.error(R.drawable.ic_warning);
 
         Glide.with(mContext).setDefaultRequestOptions(requestOptions)
-                .load(gamesList.getNodeServerImage())
+                .load(assessList.getNodeServerImage())
                 .into(holder.thumbnail);
-
 
         holder.game_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (gamesList.getNodeType() != null) {
-                    assessmentClicked.assessmentClicked(position, gamesList.getNodeId());
+                if (assessList.getNodeType() != null) {
+                    assessmentClicked.assessmentClicked(position, assessList.getNodeId());
                 }
             }
         });
@@ -107,6 +106,6 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
 
     @Override
     public int getItemCount() {
-        return gamesViewList.size();
+        return assessmentViewList.size();
     }
 }

@@ -11,6 +11,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.domain.ContentTable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +34,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         setContentView(R.layout.activity_choose_assessment);
 
         presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this, this);
+        contentTableList = new ArrayList<>();
 
         recyclerView = (RecyclerView) findViewById(R.id.choose_assessment_recycler);
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
