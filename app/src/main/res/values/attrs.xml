@@ -33,5 +33,17 @@
             <enum name="vertical" value="1" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="ProgressLayout">
+        <attr name="c_progressColor" format="color" />
+        <attr name="c_progressDescColor" format="color" />
+        <attr name="c_progressRadius" format="dimension" />
+        <attr name="c_max" format="integer" />
+        <attr name="c_progress" format="integer" />
+        <attr name="c_borderWidth" format="dimension" />
+        <attr name="c_progressDesc" format="string" />
+        <attr name="c_isShowDesc" format="boolean" />
+    </declare-styleable>
+
 </resources>
 

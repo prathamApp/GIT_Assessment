@@ -2,6 +2,7 @@ package com.pratham.assessment.ui.choose_assessment;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.design.card.MaterialCardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ContentTable;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.List;
 
@@ -30,14 +33,14 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         public TextView title;
         public ImageView thumbnail;
         public ImageView iv_download;
-        public LinearLayout game_card_view;
+        public MaterialCardView game_card_view;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.assessment_title);
             thumbnail = (ImageView) view.findViewById(R.id.assessment_thumbnail);
             iv_download = (ImageView) view.findViewById(R.id.iv_download_icon);
-            game_card_view = (LinearLayout) view.findViewById(R.id.assessment_content_card);
+            game_card_view = (MaterialCardView) view.findViewById(R.id.assessment_content_card);
         }
     }
 
@@ -70,9 +73,14 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         requestOptions.placeholder(R.drawable.ic_warning);
         requestOptions.error(R.drawable.ic_warning);
 
-        Glide.with(mContext).setDefaultRequestOptions(requestOptions)
-                .load(assessList.getNodeServerImage())
-                .into(holder.thumbnail);
+        if (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1"))
+            Glide.with(mContext).setDefaultRequestOptions(requestOptions)
+                    .load(AssessmentApplication.assessPath + Assessment_Constants.THUMBS_PATH + assessList.getNodeImage())
+                    .into(holder.thumbnail);
+        else
+            Glide.with(mContext).setDefaultRequestOptions(requestOptions)
+                    .load(assessList.getNodeServerImage())
+                    .into(holder.thumbnail);
 
         holder.game_card_view.setOnClickListener(new View.OnClickListener() {
             @Override

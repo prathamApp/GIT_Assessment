@@ -4,13 +4,31 @@ public class Assessment_Constants {
     public static final String INITIAL_ENTRIES = "initial_entries";
     public static final String KEY_ASSET_COPIED = "key_asset_copied";
     public static final String KEY_MENU_COPIED = "KEY_MENU_COPIED";
+    public static final String FILE_DOWNLOAD_COMPLETE = "file_download_complete";
+    public static final String FILE_DOWNLOAD_ERROR = "file_download_error";
+    public static final String FILE_DOWNLOAD_UPDATE = "file_download_update";
+    public static final String FILE_DOWNLOAD_STARTED = "file_download_started";
+    public static final String GAME = "game";
+    public static final String LANGUAGE = "language";
     public static boolean SD_CARD_Content = false;
     public static String STORING_IN;
     public static String ext_path="";
+    public static String ENGLISH = "English";
+
+    public static String ASSESSMENT_FOLDER_PATH = "/.Assessment/";
+    public static String GAME_PATH = "/.Assessment/English/Game/";
+    public static String ENGLISH_FOLDER_PATH = "/.Assessment/English/";
+    public static String THUMBS_PATH = "/.Assessment/English/app_Thumbs/";
 
     public static String CERTIFICATE_LBL = "certificate_lbl";
     public static final String PREFS_VERSION = "com.pratham.assessment";
     public static final String CURRENT_VERSION = "App Version";
+
+    public static final String INTERNET_DOWNLOAD = "prathmApp";
+    public static final String INTERNET_DOWNLOAD_API = "http://www.prodigi.openiscool.org/api/pos/Get?id=";
+    public static final String INTERNET_DOWNLOAD_RESOURCE = "downloadResource";
+    public static final String INTERNET_DOWNLOAD_RESOURCE_API = "http://prodigi.openiscool.org/api/pos/DownloadResource?resid=";
+
 
     public static final String PRATHAM_KOLIBRI_HOTSPOT = "prathamkolibri";
     public static String FACILITY_ID = "facility_id";
@@ -39,7 +57,9 @@ public class Assessment_Constants {
     public static final String STUDENT_LIST = "STUDENT_LIST";    public static final String SESSIONID = "sessionid";
     public static String currentStudentID;
     public static String currentSession;
-
+    public static boolean supervisedAssessment = false;
+    public static String assessmentSession = "";
+    public static String currentSupervisorID = "";
 
 
     public static enum URL {

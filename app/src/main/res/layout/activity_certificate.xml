@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/credits_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_lang_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:gravity="center">
+
+        <Spinner
+            android:id="@+id/lang_certi_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:background="@drawable/custom_spinner"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_lang_buttons"
+        android:background="@drawable/certificate_bg">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:background="@drawable/certificate_bg"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:id="@+id/rl_studentHeader"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_110sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginVertical="@dimen/_2sdp">
+
+                <ImageView
+                    android:id="@+id/iv_certificate"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_60sdp"
+                    android:padding="@dimen/_2sdp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/pratham_logo" />
+
+                <TextView
+                    android:id="@+id/tv_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/iv_certificate"
+                    android:gravity="center"
+                    android:text="Name"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_studentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_below="@id/tv_level"
+                    android:gravity="center"
+                    android:text="Name"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/_15sdp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_separator"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_below="@+id/rl_studentHeader"
+                android:layout_marginVertical="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/certi_separator" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/iv_separator"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/assessment_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/rl_supervisedby"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="5dp"
+                    android:clipToPadding="false"
+                    android:gravity="center"
+                    android:layoutAnimation="@anim/layout_fall_down"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:scrollbars="vertical" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_supervisedby"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_90sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="2.5"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/iv_photo"
+                        android:layout_width="@dimen/_90sdp"
+                        android:layout_height="match_parent" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@id/iv_photo"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tv_sup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Supervised By"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <TextView
+                            android:id="@+id/tv_supervisor_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_sup"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/_13sdp" />
+
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

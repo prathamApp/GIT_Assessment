@@ -1,60 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/assessment_content_card"
+    android:id="@+id/level_card_view"
     android:layout_width="match_parent"
+    android:layout_marginHorizontal="@dimen/_15sdp"
     android:layout_height="wrap_content"
     android:padding="@dimen/_5sdp"
-    android:layout_margin="@dimen/_2sdp"
+    android:layout_marginVertical="@dimen/_8sdp"
     app:cardCornerRadius="@dimen/_8sdp"
     app:cardBackgroundColor="@color/colorPrimary"
     app:cardElevation="@dimen/_3sdp"
     app:cardMaxElevation="@dimen/_5sdp">
 
     <RelativeLayout
-        android:id="@+id/rl_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:paddingHorizontal="@dimen/_10sdp">
 
         <ImageView
-            android:id="@+id/assessment_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_80sdp"
-            android:layout_marginHorizontal="5dp"
+            android:id="@+id/level_thumbnail"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:foregroundGravity="center"
-            android:scaleType="fitCenter"
-            android:src="@drawable/pratham_logo" />
+            android:layout_centerVertical="true"
+            android:src="@drawable/pratham_logo"
+            android:scaleType="fitCenter" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/assessment_thumbnail">
+            android:layout_height="@dimen/_70sdp"
+            android:layout_toRightOf="@id/level_thumbnail"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/iv_download_icon"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_alignParentRight="true"
+                android:visibility="gone"
                 android:layout_centerVertical="true"
-                android:visibility="gone" />
-            <!--android:src="@drawable/download_icon"/>-->
+                android:src="@drawable/download_icon"/>
 
             <TextView
-                android:id="@+id/assessment_title"
+                android:id="@+id/level_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/iv_download_icon"
                 android:gravity="center"
-                android:paddingLeft="2dp"
-                android:paddingTop="5dp"
-                android:paddingRight="2dp"
                 android:paddingBottom="5dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_toLeftOf="@+id/iv_download_icon"
                 android:text="@string/app_name"
-                android:textColor="@color/primaryText"
+                android:paddingTop="5dp"
                 android:textSize="@dimen/_12sdp" />
 
         </RelativeLayout>
 
     </RelativeLayout>
 
-</android.support.design.card.MaterialCardView>
+</android.support.design.card.MaterialCardView >

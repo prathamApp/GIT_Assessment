@@ -12,6 +12,7 @@ import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.domain.ContentTable;
+import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,6 +86,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         if (nodeId.equalsIgnoreCase("1300")) {
             startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
         } else {
+            Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
+            intent.putExtra("nodeId", nodeId);
+            startActivity(intent);
 
         }
 //        Toast.makeText(this, "assessmentClicked : " + position + "  /  " + nodeId, Toast.LENGTH_SHORT).show();

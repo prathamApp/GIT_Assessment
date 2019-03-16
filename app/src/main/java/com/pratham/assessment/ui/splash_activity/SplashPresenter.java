@@ -392,11 +392,11 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             if (!sharedPreferences.getBoolean(Assessment_Constants.KEY_ASSET_COPIED, false)) {
                 splashView.showProgressDialog();
                 File mydir = null;
-                mydir = new File(AssessmentApplication.assessPath + "/.Assessment");
+                mydir = new File(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH);
                 if (!mydir.exists())
                     mydir.mkdirs();
 
-                String path = AssessmentApplication.assessPath + "/.Assessment/";
+                String path = AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH;
                 copyFile(context, path);
 
                 sharedPreferences.edit().putBoolean(Assessment_Constants.KEY_ASSET_COPIED, true).apply();
@@ -436,7 +436,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 out.write(buffer, 0, read);
                 read = in.read(buffer);
             }
-            unzipFile(AssessmentApplication.assessPath + "/.Assessment/assessData.zip", AssessmentApplication.assessPath + "/.Assessment");
+            unzipFile(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH + "assessData.zip", AssessmentApplication.assessPath + "/.Assessment");
         } catch (Exception e) {
             e.getMessage();
         }
@@ -448,7 +448,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
             if (!direct.exists()) direct.mkdir();
 
-            InputStream in = new FileInputStream(Assessment_Constants.ext_path + "/.Assessment/" + AppDatabase.DB_NAME);
+            InputStream in = new FileInputStream(Assessment_Constants.ext_path + Assessment_Constants.ASSESSMENT_FOLDER_PATH + AppDatabase.DB_NAME);
 //            InputStream in = assetManager.open("assessData.zip");
             OutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal/" + AppDatabase.DB_NAME);
             byte[] buffer = new byte[1024];
@@ -534,7 +534,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 else
 */
                 folder_file = new File(AssessmentApplication.assessPath);
-                    folder_file = new File(AssessmentApplication.assessPath + "/.Assessment/English/");
+                    folder_file = new File(AssessmentApplication.assessPath + Assessment_Constants.ENGLISH_FOLDER_PATH);
                 if (folder_file.exists()) {
                     Log.d("-CT-", "doInBackground Assessment_Constants.ext_path: " + Assessment_Constants.ext_path);
                     db_file = new File(folder_file + "/" + AppDatabase.DB_NAME);

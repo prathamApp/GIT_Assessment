@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.io.File;
@@ -70,7 +71,7 @@ public class AssessmentApplication extends Application {
         if (assessmentApplication == null) {
             assessmentApplication = this;
         }
-//        FastSave.init(getApplicationContext());
+        FastSave.init(getApplicationContext());
 
         sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
         assessPath = Assessment_Utility.getInternalPath(this);
@@ -103,7 +104,7 @@ public class AssessmentApplication extends Application {
     }
 
     private void makeDir() {
-        String folder = assessPath+ "/" + ".Assessment";
+        String folder = assessPath+ "/.Assessment";
         File f = new File(folder);
         if (!f.exists()) f.mkdirs();
 
