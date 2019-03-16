@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,6 +21,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
 
+import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
@@ -216,57 +218,57 @@ public class Activity_AssignGroups extends AppCompatActivity {
 
 //        Toast.makeText(this, ""+vilID, Toast.LENGTH_SHORT).show();
 
-       // if (VillagesSpinnerValue > 0 || programID.equals("2")) {
+        // if (VillagesSpinnerValue > 0 || programID.equals("2")) {
 
-            // Showing Groups from Database
-            checkBoxIds = null;
+        // Showing Groups from Database
+        checkBoxIds = null;
 
 //            dbgroupList = BaseActivity.groupDao.GetGroups(vilID);
-            dbgroupList = AppDatabase.getDatabaseInstance(this).getGroupsDao().GetGroups(vilID);
+        dbgroupList = AppDatabase.getDatabaseInstance(this).getGroupsDao().GetGroups(vilID);
 
 //            groupList.remove(0);
-            assignGroup1.removeAllViews();
-            assignGroup2.removeAllViews();
+        assignGroup1.removeAllViews();
+        assignGroup2.removeAllViews();
 
-            checkBoxIds = new String[dbgroupList.size()];
-            int half = Math.round(dbgroupList.size() / 2);
+        checkBoxIds = new String[dbgroupList.size()];
+        int half = Math.round(dbgroupList.size() / 2);
 
-            for (int i = 0; i < dbgroupList.size(); i++) {
+        for (int i = 0; i < dbgroupList.size(); i++) {
 
-                Groups grp = dbgroupList.get(i);
-                String groupName = grp.getGroupName();
-                String groupId = grp.getGroupId();
+            Groups grp = dbgroupList.get(i);
+            String groupName = grp.getGroupName();
+            String groupId = grp.getGroupId();
 
-                TableRow row = new TableRow(Activity_AssignGroups.this);
-                //row.setId(groupId);
-                checkBoxIds[i] = groupId;
+            TableRow row = new TableRow(Activity_AssignGroups.this);
+            //row.setId(groupId);
+            checkBoxIds[i] = groupId;
 
-                //dynamically create checkboxes. i.e no. of students in group = no. of checkboxes
-                row.setLayoutParams(new TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                CheckBox checkBox = new CheckBox(Activity_AssignGroups.this);
+            //dynamically create checkboxes. i.e no. of students in group = no. of checkboxes
+            row.setLayoutParams(new TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            CheckBox checkBox = new CheckBox(Activity_AssignGroups.this);
 
-                try {
-                    checkBox.setId(i);
-                    checkBox.setTag(groupId);
-                    checkBox.setText(groupName);
-                } catch (Exception e) {
+            try {
+                checkBox.setId(i);
+                checkBox.setTag(groupId);
+                checkBox.setText(groupName);
+            } catch (Exception e) {
 
-                }
-                checkBox.setTextSize(20);
-                checkBox.setTextColor(Color.BLACK);
-                checkBox.setBackgroundColor(Color.LTGRAY);
-
-                row.addView(checkBox);
-                if (i >= half)
-                    assignGroup2.addView(row);
-                else
-                    assignGroup1.addView(row);
             }
-            // Animation Effect on Groups populate
-            Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide);
-            LinearLayoutGroups.startAnimation(animation1);
+            checkBox.setTextSize(20);
+            checkBox.setTextColor(Color.BLACK);
+            checkBox.setBackgroundColor(Color.LTGRAY);
 
-            allocateGroups.setVisibility(View.VISIBLE);
+            row.addView(checkBox);
+            if (i >= half)
+                assignGroup2.addView(row);
+            else
+                assignGroup1.addView(row);
+        }
+        // Animation Effect on Groups populate
+        Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide);
+        LinearLayoutGroups.startAnimation(animation1);
+
+        allocateGroups.setVisibility(View.VISIBLE);
        /* } else {
             assignGroup1.removeAllViews();
             assignGroup2.removeAllViews();
@@ -370,8 +372,12 @@ public class Activity_AssignGroups extends AppCompatActivity {
                                     isAssigned = true;
                                     Toast.makeText(Activity_AssignGroups.this, " Groups Assigned Successfully !!!", Toast.LENGTH_SHORT).show();
                                     progress.dismiss();
-                                    startActivity(new Intent(Activity_AssignGroups.this, SelectGroupActivity.class));
-
+                                   /* FragmentManager fm = getSupportFragmentManager();
+                                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                                        fm.popBackStack();
+                                    }*/
+                                    startActivity(new Intent(Activity_AssignGroups.this, MainActivity.class));
+                                    finish();
                                     onBackPressed();
                                 }
                             });

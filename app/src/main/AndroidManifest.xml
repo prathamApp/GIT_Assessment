@@ -27,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.choose_assessment.ChooseAssessmentActivity"></activity>
+        <activity android:name=".ui.choose_assessment.ECEActivity"></activity>
+        <activity android:name=".ui.choose_assessment.ChooseAssessmentActivity" />
         <activity
             android:name=".ui.splash_activity.SplashActivity"
             android:screenOrientation="portrait">
