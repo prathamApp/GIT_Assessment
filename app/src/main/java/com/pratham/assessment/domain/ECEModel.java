@@ -13,12 +13,22 @@ public class ECEModel {
     private String question;
     @SerializedName("type")
     private String type;
+    @SerializedName("title")
+    private String title;
     @SerializedName("instructions")
     private String instructions;
     @SerializedName("video")
     private String video;
     @SerializedName("rating")
     private String rating;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getQuestionId() {
         return questionId;

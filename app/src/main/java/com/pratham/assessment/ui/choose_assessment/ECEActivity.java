@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.pratham.assessment.R;
 import com.pratham.assessment.discrete_view.DSVOrientation;
 import com.pratham.assessment.discrete_view.DiscreteScrollView;
@@ -14,9 +13,7 @@ import com.pratham.assessment.domain.ECEModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener {
+public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
     @BindView(R.id.attendance_recycler_view)
     DiscreteScrollView discreteScrollView;
     List<ECEModel> eceModelList;
@@ -61,6 +58,7 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
                 eceModel.setQuestionId(jsonArray.getJSONObject(i).getString("questionId"));
                 eceModel.setQuestion(jsonArray.getJSONObject(i).getString("question"));
                 eceModel.setType(jsonArray.getJSONObject(i).getString("type"));
+                eceModel.setTitle(jsonArray.getJSONObject(i).getString("title"));
                 eceModel.setInstructions(jsonArray.getJSONObject(i).getString("instructions"));
                 eceModel.setVideo(jsonArray.getJSONObject(i).getString("video"));
                 eceModel.setRating(jsonArray.getJSONObject(i).getString("rating"));
@@ -114,4 +112,10 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         return jsonArr;
     }
 
+    @Override
+    public void onAnswerClicked(int position, int answer) {
+        if(answer==1){
+
+        }
+    }
 }
