@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ripple_rectangle"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -27,7 +28,7 @@
 
     <ImageView
         android:id="@+id/iv_play_video"
-        android:layout_width="@dimen/_50sdp"
+        android:layout_width="@dimen/_60sdp"
         android:layout_height="0dp"
         android:layout_weight="0.5"
         android:src="@drawable/ripple_round" />
@@ -43,22 +44,26 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
-            <Button
-                android:id="@+id/btn_yes"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="YES" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/btn_no"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="No" />
+                <RadioButton
+                    android:id="@+id/btn_yes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="YES" />
 
+                <RadioButton
+                    android:id="@+id/btn_no"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="No" />
+            </RadioGroup>
 
         </LinearLayout>
 
@@ -68,8 +73,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:numStars="5"
+android:visibility="gone"
             android:rating="2.0"
-            android:stepSize="1.0" />
+            android:stepSize="0.5" />
 
     </FrameLayout>
 </LinearLayout>

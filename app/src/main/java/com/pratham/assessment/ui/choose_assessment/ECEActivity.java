@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener {
     @BindView(R.id.attendance_recycler_view)
     DiscreteScrollView discreteScrollView;
+    List<ECEModel> eceModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +35,12 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         setContentView(R.layout.activity_ece);
         ButterKnife.bind(this);
 
-        JSONArray jsonArray = fetchJson("EnglishSentences.json");
+        JSONArray jsonArray = fetchJson("ece.json");
+        eceModelList=parsejsonArray(jsonArray);
         //insertJsonToDB(jsonArray);
 
 
-        ECEAdapter eceAdapter = new ECEAdapter(this);
+        ECEAdapter eceAdapter = new ECEAdapter(this,eceModelList);
         discreteScrollView.setOrientation(DSVOrientation.HORIZONTAL);
         discreteScrollView.addOnItemChangedListener(this);
         discreteScrollView.setItemTransitionTimeMillis(200);
@@ -48,6 +50,26 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         discreteScrollView.setAdapter(eceAdapter);
         eceAdapter.notifyDataSetChanged();
 
+    }
+
+    private List<ECEModel> parsejsonArray(JSONArray jsonArray) {
+        List<ECEModel> eceList = new ArrayList<>();
+        try {
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ECEModel eceModel = new ECEModel();
+                eceModel.setQuestionId(jsonArray.getJSONObject(i).getString("questionId"));
+                eceModel.setQuestion(jsonArray.getJSONObject(i).getString("question"));
+                eceModel.setType(jsonArray.getJSONObject(i).getString("type"));
+                eceModel.setInstructions(jsonArray.getJSONObject(i).getString("instructions"));
+                eceModel.setVideo(jsonArray.getJSONObject(i).getString("video"));
+                eceModel.setRating(jsonArray.getJSONObject(i).getString("rating"));
+                eceList.add(eceModel);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return eceList;
     }
 
     /*private void insertJsonToDB(JSONArray jsonArray) {

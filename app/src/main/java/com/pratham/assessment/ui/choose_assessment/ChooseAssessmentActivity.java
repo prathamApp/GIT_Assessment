@@ -1,5 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,7 +21,7 @@ import java.util.List;
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
 public class ChooseAssessmentActivity extends BaseActivity implements
-        ChoseAssessmentClicked, ChooseAssessmentContract.ChooseAssessmentView{
+        ChoseAssessmentClicked, ChooseAssessmentContract.ChooseAssessmentView {
 
     ChooseAssessmentContract.ChooseAssessmentPresenter presenter;
 
@@ -41,7 +42,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10,this), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, this), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(chooseAssessAdapter);
 
@@ -80,6 +81,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @Override
     public void assessmentClicked(int position, String nodeId) {
-        Toast.makeText(this, "assessmentClicked : "+position+"  /  "+nodeId, Toast.LENGTH_SHORT).show();
+
+        if (nodeId.equalsIgnoreCase("1300")) {
+            startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
+        } else {
+
+        }
+//        Toast.makeText(this, "assessmentClicked : " + position + "  /  " + nodeId, Toast.LENGTH_SHORT).show();
     }
 }

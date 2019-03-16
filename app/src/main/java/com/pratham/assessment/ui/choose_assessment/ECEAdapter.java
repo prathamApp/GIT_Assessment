@@ -7,37 +7,46 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.domain.ECEModel;
 
 import java.util.List;
 
 public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
 
     private Context mContext;
-    //private List<ModalGames> gamesViewList;
+    private List<ECEModel> eceModelList;
     //GameClicked gameClicked;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
-        public ImageView thumbnail;
-        public CardView game_card_view;
+        public TextView tv_ece_question;
+        public TextView tv_ece_instructions;
+        public ImageView iv_play_video;
+        public Button yes;
+        public Button no;
+        public RatingBar rb_rating;
 
         public MyViewHolder(View view) {
             super(view);
-            /*title = (TextView) view.findViewById(R.id.game_title);
-            thumbnail = (ImageView) view.findViewById(R.id.game_thumbnail);
-            game_card_view = (CardView) view.findViewById(R.id.game_card_view);*/
+            tv_ece_question =  view.findViewById(R.id.tv_ece_question);
+            tv_ece_instructions = view.findViewById(R.id.tv_ece_instructions);
+            iv_play_video =  view.findViewById(R.id.iv_play_video);
+            yes =  view.findViewById(R.id.btn_yes);
+            no =  view.findViewById(R.id.btn_no);
+            rb_rating =  view.findViewById(R.id.rb_rating);
         }
     }
 
-    public ECEAdapter(Context mContext) {
+    public ECEAdapter(Context mContext, List<ECEModel> eceModelList) {
         this.mContext = mContext;
-       /* this.gamesViewList = gamesViewList;
-        this.gameClicked = gameClicked;*/
+       this.eceModelList = eceModelList;
+        /* this.gameClicked = gameClicked;*/
     }
 
 
@@ -50,13 +59,11 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-       // final ModalGames gamesList = gamesViewList.get(position);
+        final ECEModel eceModel = eceModelList.get(position);
 
 
-   /*     holder.title.setText(gamesList.getNodeTitle());
-        ex_path = new SdCardPath(mContext);
-        sdCardPathString = ex_path.getSdCardPath();
-*/
+        holder.tv_ece_question.setText(eceModel.getQuestion());
+        holder.tv_ece_instructions.setText(eceModel.getInstructions());
 
        /* Glide.with(mContext).load(sdCardPathString+ "/StoryData/" +gamesList.getNodeImage()).into(holder.thumbnail);
         holder.game_card_view.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +76,6 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
-            return 0; /*gamesViewList.size();*/
+            return eceModelList.size();
     }
 }
