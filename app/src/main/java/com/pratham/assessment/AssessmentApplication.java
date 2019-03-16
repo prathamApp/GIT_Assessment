@@ -74,7 +74,7 @@ public class AssessmentApplication extends Application {
 
         sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
         assessPath = Assessment_Utility.getInternalPath(this);
-        makeDir();
+//        makeDir();
 //        if (Assessment_Constants.SMART_PHONE)
 //            Assessment_Constants.ext_path = assessPath;
 

@@ -225,7 +225,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
     @Override
     public void pushData() {
-        new PushDataToServerold(context).execute();
+        new PushDataToServer(context).execute();
     }
 
     @Override
@@ -393,7 +393,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 splashView.showProgressDialog();
                 File mydir = null;
                 mydir = new File(AssessmentApplication.assessPath + "/.Assessment");
-                if (!mydir.exists()) mydir.mkdirs();
+                if (!mydir.exists())
+                    mydir.mkdirs();
 
                 String path = AssessmentApplication.assessPath + "/.Assessment/";
                 copyFile(context, path);
@@ -533,7 +534,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 else
 */
                 folder_file = new File(AssessmentApplication.assessPath);
-//                    folder_file = new File(AssessmentApplication.assessPath + "/.LLA/English/");
+                    folder_file = new File(AssessmentApplication.assessPath + "/.Assessment/English/");
                 if (folder_file.exists()) {
                     Log.d("-CT-", "doInBackground Assessment_Constants.ext_path: " + Assessment_Constants.ext_path);
                     db_file = new File(folder_file + "/" + AppDatabase.DB_NAME);
