@@ -5,6 +5,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
@@ -79,6 +80,6 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @Override
     public void assessmentClicked(int position, String nodeId) {
-
+        Toast.makeText(this, "assessmentClicked : "+position+"  /  "+nodeId, Toast.LENGTH_SHORT).show();
     }
 }
