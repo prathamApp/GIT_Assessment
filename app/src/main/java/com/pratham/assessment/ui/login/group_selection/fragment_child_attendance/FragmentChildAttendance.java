@@ -215,15 +215,15 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
                     AppDatabase.getDatabaseInstance(getContext()).getSessionDao().insert(startSesion);
 
                     Attendance attendance = new Attendance();
-                    for (int i = 0; i < stud.size(); i++) {
+//                    for (int i = 0; i < stud.size(); i++) {
                         attendance.setSessionID("" + currentSession);
-                        attendance.setStudentID("" + stud.get(i).getStudentID());
+                        attendance.setStudentID("" + stud.get(0).getStudentID());
                         attendance.setDate(AssessmentApplication.getCurrentDateTime());
                         attendance.setGroupID(groupID);
                         attendance.setSentFlag(0);
                         AppDatabase.getDatabaseInstance(getContext()).getAttendanceDao().insert(attendance);
-                    }
-                    Assessment_Constants.currentStudentID = groupID;
+//                    }
+                    Assessment_Constants.currentStudentID = stud.get(0).getStudentID();
                     BackupDatabase.backup(getContext());
                     return null;
                 } catch (Exception e) {
