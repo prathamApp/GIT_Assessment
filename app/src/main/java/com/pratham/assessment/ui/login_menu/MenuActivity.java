@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
+import com.pratham.assessment.ui.login.qr_scan.QRScanActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +38,7 @@ public class MenuActivity extends BaseActivity {
     @OnClick(R.id.btn_qr)
     public void gotoQRActivity() {
        // ButtonClickSound.start();
-        // startActivity(new Intent(this, QRScanActivity.class));
+         startActivity(new Intent(this, QRScanActivity.class));
 
     }
 

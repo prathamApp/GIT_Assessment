@@ -55,6 +55,10 @@ dependencies {
     implementation 'io.github.storix:rxdiffutil:0.3.2'
     implementation 'com.github.joielechong:zip4jandroid:1.0.1'
 
+    //barcodescanner
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+
+
     //check connection
     implementation 'com.isupatches:wisefy:3.0.1'
     implementation 'commons-net:commons-net:3.6'

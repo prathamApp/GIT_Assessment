@@ -50,6 +50,9 @@
         <activity
             android:name=".BaseActivity"
             android:screenOrientation="portrait" />
+       <activity
+            android:name=".ui.login.qr_scan.QRScanActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.group_selection.SelectGroupActivity"
             android:screenOrientation="portrait" />

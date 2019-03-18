@@ -22,6 +22,16 @@ public class ECEModel {
     @SerializedName("rating")
     private String rating;
 
+    private int isSelected =-1;
+
+    public int getIsSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(int isSelected) {
+        this.isSelected = isSelected;
+    }
+
     public String getTitle() {
         return title;
     }

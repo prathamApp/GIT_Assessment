@@ -223,7 +223,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
                         attendance.setSentFlag(0);
                         AppDatabase.getDatabaseInstance(getContext()).getAttendanceDao().insert(attendance);
                     }
-
+                    Assessment_Constants.currentStudentID = groupID;
                     BackupDatabase.backup(getContext());
                     return null;
                 } catch (Exception e) {

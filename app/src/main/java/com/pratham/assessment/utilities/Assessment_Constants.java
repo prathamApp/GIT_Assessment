@@ -60,6 +60,7 @@ public class Assessment_Constants {
     public static boolean supervisedAssessment = false;
     public static String assessmentSession = "";
     public static String currentSupervisorID = "";
+    public static boolean GROUP_LOGIN = false;
 
 
     public static enum URL {

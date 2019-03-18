@@ -1,7 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +48,7 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
     public ECEAdapter(Context mContext, List<ECEModel> eceModelList) {
         this.mContext = mContext;
         this.eceModelList = eceModelList;
-         this.answerClickedListener = (AnswerClickedListener) mContext;
+        this.answerClickedListener = (AnswerClickedListener) mContext;
     }
 
 
@@ -63,13 +62,24 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final ECEModel eceModel = eceModelList.get(position);
+        if (eceModel.getIsSelected() == 1) {
+            holder.canDo.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+            holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+        } else if (eceModel.getIsSelected() == 2) {
+            holder.needHelp.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+            holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+        } else {
 
+            holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+            holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+        }
 
         holder.tv_ece_question.setText(eceModel.getQuestion());
         holder.tv_ece_question_title.setText(eceModel.getTitle());
         holder.canDo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                eceModel.setIsSelected(1);
                 answerClickedListener.onAnswerClicked(position, 1);
                 holder.canDo.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
                 holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
@@ -78,6 +88,7 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
         holder.needHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                eceModel.setIsSelected(2);
                 answerClickedListener.onAnswerClicked(position, 2);
                 holder.needHelp.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
                 holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
