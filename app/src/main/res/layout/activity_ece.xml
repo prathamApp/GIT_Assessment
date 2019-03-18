@@ -7,8 +7,20 @@
 
     tools:context=".ui.choose_assessment.ECEActivity">
 
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/_5sdp"
+        android:padding="@dimen/_5sdp"
+        android:textColor="@color/colorBlack"
+        android:background="@drawable/btn_style"
+        android:text="Submit Assessment"/>
+
     <com.pratham.assessment.discrete_view.DiscreteScrollView
         android:id="@+id/attendance_recycler_view"
+        android:layout_below="@id/btn_submit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"

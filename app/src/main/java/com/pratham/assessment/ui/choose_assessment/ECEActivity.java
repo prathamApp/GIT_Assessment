@@ -1,15 +1,24 @@
 package com.pratham.assessment.ui.choose_assessment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.discrete_view.DSVOrientation;
 import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.discrete_view.ScaleTransformer;
+import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.ECEModel;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
     @BindView(R.id.attendance_recycler_view)
@@ -33,11 +43,11 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         ButterKnife.bind(this);
 
         JSONArray jsonArray = fetchJson("ece.json");
-        eceModelList=parsejsonArray(jsonArray);
+        eceModelList = parseJsonArray(jsonArray);
         //insertJsonToDB(jsonArray);
 
 
-        ECEAdapter eceAdapter = new ECEAdapter(this,eceModelList);
+        ECEAdapter eceAdapter = new ECEAdapter(this, eceModelList);
         discreteScrollView.setOrientation(DSVOrientation.HORIZONTAL);
         discreteScrollView.addOnItemChangedListener(this);
         discreteScrollView.setItemTransitionTimeMillis(200);
@@ -49,7 +59,7 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
 
     }
 
-    private List<ECEModel> parsejsonArray(JSONArray jsonArray) {
+    private List<ECEModel> parseJsonArray(JSONArray jsonArray) {
         List<ECEModel> eceList = new ArrayList<>();
         try {
 
@@ -70,25 +80,6 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         return eceList;
     }
 
-    /*private void insertJsonToDB(JSONArray jsonArray) {
-        List<ECEModel> eceModelArrayList = new ArrayList<>();
-        try {
-            for (int i = 0; i < eceModelArrayList.length(); i++) {
-                WordEnglish sentence = new WordEnglish();
-                sentence.setWord(englishSentences.getJSONObject(i).getString("data"));
-                sentence.setUuid(englishSentences.getJSONObject(i).getString("resourceId"));
-                sentence.setSize(englishSentences.getJSONObject(i).getInt("wordCount"));
-                sentence.setType("sentence");
-
-                EnglishSentenceList.add(sentence);
-            }
-            AppDatabase.getDatabaseInstance(context).getEnglishWordDao().insertWordList(EnglishSentenceList);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-*/
     @Override
     public void onCurrentItemChanged(@Nullable RecyclerView.ViewHolder viewHolder, int adapterPosition) {
 
@@ -112,10 +103,68 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         return jsonArr;
     }
 
+    @OnClick(R.id.btn_submit)
+    public void onSubmit() {
+        int cnt = 0;
+        for (int i = 0; i < eceModelList.size(); i++) {
+            if (eceModelList.get(i).getIsSelected() != -1) {
+                cnt++;
+            } else {
+                Toast.makeText(this, "Complete all questions...", Toast.LENGTH_SHORT).show();
+                discreteScrollView.scrollToPosition(i);
+
+            }
+        }
+        if (cnt == eceModelList.size()) {
+            showConfirmationDialog();
+        }
+    }
+
+    private void showConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Alert");
+        builder.setMessage("Do you want to save this assessment?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                saveAssessmentToDB();
+                finish();
+            }
+        });
+        builder.setNegativeButton("Review", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+
+    }
+
+    private void saveAssessmentToDB() {
+        List<Assessment> assessmentList = new ArrayList<>();
+        for (int i = 0; i < eceModelList.size(); i++) {
+            Assessment assessment = new Assessment();
+            assessment.setResourceIDa("");
+            assessment.setSessionIDa("");
+            assessment.setSessionIDm("");
+            assessment.setQuestionIda(Integer.parseInt(eceModelList.get(i).getQuestionId()));
+            assessment.setScoredMarksa(0);
+            assessment.setTotalMarksa(0);
+            assessment.setStudentIDa(Assessment_Constants.currentStudentID);
+            assessment.setStartDateTimea("");
+            assessment.setEndDateTime(AssessmentApplication.getCurrentDateTime());
+            assessment.setDeviceIDa("");
+            assessment.setLevela(eceModelList.get(i).getIsSelected());
+            assessment.setLabel(eceModelList.get(i).getQuestion());
+            assessment.setSentFlag(0);
+            assessmentList.add(assessment);
+        }
+        AppDatabase.getDatabaseInstance(this).getAssessmentDao().insertAllAssessments(assessmentList);
+        BackupDatabase.backup(this);
+    }
+
     @Override
     public void onAnswerClicked(int position, int answer) {
-        if(answer==1){
+        eceModelList.get(position).setIsSelected(answer);
 
-        }
     }
 }

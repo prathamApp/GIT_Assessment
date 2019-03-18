@@ -63,15 +63,27 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final ECEModel eceModel = eceModelList.get(position);
         if (eceModel.getIsSelected() == 1) {
-            holder.canDo.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+//            holder.canDo.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+            holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_effect));
+            holder.canDo.setTextColor(mContext.getResources().getColor(R.color.colorWhiteLight));
             holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+            holder.needHelp.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+
         } else if (eceModel.getIsSelected() == 2) {
-            holder.needHelp.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+//            holder.needHelp.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+            holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_effect));
+            holder.needHelp.setTextColor(mContext.getResources().getColor(R.color.colorWhiteLight));
+
             holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+            holder.canDo.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+
         } else {
 
             holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
             holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+            holder.canDo.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+            holder.needHelp.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+
         }
 
         holder.tv_ece_question.setText(eceModel.getQuestion());
@@ -81,8 +93,12 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
             public void onClick(View v) {
                 eceModel.setIsSelected(1);
                 answerClickedListener.onAnswerClicked(position, 1);
-                holder.canDo.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+//                holder.canDo.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+                holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_effect));
+                holder.canDo.setTextColor(mContext.getResources().getColor(R.color.colorWhiteLight));
                 holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+                holder.needHelp.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+
             }
         });
         holder.needHelp.setOnClickListener(new View.OnClickListener() {
@@ -90,8 +106,11 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
             public void onClick(View v) {
                 eceModel.setIsSelected(2);
                 answerClickedListener.onAnswerClicked(position, 2);
-                holder.needHelp.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+//                holder.needHelp.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccentDark));
+                holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_effect));
+                holder.needHelp.setTextColor(mContext.getResources().getColor(R.color.colorWhiteLight));
                 holder.canDo.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
+                holder.canDo.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
 
             }
         });

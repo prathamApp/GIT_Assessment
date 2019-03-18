@@ -21,6 +21,9 @@ public interface AssessmentDao {
     @Insert
     long[] insertAll(Assessment... assessments);
 
+    @Insert
+    long[] insertAllAssessments(List<Assessment> assessments);
+
     @Update
     int update(Assessment assessment);
 
