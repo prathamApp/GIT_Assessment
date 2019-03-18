@@ -18,6 +18,7 @@
             android:text="Choose Assessment"
             android:textColor="@color/primaryText"
             android:textSize="@dimen/_15sdp" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -35,4 +36,25 @@
             android:layoutAnimation="@anim/layout_fall_down"
             android:scrollbars="vertical" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_Profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/admin_btn_bg">
+
+        <ImageButton
+            android:id="@+id/btn_Profile"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/b2" />
+    </RelativeLayout>
+
 </RelativeLayout>

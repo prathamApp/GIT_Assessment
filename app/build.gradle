@@ -67,4 +67,8 @@ dependencies {
     implementation 'io.nlopez.smartlocation:library:3.3.3'
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 
+    implementation "org.androidannotations:androidannotations-api:4.5.2"
+    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
+
+
 }

@@ -231,7 +231,7 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
         startSession();
         Assessment_Constants.currentStudentID = stdId;
        // ButtonClickSound.start();
-        Assessment_Constants.GROUP_LOGIN = false;
+        //Assessment_Constants.GROUP_LOGIN = false;
         //startActivity(new Intent(this, RCGameActivity.class));
         startActivity(new Intent(this, ChooseAssessmentActivity.class));
 

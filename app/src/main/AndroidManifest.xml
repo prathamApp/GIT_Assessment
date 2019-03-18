@@ -28,10 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.choose_assessment.ECEActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.choose_assessment.ChooseAssessmentActivity" />
+
         <activity
             android:name=".ui.splash_activity.SplashActivity"
             android:screenOrientation="portrait">
@@ -41,33 +38,53 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".ui.login.MainActivity"
+            android:name=".ui.choose_assessment.ECEActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.choose_assessment.ChooseAssessmentActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.login.MainActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".admin_pannel.PushOrAssign.Activity_AssignGroups"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".BaseActivity"
             android:screenOrientation="portrait" />
-       <activity
-            android:name=".ui.login.qr_scan.QRScanActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.login.group_selection.SelectGroupActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.login_menu.MenuActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.display_english_list.TestDisplayActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.certificate.CertificateActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.content_player.WebViewActivity"
             android:screenOrientation="sensorLandscape" />
+
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.login.qr_scan.QRScanActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

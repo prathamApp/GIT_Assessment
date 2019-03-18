@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.interfaces.PermissionResult;
+import com.pratham.assessment.services.TTSService;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,7 +36,7 @@ import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
-//    public static TTSService ttsService;
+    public static TTSService ttsService;
 //    public static STTService sttService;
 
     static CountDownTimer cd;
@@ -61,10 +62,10 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        ButtonClickSound = MediaPlayer.create(this, R.raw.click);//new MediaPlayer instance
 
-//        ttsService = new TTSService(getApplication());
-//        ttsService.setActivity(this);
-//        ttsService.setSpeechRate(0.7f);
-//        ttsService.setLanguage(new Locale("en", "IN"));
+        ttsService = new TTSService(getApplication());
+        ttsService.setActivity(this);
+        ttsService.setSpeechRate(0.7f);
+        ttsService.setLanguage(new Locale("en", "IN"));
 //        sttService = STTService.init(getApplicationContext());
 //        appDatabase = Room.databaseBuilder(BaseActivity.this,
 //                AppDatabase.class, AppDatabase.DB_NAME)

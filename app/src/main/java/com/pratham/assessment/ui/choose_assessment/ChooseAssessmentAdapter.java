@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -66,18 +65,27 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         animation = AnimationUtils.loadAnimation(mContext, R.anim.item_fall_down);
         animation.setDuration(500);
 
-        holder.title.setText(assessList.getNodeTitle());
+        if (assessList.getNodeTitle().equalsIgnoreCase("test"))
+            holder.title.setText("English");
+        else
+            holder.title.setText(assessList.getNodeTitle());
 
         holder.iv_download.setVisibility(View.GONE);
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.ic_warning);
         requestOptions.error(R.drawable.ic_warning);
 
-        if (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1"))
+
+        if ( (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1")) && !Assessment_Constants.SD_CARD_Content){
             Glide.with(mContext).setDefaultRequestOptions(requestOptions)
                     .load(AssessmentApplication.assessPath + Assessment_Constants.THUMBS_PATH + assessList.getNodeImage())
                     .into(holder.thumbnail);
-        else
+        }
+        else if ( (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1")) && Assessment_Constants.SD_CARD_Content) {
+            Glide.with(mContext).setDefaultRequestOptions(requestOptions)
+                    .load(Assessment_Constants.ext_path + Assessment_Constants.THUMBS_PATH + assessList.getNodeImage())
+                    .into(holder.thumbnail);
+        }else
             Glide.with(mContext).setDefaultRequestOptions(requestOptions)
                     .load(assessList.getNodeServerImage())
                     .into(holder.thumbnail);

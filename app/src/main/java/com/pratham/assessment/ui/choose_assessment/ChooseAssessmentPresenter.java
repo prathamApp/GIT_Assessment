@@ -29,12 +29,14 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
     @Override
     public void copyListData() {
-        new AsyncTask<Object, Void, Object>() {
+        getListData();
+
+/*        new AsyncTask<Object, Void, Object>() {
             String currentSession;
 
             @Override
             protected Object doInBackground(Object[] objects) {
-                /*try {
+                *//*try {
 
 //                    if(!COS_Constants.SD_CARD_Content) {
 
@@ -112,7 +114,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
-                }*/
+                }*//*
                 return null;
             }
 
@@ -121,8 +123,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 super.onPostExecute(o);
                 getListData();
             }
-        }.execute();
-
+        }.execute();*/
     }
 
     private void getListData() {

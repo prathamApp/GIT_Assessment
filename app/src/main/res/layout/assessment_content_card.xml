@@ -7,7 +7,7 @@
     android:padding="@dimen/_5sdp"
     android:layout_margin="@dimen/_2sdp"
     app:cardCornerRadius="@dimen/_8sdp"
-    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardBackgroundColor="@color/transparent_white_btn"
     app:cardElevation="@dimen/_3sdp"
     app:cardMaxElevation="@dimen/_5sdp">
 
@@ -20,7 +20,8 @@
             android:id="@+id/assessment_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_80sdp"
-            android:layout_marginHorizontal="5dp"
+            android:layout_marginHorizontal="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:foregroundGravity="center"
             android:scaleType="fitCenter"
             android:src="@drawable/pratham_logo" />

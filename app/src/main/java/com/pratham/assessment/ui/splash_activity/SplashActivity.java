@@ -194,15 +194,15 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() { 
-//                Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();
-//                if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false) ) {
-//                    if (!Assessment_Constants.SD_CARD_Content)
+                Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();
+                if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false) ) {
+                    if (!Assessment_Constants.SD_CARD_Content)
                         splashPresenter.copyZipAndPopulateMenu();
-//                    else
-//                        splashPresenter.populateSDCardMenu();
-//                }
-//                else
-//                    gotoNextActivity();
+                    else
+                        splashPresenter.populateSDCardMenu();
+                }
+                else
+                    gotoNextActivity();
             }
         }, 2000);
     }
@@ -445,13 +445,13 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Override
     public void gotoNextActivity() {
 /*        if (Assessment_Constants.SMART_PHONE && !Assessment_Constants.SD_CARD_Content) {
-            Assessment_Constants.ext_path = COSApplication.assessPath + "/.LLA/English/";*/
+            Assessment_Constants.ext_path = COSApplication.assessPath + "/.LLA/English/";
             dismissProgressDialog();
-/*            showBottomFragment();
-        } else {
-            dismissProgressDialog();*/
+            showBottomFragment();
+        } else {*/
+            dismissProgressDialog();
             startActivity(new Intent(context, MainActivity.class));
-/*        }*/
+//        }
     }
 
 /*    @Override

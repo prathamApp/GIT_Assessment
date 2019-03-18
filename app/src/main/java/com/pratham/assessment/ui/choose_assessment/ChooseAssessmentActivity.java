@@ -6,6 +6,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.pratham.assessment.BaseActivity;
@@ -19,6 +22,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
 public class ChooseAssessmentActivity extends BaseActivity implements
@@ -26,6 +32,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     ChooseAssessmentContract.ChooseAssessmentPresenter presenter;
 
+    @BindView(R.id.rl_Profile)
+    RelativeLayout rl_Profile;
 
     private RecyclerView recyclerView;
     List<ContentTable> contentTableList;
@@ -35,9 +43,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_assessment);
+        ButterKnife.bind(this);
+
+        rl_Profile.setVisibility(View.GONE);
 
         presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this, this);
         contentTableList = new ArrayList<>();
+
 
         recyclerView = (RecyclerView) findViewById(R.id.choose_assessment_recycler);
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
@@ -83,7 +95,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @Override
     public void assessmentClicked(int position, String nodeId) {
 
-        if (nodeId.equalsIgnoreCase("1300")) {
+        if (nodeId.equalsIgnoreCase("1304")) {
             startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
         } else {
             Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);

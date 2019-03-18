@@ -10,6 +10,7 @@ public class Assessment_Constants {
     public static final String FILE_DOWNLOAD_STARTED = "file_download_started";
     public static final String GAME = "game";
     public static final String LANGUAGE = "language";
+    public static final String SD_CARD_Content_STR = "sd_card_content_str";
     public static boolean SD_CARD_Content = false;
     public static String STORING_IN;
     public static String ext_path="";
@@ -60,7 +61,7 @@ public class Assessment_Constants {
     public static boolean supervisedAssessment = false;
     public static String assessmentSession = "";
     public static String currentSupervisorID = "";
-    public static boolean GROUP_LOGIN = false;
+//    public static boolean GROUP_LOGIN = false;
 
 
     public static enum URL {

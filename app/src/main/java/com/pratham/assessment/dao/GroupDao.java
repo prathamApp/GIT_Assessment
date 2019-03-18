@@ -27,6 +27,9 @@ public interface GroupDao {
     @Query("DELETE FROM Groups WHERE GroupID=:grpID")
     public void deleteGroupByGrpID(String grpID);
 
+    @Query("SELECT GroupName FROM Groups WHERE GroupID=:grpID")
+    public String getGroupNameByGrpID(String grpID);
+
     @Query("SELECT * FROM Groups WHERE GroupID=:grpID")
     public Groups getGroupByGrpID(String grpID);
 

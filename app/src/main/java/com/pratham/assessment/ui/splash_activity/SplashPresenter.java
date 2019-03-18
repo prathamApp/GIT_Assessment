@@ -2,6 +2,7 @@ package com.pratham.assessment.ui.splash_activity;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -36,6 +37,7 @@ import com.pratham.assessment.services.LocationService;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.FileUtils;
+import com.pratham.assessment.utilities.SDCardUtil;
 
 import net.lingala.zip4j.core.ZipFile;
 
@@ -226,6 +228,30 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
     @Override
     public void pushData() {
         new PushDataToServer(context).execute();
+    }
+
+    @Override
+    public boolean getSdCardPath() {
+
+        ArrayList<String> base_path = SDCardUtil.getExtSdCardPaths(context);
+        if (base_path.size() > 0) {
+            String path = base_path.get(0).replace("[", "");
+            path = path.replace("]", "");
+            fpath = path;
+        } else
+            fpath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+        File file = new File(fpath + Assessment_Constants.ASSESSMENT_FOLDER_PATH + AppDatabase.DB_NAME);
+
+        if (file.exists()) {
+            Assessment_Constants.ext_path = fpath + "/";
+            Log.d("getSD", "getSdCardPath: " + Assessment_Constants.ext_path);
+            Assessment_Constants.SD_CARD_Content = true;
+            return true;
+        } else {
+            Assessment_Constants.SD_CARD_Content = false;
+            return false;
+        }
     }
 
     @Override
@@ -425,44 +451,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         }
     }
 
-    private void copyFile(Context context, String path) {
-        AssetManager assetManager = context.getAssets();
-        try {
-            InputStream in = assetManager.open("assessData.zip");
-            OutputStream out = new FileOutputStream(path + "assessData.zip");
-            byte[] buffer = new byte[1024];
-            int read = in.read(buffer);
-            while (read != -1) {
-                out.write(buffer, 0, read);
-                read = in.read(buffer);
-            }
-            unzipFile(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH + "assessData.zip", AssessmentApplication.assessPath + "/.Assessment");
-        } catch (Exception e) {
-            e.getMessage();
-        }
-    }
-
-    private void copyDBFile() {
-        AssetManager assetManager = context.getAssets();
-        try {
-            File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
-            if (!direct.exists()) direct.mkdir();
-
-            InputStream in = new FileInputStream(Assessment_Constants.ext_path + Assessment_Constants.ASSESSMENT_FOLDER_PATH + AppDatabase.DB_NAME);
-//            InputStream in = assetManager.open("assessData.zip");
-            OutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal/" + AppDatabase.DB_NAME);
-            byte[] buffer = new byte[1024];
-            int read = in.read(buffer);
-            while (read != -1) {
-                out.write(buffer, 0, read);
-                read = in.read(buffer);
-            }
-        } catch (Exception e) {
-            e.getMessage();
-        }
-    }
-
- /*   @Override
+    @Override
     public void populateSDCardMenu() {
         if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false)) {
             if (!sharedPreferences.getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
@@ -470,7 +459,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             copyDBFile();
             try {
                 File db_file;
-                db_file = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal/" + AppDatabase.DB_NAME);
+                db_file = new File(Environment.getExternalStorageDirectory().toString() + "/.AssessmentInternal/" + AppDatabase.DB_NAME);
                 if (db_file.exists()) {
                     Assessment_Constants.SD_CARD_Content = true;
                     SQLiteDatabase db = SQLiteDatabase.openDatabase(db_file.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
@@ -518,23 +507,59 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 e.printStackTrace();
             }
         } else {
-            context.startService(new Intent(context, AppExitService.class));
+//            context.startService(new Intent(context, AppExitService.class));
             BackupDatabase.backup(context);
             splashView.gotoNextActivity();
         }
-    }*/
+    }
+
+    private void copyFile(Context context, String path) {
+        AssetManager assetManager = context.getAssets();
+        try {
+            InputStream in = assetManager.open("assessData.zip");
+            OutputStream out = new FileOutputStream(path + "assessData.zip");
+            byte[] buffer = new byte[1024];
+            int read = in.read(buffer);
+            while (read != -1) {
+                out.write(buffer, 0, read);
+                read = in.read(buffer);
+            }
+            unzipFile(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH + "assessData.zip", AssessmentApplication.assessPath + "/.Assessment");
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+    private void copyDBFile() {
+        AssetManager assetManager = context.getAssets();
+        try {
+            File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
+            if (!direct.exists()) direct.mkdir();
+
+            InputStream in = new FileInputStream(Assessment_Constants.ext_path + Assessment_Constants.ASSESSMENT_FOLDER_PATH + AppDatabase.DB_NAME);
+//            InputStream in = assetManager.open("assessData.zip");
+            OutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal/" + AppDatabase.DB_NAME);
+            byte[] buffer = new byte[1024];
+            int read = in.read(buffer);
+            while (read != -1) {
+                out.write(buffer, 0, read);
+                read = in.read(buffer);
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
 
     public void populateMenu() {
         try {
             File folder_file, db_file;
             if (!sharedPreferences.getBoolean(Assessment_Constants.KEY_MENU_COPIED, false)) {
-/*
-                if (!Assessment_Constants.SMART_PHONE)
-                    folder_file = new File(Assessment_Constants.ext_path);
-                else
-*/
-                folder_file = new File(AssessmentApplication.assessPath);
-                    folder_file = new File(AssessmentApplication.assessPath + Assessment_Constants.ENGLISH_FOLDER_PATH);
+
+/*                if (Assessment_Constants.SD_CARD_Content)
+                    folder_file = new File(Assessment_Constants.ext_path+ Assessment_Constants.ASSESSMENT_FOLDER_PATH);
+                else*/
+                    folder_file = new File(AssessmentApplication.assessPath+ Assessment_Constants.ASSESSMENT_FOLDER_PATH);
+
                 if (folder_file.exists()) {
                     Log.d("-CT-", "doInBackground Assessment_Constants.ext_path: " + Assessment_Constants.ext_path);
                     db_file = new File(folder_file + "/" + AppDatabase.DB_NAME);

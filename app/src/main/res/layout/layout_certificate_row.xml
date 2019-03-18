@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/certi_root"
+    android:paddingHorizontal="@dimen/_20sdp"
+    android:paddingVertical="@dimen/_10sdp">
+
+    <RelativeLayout
+        android:id="@+id/rl_assess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/tv_view">
+        <TextView
+            android:id="@+id/tv_assessment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="word"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_12sdp" />
+
+        <TextView
+            android:id="@+id/tv_timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_assessment"
+            android:textSize="@dimen/_8sdp"
+            android:text="timestamp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_view"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="View"
+        android:paddingVertical="@dimen/_3sdp"
+        android:gravity="center"
+        android:background="@drawable/ripple_effect"
+        android:layout_centerVertical="true"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/_12sdp" />
+
+</RelativeLayout>

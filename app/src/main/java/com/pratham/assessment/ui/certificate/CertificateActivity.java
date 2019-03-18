@@ -38,6 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.pratham.assessment.ui.profile.ProfileActivity.assessmentProfile;
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
 
@@ -125,13 +126,15 @@ public class CertificateActivity extends BaseActivity implements CertificateCont
             else if (CertiTitle.equalsIgnoreCase("2"))
                 tv_certi_level.setText("Expert");
 
-/*            if(!assessmentProfile.getDeviceIDa().equalsIgnoreCase("na")){
+/*
+            if(!assessmentProfile.getDeviceIDa().equalsIgnoreCase("na")){
                 rl_supervisedby.setVisibility(View.VISIBLE);
                 presenter.getSupervisorData(certiMode);
             }else
                 rl_supervisedby.setVisibility(View.GONE);
+*/
 
-            presenter.fillAdapter(assessmentProfile, certiData);*/
+            presenter.fillAdapter(assessmentProfile, certiData);
         }
 /*        if(Assessment_Constants.GROUP_LOGIN){
 
@@ -242,11 +245,10 @@ public class CertificateActivity extends BaseActivity implements CertificateCont
         clicked_Pos = position;
         String gameID = ContentTableList.get(position).getResourceId();
         //TODO WebViewGame Level
-      //  gameLevel = ContentTableList.get(position).getNodeAge();
-//        if (Assessment_Constants.SMART_PHONE && !Assessment_Constants.SD_CARD_Content)
+        if (!Assessment_Constants.SD_CARD_Content)
             resPath = AssessmentApplication.assessPath+ Assessment_Constants.GAME_PATH+ ContentTableList.get(position).getResourcePath();
-//        else if (Assessment_Constants.SMART_PHONE && Assessment_Constants.SD_CARD_Content)
-//            resPath = Assessment_Constants.ext_path + Assessment_Constants.GAME_PATH + ContentTableList.get(position).getResourcePath();
+        else if (Assessment_Constants.SD_CARD_Content)
+            resPath = Assessment_Constants.ext_path + Assessment_Constants.GAME_PATH + ContentTableList.get(position).getResourcePath();
         File file = new File(resPath);
         Uri path = Uri.fromFile(file);
 

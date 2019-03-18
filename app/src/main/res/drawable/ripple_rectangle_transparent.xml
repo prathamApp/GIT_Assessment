@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/whiteButtonPressedBg" >
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <stroke android:width="5dp"
+                android:color="@color/colorBlue"/>
+            <solid android:color="@color/transparent_white_btn" />
+        </shape>
+    </item>
+</ripple>

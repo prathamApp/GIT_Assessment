@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.domain.Modal_FileDownloading;
 import com.pratham.assessment.ui.certificate.CertificateActivity;
+import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -40,11 +43,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class TestDisplayActivity extends BaseActivity implements TestClicked, TestDiaplayContract.TestDisplayView {
 
     TestDiaplayContract.TestDisplayPresenter presenter;
+
+    @BindView(R.id.rl_Profile)
+    RelativeLayout rl_Profile;
+    @BindView(R.id.btn_Profile)
+    ImageButton btn_Profile;
+
 
     String supervisorID;
     Dialog dialog, errorDialog;
@@ -72,6 +83,7 @@ public class TestDisplayActivity extends BaseActivity implements TestClicked, Te
         setContentView(R.layout.activity_choose_assessment);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        rl_Profile.setVisibility(View.VISIBLE);
         BackupDatabase.backup(this);
         sdCardPath = Assessment_Constants.ext_path;
         nodeId = getIntent().getStringExtra("nodeId");
@@ -112,6 +124,12 @@ public class TestDisplayActivity extends BaseActivity implements TestClicked, Te
             }
         });
         testDisplayAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick({R.id.btn_Profile, R.id.rl_Profile})
+    public void gotoProfileActivity() {
+//        ButtonClickSound.start();
+        startActivity(new Intent(this, ProfileActivity.class));
     }
 
     @Override

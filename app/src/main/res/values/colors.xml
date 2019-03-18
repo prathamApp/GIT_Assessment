@@ -12,6 +12,10 @@
     <color name="colorBlack">#000</color>
     <color name="colorWhiteDark">#d4d4d4</color>
     <color name="colorWhiteLight">#fafafa</color>
+    <color name="colorBlackTransparentDark">#e8000000</color>
+    <color name="whiteButtonPressedBg">#b5999999</color>
+    <color name="colorBlue">#0bdcff</color>
+    <color name="transparent_white_btn">#c8ffffff</color>
 
 
 </resources>
