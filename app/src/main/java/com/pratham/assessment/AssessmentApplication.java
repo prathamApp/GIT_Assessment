@@ -36,7 +36,7 @@ import static com.pratham.assessment.utilities.Assessment_Constants.PREFS_VERSIO
 public class AssessmentApplication extends Application {
 
     public static String cosPath = "", networkSSID = "PrathamHotSpot-" + Build.SERIAL;
-    public static String uploadDataUrl = "http://www.swap.prathamcms.org/api/kkspush/kkspushdata";
+    public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
     public static final boolean isTablet = true;
