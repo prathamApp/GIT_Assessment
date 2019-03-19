@@ -59,7 +59,8 @@ public class MenuActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        showExitDialog();
+        finishAffinity();
+      //  showExitDialog();
     }
 
     private void showExitDialog() {

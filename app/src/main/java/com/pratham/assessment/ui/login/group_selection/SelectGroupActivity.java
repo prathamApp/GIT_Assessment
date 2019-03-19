@@ -49,7 +49,7 @@ public class SelectGroupActivity extends AppCompatActivity {
                 selectAgeGroupDialog.dismiss();
                 finish();
 //                startActivity(new Intent(SelectGroupActivity.this, MenuActivity.class));
-                Toast.makeText(SelectGroupActivity.this, "age group selected", Toast.LENGTH_SHORT).show();
+       //         Toast.makeText(SelectGroupActivity.this, "age group selected", Toast.LENGTH_SHORT).show();
             }
         });
         selectAgeGroupDialog.setCancelable(false);

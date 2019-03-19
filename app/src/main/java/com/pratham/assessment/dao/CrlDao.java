@@ -54,5 +54,7 @@ public interface CrlDao {
     @Query("SELECT * FROM CRL WHERE UserName=:user AND Password=:pass")
     public Crl checkUserValidation(String user, String pass);
 
+    @Query("select CRLId from Crl where UserName = :uName and Password = :uPass")
+    String getCrlId(String uName, String uPass);
 
 }

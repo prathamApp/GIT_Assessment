@@ -118,9 +118,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     String assessmentSession = "" + UUID.randomUUID().toString();
                     Assessment_Constants.assessmentSession = assessmentSession;
 
+                    String crlId = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().getCrlId(userName, password);
+
                     if (nodeId.equalsIgnoreCase("1304")) {
                         Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
                         intent.putExtra("resId", contentTableList.get(position).getResourceId());
+                        intent.putExtra("crlId", crlId);
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
