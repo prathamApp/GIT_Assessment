@@ -68,7 +68,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
 
     @OnClick(R.id.btn_login)
     public void loginCheck() {
-        adminPanelPresenter.checkLogin(getUserName(), getPassword(), startAssessment.isChecked());
+        adminPanelPresenter.checkLogin(getUserName(), getPassword());
         userNameET.getText().clear();
         passwordET.getText().clear();
     }
@@ -134,11 +134,11 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     }
 
     @Override
-    public void onLoginSuccess(boolean startAssessment) {
-        if (!startAssessment)
+    public void onLoginSuccess() {
+       /* if (!startAssessment)*/
             Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
                     null, PushOrAssignFragment.class.getSimpleName());
-        else startActivity(new Intent(getActivity(), MenuActivity.class));
+       // else startActivity(new Intent(getActivity(), MenuActivity.class));
             /*Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
                     null, PushOrAssignFragment.class.getSimpleName());
 */

@@ -9,9 +9,9 @@
 
     <RelativeLayout
         android:id="@+id/topPanel"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
+        android:layout_alignParentTop="true"
         android:background="@color/colorPrimary">
 
         <TextView
@@ -26,9 +26,9 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_below="@+id/topPanel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topPanel">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -44,8 +44,8 @@
                 android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_80sdp"
                 android:layout_gravity="center"
-                android:layout_marginRight="@dimen/_15sdp"
                 android:layout_marginVertical="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_15sdp"
                 android:elevation="5dp"
                 android:gravity="center"
                 android:padding="@dimen/_10sdp"
@@ -57,8 +57,8 @@
                 android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_80sdp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_15sdp"
                 android:layout_marginVertical="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_15sdp"
                 android:layout_toRightOf="@+id/btn_qr"
                 android:elevation="5dp"
                 android:padding="@dimen/_10sdp"
@@ -75,18 +75,18 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentRight="true"
-        >
+        android:background="@drawable/admin_btn_bg">
 
         <ImageButton
             android:id="@+id/btn_admin"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:background="@null"
             android:scaleType="fitCenter"
-            />
+            android:src="@drawable/admin" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -11,6 +11,7 @@
         android:layout_above="@id/ll_login_credential"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/_5sdp"
+        android:visibility="gone"
         android:text="Start Assessment" />
 
     <LinearLayout

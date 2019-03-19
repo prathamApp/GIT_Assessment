@@ -14,9 +14,12 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/_5sdp"
         android:padding="@dimen/_5sdp"
+        android:drawablePadding="@dimen/_3sdp"
+        android:textSize="@dimen/_15sdp"
+        android:drawableLeft="@drawable/ic_submit_assessment"
         android:textColor="@color/colorBlack"
         android:background="@drawable/btn_style"
-        android:text="Submit Assessment"/>
+        android:text="Submit"/>
 
     <com.pratham.assessment.discrete_view.DiscreteScrollView
         android:id="@+id/attendance_recycler_view"

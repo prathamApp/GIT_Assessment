@@ -3,10 +3,15 @@ package com.pratham.assessment.ui.choose_assessment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.pratham.assessment.AssessmentApplication;
@@ -26,6 +31,7 @@ import org.json.JSONException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,18 +40,32 @@ import butterknife.OnClick;
 public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
     @BindView(R.id.attendance_recycler_view)
     DiscreteScrollView discreteScrollView;
+    @BindView(R.id.btn_submit)
+    Button submit;
     List<ECEModel> eceModelList;
+    String eceStartTime = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ece);
         ButterKnife.bind(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        /*Drawable drawable = ContextCompat.getDrawable(this,R.drawable.ic_submit_assessment);
+        drawable.setBounds(0, 0, (int)(drawable.getIntrinsicWidth()*2),
+                (int)(drawable.getIntrinsicHeight()*2));
+        ScaleDrawable sd = new ScaleDrawable(drawable, 0, 0, 0);
+        submit.setCompoundDrawables(sd.getDrawable(), null, null, null);
+        */
         JSONArray jsonArray = fetchJson("ece.json");
         eceModelList = parseJsonArray(jsonArray);
         //insertJsonToDB(jsonArray);
 
+        String assessmentSession = "" + UUID.randomUUID().toString();
+        Assessment_Constants.assessmentSession = assessmentSession;
+
+        eceStartTime = AssessmentApplication.getCurrentDateTime();
 
         ECEAdapter eceAdapter = new ECEAdapter(this, eceModelList);
         discreteScrollView.setOrientation(DSVOrientation.HORIZONTAL);
@@ -112,7 +132,7 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
             } else {
                 Toast.makeText(this, "Complete all questions...", Toast.LENGTH_SHORT).show();
                 discreteScrollView.scrollToPosition(i);
-
+                break;
             }
         }
         if (cnt == eceModelList.size()) {
@@ -141,18 +161,23 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
 
     private void saveAssessmentToDB() {
         List<Assessment> assessmentList = new ArrayList<>();
+        String deviceId = AppDatabase.getDatabaseInstance(this).getStatusDao().getValue("DeviceId");
+
         for (int i = 0; i < eceModelList.size(); i++) {
             Assessment assessment = new Assessment();
             assessment.setResourceIDa("");
-            assessment.setSessionIDa("");
-            assessment.setSessionIDm("");
-            assessment.setQuestionIda(Integer.parseInt(eceModelList.get(i).getQuestionId()));
-            assessment.setScoredMarksa(0);
-            assessment.setTotalMarksa(0);
+            assessment.setSessionIDa(Assessment_Constants.assessmentSession);
+            assessment.setSessionIDm(Assessment_Constants.currentSession);
+            assessment.setQuestionIda(0);
+            if (eceModelList.get(i).getIsSelected() == 1)
+                assessment.setScoredMarksa(10);
+            else if (eceModelList.get(i).getIsSelected() == 2)
+                assessment.setScoredMarksa(5);
+            assessment.setTotalMarksa(10);
             assessment.setStudentIDa(Assessment_Constants.currentStudentID);
-            assessment.setStartDateTimea("");
+            assessment.setStartDateTimea(eceStartTime);
             assessment.setEndDateTime(AssessmentApplication.getCurrentDateTime());
-            assessment.setDeviceIDa("");
+            assessment.setDeviceIDa(deviceId);
             assessment.setLevela(eceModelList.get(i).getIsSelected());
             assessment.setLabel(eceModelList.get(i).getQuestion());
             assessment.setSentFlag(0);

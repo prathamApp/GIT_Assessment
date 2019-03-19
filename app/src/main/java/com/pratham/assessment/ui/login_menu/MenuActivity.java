@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
+import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.ui.login.qr_scan.QRScanActivity;
 
@@ -49,11 +50,11 @@ public class MenuActivity extends BaseActivity {
 
     }
 
-   /* @OnClick({R.id.btn_admin, R.id.rl_admin})
+    @OnClick({R.id.btn_admin, R.id.rl_admin})
     public void goto_btn_admin() {
-        ButtonClickSound.start();
-        startActivity(new Intent(this, AdminControlsActivity.class));
-    }*/
+//        ButtonClickSound.start();
+        startActivity(new Intent(this, MainActivity.class));
+    }
 
     @Override
     public void onBackPressed() {

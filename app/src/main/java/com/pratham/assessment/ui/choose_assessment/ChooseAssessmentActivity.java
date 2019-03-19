@@ -95,7 +95,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @Override
     public void assessmentClicked(int position, String nodeId) {
 
-        if (nodeId.equalsIgnoreCase("1304")) {
+        if (nodeId.equalsIgnoreCase("1300")) {
             startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
         } else {
             Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);

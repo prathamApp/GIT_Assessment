@@ -10,13 +10,13 @@ public interface AdminPanelContract {
           public String getPassword();
           public void openPullDataFragment();
           public void onLoginFail();
-          public void onLoginSuccess(boolean startAssessment);
+          public void onLoginSuccess();
           public void onDataClearToast();
 
     }
 
     interface AdminPanelPresenter {
-        public void checkLogin(String userName, String password, boolean checked);
+        public void checkLogin(String userName, String password);
         public void clearData();
     }
 }
