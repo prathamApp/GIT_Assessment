@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/colorPrimaryLight"
+    app:cardBackgroundColor="@color/colorAccent"
     app:cardCornerRadius="@dimen/_10sdp">
 
     <RelativeLayout
