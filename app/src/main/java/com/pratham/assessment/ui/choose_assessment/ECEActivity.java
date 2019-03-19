@@ -45,6 +45,8 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
     Button submit;
     List<ECEModel> eceModelList;
     String eceStartTime = "";
+    String resId;
+    String crlId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         setContentView(R.layout.activity_ece);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        resId = getIntent().getStringExtra("resId");
+        crlId = getIntent().getStringExtra("crlId");
 
         /*Drawable drawable = ContextCompat.getDrawable(this,R.drawable.ic_submit_assessment);
         drawable.setBounds(0, 0, (int)(drawable.getIntrinsicWidth()*2),
@@ -129,7 +133,7 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
             if (eceModelList.get(i).getIsSelected() != -1) {
                 cnt++;
             } else {
-                Toast.makeText(this, "Complete all questions...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please complete all questions...", Toast.LENGTH_SHORT).show();
                 discreteScrollView.scrollToPosition(i);
                 break;
             }
@@ -160,11 +164,10 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
 
     private void saveAssessmentToDB() {
         List<Assessment> assessmentList = new ArrayList<>();
-        String deviceId = AppDatabase.getDatabaseInstance(this).getStatusDao().getValue("DeviceId");
 
         for (int i = 0; i < eceModelList.size(); i++) {
             Assessment assessment = new Assessment();
-            assessment.setResourceIDa("");
+            assessment.setResourceIDa(resId);
             assessment.setSessionIDa(Assessment_Constants.assessmentSession);
             assessment.setSessionIDm(Assessment_Constants.currentSession);
             assessment.setQuestionIda(0);
@@ -176,7 +179,7 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
             assessment.setStudentIDa(Assessment_Constants.currentStudentID);
             assessment.setStartDateTimea(eceStartTime);
             assessment.setEndDateTime(AssessmentApplication.getCurrentDateTime());
-            assessment.setDeviceIDa(deviceId);
+            assessment.setDeviceIDa(crlId);
             assessment.setLevela(eceModelList.get(i).getIsSelected());
             assessment.setLabel(eceModelList.get(i).getQuestion());
             assessment.setSentFlag(0);
