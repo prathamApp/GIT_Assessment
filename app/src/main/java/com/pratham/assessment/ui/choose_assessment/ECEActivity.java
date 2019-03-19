@@ -62,8 +62,6 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         eceModelList = parseJsonArray(jsonArray);
         //insertJsonToDB(jsonArray);
 
-        String assessmentSession = "" + UUID.randomUUID().toString();
-        Assessment_Constants.assessmentSession = assessmentSession;
 
         eceStartTime = AssessmentApplication.getCurrentDateTime();
 

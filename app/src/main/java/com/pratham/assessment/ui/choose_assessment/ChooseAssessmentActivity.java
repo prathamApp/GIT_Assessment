@@ -16,11 +16,13 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,7 +97,10 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @Override
     public void assessmentClicked(int position, String nodeId) {
 
-        if (nodeId.equalsIgnoreCase("1300")) {
+        if (nodeId.equalsIgnoreCase("1304")) {
+            String assessmentSession = "" + UUID.randomUUID().toString();
+            Assessment_Constants.assessmentSession = assessmentSession;
+
             startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
         } else {
             Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
