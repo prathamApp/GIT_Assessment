@@ -60,6 +60,13 @@ public class TestDisplayAdapter extends RecyclerView.Adapter<TestDisplayAdapter.
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final ContentTable gamesList = gamesViewList.get(position);
 //        Log.d("sd", "onBindViewHolder: " + sdCardPath + "LLA_Thumbs/" + gamesList.getNodeServerImage());
+        String nodeTitle = gamesList.getNodeTitle();
+
+        if(nodeTitle.equalsIgnoreCase("intermediate"))
+            nodeTitle = "Sub-Junior";
+        else if(nodeTitle.equalsIgnoreCase("expert"))
+            nodeTitle = "Junior";
+
         holder.title.setText(""+gamesList.getNodeTitle());
 
         holder.iv_download.setVisibility(View.GONE);

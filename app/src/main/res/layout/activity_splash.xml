@@ -5,51 +5,39 @@
     android:layout_height="match_parent"
     tools:context=".ui.splash_activity.SplashActivity">
 
-    <RelativeLayout
-        android:id="@+id/temppp"
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_80sdp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/pratham_logo" />
+
+    <com.pratham.assessment.custom.MyTextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_logo"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:gravity="center"
+        android:fontFamily=""
+        android:textSize="@dimen/_30sdp"
+        android:text="Pratham \n Assessments" />
 
-        <ImageView
-            android:id="@+id/iv_pratham_logo"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitCenter"
-            />
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/_140sdp"
+        android:hapticFeedbackEnabled="true"
+        android:soundEffectsEnabled="true"
+        android:text="Start"
+        android:textSize="@dimen/_12sdp" />
 
-        <ImageView
-            android:id="@+id/iv_logo"
-            android:layout_width="@dimen/_200sdp"
-            android:layout_height="@dimen/_150sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitCenter"
-            />
-        <ImageView
-            android:id="@+id/iv_logo_pradigi"
-            android:layout_width="@dimen/_150sdp"
-            android:layout_height="@dimen/_100sdp"
-            android:layout_below="@id/iv_logo"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitCenter"
-            />
-
-        <Button
-            android:id="@+id/btn_start"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/_12sdp"
-            android:soundEffectsEnabled="true"
-            android:hapticFeedbackEnabled="true"
-            android:layout_marginBottom="@dimen/_140sdp"
-            android:text="Start" />
-
-
-    </RelativeLayout>
 
 </RelativeLayout>
+

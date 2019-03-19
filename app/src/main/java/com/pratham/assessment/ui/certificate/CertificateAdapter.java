@@ -1,6 +1,7 @@
 package com.pratham.assessment.ui.certificate;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -78,6 +79,9 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
             ques="";
         }
 
+//        Typeface face= Typeface.createFromAsset(null, String.valueOf(Typeface.NORMAL));
+        holder.title.setTypeface(null, Typeface.NORMAL);
+
         if(!certiList.isAsessmentGiven()){
             holder.ratingStars.setVisibility(View.GONE);
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("English"))
@@ -86,24 +90,34 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
                 holder.title.setText(ques+certiList.getHindiQues());
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Marathi"))
                 holder.title.setText(ques+certiList.getMarathiQues());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Gujarati"))
-                holder.title.setText(ques+certiList.getGujaratiQues());
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Gujarati")) {
+                Typeface face= Typeface.createFromAsset(mContext.getAssets(), "fonts/muktavaani_gujarati.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getGujaratiQues());
+            }
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Kannada"))
                 holder.title.setText(ques+certiList.getKannadaQues());
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Bengali"))
                 holder.title.setText(ques+certiList.getBengaliQues());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Assamese"))
-                holder.title.setText(ques+certiList.getAssameseQues());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Telugu"))
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Assamese")) {
+                Typeface face= Typeface.createFromAsset(mContext.getAssets(), "fonts/lohit_oriya.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getAssameseQues());
+            }if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Telugu"))
                 holder.title.setText(ques+certiList.getTeluguQues());
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Tamil"))
                 holder.title.setText(ques+certiList.getTamilQues());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Odia"))
-                holder.title.setText(ques+certiList.getOdiaQues());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Urdu"))
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Odia")) {
+                Typeface  face= Typeface.createFromAsset(mContext.getAssets(), "fonts/lohit_oriya.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getOdiaQues());
+            }if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Urdu"))
                 holder.title.setText(ques+certiList.getUrduQues());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Punjabi"))
-                holder.title.setText(ques+certiList.getPunjabiQues());
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Punjabi")) {
+                Typeface face= Typeface.createFromAsset(mContext.getAssets(), "fonts/raavi_punjabi.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getPunjabiQues());
+            }
 
             holder.certificate_card.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,24 +133,33 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
                 holder.title.setText(ques+certiList.getHindiAnsw());
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Marathi"))
                 holder.title.setText(ques+certiList.getMarathiAnsw());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Gujarati"))
-                holder.title.setText(ques+certiList.getGujaratiAnsw());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Kannada"))
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Gujarati")) {
+                Typeface face= Typeface.createFromAsset(mContext.getAssets(), "fonts/muktavaani_gujarati.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getGujaratiAnsw());
+            }if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Kannada"))
                 holder.title.setText(ques+certiList.getKannadaAnsw());
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Bengali"))
                 holder.title.setText(ques+certiList.getBengaliAnsw());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Assamese"))
-                holder.title.setText(ques+certiList.getAssameseAnsw());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Telugu"))
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Assamese")) {
+                Typeface face= Typeface.createFromAsset(mContext.getAssets(), "fonts/geetl_assamese.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getAssameseAnsw());
+            }if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Telugu"))
                 holder.title.setText(ques+certiList.getTeluguAnsw());
             if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Tamil"))
                 holder.title.setText(ques+certiList.getTamilAnsw());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Odia"))
-                holder.title.setText(ques+certiList.getOdiaAnsw());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Urdu"))
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Odia")) {
+                Typeface face= Typeface.createFromAsset(mContext.getAssets(), "fonts/lohit_oriya.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getOdiaAnsw());
+            }if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Urdu"))
                 holder.title.setText(ques+certiList.getUrduAnsw());
-            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Punjabi"))
-                holder.title.setText(ques+certiList.getPunjabiAnsw());
+            if(CertificateActivity.certificateLanguage.equalsIgnoreCase("Punjabi")) {
+                Typeface face= Typeface.createFromAsset(mContext.getAssets(), "fonts/raavi_punjabi.ttf");
+                holder.title.setTypeface(face);
+                holder.title.setText(ques + certiList.getPunjabiAnsw());
+            }
 
             holder.ratingStars.setRating(certiList.getCertificateRating());
 

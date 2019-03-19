@@ -63,10 +63,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     Button btn_start_game;
     @BindView(R.id.iv_logo)
     ImageView iv_logo;
-    @BindView(R.id.iv_logo_pradigi)
+/*    @BindView(R.id.iv_logo_pradigi)
     ImageView iv_logo_pradigi;
     @BindView(R.id.temppp)
-    RelativeLayout temppp;
+    RelativeLayout temppp;*/
     static String fpath, appname;
     public static MediaPlayer bgMusic;
     public static AppDatabase appDatabase;
@@ -89,7 +89,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         splashPresenter = new SplashPresenter(this, this);
         context = SplashActivity.this;
         btn_start_game.setVisibility(View.GONE);
-        iv_logo_pradigi.setVisibility(View.GONE);
+//        iv_logo_pradigi.setVisibility(View.GONE);
         initiateApp();
     }
 

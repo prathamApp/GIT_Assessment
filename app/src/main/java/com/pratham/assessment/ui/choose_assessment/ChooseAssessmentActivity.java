@@ -16,6 +16,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
+import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
@@ -36,6 +38,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @BindView(R.id.rl_Profile)
     RelativeLayout rl_Profile;
+    @BindView(R.id.btn_Profile)
+    ImageButton btn_Profile;
 
     private RecyclerView recyclerView;
     List<ContentTable> contentTableList;
@@ -46,12 +50,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_assessment);
         ButterKnife.bind(this);
-
-        rl_Profile.setVisibility(View.GONE);
-
+        rl_Profile.setVisibility(View.VISIBLE);
         presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this, this);
         contentTableList = new ArrayList<>();
-
 
         recyclerView = (RecyclerView) findViewById(R.id.choose_assessment_recycler);
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
@@ -93,14 +94,19 @@ public class ChooseAssessmentActivity extends BaseActivity implements
          }*/
     }
 
+    @OnClick({R.id.btn_Profile, R.id.rl_Profile})
+    public void gotoProfileActivity() {
+//        ButtonClickSound.start();
+        startActivity(new Intent(this, ProfileActivity.class));
+    }
+
 
     @Override
     public void assessmentClicked(int position, String nodeId) {
+        String assessmentSession = "" + UUID.randomUUID().toString();
+        Assessment_Constants.assessmentSession = assessmentSession;
 
         if (nodeId.equalsIgnoreCase("1304")) {
-            String assessmentSession = "" + UUID.randomUUID().toString();
-            Assessment_Constants.assessmentSession = assessmentSession;
-
             startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
         } else {
             Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);

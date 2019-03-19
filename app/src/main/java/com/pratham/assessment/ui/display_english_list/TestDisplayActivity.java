@@ -53,19 +53,14 @@ public class TestDisplayActivity extends BaseActivity implements TestClicked, Te
 
     @BindView(R.id.rl_Profile)
     RelativeLayout rl_Profile;
-    @BindView(R.id.btn_Profile)
-    ImageButton btn_Profile;
-
 
     String supervisorID;
     Dialog dialog, errorDialog;
-
     ProgressLayout progressLayout;
     TextView dialog_file_name;
     public Dialog downloadDialog;
     int tempDownloadPos;
     String ResId, resName, downloadNodeId, jsonNodeName;
-
     private RecyclerView recyclerView;
     TestDisplayAdapter testDisplayAdapter;
     public static List<ContentTable> gameWebViewList;
@@ -83,9 +78,9 @@ public class TestDisplayActivity extends BaseActivity implements TestClicked, Te
         setContentView(R.layout.activity_choose_assessment);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        rl_Profile.setVisibility(View.VISIBLE);
         BackupDatabase.backup(this);
         sdCardPath = Assessment_Constants.ext_path;
+        rl_Profile.setVisibility(View.GONE);
         nodeId = getIntent().getStringExtra("nodeId");
        // Assessment_Constants.currentsupervisorID = getIntent().getStringExtra("supervisorID");
         recyclerView = (RecyclerView) findViewById(R.id.choose_assessment_recycler);
@@ -124,12 +119,6 @@ public class TestDisplayActivity extends BaseActivity implements TestClicked, Te
             }
         });
         testDisplayAdapter.notifyDataSetChanged();
-    }
-
-    @OnClick({R.id.btn_Profile, R.id.rl_Profile})
-    public void gotoProfileActivity() {
-//        ButtonClickSound.start();
-        startActivity(new Intent(this, ProfileActivity.class));
     }
 
     @Override
