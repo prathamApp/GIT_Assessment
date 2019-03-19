@@ -11,11 +11,14 @@
     <color name="colorGreen">#AED581</color>
     <color name="colorBlack">#000</color>
     <color name="colorWhiteDark">#d4d4d4</color>
+    <color name="color_bg">#F0F0F0</color>
     <color name="colorWhiteLight">#fafafa</color>
     <color name="colorBlackTransparentDark">#e8000000</color>
     <color name="whiteButtonPressedBg">#b5999999</color>
     <color name="colorBlue">#0bdcff</color>
     <color name="transparent_white_btn">#c8ffffff</color>
+    <color name="gradiance_start">#3F51B5</color>
+    <color name="gradiance_end">#03A9F4</color>
 
 
 </resources>
