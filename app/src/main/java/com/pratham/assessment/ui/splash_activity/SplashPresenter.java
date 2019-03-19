@@ -225,10 +225,10 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         }
     }
 
-    @Override
+/*    @Override
     public void pushData() {
         new PushDataToServer(context).execute();
-    }
+    }*/
 
     @Override
     public boolean getSdCardPath() {

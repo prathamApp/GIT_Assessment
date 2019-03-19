@@ -106,7 +106,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
 
     @Override
-    public void assessmentClicked(int position, final String nodeId) {
+    public void assessmentClicked(final int position, final String nodeId) {
         final ECELoginDialog eceLoginDialog = new ECELoginDialog(this);
         eceLoginDialog.login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,12 +119,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     Assessment_Constants.assessmentSession = assessmentSession;
 
                     if (nodeId.equalsIgnoreCase("1304")) {
-                        startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
+                        Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
+                        intent.putExtra("resId", contentTableList.get(position).getResourceId());
+                        startActivity(intent);
                     } else {
                         Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
                         intent.putExtra("nodeId", nodeId);
                         startActivity(intent);
-
                     }
                     eceLoginDialog.dismiss();
                 } else {

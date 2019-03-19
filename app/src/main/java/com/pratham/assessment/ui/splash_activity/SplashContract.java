@@ -32,7 +32,7 @@ public interface SplashContract {
 
         void copyZipAndPopulateMenu();
 
-        void pushData();
+//        void pushData();
 
         void copyDataBase();
 

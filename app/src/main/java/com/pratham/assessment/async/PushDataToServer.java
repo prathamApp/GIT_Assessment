@@ -5,16 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
-
-import com.pratham.assessment.ui.login.MainActivity;
-import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.Attendance;
@@ -24,6 +20,7 @@ import com.pratham.assessment.domain.Modal_Log;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
+import com.pratham.assessment.ui.login.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +31,7 @@ import java.util.List;
 public class PushDataToServer extends AsyncTask {
 
     Context context;
+    boolean autoPush;
     JSONArray scoreData;
     JSONArray attendanceData;
     JSONArray studentData;
@@ -45,9 +43,10 @@ public class PushDataToServer extends AsyncTask {
     JSONArray assessmentData;
     JSONArray logsData;
 
-    public PushDataToServer(Context context) {
+    public PushDataToServer(Context context, boolean autoPush) {
 
         this.context = context;
+        this.autoPush = autoPush;
         scoreData = new JSONArray();
         attendanceData = new JSONArray();
         crlData = new JSONArray();
@@ -72,15 +71,12 @@ public class PushDataToServer extends AsyncTask {
         studentData = fillStudentData(studentList);
         List<Crl> crlList = AppDatabase.getDatabaseInstance(context).getCrlDao().getAllCrls();
         crlData = fillCrlData(crlList);
-                    /*List<Status> statusList = AppDatabase.getDatabaseInstance(context).getStatusDao().getAllStatuses();
-                    statusData = fillStatusData(statusList);*/
         List<Session> sessionList = AppDatabase.getDatabaseInstance(context).getSessionDao().getAllNewSessions();
         sessionData = fillSessionData(sessionList);
-        /*List<LearntWords> learntWordsList = AppDatabase.getDatabaseInstance(context).getLearntWordDao().getAllData();
+/*        List<LearntWords> learntWordsList = AppDatabase.getDatabaseInstance(context).getLearntWordDao().getAllData();
         learntWords = fillLearntWordsData(learntWordsList);
         List<SupervisorData> supervisorDataList = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().getAllSupervisorData();
-        supervisorData = fillSupervisorData(supervisorDataList);
-        */
+        supervisorData = fillSupervisorData(supervisorDataList);*/
         List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
         logsData = fillLogsData(logsList);
         List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllAssessment();
@@ -95,7 +91,7 @@ public class PushDataToServer extends AsyncTask {
             Gson gson = new Gson();
             //iterate through all new sessions
             JSONObject metadataJson = new JSONObject();
-            JSONArray sessionArray = new JSONArray();
+/*            JSONArray sessionArray = new JSONArray();
             List<Session> newSessions = AppDatabase.getDatabaseInstance(context).getSessionDao().getAllNewSessions();
 
             for (Session session : newSessions) {
@@ -124,43 +120,43 @@ public class PushDataToServer extends AsyncTask {
                 sessionArray.put(sessionJson);
 
                 JSONArray studentArray = new JSONArray();
-                if (!AssessmentApplication.isTablet) {
+                if (!COSApplication.isTablet) {
                     List<Student> newStudents = AppDatabase.getDatabaseInstance(context).getStudentDao().getAllNewStudents();
                     for (Student std : newStudents)
                         studentArray.put(new JSONObject(gson.toJson(std)));
                 }
-                if (!AssessmentApplication.isTablet)
-                    rootJson.put(Assessment_Constants.STUDENTS, studentArray);
-                rootJson.put(Assessment_Constants.SESSION, sessionArray);
-                rootJson.put(Assessment_Constants.ATTENDANCE, attendanceArray);
-                rootJson.put(Assessment_Constants.SCORE, scoreArray);
-                rootJson.put(Assessment_Constants.LOGS, logArray);
-                rootJson.put(Assessment_Constants.ASSESSMENT, assessmentData);
+                if (!COSApplication.isTablet)
+                    rootJson.put(COS_Constants.STUDENTS, studentArray);
+                rootJson.put(COS_Constants.SESSION, sessionArray);
+                rootJson.put(COS_Constants.ATTENDANCE, attendanceArray);
+                rootJson.put(COS_Constants.SCORE, scoreArray);
+                rootJson.put(COS_Constants.LOGS, logArray);
+                rootJson.put(COS_Constants.ASSESSMENT, assessmentData);
+                rootJson.put(COS_Constants.SUPERVISOR, supervisorData);
+                rootJson.put(COS_Constants.LEARNTWORDS, learntWords);
 
-
-            }
-            List<com.pratham.assessment.domain.Status> metadata = AppDatabase.getDatabaseInstance(context).getStatusDao().getAllStatuses();
-            for (com.pratham.assessment.domain.Status status : metadata) {
+            }*/
+           /* List<com.pratham.cityofstories.domain.Status> metadata = AppDatabase.getDatabaseInstance(context).getStatusDao().getAllStatuses();
+            for (com.pratham.cityofstories.domain.Status status : metadata) {
                 metadataJson.put(status.getStatusKey(), status.getValue());
                 if (status.getStatusKey().equalsIgnoreCase("programId"))
                     programID = status.getValue();
             }
-            metadataJson.put(Assessment_Constants.SCORE_COUNT, (metadata.size() > 0) ? metadata.size() : 0);
-            rootJson.put(Assessment_Constants.METADATA, metadataJson);
-
+            metadataJson.put(COS_Constants.SCORE_COUNT, (metadata.size() > 0) ? metadata.size() : 0);
+            rootJson.put(COS_Constants.METADATA, metadataJson);
+*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
+        String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
 //        if (checkEmptyness(requestString))
-        pushDataToServer(context, rootJson.toString(), AssessmentApplication.uploadDataUrl);
+        pushDataToServer(context, requestString, AssessmentApplication.uploadDataUrl);
         return null;
     }
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-
     }
 
     private boolean checkEmptyness(String requestString) {
@@ -216,7 +212,8 @@ public class PushDataToServer extends AsyncTask {
             metaDataObj.put("Longitude", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Longitude"));
 
             sessionObj.put("scoreData", scoreData);
-            sessionObj.put("studentData", studentData);
+/*            if (!COS_Constants.SD_CARD_Content)
+                sessionObj.put("studentData", studentData);*/
             sessionObj.put("attendanceData", attendanceData);
             sessionObj.put("sessionsData", sessionData);
             sessionObj.put("learntWordsData", learntWordsData);
@@ -251,8 +248,8 @@ public class PushDataToServer extends AsyncTask {
         }
         return newSessionsData;
     }
-
-    /*private JSONArray fillLearntWordsData(List<LearntWords> learntWordsList) {
+/*
+    private JSONArray fillLearntWordsData(List<LearntWords> learntWordsList) {
         JSONArray newLearntWords = new JSONArray();
         JSONObject _learntWordsObj;
         try {
@@ -269,7 +266,8 @@ public class PushDataToServer extends AsyncTask {
             return null;
         }
         return newLearntWords;
-    }*/
+    }
+*/
 
     private JSONArray fillCrlData(List<Crl> crlsList) {
 
@@ -372,8 +370,8 @@ public class PushDataToServer extends AsyncTask {
         }
         return scoreData;
     }
-
-    /*private JSONArray fillSupervisorData(List<SupervisorData> supervisorDataList) {
+/*
+    private JSONArray fillSupervisorData(List<SupervisorData> supervisorDataList) {
         JSONArray supervisorData = new JSONArray();
         JSONObject _supervisorDataObj;
         try {
@@ -393,7 +391,8 @@ public class PushDataToServer extends AsyncTask {
             return null;
         }
         return supervisorData;
-    }*/
+    }
+*/
 
     private JSONArray fillLogsData(List<Modal_Log> logsList) {
         JSONArray logsData = new JSONArray();
@@ -489,31 +488,36 @@ public class PushDataToServer extends AsyncTask {
                         @Override
                         public void onResponse(String response) {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
-                            new AlertDialog.Builder(context)
-                                    .setMessage("Data pushed successfully")
-                                    .setCancelable(false)
-                                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            ((MainActivity) context).onResponseGet();
-                                        }
-                                    }).create().show();
-                             setPushFlag();
+                            if (!autoPush) {
+                                new AlertDialog.Builder(context)
+                                        .setMessage("Data pushed successfully")
+                                        .setCancelable(false)
+                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                ((MainActivity) context).onResponseGet();
+                                            }
+                                        }).create().show();
+                            }
+                            setPushFlag();
                         }
 
                         @Override
                         public void onError(ANError anError) {
-                            new AlertDialog.Builder(context)
-                                    .setMessage("Data push failed")
-                                    .setCancelable(false)
-                                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            ((MainActivity) context).onResponseGet();
-                                        }
-                                    }).create().show();
                             Log.d("PUSH_STATUS", "Data push failed");
-                            // Toast.makeText(context, "Data push failed", Toast.LENGTH_SHORT).show();
+                            if (!autoPush) {
+                                new AlertDialog.Builder(context)
+                                        .setMessage("Data push failed")
+                                        .setCancelable(false)
+                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                ((MainActivity) context).onResponseGet();
+                                            }
+                                        }).create().show();
+                            }
                         }
                     });
         } catch (Exception e) {
@@ -527,9 +531,9 @@ public class PushDataToServer extends AsyncTask {
         AppDatabase.getDatabaseInstance(context).getAttendanceDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getScoreDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentDao().setSentFlag();
-        //  AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
+//        AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
-        //   AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();
+//        AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();
 
     }
 }
