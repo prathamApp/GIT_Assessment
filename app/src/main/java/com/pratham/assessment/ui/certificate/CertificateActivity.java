@@ -257,8 +257,8 @@ public class CertificateActivity extends BaseActivity implements CertificateCont
         intent.putExtra("resId", gameID);
         intent.putExtra("mode", "test");
         intent.putExtra("gameLevel", ContentTableList.get(position).getNodeAge());
-
         startActivityForResult(intent, 1);
+
     }
 
     @Override
