@@ -1,5 +1,7 @@
 package com.pratham.assessment.ui.choose_assessment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,7 +16,9 @@ import android.widget.Toast;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ContentTable;
+import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -102,18 +106,47 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
 
     @Override
-    public void assessmentClicked(int position, String nodeId) {
-        String assessmentSession = "" + UUID.randomUUID().toString();
-        Assessment_Constants.assessmentSession = assessmentSession;
+    public void assessmentClicked(int position, final String nodeId) {
+        final ECELoginDialog eceLoginDialog = new ECELoginDialog(this);
+        eceLoginDialog.login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
 
-        if (nodeId.equalsIgnoreCase("1304")) {
-            startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
-        } else {
-            Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
-            intent.putExtra("nodeId", nodeId);
-            startActivity(intent);
+                Crl loggedCrl = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().checkUserValidation(userName, password);
+                if (loggedCrl != null) {
+                    String assessmentSession = "" + UUID.randomUUID().toString();
+                    Assessment_Constants.assessmentSession = assessmentSession;
 
-        }
+                    if (nodeId.equalsIgnoreCase("1304")) {
+                        startActivity(new Intent(ChooseAssessmentActivity.this, ECEActivity.class));
+                    } else {
+                        Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
+                        intent.putExtra("nodeId", nodeId);
+                        startActivity(intent);
+
+                    }
+                    eceLoginDialog.dismiss();
+                } else {
+                    //userNAme and password may be wrong
+                    AlertDialog alertDialog = new AlertDialog.Builder(ChooseAssessmentActivity.this).create();
+                    alertDialog.setTitle("Invalid Credentials");
+                    alertDialog.setIcon(R.drawable.ic_error_outline_black_24dp);
+                    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            eceLoginDialog.userNameET.setText("");
+                            eceLoginDialog.passwordET.setText("");
+                            eceLoginDialog.userNameET.requestFocus();
+                        }
+                    });
+                    alertDialog.show();
+                }
+            }
+        });
+        eceLoginDialog.show();
+
+
 //        Toast.makeText(this, "assessmentClicked : " + position + "  /  " + nodeId, Toast.LENGTH_SHORT).show();
     }
 }
