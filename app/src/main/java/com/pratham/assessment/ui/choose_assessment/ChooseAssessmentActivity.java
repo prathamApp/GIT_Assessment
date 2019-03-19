@@ -122,7 +122,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
                     if (nodeId.equalsIgnoreCase("1304")) {
                         Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
-                        intent.putExtra("resId", contentTableList.get(position).getResourceId());
+                        intent.putExtra("resId", "9962");
                         intent.putExtra("crlId", crlId);
                         startActivity(intent);
                     } else {

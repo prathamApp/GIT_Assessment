@@ -29,7 +29,7 @@
         android:numStars="5"
         android:stepSize="1"
         android:isIndicator="true"
-        android:progressTint="@color/colorPrimary" />
+        android:progressTint="@color/colorAccentDark" />
 
     <View
         android:layout_width="match_parent"
