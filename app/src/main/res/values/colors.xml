@@ -18,6 +18,8 @@
     <color name="transparent_white_btn">#c8ffffff</color>
     <color name="gradiance_start">#3F51B5</color>
     <color name="gradiance_end">#03A9F4</color>
+    <color name="colorRed">#EF5350</color>
+    <color name="colorRedLight">#ff908e</color>
 
 
 </resources>

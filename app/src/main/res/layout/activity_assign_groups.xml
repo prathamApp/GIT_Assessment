@@ -9,15 +9,13 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:drawableLeft="@mipmap/ic_launcher"
-        android:fontFamily="serif-monospace"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:paddingLeft="16dp"
         android:text="Assign Groups"
         android:textColor="#FFFFFF"
-        android:textSize="32sp"
+        android:textSize="@dimen/_15sdp"
         android:textStyle="bold" />
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -98,6 +96,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="16dp"
                 android:text="  Assign  "
+                android:background="@drawable/ripple_effect"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"

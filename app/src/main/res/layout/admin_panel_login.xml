@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_margin="@dimen/_5sdp"
+        android:layout_marginHorizontal="@dimen/_25sdp"
         android:elevation="@dimen/_20sdp"
         android:orientation="vertical">
 
@@ -81,6 +81,7 @@
             android:layout_height="80dp"
             android:layout_below="@+id/login_credential"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/_10sdp"
             android:paddingTop="20dp"
             android:paddingRight="@dimen/_10sdp">
@@ -90,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/btn_style"
+                android:background="@drawable/ripple_effect"
                 android:text="Login"
                 android:textColor="#ffffff" />
 
@@ -104,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/btn_style"
+                android:background="@drawable/ripple_effect"
                 android:text="Clear"
                 android:textColor="#ffffff" />
         </LinearLayout>

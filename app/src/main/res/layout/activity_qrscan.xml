@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4.5"
-                android:background="@drawable/chat_bg"
+                android:background="@color/colorRed"
                 android:weightSum="6"
                 android:orientation="vertical">
 
@@ -64,7 +64,7 @@
                         android:id="@+id/wall_view"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40sdp"
-                        android:background="@drawable/ripple_rectangle"
+                        android:background="@drawable/main_card_bg"
                         android:elevation="10dp"/>
 
                     <TextView

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/chat_bg"
+    android:background="@color/color_bg"
     tools:context="com.pratham.assessment.ui.login.MainActivity">
 
     <RelativeLayout
@@ -41,25 +41,27 @@
 
             <ImageButton
                 android:id="@+id/btn_qr"
-                android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_80sdp"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
                 android:layout_gravity="center"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:layout_marginRight="@dimen/_15sdp"
                 android:elevation="5dp"
                 android:gravity="center"
                 android:padding="@dimen/_10sdp"
+                android:background="@drawable/ripple_effect"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_qr_code" />
 
             <ImageButton
                 android:id="@+id/btn_grp"
-                android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_80sdp"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
                 android:layout_gravity="center"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:layout_marginLeft="@dimen/_15sdp"
                 android:layout_toRightOf="@+id/btn_qr"
+                android:background="@drawable/ripple_effect"
                 android:elevation="5dp"
                 android:padding="@dimen/_10sdp"
                 android:scaleType="centerInside"
