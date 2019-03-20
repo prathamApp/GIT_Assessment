@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -48,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="User name"
-                    android:text="pravinthorat"
+                    android:text=""
                     android:maxLines="1"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -70,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Password"
-                    android:text="pratham123"
+                    android:text=""
                     android:inputType="textWebPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
