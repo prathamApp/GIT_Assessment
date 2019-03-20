@@ -185,6 +185,7 @@ public class TestDisplayActivity extends BaseActivity implements TestClicked, Te
 
     @Override
     public void onBackPressed() {
+        presenter.endTestSession();
         super.onBackPressed();
 /*        final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

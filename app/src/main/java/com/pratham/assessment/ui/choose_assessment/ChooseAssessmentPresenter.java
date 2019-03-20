@@ -3,8 +3,12 @@ package com.pratham.assessment.ui.choose_assessment;
 import android.content.Context;
 import android.os.AsyncTask;
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.ContentTable;
+import com.pratham.assessment.domain.Session;
+import com.pratham.assessment.utilities.Assessment_Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,6 +130,28 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         }.execute();*/
     }
 
+    @Override
+    public void startAssessSession() {
+
+        new AsyncTask<Object, Void, Object>() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                try {
+                    Session startSesion = new Session();
+                    startSesion.setSessionID("" + Assessment_Constants.assessmentSession);
+                    String timerTime = AssessmentApplication.getCurrentDateTime(false, AssessmentApplication.getCurrentDateTime());
+                    startSesion.setFromDate(timerTime);
+                    startSesion.setToDate("NA");
+                    startSesion.setSentFlag(0);
+                    AppDatabase.getDatabaseInstance(context).getSessionDao().insert(startSesion);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
     private void getListData() {
         new AsyncTask<Object, Void, Object>() {
             @Override
@@ -189,11 +215,9 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 protected Object doInBackground(Object[] objects) {
                     try {
 
-                        String curSession = appDatabase.getStatusDao().getValue("CurrentSession");
-                        String AppStartDateTime = appDatabase.getStatusDao().getValue("AppStartDateTime");
-                        String toDateTemp = appDatabase.getSessionDao().getToDate(curSession);
+                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
                         if (toDateTemp.equalsIgnoreCase("na")) {
-                            appDatabase.getSessionDao().UpdateToDate(curSession, AssessmentApplication.getCurrentDateTime(false, AppStartDateTime));
+                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.currentSession, AssessmentApplication.getCurrentDateTime());
                         }
                         BackupDatabase.backup(context);
                     } catch (Exception e) {

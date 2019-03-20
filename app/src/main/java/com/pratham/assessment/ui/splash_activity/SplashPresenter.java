@@ -33,6 +33,7 @@ import com.pratham.assessment.domain.Modal_RaspFacility;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Status;
+import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.services.LocationService;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -507,7 +508,6 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 e.printStackTrace();
             }
         } else {
-//            context.startService(new Intent(context, AppExitService.class));
             BackupDatabase.backup(context);
             splashView.gotoNextActivity();
         }

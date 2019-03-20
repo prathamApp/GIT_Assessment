@@ -1,16 +1,12 @@
 package com.pratham.assessment.ui.choose_assessment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -32,11 +28,12 @@ import org.json.JSONException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.pratham.assessment.BaseActivity.appDatabase;
 
 public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
     @BindView(R.id.attendance_recycler_view)
@@ -80,6 +77,35 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         discreteScrollView.setAdapter(eceAdapter);
         eceAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        endTestSession();
+        super.onBackPressed();
+    }
+
+    public void endTestSession() {
+        try {
+            new AsyncTask<Object, Void, Object>() {
+                @Override
+                protected Object doInBackground(Object[] objects) {
+                    try {
+                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.assessmentSession);
+
+                        if (toDateTemp.equalsIgnoreCase("na")) {
+                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.assessmentSession, AssessmentApplication.getCurrentDateTime());
+                        }
+                        BackupDatabase.backup(ECEActivity.this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private List<ECEModel> parseJsonArray(JSONArray jsonArray) {
