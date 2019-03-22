@@ -48,7 +48,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="User name"
-                    android:text="pravinthorat"
                     android:maxLines="1"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -70,7 +69,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Password"
-                    android:text="pratham123"
                     android:inputType="textWebPassword"
                     android:maxLines="1"
                     android:singleLine="true" />

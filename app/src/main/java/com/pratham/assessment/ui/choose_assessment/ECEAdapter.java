@@ -99,6 +99,7 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
                 holder.needHelp.setBackground(mContext.getResources().getDrawable(R.drawable.ripple_rectangle));
                 holder.needHelp.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
 
+
             }
         });
         holder.needHelp.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +133,13 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
             }
         });*/
     }
+
+   /* public interface OnItemChangedListener<T extends MyViewHolder> {
+        *//**
+         * Called when new item is selected. It is similar to the onScrollEnd of ScrollStateChangeListener, except that it is * also called when currently selected item appears on the screen for the first time. * viewHolder will be null, if data set becomes empty
+         *//*
+          answerClickedListener.onAnswerClicked(position, 2);
+    }*/
 
     @Override
     public int getItemCount() {
