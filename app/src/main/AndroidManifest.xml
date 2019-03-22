@@ -85,6 +85,11 @@
             android:name=".ui.login.qr_scan.QRScanActivity"
             android:screenOrientation="portrait" />
 
+        <service
+            android:name="com.pratham.assessment.services.AppExitService"
+            android:enabled="true"
+            android:stopWithTask="false" />
+
     </application>
 
 </manifest>

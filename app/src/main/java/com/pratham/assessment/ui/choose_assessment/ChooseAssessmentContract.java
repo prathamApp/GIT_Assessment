@@ -21,6 +21,8 @@ public interface ChooseAssessmentContract {
         void clearNodeIds();
 
         void endSession();
+
+        void startAssessSession();
     }
 
 }

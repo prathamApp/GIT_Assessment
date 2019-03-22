@@ -13,12 +13,14 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
+import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -104,6 +106,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         startActivity(new Intent(this, ProfileActivity.class));
     }
 
+    @Override
+    public void onBackPressed() {
+        presenter.endSession();
+        super.onBackPressed();
+    }
 
     @Override
     public void assessmentClicked(final int position, final String nodeId) {
@@ -116,8 +123,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 Crl loggedCrl = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().checkUserValidation(userName, password);
                 if (loggedCrl != null) {
                     String assessmentSession = "" + UUID.randomUUID().toString();
-                    Assessment_Constants.assessmentSession = assessmentSession;
+                    Assessment_Constants.assessmentSession = "test-"+assessmentSession;
 
+                    presenter.startAssessSession();
                     String crlId = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().getCrlId(userName, password);
 
                     if (nodeId.equalsIgnoreCase("1304")) {

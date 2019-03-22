@@ -40,6 +40,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
+import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.ui.login_menu.MenuActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -450,6 +451,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             dismissProgressDialog();
             showBottomFragment();
         } else {*/
+
+        context.startService(new Intent(context, AppExitService.class));
             dismissProgressDialog();
             startActivity(new Intent(context, MenuActivity.class));
 //            startActivity(new Intent(context, MainActivity.class));

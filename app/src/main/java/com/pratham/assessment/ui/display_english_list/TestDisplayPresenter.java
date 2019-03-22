@@ -256,17 +256,11 @@ public class TestDisplayPresenter implements TestDiaplayContract.TestDisplayPres
                 @Override
                 protected Object doInBackground(Object[] objects) {
                     try {
+                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.assessmentSession);
 
-                        String curSession = appDatabase.getStatusDao().getValue("CurrentSession");
-                        String AppStartDateTime = appDatabase.getStatusDao().getValue("AppStartDateTime");
-                        String toDateTemp = appDatabase.getSessionDao().getToDate(curSession);
-
-/*                        String toDateAssessment = appDatabase.getSessionDao().getToDate(Assessment_Constants.assessmentSession);
-                        if (toDateAssessment.equalsIgnoreCase("na")) {
-                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.assessmentSession, COSApplication.getCurrentDateTime(false, AppStartDateTime));
+                        if (toDateTemp.equalsIgnoreCase("na")) {
+                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.assessmentSession, AssessmentApplication.getCurrentDateTime());
                         }
-                        Assessment_Constants.assessmentSession = "NA";
-                        Assessment_Constants.assessmentFlag = false;*/
                         BackupDatabase.backup(context);
                     } catch (Exception e) {
                         e.printStackTrace();
