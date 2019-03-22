@@ -57,12 +57,12 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        userNameET.setText("pravinthorat");
-        passwordET.setText("pratham123");
+/*        userNameET.setText("pravinthorat");
+        passwordET.setText("pratham123");*/
         /*  userNameET.setText("admin");
         passwordET.setText("admin");*/
-        /*userNameET.setText("");
-        passwordET.setText("");*/
+        userNameET.setText("");
+        passwordET.setText("");
         adminPanelPresenter = new AdminPanelPresenter(getActivity(), this);
     }
 

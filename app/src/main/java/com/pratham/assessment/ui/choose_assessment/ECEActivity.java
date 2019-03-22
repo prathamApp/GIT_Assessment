@@ -1,18 +1,16 @@
 package com.pratham.assessment.ui.choose_assessment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.pratham.assessment.AssessmentApplication;
@@ -32,21 +30,27 @@ import org.json.JSONException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.pratham.assessment.BaseActivity.appDatabase;
+
 public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
     @BindView(R.id.attendance_recycler_view)
     DiscreteScrollView discreteScrollView;
+
+    @BindView(R.id.ll_progress)
+    LinearLayout ll_progress;
+
     @BindView(R.id.btn_submit)
     Button submit;
     List<ECEModel> eceModelList;
     String eceStartTime = "";
     String resId;
     String crlId;
+    int[] idArr = {R.id.step_1, R.id.step_2, R.id.step_3, R.id.step_4, R.id.step_5, R.id.step_6, R.id.step_7, R.id.step_8, R.id.step_9, R.id.step_10, R.id.step_11, R.id.step_12, R.id.step_13, R.id.step_14, R.id.step_15, R.id.step_16, R.id.step_17};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +83,57 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
                 .build());
         discreteScrollView.setAdapter(eceAdapter);
         eceAdapter.notifyDataSetChanged();
+        discreteScrollView.addOnItemChangedListener(new DiscreteScrollView.OnItemChangedListener<RecyclerView.ViewHolder>() {
+            @Override
+            public void onCurrentItemChanged(@Nullable RecyclerView.ViewHolder viewHolder, int adapterPosition) {
+                for (int i = 0; i < eceModelList.size(); i++) {
+                    if (eceModelList.get(i).getIsSelected() > 0) {
+                        ImageView view = findViewById(idArr[i]);
+//                        view.setBackgroundColor(getResources().getColor(R.color.catcho_primary));
+                        view.setBackground(getResources().getDrawable(R.drawable.answered_ece_card));
 
+                    } else {
+                        ImageView view = findViewById(idArr[i]);
+                        view.setBackground(getResources().getDrawable(R.drawable.ece_top_bg));
+//                        view.setBackgroundColor(getResources().getColor(R.color.colorRed));
+
+                    }
+                }
+                ImageView view = findViewById(idArr[adapterPosition]);
+//                view.setBackgroundColor(getResources().getColor(R.color.color_bg));
+                view.setBackground(getResources().getDrawable(R.drawable.current_ece_card));
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        endTestSession();
+        super.onBackPressed();
+    }
+
+    public void endTestSession() {
+        try {
+            new AsyncTask<Object, Void, Object>() {
+                @Override
+                protected Object doInBackground(Object[] objects) {
+                    try {
+                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.assessmentSession);
+
+                        if (toDateTemp.equalsIgnoreCase("na")) {
+                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.assessmentSession, AssessmentApplication.getCurrentDateTime());
+                        }
+                        BackupDatabase.backup(ECEActivity.this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private List<ECEModel> parseJsonArray(JSONArray jsonArray) {
@@ -192,6 +246,9 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
     @Override
     public void onAnswerClicked(int position, int answer) {
         eceModelList.get(position).setIsSelected(answer);
+        ImageView view = findViewById(idArr[position]);
+//        view.setBackgroundColor(getResources().getColor(R.color.catcho_primary));
+        view.setBackground(getResources().getDrawable(R.drawable.answered_ece_card));
 
     }
 }
