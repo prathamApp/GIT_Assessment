@@ -181,7 +181,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             // markAttendance(checkedStds);
             startSession(checkedStds);
             presentActivity(v);
-            Toast.makeText(getActivity(), "Success...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Success...", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getActivity(), ChooseAssessmentActivity.class));
         } else {
             Toast.makeText(getContext(), "Please Select Students !", Toast.LENGTH_SHORT).show();

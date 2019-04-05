@@ -6,7 +6,7 @@
     android:background="@color/color_bg"
 
     tools:context=".ui.choose_assessment.ECEActivity">
-
+    ll_progress
     <LinearLayout
         android:id="@+id/ll_progress"
         android:layout_width="match_parent"

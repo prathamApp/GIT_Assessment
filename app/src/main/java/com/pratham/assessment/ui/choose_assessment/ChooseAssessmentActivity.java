@@ -124,10 +124,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 if (loggedCrl != null) {
                     String assessmentSession = "" + UUID.randomUUID().toString();
                     Assessment_Constants.assessmentSession = "test-"+assessmentSession;
-
                     presenter.startAssessSession();
                     String crlId = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().getCrlId(userName, password);
-
                     if (nodeId.equalsIgnoreCase("1304")) {
                         Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
                         intent.putExtra("resId", "9962");
@@ -140,7 +138,6 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     }
                     eceLoginDialog.dismiss();
                 } else {
-                    //userNAme and password may be wrong
                     AlertDialog alertDialog = new AlertDialog.Builder(ChooseAssessmentActivity.this).create();
                     alertDialog.setTitle("Invalid Credentials");
                     alertDialog.setIcon(R.drawable.ic_error_outline_black_24dp);
@@ -157,8 +154,5 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             }
         });
         eceLoginDialog.show();
-
-
-//        Toast.makeText(this, "assessmentClicked : " + position + "  /  " + nodeId, Toast.LENGTH_SHORT).show();
     }
 }
