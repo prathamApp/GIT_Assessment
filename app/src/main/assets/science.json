@@ -1,0 +1,111 @@
+[
+  {
+    "questionId": "0",
+    "question": "भाप पदार्थ की कौनसी अवस्था है?",
+    "type": "multiple choice",
+    "options": [
+      "ठोस",
+      "द्रव",
+      "गैस",
+      "इनमें से कोई नहीं"
+    ],
+    "correctAns": [
+      "गैस"
+    ]
+  },
+  {
+    "questionId": "1",
+    "question": "ऊष्मा ऊर्जा गर्म से ठन्डे की दिशा में चलती है",
+    "type": "singlechoice",
+    "options": [
+      "true",
+      "false"
+    ],
+    "correctAns": [
+      "true"
+    ],
+    "mandatory": "yes"
+  },
+  {
+    "questionId": "2",
+    "question": "ऊष्मा ऊर्जा नापने की इकाई क्या है?",
+    "type": "multiple",
+    "options": [
+      "डिग्री सेल्सियस या डिग्री फारेनहाइट या केल्विन",
+      "ग्राम या किलोग्राम",
+      "मीटर या किलोमीटर",
+      "हर्ट्ज़"
+    ],
+    "correctAns": [
+      "डिग्री सेल्सियस या डिग्री फारेनहाइट या केल्विन"
+    ],
+    "mandatory": "yes"
+  },
+  {
+    "questionId": "3",
+    "question": "ऊष्मा ऊर्जा दिशा में चलती है",
+    "type": "fillblank",
+    "options": [],
+    "correctAns": [
+      "गर्म से ठन्डे की"
+    ],
+    "mandatory": "no"
+  },
+  {
+    "questionId": "4",
+    "question": "वाष्पन",
+    "type": "multipleimages",
+    "options": [
+      "boil.gif",
+      "conduction_1.gif"
+    ],
+    "correctAns": [
+      "evaporation_1.gif",
+      "Evaporation_2.gif"
+    ],
+    "mandatory": "yes"
+  },
+  {
+    "questionId": "5",
+    "question": "भाप पदार्थ की कौनसी अवस्था है?",
+    "type": "singlechoice",
+    "options": [
+      "ठोस",
+      "द्रव",
+      "गैस",
+      "इनमें से कोई नहीं"
+    ],
+    "correctAns": [
+      "गैस"
+    ],
+    "mandatory": "yes"
+  },
+  {
+    "questionId": "6",
+    "question": "ऊष्मा ऊर्जा गर्म से ठन्डे की दिशा में चलती है",
+    "type": "singlechoice",
+    "options": [
+      "true",
+      "false"
+    ],
+    "correctAns": [
+      "true"
+    ],
+    "mandatory": "yes"
+  },
+  {
+    "questionId": "7",
+    "question": "ऊष्मा ऊर्जा नापने की इकाई क्या है?",
+    "type": "trueOrFalse",
+    "options": [
+      "डिग्री सेल्सियस या डिग्री फारेनहाइट या केल्विन",
+      "ग्राम या किलोग्राम",
+      "मीटर या किलोमीटर",
+      "हर्ट्ज़"
+    ],
+    "correctAns": [
+      "डिग्री सेल्सियस या डिग्री फारेनहाइट या केल्विन"
+    ],
+    "mandatory": "yes"
+  }
+]

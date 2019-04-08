@@ -11,16 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
-import com.pratham.assessment.domain.Session;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -123,7 +121,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 Crl loggedCrl = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().checkUserValidation(userName, password);
                 if (loggedCrl != null) {
                     String assessmentSession = "" + UUID.randomUUID().toString();
-                    Assessment_Constants.assessmentSession = "test-"+assessmentSession;
+                    Assessment_Constants.assessmentSession = "test-" + assessmentSession;
                     presenter.startAssessSession();
                     String crlId = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().getCrlId(userName, password);
                     if (nodeId.equalsIgnoreCase("1304")) {
@@ -131,8 +129,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         intent.putExtra("resId", "9962");
                         intent.putExtra("crlId", crlId);
                         startActivity(intent);
-                    } else {
+                    } else if (nodeId.equalsIgnoreCase("1302")) {
                         Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
+                        intent.putExtra("nodeId", nodeId);
+                        startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
                         intent.putExtra("nodeId", nodeId);
                         startActivity(intent);
                     }

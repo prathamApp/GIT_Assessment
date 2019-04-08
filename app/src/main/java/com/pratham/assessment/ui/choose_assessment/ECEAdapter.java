@@ -34,7 +34,7 @@ public class ECEAdapter extends RecyclerView.Adapter<ECEAdapter.MyViewHolder> {
         public MyViewHolder(View view) {
             super(view);
             tv_ece_question = view.findViewById(R.id.tv_ece_question);
-            tv_ece_question_title = view.findViewById(R.id.tv_ece_question_title);
+            tv_ece_question_title = view.findViewById(R.id.tv_science_question_title);
 //            tv_ece_instructions = view.findViewById(R.id.tv_ece_instructions);
 //            iv_play_video =  view.findViewById(R.id.iv_play_video);
             canDo = view.findViewById(R.id.btn_yes);
