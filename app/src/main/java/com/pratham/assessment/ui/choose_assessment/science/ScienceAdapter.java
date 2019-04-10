@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -54,47 +56,66 @@ public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHo
         ScienceModalClass scienceModalClass = scienceModalClassList.get(i);
         myViewHolder.que_cnt.setText(i + 1 + "/" + scienceModalClassList.size());
         String questionType = scienceModalClass.getType();
+        TextView textView;                RadioGroup radioGroup;
+
 
         switch (questionType) {
             case "trueOrFalse":
-//                myViewHolder.question.setText(scienceModalClass.getQuestion());
-                TextView textView = new TextView(context);
+                textView = createQuestionTextView();
                 textView.setText(scienceModalClass.getQuestion());
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 45);
-                textView.setTextColor(context.getResources().getColor(R.color.colorBlack));
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0);
-                params.setMargins(10, 0, 0, 0);
-                textView.setLayoutParams(params);
                 myViewHolder.queAns.addView(textView);
-                RadioGroup radioGroup = new RadioGroup(context);
 
+                radioGroup = new RadioGroup(context);
                 radioGroup.setBackground(ContextCompat.getDrawable(context, R.drawable.ripple_rectangle));
                 RadioButton radioButtonTrue = new RadioButton(context);
-//                    radioButton.setId(r);
                 radioButtonTrue.setText("True");
                 radioGroup.addView(radioButtonTrue);
                 RadioButton radioButtonFalse = new RadioButton(context);
-//                    radioButton.setId(r);
                 radioButtonFalse.setText("False");
                 radioGroup.addView(radioButtonFalse);
                 myViewHolder.queAns.addView(radioGroup);
                 break;
 
+            case "fillInTheBlanks":
+                textView = createQuestionTextView();
+                textView.setText(scienceModalClass.getQuestion());
+                myViewHolder.queAns.addView(textView);
 
-                       /* radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton compoundButton, boolean isSelected) {
-                                if (isSelected) {
-                                    dde_questions.setAnswer(compoundButton.getTag().toString());
-                                    LinearLayout layout = (LinearLayout) compoundButton.getParent().getParent();
-                                    String tag = (String) layout.getTag();
-                                    checkRuleCondition(tag, compoundButton.getTag().toString(), "singlechoice");
-                                }
-                            }
-                        });*/
-        }
-//                    radioGroup.setLayoutParams(params);
+                String[] options=scienceModalClass.getOptions();
+                if(options.length>0){
+                    radioGroup = new RadioGroup(context);
+                    radioGroup.setBackground(ContextCompat.getDrawable(context, R.drawable.ripple_rectangle));
+                    for (int r = 0; r < options.length; r++) {
+                        RadioButton radioButton = new RadioButton(context);
+                        radioButton.setId(r);
 
+                        radioButton.setText(options[r]);
+                        radioGroup.addView(radioButton);
+
+                    }
+                    myViewHolder.queAns.addView(radioGroup);
+                }else {
+                    EditText etAns = new EditText(context);
+                    etAns.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 30);
+                    etAns.setTextColor(context.getResources().getColor(R.color.colorBlack));
+                    etAns.setHint("Enter answer");
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0);
+                    etAns.setBackground(context.getResources().getDrawable(R.drawable.answered_ece_card));
+                    params.setMargins(10, 10, 10, 10);
+                    etAns.setLayoutParams(params);
+                    myViewHolder.queAns.addView(etAns);
+                }
+}
+    }
+
+    private TextView createQuestionTextView() {
+        TextView textView = new TextView(context);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 45);
+        textView.setTextColor(context.getResources().getColor(R.color.colorBlack));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0);
+        params.setMargins(10, 10, 10, 10);
+        textView.setLayoutParams(params);
+        return textView;
     }
 
 

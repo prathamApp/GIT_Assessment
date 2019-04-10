@@ -17,13 +17,11 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
             android:elevation="@dimen/_5sdp"
             android:gravity="center"
-
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -49,84 +47,28 @@
             android:layout_weight="3">
 
         </LinearLayout>
-       <!-- <TextView
-            android:id="@+id/tv_science_question_title"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/_2sdp"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:text="Question"
-            android:textAlignment="center"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/_15sdp" />-->
-
-
-
-            <!--       <TextView
-                       android:id="@+id/tv_science_question"
-                       android:layout_width="match_parent"
-                       android:layout_height="0dp"
-                       android:layout_margin="@dimen/_2sdp"
-                       android:layout_weight="3"
-                       android:background="@drawable/ripple_rectangle"
-                       android:gravity="center"
-
-                       android:text="Question"
-                       android:textAlignment="center"
-                       android:textColor="@color/colorBlack"
-                       android:textSize="@dimen/_30sdp" />
-       -->
-            <!--   <TextView
-                   android:id="@+id/tv_ece_instructions"
-                   android:layout_width="match_parent"
-                   android:layout_height="0dp"
-                   android:layout_margin="@dimen/_2sdp"
-                   android:layout_weight="2"
-
-                   android:gravity="center"
-                   android:text="Instructions"
-                   android:textAlignment="center"
-                   android:textSize="@dimen/_20sdp"
-
-                   />-->
 
 
         </LinearLayout>
 
-        <!-- <ImageView
-             android:id="@+id/iv_play_video"
-             android:layout_width="169dp"
-             android:layout_height="@dimen/_50sdp"
-             android:layout_marginStart="8dp"
-             android:layout_marginTop="8dp"
-             android:layout_marginEnd="8dp"
-             android:layout_weight="0.5"
-             android:elevation="@dimen/_8sdp"
-             android:src="@drawable/ic_play_circle"
-             app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
- -->
-        <Space
+       <!-- <Space
             android:id="@+id/space"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:elevation="@dimen/_2sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />-->
     </android.support.constraint.ConstraintLayout>
 
-    <FrameLayout
+    <!--<FrameLayout
         android:id="@+id/fl_yes_no"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/_5sdp"
         android:layout_weight="1">
 
-        <!--  <LinearLayout
+        &lt;!&ndash;  <LinearLayout
               android:id="@+id/ll_yes_no"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -148,8 +90,8 @@
 
 
           </LinearLayout>
-  -->
-        <!--<LinearLayout
+  &ndash;&gt;
+        &lt;!&ndash;<LinearLayout
             android:id="@+id/ll_rating"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -170,6 +112,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Submit Rating" />
-        </LinearLayout>-->
-    </FrameLayout>
+        </LinearLayout>&ndash;&gt;
+    </FrameLayout>-->
 </LinearLayout>

@@ -43,8 +43,8 @@
   },
   {
     "questionId": "3",
-    "question": "ऊष्मा ऊर्जा दिशा में चलती है",
-    "type": "fillblank",
+    "question": "ऊष्मा ऊर्जा _______ दिशा में चलती है",
+    "type": "fillInTheBlanks",
     "options": [],
     "correctAns": [
       "गर्म से ठन्डे की"
@@ -54,7 +54,7 @@
   {
     "questionId": "4",
     "question": "वाष्पन",
-    "type": "multipleimages",
+    "type": "fillInTheBlanks",
     "options": [
       "boil.gif",
       "conduction_1.gif"

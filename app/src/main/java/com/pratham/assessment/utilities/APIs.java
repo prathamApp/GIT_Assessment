@@ -188,4 +188,13 @@ public class APIs {
     // High Score Push API & Leaderboard Pull API
     public static String highScoreUrl = "http://www.swap.prathamcms.org/api/KksHighScore/KksPushData";
 
+
+    public static String AssessmentLanguageAPI="http://www.apiassessment.openiscool.org/api/language/GetLanguage";
+    public static String AssessmentSubjectAPI="http://www.apiassessment.openiscool.org/api/subject/Getsubject";
+    public static String AssessmentTopicAPI="http://www.apiassessment.openiscool.org/api/subjecttopic/Gettopic";
+    public static String AssessmentSubjectWiseTopicAPI="http://www.apiassessment.openiscool.org/api/subjecttopic/Getsubjecttopic?subjectid=2";
+    public static String AssessmentQuestionAPI="http://www.apiassessment.openiscool.org/api/question/GetQuestion?languageid=3&subjectid=2&topicid=8";
+
+
+
 }
