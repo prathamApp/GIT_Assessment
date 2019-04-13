@@ -72,9 +72,5 @@ public class ScienceModalClass
         this.mandatory = mandatory;
     }
 
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [questionId = "+questionId+", question = "+question+", options = "+options+", type = "+type+", correctAns = "+correctAns+", mandatory = "+mandatory+"]";
-    }
+
 }

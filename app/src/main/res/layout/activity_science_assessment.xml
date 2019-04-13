@@ -5,90 +5,98 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     tools:context=".ui.choose_assessment.science.ScienceAssessmentActivity">
-  <!--  <LinearLayout
-        android:id="@+id/ll_progress"
-        android:layout_width="match_parent"
+
+    <Chronometer
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorRedLightnew"
-        android:weightSum="17">
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center" />
 
-        <ImageView
-            android:id="@+id/step_1"
-            style="@style/progressStyle" />
+    <!--  <LinearLayout
+          android:id="@+id/ll_progress"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:background="@color/colorRedLightnew"
+          android:weightSum="17">
 
-        <ImageView
-            android:id="@+id/step_2"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_1"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_3"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_2"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_4"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_3"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_5"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_4"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_6"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_5"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_7"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_6"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_8"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_7"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_9"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_8"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_10"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_9"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_11"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_10"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_12"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_11"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_13"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_12"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_14"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_13"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_15"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_14"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_16"
-            style="@style/progressStyle" />
+          <ImageView
+              android:id="@+id/step_15"
+              style="@style/progressStyle" />
 
-        <ImageView
-            android:id="@+id/step_17"
-            style="@style/progressStyle" />
-    </LinearLayout>-->
+          <ImageView
+              android:id="@+id/step_16"
+              style="@style/progressStyle" />
+
+          <ImageView
+              android:id="@+id/step_17"
+              style="@style/progressStyle" />
+      </LinearLayout>-->
 
 
     <com.pratham.assessment.discrete_view.DiscreteScrollView
-        android:id="@+id/attendance_recycler_view"
-        android:layout_below="@id/ll_progress"
+        android:id="@+id/question_discrete_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btn_submit"
+        android:layout_below="@id/timer"
         android:layout_margin="@dimen/_5sdp"
         android:layout_marginTop="30dp" />
 

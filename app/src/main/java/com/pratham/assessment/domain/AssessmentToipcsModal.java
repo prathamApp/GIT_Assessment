@@ -39,8 +39,8 @@ public class AssessmentToipcsModal {
         this.subjectid = subjectid;
     }
 
-    @Override
+   /* @Override
     public String toString() {
-        return "ClassPojo [topicid = " + topicid + ", topicname = " + topicname + ", subjectid = " + subjectid + "]";
-    }
+        return "[topicid = " + topicid + ", topicname = " + topicname + ", subjectid = " + subjectid + "]";
+    }*/
 }

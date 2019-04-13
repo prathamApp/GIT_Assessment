@@ -10,7 +10,7 @@ import com.pratham.assessment.domain.AssessmentToipcsModal;
 import java.util.List;
 
 @Dao
-public interface TopicDao {
+public interface AssessmentTopicDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertTopic(AssessmentToipcsModal assessmentToipcsModal);
 
@@ -19,6 +19,9 @@ public interface TopicDao {
 
     @Query("select * from AssessmentTopic")
     public List<AssessmentToipcsModal> getAllAssessmentToipcs();
+
+    @Query("select topicid from AssessmentTopic where topicname=:topicName")
+    public String getTopicIdByTopicName(String topicName);
 /*
 
     @Query("select * from AssessmentTopic where sentFlag=0")

@@ -10,20 +10,28 @@ import com.pratham.assessment.dao.AttendanceDao;
 import com.pratham.assessment.dao.ContentTableDao;
 import com.pratham.assessment.dao.CrlDao;
 import com.pratham.assessment.dao.GroupDao;
+import com.pratham.assessment.dao.LanguageDao;
 import com.pratham.assessment.dao.LogDao;
+import com.pratham.assessment.dao.ScienceQuestionChoiceDao;
+import com.pratham.assessment.dao.ScienceQuestionDao;
 import com.pratham.assessment.dao.ScoreDao;
 import com.pratham.assessment.dao.SessionDao;
 import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.dao.StudentDao;
-import com.pratham.assessment.dao.TopicDao;
+import com.pratham.assessment.dao.AssessmentTopicDao;
+import com.pratham.assessment.dao.SubjectDao;
 import com.pratham.assessment.dao.VillageDao;
 import com.pratham.assessment.domain.Assessment;
+import com.pratham.assessment.domain.AssessmentLanguages;
+import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Modal_Log;
+import com.pratham.assessment.domain.ScienceQuestion;
+import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Status;
@@ -31,7 +39,7 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.Village;
 
 
-@Database(entities = {Crl.class,  Student.class, Score.class, Session.class, Attendance.class, Status.class,  Village.class, Groups.class, Assessment.class, Modal_Log.class, ContentTable.class, AssessmentToipcsModal.class}, version = 1)
+@Database(entities = {Crl.class, Student.class, Score.class, Session.class, Attendance.class, Status.class, Village.class, Groups.class, Assessment.class, Modal_Log.class, ContentTable.class, AssessmentToipcsModal.class, ScienceQuestion.class, ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -59,7 +67,15 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract StatusDao getStatusDao();
 
-    public abstract TopicDao getTopicDao();
+    public abstract AssessmentTopicDao getAssessmentTopicDao();
+
+    public abstract ScienceQuestionDao getScienceQuestionDao();
+
+    public abstract ScienceQuestionChoiceDao getScienceQuestionChoicesDao();
+
+    public abstract SubjectDao getSubjectDao();
+
+    public abstract LanguageDao getLanguageDao();
 
 
    /* public static AppDatabase getDatabaseInstance(Context context) {

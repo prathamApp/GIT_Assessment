@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -16,11 +17,16 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.R;
+import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.discrete_view.DSVOrientation;
 import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.discrete_view.ScaleTransformer;
+import com.pratham.assessment.domain.AssessmentLanguages;
+import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.domain.ScienceModalClass;
+import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.utilities.APIs;
 
 import org.json.JSONArray;
@@ -36,12 +42,17 @@ import butterknife.ButterKnife;
 
 public class ScienceAssessmentActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener, TopicSelectListener {
     List<ScienceModalClass> scienceModalClassList;
-    @BindView(R.id.attendance_recycler_view)
-    DiscreteScrollView discreteScrollView;
-    List<AssessmentToipcsModal> topicNames = new ArrayList<>();
 
-  /*  @BindView(R.id.ll_root)
-    LinearLayout ll_root;*/
+    List<AssessmentToipcsModal> topics = new ArrayList<>();
+    ArrayList<String> topicIDList = new ArrayList<>();
+    List<AssessmentLanguages> languages = new ArrayList<>();
+    List<AssessmentSubjects> subjects = new ArrayList<>();
+    ProgressDialog progressDialog;
+
+    int queDownloadIndex = 0;
+
+    @BindView(R.id.question_discrete_view)
+    DiscreteScrollView discreteScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,56 +60,131 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
         setContentView(R.layout.activity_science_assessment);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        showSelectTopic();
+        progressDialog = new ProgressDialog(this);
+        showSelectTopicDialog();
         //getTopicData();
-        scienceModalClassList = fetchJson("science.json");
+        //scienceModalClassList = fetchJson("science.json");
 
         // setQuestions();
-        ScienceAdapter scienceAdapter = new ScienceAdapter(this, scienceModalClassList);
-        discreteScrollView.setOrientation(DSVOrientation.HORIZONTAL);
-        discreteScrollView.addOnItemChangedListener(this);
-        discreteScrollView.setItemTransitionTimeMillis(200);
-        discreteScrollView.setItemTransformer(new ScaleTransformer.Builder()
-                .setMinScale(0.5f)
-                .build());
-        discreteScrollView.setAdapter(scienceAdapter);
-        scienceAdapter.notifyDataSetChanged();
+
     }
 
-    private void showSelectTopic() {
-        Dialog selectTopicDialog=new SelectTopicDialog(this,this,topicNames);
-        selectTopicDialog.show();
-        ((SelectTopicDialog) selectTopicDialog).updateTopics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getTopicData();
-            }
-        });
+    private void showSelectTopicDialog() {
+        topics = AppDatabase.getDatabaseInstance(this).getAssessmentTopicDao().getAllAssessmentToipcs();
+        subjects = AppDatabase.getDatabaseInstance(this).getSubjectDao().getAllSubjects();
+        languages = AppDatabase.getDatabaseInstance(this).getLanguageDao().getAllLangs();
+        SelectTopicDialog selectTopicDialog = new SelectTopicDialog(this, this, topics, languages, subjects);
+
+
+        if (topics.size() > 0) {
+            selectTopicDialog.show();
+            selectTopicDialog.updateTopics.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    topics.clear();
+                    getLanguageData();
+                }
+            });
+        } else {
+            getLanguageData();
+        }
     }
 
-    private JSONArray[] getTopicData() {
-        final JSONArray[] topics = {new JSONArray()};
-        final ProgressDialog progressDialog = new ProgressDialog(this);
+    private void getLanguageData() {
+        progressDialog.setMessage("Loading language");
         progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Loading...");
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentSubjectWiseTopicAPI)
+        languages.clear();
+        AndroidNetworking.get(APIs.AssessmentLanguageAPI)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
                             for (int i = 0; i < response.length(); i++) {
-                                AssessmentToipcsModal assessmentToipcsModal = new AssessmentToipcsModal();
-                                assessmentToipcsModal.setTopicid(response.getJSONObject(i).getString("topicid"));
-                                assessmentToipcsModal.setTopicname(response.getJSONObject(i).getString("topicname"));
-                                assessmentToipcsModal.setSubjectid(response.getJSONObject(i).getString("subjectid"));
-                                topicNames.add(assessmentToipcsModal);
-
+                                AssessmentLanguages assessmentLanguages = new AssessmentLanguages();
+                                assessmentLanguages.setLanguageid(response.getJSONObject(i).getString("languageid"));
+                                assessmentLanguages.setLanguagename(response.getJSONObject(i).getString("languagename"));
+                                languages.add(assessmentLanguages);
                             }
+                            AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getLanguageDao().insertAllLanguages(languages);
+
+                            getSubjectData();
+//                            showDownloadTopicDialog();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(ScienceAssessmentActivity.this, "Error in loading", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    }
+                });
+
+    }
+
+    private void getSubjectData() {
+        subjects.clear();
+        progressDialog.setMessage("Loading subjects");
+        AndroidNetworking.get(APIs.AssessmentSubjectAPI)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                AssessmentSubjects assessmentSubjects = new AssessmentSubjects();
+                                assessmentSubjects.setSubjectid(response.getJSONObject(i).getString("subjectid"));
+                                assessmentSubjects.setSubjectname(response.getJSONObject(i).getString("subjectname"));
+                                subjects.add(assessmentSubjects);
+                            }
+                            AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getSubjectDao().insertAllSubjects(subjects);
                             progressDialog.dismiss();
-                            showTopicDialog();
+                            showDownloadTopicDialog();
+                            //getTopicData();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(ScienceAssessmentActivity.this, "Error in loading", Toast.LENGTH_SHORT).show();
+progressDialog.dismiss();
+                    }
+                });
+
+    }
+
+    private void getTopicData(String selectedSub) {
+
+//        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
+
+        topics.clear();
+
+        AndroidNetworking.get(APIs.AssessmentSubjectWiseTopicAPI + selectedSub)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            if (response != null) {
+                                for (int i = 0; i < response.length(); i++) {
+                                    AssessmentToipcsModal assessmentToipcsModal = new AssessmentToipcsModal();
+                                    assessmentToipcsModal.setTopicid(response.getJSONObject(i).getString("topicid"));
+                                    assessmentToipcsModal.setTopicname(response.getJSONObject(i).getString("topicname"));
+                                    assessmentToipcsModal.setSubjectid(response.getJSONObject(i).getString("subjectid"));
+                                    topics.add(assessmentToipcsModal);
+
+                                }
+                                progressDialog.dismiss();
+                                showDownloadTopicDialog();
+                            } else {
+                                Toast.makeText(ScienceAssessmentActivity.this, "No data", Toast.LENGTH_SHORT).show();
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -113,112 +199,13 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     }
                 });
 
-        return topics;
     }
 
-    private void showTopicDialog() {
-        Dialog topicDialog = new DownloadTopicsDialog(this, this, topicNames);
+    private void showDownloadTopicDialog() {
+        Dialog topicDialog = new DownloadTopicsDialog(this, this, topics, languages, subjects);
         topicDialog.show();
-
     }
 
-   /* private void showTopicDialog() {
-        Dialog topicDialog = new DownloadTopicsDialog(this, this, topicNames);
-        topicDialog.show();
-    }*/
-
-    /*  private void setQuestions() {
-
-
-          for (int i = 0; i < scienceModalClassList.size(); i++) {
-
-              final LinearLayout layout = new LinearLayout(this);
-              layout.setPadding(10, 10, 10, 50);
-              layout.setOrientation(LinearLayout.VERTICAL);
-              layout.setTag(scienceModalClassList.get(i).getQuestionId());
-              TextView textView = new TextView(this);
-              textView.setText(scienceModalClassList.get(i).getQuestion());
-              textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
-              textView.setTextColor(getResources().getColor(R.color.colorBlack));
-              LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0);
-              params.setMargins(10, 0, 0, 0);
-              textView.setLayoutParams(params);
-              layout.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_rectangle));
-
-              layout.addView(textView);
-
-              LinearLayout.LayoutParams paramsWrapContaint = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0);
-              paramsWrapContaint.setMargins(10, 0, 0, 0);
-
-              String questionType = scienceModalClassList.get(i).getType();
-              switch (questionType) {
-                  case "singlechoice":
-                      String[] options = scienceModalClassList.get(i).getOptions();
-                      RadioGroup radioGroup = new RadioGroup(this);
-                      radioGroup.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_rectangle));
-                      for (int r = 0; r < options.length; r++) {
-                          RadioButton radioButton = new RadioButton(this);
-                          radioButton.setId(r);
-
-                          radioButton.setText(options[r]);
-                          radioGroup.addView(radioButton);
-                         *//* radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton compoundButton, boolean isSelected) {
-                                if (isSelected) {
-                                    dde_questions.setAnswer(compoundButton.getTag().toString());
-                                    LinearLayout layout = (LinearLayout) compoundButton.getParent().getParent();
-                                    String tag = (String) layout.getTag();
-                                    checkRuleCondition(tag, compoundButton.getTag().toString(), "singlechoice");
-                                }
-                            }
-                        });*//*
-                    }
-//                    radioGroup.setLayoutParams(params);
-                    layout.addView(radioGroup);
-
-
-                    break;
-                case "multiple":
-                    String[] multipleOptions = scienceModalClassList.get(i).getOptions();
-                    for (int r = 0; r < multipleOptions.length; r++) {
-                        CheckBox checkBox = new CheckBox(this);
-                        checkBox.setId(r);
-
-                        checkBox.setText(multipleOptions[r]);
-                       *//* radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton compoundButton, boolean isSelected) {
-                                if (isSelected) {
-                                    dde_questions.setAnswer(compoundButton.getTag().toString());
-                                    LinearLayout layout = (LinearLayout) compoundButton.getParent().getParent();
-                                    String tag = (String) layout.getTag();
-                                    checkRuleCondition(tag, compoundButton.getTag().toString(), "singlechoice");
-                                }
-                            }
-                        });*//*
-                        layout.addView(checkBox);
-
-                    }
-//                    radioGroup.setLayoutParams(params);
-
-                    break;
-                case "fillblank":
-                    break;
-                case "multipleimages":
-
-                    break;
-            }
-            View view = new View(this);
-            view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            LinearLayout.LayoutParams view_params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 0);
-            view_params.setMargins(0, 10, 0, 10);
-            view.setLayoutParams(view_params);
-            layout.addView(view);
-//            ll_root.addView(layout);
-        }
-    }
-*/
     private List<ScienceModalClass> fetchJson(String jasonName) {
         List<ScienceModalClass> scienceModalClasses = new ArrayList<>();
         try {
@@ -248,12 +235,118 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     }
 
     @Override
-    public void getSelectedItems(ArrayList<String> topicIDList) {
-        //   pullTopics(topicIDList);
+    public void getSelectedItems(ArrayList<String> topicIDList, String selectedLang, String selectedSub) {
+        for (int i = 0; i < topicIDList.size(); i++) {
+            insertTopicsToDB(topicIDList.get(i));
+        }
+        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
+        String langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
+
+        downloadQuestions(topicIDList.get(queDownloadIndex), langId, subId);
+        // pullTopics(topicIDList,selectedLang,selectedSub);
 
     }
 
-    private void pullTopics(ArrayList<String> topicIDList) {
+    @Override
+    public void getSelectedTopic(String topic, String selectedSub, String selectedLang) {
+        String topicId = AppDatabase.getDatabaseInstance(this).getAssessmentTopicDao().getTopicIdByTopicName(topic);
+        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
+        String langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
+        showQuestions(topicId, subId, langId);
+    }
+
+    @Override
+    public void getTopicDataBySubject(String selectedSub) {
+        getTopicData(selectedSub);
+    }
+
+
+    private void pullTopics(ArrayList<String> topicIDList, String selectedLang, String selectedSub) {
+
+        this.topicIDList = topicIDList;
+//        downloadQuestions(topicIDList.get(queDownloadIndex));
 
     }
+
+    private void insertTopicsToDB(String topicId) {
+        for (int i = 0; i < topics.size(); i++) {
+            if (topics.get(i).getTopicid().equalsIgnoreCase(topicId))
+                AppDatabase.getDatabaseInstance(this).getAssessmentTopicDao().insertTopic(topics.get(i));
+        }
+        BackupDatabase.backup(this);
+
+    }
+
+    private void downloadQuestions(final String topicId, final String selectedLang, final String selectedSub) {
+        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + selectedSub + "&topicid=" + topicId;
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Downloading...");
+        progressDialog.show();
+        AndroidNetworking.get(questionUrl)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        progressDialog.dismiss();
+                        if (response.length() > 0) {
+                            insertQuestionsToDB(response);
+                            queDownloadIndex++;
+                            if (queDownloadIndex < topicIDList.size())
+                                downloadQuestions(topicIDList.get(queDownloadIndex), selectedLang, selectedSub);
+                            else showSelectTopicDialog();
+                        } else {
+                            Toast.makeText(ScienceAssessmentActivity.this, "Nothing to download...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(ScienceAssessmentActivity.this, "Error in loading", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
+    private void insertQuestionsToDB(JSONArray response) {
+        try {
+            Gson gson = new Gson();
+            String jsonOutput = response.toString();
+            Type listType = new TypeToken<List<ScienceQuestion>>() {
+            }.getType();
+            List<ScienceQuestion> scienceQuestionList = gson.fromJson(jsonOutput, listType);
+            Log.d("hhh", scienceQuestionList.toString());
+            if (scienceQuestionList.size() > 0) {
+                AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().insertAllQuestions(scienceQuestionList);
+                for (int i = 0; i < scienceQuestionList.size(); i++) {
+                    if (scienceQuestionList.get(i).getLstquestionchoice().size() > 0)
+                        AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().insertAllQuestionChoices(scienceQuestionList.get(i).getLstquestionchoice());
+                }
+            }
+            BackupDatabase.backup(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void showQuestions(String topicId, String subId, String langId) {
+        List<ScienceQuestion> scienceQuestionList = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getQuestionListByLangIdSubIdTopicId(topicId, langId, subId);
+        if (scienceQuestionList.isEmpty()) {
+            Toast.makeText(this, "No questions", Toast.LENGTH_SHORT).show();
+        } else {
+            ScienceAdapter scienceAdapter = new ScienceAdapter(this, scienceQuestionList);
+            discreteScrollView.setOrientation(DSVOrientation.HORIZONTAL);
+            discreteScrollView.addOnItemChangedListener(this);
+            discreteScrollView.setItemTransitionTimeMillis(200);
+            discreteScrollView.setItemTransformer(new ScaleTransformer.Builder()
+                    .setMinScale(0.5f)
+                    .build());
+            discreteScrollView.setAdapter(scienceAdapter);
+            scienceAdapter.notifyDataSetChanged();
+        }
+    }
+
+
 }
