@@ -10,13 +10,30 @@ public class ScienceQuestionChoice {
     @NonNull
     @PrimaryKey
     private String qcid;
-    private String correct;
-
-    private String choicename;
 
     private String qid;
-
     private String matchingname;
+    private String choicename;
+    private String correct;
+    private String matchingurl;
+    private String choiceurl;
+
+
+    public String getMatchingurl() {
+        return matchingurl;
+    }
+
+    public void setMatchingurl(String matchingurl) {
+        this.matchingurl = matchingurl;
+    }
+
+    public String getChoiceurl() {
+        return choiceurl;
+    }
+
+    public void setChoiceurl(String choiceurl) {
+        this.choiceurl = choiceurl;
+    }
 
     public String getCorrect ()
     {

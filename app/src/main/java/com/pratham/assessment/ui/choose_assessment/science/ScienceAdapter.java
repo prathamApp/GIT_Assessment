@@ -2,37 +2,33 @@ package com.pratham.assessment.ui.choose_assessment.science;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
-import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
-import com.pratham.assessment.domain.ScienceQuestionChoice;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.ArrangeSequenceViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.FillInTheBlanksWithoutOptionsViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.MatchThePairViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.McqFillInTheBlanksViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.MultipleSelectViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.TrueFalseViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
         1	Multiple Choice  *
         2	Multiple Select *
         3	True or False *
-        4	Matching Pair
+        4	Matching Pair*
         5	Fill-in-the-blank (With Option) *
         6	Fill-in-the-blank *
         7	Arrange sequence
@@ -40,18 +36,27 @@ import java.util.List;
         9	audio
 */
 
-public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHolder> {
+public class ScienceAdapter extends RecyclerView.Adapter {
     Context context;
     List<ScienceQuestion> scienceQuestionList;
+    String loadImagePath = "http://pef1.prathamskills.org//";
+    public static final int MULTIPLE_CHOICE = 1;
+    public static final int MULTIPLE_SELECT = 2;
+    public static final int TRUE_FALSE = 3;
+    public static final int MATCHING_PAIR = 4;
+    public static final int FILL_IN_THE_BLANK_WITH_OPTION = 5;
+    public static final int FILL_IN_THE_BLANK = 6;
+    public static final int ARRANGE_SEQUENCE = 7;
+    public static final int VIDEO = 8;
+    public static final int AUDIO = 9;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends ViewHolder {
         TextView question;
         LinearLayout audioControls, llAnswer, ll_match_pair;
         ImageView questionImage, playVideo, playPause;
         SeekBar seekAudio;
         EditText answerEditText;
         RecyclerView optionsRecycler1, optionsRecycler2;
-
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,41 +79,198 @@ public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHo
         this.scienceQuestionList = scienceQuestionList;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        String questionType = scienceQuestionList.get(position).getQtid();
+        switch (questionType) {
+            case "0":
+                return super.getItemViewType(position);
+            case "1":
+                return MULTIPLE_CHOICE;
+            case "2":
+                return MULTIPLE_SELECT;
+            case "3":
+                return TRUE_FALSE;
+            case "4":
+                return MATCHING_PAIR;
+            case "5":
+                return FILL_IN_THE_BLANK_WITH_OPTION;
+            case "6":
+                return FILL_IN_THE_BLANK;
+            case "7":
+                return ARRANGE_SEQUENCE;
+            case "8":
+                return VIDEO;
+            case "9":
+                return AUDIO;
+        }
+        return super.getItemViewType(position);
+    }
+
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.layout_science_question_row, viewGroup, false);
-        return new MyViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View v;
+
+        switch (viewType) {
+            case MULTIPLE_CHOICE:
+                LayoutInflater mcq = LayoutInflater.from(viewGroup.getContext());
+                v = mcq.inflate(R.layout.layout_mcq_fill_in_the_blanks_with_options_row, viewGroup, false);
+                return new McqFillInTheBlanksViewHolder(v, context);
+
+            case MULTIPLE_SELECT:
+                LayoutInflater multipleSelect = LayoutInflater.from(viewGroup.getContext());
+                v = multipleSelect.inflate(R.layout.layout_multiple_select_row, viewGroup, false);
+                return new MultipleSelectViewHolder(v, context);
+
+            case TRUE_FALSE:
+                LayoutInflater trueFalse = LayoutInflater.from(viewGroup.getContext());
+                v = trueFalse.inflate(R.layout.layout_true_false_row, viewGroup, false);
+                return new TrueFalseViewHolder(v, context);
+
+            case MATCHING_PAIR:
+                LayoutInflater matchPair = LayoutInflater.from(viewGroup.getContext());
+                v = matchPair.inflate(R.layout.layout_match_the_pair_row, viewGroup, false);
+                return new MatchThePairViewHolder(v, context);
+
+            case FILL_IN_THE_BLANK:
+                LayoutInflater fill = LayoutInflater.from(viewGroup.getContext());
+                v = fill.inflate(R.layout.layout_fill_in_the_blanks_wo_option_row, viewGroup, false);
+                return new FillInTheBlanksWithoutOptionsViewHolder(v, context);
+
+            case FILL_IN_THE_BLANK_WITH_OPTION:
+                LayoutInflater fillInWithOption = LayoutInflater.from(viewGroup.getContext());
+                v = fillInWithOption.inflate(R.layout.layout_mcq_fill_in_the_blanks_with_options_row, viewGroup, false);
+                return new McqFillInTheBlanksViewHolder(v, context);
+
+            case ARRANGE_SEQUENCE:
+                LayoutInflater arrangeSeq = LayoutInflater.from(viewGroup.getContext());
+                v = arrangeSeq.inflate(R.layout.layout_arrange_seq_row, viewGroup, false);
+                return new ArrangeSequenceViewHolder(v, context);
+
+           /* case VIDEO:
+                LayoutInflater video = LayoutInflater.from(viewGroup.getContext());
+                v = video.inflate(R.layout.item_content_header, viewGroup, false);
+                return new EmptyHolder(v);
+
+            case AUDIO:
+                LayoutInflater audio = LayoutInflater.from(viewGroup.getContext());
+                v = audio.inflate(R.layout.item_content_header, viewGroup, false);
+                return new EmptyHolder(v);*/
+
+        }
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder myViewHolder, int i) {
         ScienceQuestion scienceQuestion = scienceQuestionList.get(i);
-//        myViewHolder.que_cnt.setText(i + 1 + "/" + scienceQuestionList.size());
         String questionType = scienceQuestion.getQtid();
-        RadioGroup radioGroup;
 
-        myViewHolder.question.setText(scienceQuestion.getQname());
+        switch (Integer.parseInt(questionType)) {
+            case 0:
+                break;
+            case MULTIPLE_CHOICE:
+                McqFillInTheBlanksViewHolder mcqFillInTheBlanksViewHolder = (McqFillInTheBlanksViewHolder) myViewHolder;
+                mcqFillInTheBlanksViewHolder.setMcqsQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+            case MULTIPLE_SELECT:
+                MultipleSelectViewHolder multipleSelectViewHolder = (MultipleSelectViewHolder) myViewHolder;
+                multipleSelectViewHolder.setMultipleSelectQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+            case TRUE_FALSE:
+                TrueFalseViewHolder trueFalseViewHolder = (TrueFalseViewHolder) myViewHolder;
+                trueFalseViewHolder.setTrueFalseQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+
+            case MATCHING_PAIR:
+                MatchThePairViewHolder matchThePairViewHolder = (MatchThePairViewHolder) myViewHolder;
+                matchThePairViewHolder.setMatchPairQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+
+            case FILL_IN_THE_BLANK:
+                FillInTheBlanksWithoutOptionsViewHolder fill = (FillInTheBlanksWithoutOptionsViewHolder) myViewHolder;
+                fill.setFillInTheBlanksQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+
+            case FILL_IN_THE_BLANK_WITH_OPTION:
+                McqFillInTheBlanksViewHolder mcqFillInTheBlanksViewHolder1 = (McqFillInTheBlanksViewHolder) myViewHolder;
+                mcqFillInTheBlanksViewHolder1.setMcqsQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+
+            case ARRANGE_SEQUENCE:
+                ArrangeSequenceViewHolder arrangeSequenceViewHolder = (ArrangeSequenceViewHolder) myViewHolder;
+                arrangeSequenceViewHolder.setArrangeSeqQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+
+            /*case VIDEO:
+                MultipleSelectViewHolder multipleSelectViewHolder = (MultipleSelectViewHolder) myViewHolder;
+                multipleSelectViewHolder.setMultipleSelectQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
+
+            case AUDIO:
+                MultipleSelectViewHolder multipleSelectViewHolder = (MultipleSelectViewHolder) myViewHolder;
+                multipleSelectViewHolder.setMultipleSelectQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;*/
+
+        }
+    }
+
+
+//        myViewHolder.que_cnt.setText(i + 1 + "/" + scienceQuestionList.size());
+    //       String questionType = scienceQuestion.getQtid();
+    //      RadioGroup radioGroup;
+
+     /*   myViewHolder.question.setText(scienceQuestion.getQname());
+        if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+
+
+            Glide.with(context).asBitmap().
+                    load(loadImagePath +).into(new SimpleTarget<Bitmap>(100, 100) {
+                @Override
+                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    Drawable bd = new BitmapDrawable(resource);
+                    myViewHolder.questionImage.setCompoundDrawablesWithIntrinsicBounds(null, null, bd, null);
+                }
+            });
+
+
+        }
         myViewHolder.llAnswer.removeAllViews();
 
         switch (questionType) {
             case "1":
+                myViewHolder.ll_match_pair.setVisibility(View.GONE);
                 myViewHolder.answerEditText.setVisibility(View.GONE);
                 List<ScienceQuestionChoice> options = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
                 if (options != null) {
                     radioGroup = new RadioGroup(context);
                     radioGroup.setBackground(ContextCompat.getDrawable(context, R.drawable.ripple_rectangle));
                     for (int r = 0; r < options.size(); r++) {
-                        RadioButton radioButton = new RadioButton(context);
+                        final RadioButton radioButton = new RadioButton(context);
                         radioButton.setId(r);
-                        radioButton.setText(options.get(r).getChoicename());
+                        if (!options.get(r).getChoiceurl().equalsIgnoreCase("")) {
+
+                            int myWidth = 100;
+                            int myHeight = 100;
+                            Glide.with(context).asBitmap().
+                                    load(loadImagePath + options.get(r).getChoiceurl()).into(new SimpleTarget<Bitmap>(myWidth, myHeight) {
+                                @Override
+                                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                    Drawable bd = new BitmapDrawable(resource);
+                                    radioButton.setCompoundDrawablesWithIntrinsicBounds(null, null, bd, null);
+                                }
+                            });
+                        } else
+                            radioButton.setText(options.get(r).getChoicename());
                         radioGroup.addView(radioButton);
+
                     }
                     myViewHolder.llAnswer.addView(radioGroup);
                 }
                 break;
             case "2":
+                myViewHolder.ll_match_pair.setVisibility(View.GONE);
                 myViewHolder.answerEditText.setVisibility(View.GONE);
                 List<ScienceQuestionChoice> choices = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
 
@@ -129,6 +291,8 @@ public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHo
                 myViewHolder.llAnswer.addView(gridLayout);
                 break;
             case "3":
+                myViewHolder.ll_match_pair.setVisibility(View.GONE);
+
                 myViewHolder.answerEditText.setVisibility(View.GONE);
                 RadioButton radioButtonTrue = new RadioButton(context);
                 radioButtonTrue.setText("True");
@@ -141,15 +305,20 @@ public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHo
                 break;
 
             case "4":
+
+                myViewHolder.llAnswer.setVisibility(View.VISIBLE);
                 myViewHolder.answerEditText.setVisibility(View.GONE);
                 myViewHolder.ll_match_pair.setVisibility(View.VISIBLE);
+                myViewHolder.optionsRecycler1.setVisibility(View.VISIBLE);
+                myViewHolder.optionsRecycler2.setVisibility(View.VISIBLE);
                 List list1 = new ArrayList();
                 List list2 = new ArrayList();
-                List<ScienceQuestionChoice> pairList=new ArrayList<>();
+                List<ScienceQuestionChoice> pairList = new ArrayList<>();
 
                 try {
 
                     pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+                    Log.d("wwwwwwwwwww", pairList.size() + "");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -158,12 +327,25 @@ public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHo
                     list2.add(pairList.get(p).getMatchingname());
                 }
                 MatchPairAdapter matchPairAdapter = new MatchPairAdapter(list1, context);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context.getApplicationContext());
                 myViewHolder.optionsRecycler1.setLayoutManager(linearLayoutManager);
                 myViewHolder.optionsRecycler1.setAdapter(matchPairAdapter);
+
+                Collections.shuffle(list2);
+                DragDropAdapter dragDropAdapter = new DragDropAdapter(list2);
+                ItemTouchHelper.Callback callback =
+                        new ItemMoveCallback(dragDropAdapter);
+                ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                touchHelper.attachToRecyclerView(myViewHolder.optionsRecycler2);
+                LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context.getApplicationContext());
+                myViewHolder.optionsRecycler2.setLayoutManager(linearLayoutManager1);
+                myViewHolder.optionsRecycler2.setAdapter(dragDropAdapter);
+                Log.d("wwwwwwwwwww", pairList.size() + "");
+
+
                 break;
-            case "5":
-                //  textView = createQuestionTextView();
+            case "5":*/
+    //  textView = createQuestionTextView();
 //                textView.setText(scienceQuestion.getQuestion());
 //                myViewHolder.queAns.addView(textView);
 
@@ -191,8 +373,9 @@ public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHo
                     etAns.setLayoutParams(params);
                     myViewHolder.queAns.addView(etAns);
                 }*/
-                break;
+               /* break;
             case "6":
+                myViewHolder.ll_match_pair.setVisibility(View.GONE);
                 myViewHolder.answerEditText.setVisibility(View.VISIBLE);
                 break;
             case "7":
@@ -203,7 +386,7 @@ public class ScienceAdapter extends RecyclerView.Adapter<ScienceAdapter.MyViewHo
                 break;
 
         }
-    }
+}*/
 
     @Override
     public int getItemCount() {

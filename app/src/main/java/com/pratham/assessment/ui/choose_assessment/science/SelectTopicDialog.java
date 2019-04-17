@@ -1,5 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment.science;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -51,7 +52,7 @@ public class SelectTopicDialog extends Dialog {
     TopicSelectListener topicSelectListener;
 
     public SelectTopicDialog(@NonNull Context context, TopicSelectListener topicSelectListener, List topicList, List<AssessmentLanguages> languages, List<AssessmentSubjects> subjects) {
-        super(context, android.R.style.Theme_DeviceDefault_Light_NoActionBar);
+        super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         this.toipcsModalList = topicList;
         this.context = context;
         this.topicSelectListener = topicSelectListener;
@@ -112,6 +113,7 @@ public class SelectTopicDialog extends Dialog {
     @OnClick(R.id.btn_close)
     public void closeDialog() {
         dismiss();
+        ((Activity)context).finish();
     }
 
 
@@ -120,8 +122,7 @@ public class SelectTopicDialog extends Dialog {
         String selectedTopic = spinner_topic.getSelectedItem().toString();
         String selectedSub = spinner_subject.getSelectedItem().toString();
         String selectedLang = spinner_lang.getSelectedItem().toString();
-        topicSelectListener.getSelectedTopic(selectedTopic, selectedSub, selectedLang);
-        dismiss();
+        topicSelectListener.getSelectedTopic(selectedTopic, selectedSub, selectedLang,this);
     }
 
 

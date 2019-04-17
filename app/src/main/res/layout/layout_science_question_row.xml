@@ -55,14 +55,20 @@
             android:layout_weight="3" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_ans"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_weight="1">
 
+        <LinearLayout
+            android:id="@+id/ll_ans"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
 
+        </LinearLayout>
+    </ScrollView>
 
     <EditText
         android:id="@+id/et_answer"
@@ -70,14 +76,14 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:hint="Enter Answer"
-        android:textSize="@dimen/_15sdp"
-        android:visibility="gone" />
+        android:textSize="@dimen/_15sdp" />
 
     <LinearLayout
         android:id="@+id/ll_match_pair"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:visibility="visible">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rl_ans_options1"
@@ -90,6 +96,5 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-    </LinearLayout>
     </LinearLayout>
 </LinearLayout>

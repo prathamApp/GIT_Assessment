@@ -3,12 +3,14 @@ package com.pratham.assessment.ui.choose_assessment.science;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Chronometer;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -53,6 +55,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @BindView(R.id.question_discrete_view)
     DiscreteScrollView discreteScrollView;
+    @BindView(R.id.timer)
+    Chronometer chronometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +124,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     @Override
                     public void onError(ANError anError) {
                         Toast.makeText(ScienceAssessmentActivity.this, "Error in loading", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                        progressDialog.dismiss();
                     }
                 });
 
@@ -153,7 +157,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     @Override
                     public void onError(ANError anError) {
                         Toast.makeText(ScienceAssessmentActivity.this, "Error in loading", Toast.LENGTH_SHORT).show();
-progressDialog.dismiss();
+                        progressDialog.dismiss();
                     }
                 });
 
@@ -235,7 +239,8 @@ progressDialog.dismiss();
     }
 
     @Override
-    public void getSelectedItems(ArrayList<String> topicIDList, String selectedLang, String selectedSub) {
+    public void getSelectedItems(ArrayList<String> topicIDList, String selectedLang, String selectedSub, List<AssessmentToipcsModal> topics) {
+        this.topics = topics;
         for (int i = 0; i < topicIDList.size(); i++) {
             insertTopicsToDB(topicIDList.get(i));
         }
@@ -243,30 +248,18 @@ progressDialog.dismiss();
         String langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
 
         downloadQuestions(topicIDList.get(queDownloadIndex), langId, subId);
-        // pullTopics(topicIDList,selectedLang,selectedSub);
 
     }
 
     @Override
-    public void getSelectedTopic(String topic, String selectedSub, String selectedLang) {
+    public void getSelectedTopic(String topic, String selectedSub, String selectedLang, SelectTopicDialog selectTopicDialog) {
         String topicId = AppDatabase.getDatabaseInstance(this).getAssessmentTopicDao().getTopicIdByTopicName(topic);
         String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
         String langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
-        showQuestions(topicId, subId, langId);
-    }
-
-    @Override
-    public void getTopicDataBySubject(String selectedSub) {
-        getTopicData(selectedSub);
-    }
-
-
-    private void pullTopics(ArrayList<String> topicIDList, String selectedLang, String selectedSub) {
-
-        this.topicIDList = topicIDList;
-//        downloadQuestions(topicIDList.get(queDownloadIndex));
+        showQuestions(topicId, subId, langId, selectTopicDialog);
 
     }
+
 
     private void insertTopicsToDB(String topicId) {
         for (int i = 0; i < topics.size(); i++) {
@@ -295,7 +288,10 @@ progressDialog.dismiss();
                             queDownloadIndex++;
                             if (queDownloadIndex < topicIDList.size())
                                 downloadQuestions(topicIDList.get(queDownloadIndex), selectedLang, selectedSub);
-                            else showSelectTopicDialog();
+                            else {
+                                progressDialog.dismiss();
+                                showSelectTopicDialog();
+                            }
                         } else {
                             Toast.makeText(ScienceAssessmentActivity.this, "Nothing to download...", Toast.LENGTH_SHORT).show();
                         }
@@ -331,11 +327,12 @@ progressDialog.dismiss();
 
     }
 
-    private void showQuestions(String topicId, String subId, String langId) {
+    private void showQuestions(String topicId, String subId, String langId, SelectTopicDialog selectTopicDialog) {
         List<ScienceQuestion> scienceQuestionList = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getQuestionListByLangIdSubIdTopicId(topicId, langId, subId);
         if (scienceQuestionList.isEmpty()) {
             Toast.makeText(this, "No questions", Toast.LENGTH_SHORT).show();
         } else {
+            selectTopicDialog.dismiss();
             ScienceAdapter scienceAdapter = new ScienceAdapter(this, scienceQuestionList);
             discreteScrollView.setOrientation(DSVOrientation.HORIZONTAL);
             discreteScrollView.addOnItemChangedListener(this);
@@ -345,8 +342,14 @@ progressDialog.dismiss();
                     .build());
             discreteScrollView.setAdapter(scienceAdapter);
             scienceAdapter.notifyDataSetChanged();
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        chronometer.stop();
+    }
 }

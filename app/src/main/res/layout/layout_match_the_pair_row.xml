@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_question"
+        style="@style/CustomQuestionStyle"
+        />
+
+    <ImageView
+        android:id="@+id/tv_question_image"
+        style="@style/CustomQuestionImageStyle" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_match_pair"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="visible">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rl_ans_options1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ripple_rectangle"
+            android:layout_weight="1" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rl_ans_options2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ripple_rectangle"
+
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment.science;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -47,7 +48,7 @@ public class DownloadTopicsDialog extends Dialog {
     @BindView(R.id.btn_close)
     ImageButton btn_close;
     @BindView(R.id.txt_message)
-    TextView topics;
+    TextView tv_topics;
     @BindView(R.id.flowLayout)
     GridLayout flowLayout;
     @BindView(R.id.ll_lang_sub)
@@ -68,10 +69,11 @@ public class DownloadTopicsDialog extends Dialog {
     List<AssessmentSubjects> assessmentSubjectsList;
     List<CheckBox> checkBoxes = new ArrayList<>();
     TopicSelectListener topicSelectListener;
+    List<AssessmentToipcsModal> topics;
 
-    public DownloadTopicsDialog(@NonNull Context context, TopicSelectListener topicSelectListener, List<AssessmentToipcsModal> topics, List<AssessmentLanguages> languages, List<AssessmentSubjects> subjects) {
-        super(context, android.R.style.Theme_DeviceDefault_Light_NoActionBar);
-        this.toipcsModalList = topics;
+    public DownloadTopicsDialog(@NonNull Context context, TopicSelectListener topicSelectListener, List<AssessmentToipcsModal> tv_topics, List<AssessmentLanguages> languages, List<AssessmentSubjects> subjects) {
+        super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+        this.toipcsModalList = tv_topics;
         this.assessmentLanguagesList = languages;
         this.assessmentSubjectsList = subjects;
         this.context = context;
@@ -87,7 +89,7 @@ public class DownloadTopicsDialog extends Dialog {
         ll_filters.setVisibility(View.VISIBLE);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
-        topics.setText("Select Topics");
+        tv_topics.setText("Select Topics");
 
         String[] lang = new String[assessmentLanguagesList.size() + 1];
         lang[0] = "Select Language";
@@ -126,7 +128,7 @@ public class DownloadTopicsDialog extends Dialog {
                     Toast.makeText(context, "Please select subject", Toast.LENGTH_SHORT).show();
                 else {
                     selectedSub = spinnerSubject.getSelectedItem().toString();
-                    String subId= AppDatabase.getDatabaseInstance(context).getSubjectDao().getIdByName(selectedSub);
+                    String subId = AppDatabase.getDatabaseInstance(context).getSubjectDao().getIdByName(selectedSub);
                     getTopicData(subId);
                 }
             }
@@ -156,6 +158,8 @@ public class DownloadTopicsDialog extends Dialog {
     @OnClick(R.id.btn_close)
     public void closeDialog() {
         dismiss();
+        ((Activity) context).finish();
+
     }
 
     @OnClick(R.id.txt_clear_changes)
@@ -170,7 +174,7 @@ public class DownloadTopicsDialog extends Dialog {
         if (spinnerLang.getSelectedItem().toString().equalsIgnoreCase("Select Language")
                 || spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject")) {
             Toast.makeText(context, "Please select language and subject", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
 
             new AlertDialog.Builder(context)
                     .setTitle("Download Questions")
@@ -188,7 +192,7 @@ public class DownloadTopicsDialog extends Dialog {
 //                            spinnerSubject.setSelection();
                                 selectedSub = spinnerSubject.getSelectedItem().toString();
                                 dismiss();
-                                topicSelectListener.getSelectedItems(topicIDList, selectedLang, selectedSub);
+                                topicSelectListener.getSelectedItems(topicIDList, selectedLang, selectedSub, topics);
                             } else
                                 Toast.makeText(context, "Please select topic", Toast.LENGTH_SHORT).show();
                             dismiss();
@@ -204,7 +208,7 @@ public class DownloadTopicsDialog extends Dialog {
     private void getTopicData(String selectedSub) {
 
 //        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
-        final List<AssessmentToipcsModal> topics = new ArrayList<>();
+        topics = new ArrayList<>();
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Loading language");
         progressDialog.setCancelable(false);

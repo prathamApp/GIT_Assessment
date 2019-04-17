@@ -63,6 +63,9 @@ public class Assessment_Constants {
     public static String currentSupervisorID = "";
 //    public static boolean GROUP_LOGIN = false;
 
+    public static String loadOnlineImagePath = "http://pef1.prathamskills.org//";
+
+
 
     public static enum URL {
         BROWSE_BY_ID(BASE_URL + "get?id="),
