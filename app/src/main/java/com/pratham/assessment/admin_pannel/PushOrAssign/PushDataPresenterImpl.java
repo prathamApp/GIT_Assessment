@@ -62,6 +62,7 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
                         supervisorData = new JSONArray(),
                         groupsData = new JSONArray(),
                         assessmentData = new JSONArray(),
+                        assessmentScienceData = new JSONArray(),
                         logsData = new JSONArray();
 
                 @Override
@@ -82,10 +83,13 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
                     learntWords = fillLearntWordsData(learntWordsList);
                     List<SupervisorData> supervisorDataList = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().getAllSupervisorData();
                     supervisorData = fillSupervisorData(supervisorDataList);
-                  */  List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
+                  */
+                    List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
                     logsData = fillLogsData(logsList);
-                    List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllAssessment();
+                    List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllECEAssessment();
                     assessmentData = fillAssessmentData(assessmentList);
+                    List<Assessment> scienceAssessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllScienceAssessment();
+                    assessmentScienceData = fillAssessmentData(scienceAssessmentList);
                     List<Groups> groupsList = AppDatabase.getDatabaseInstance(context).getGroupsDao().getAllGroups();
                     groupsData = fillGroupsData(groupsList);
 
@@ -168,21 +172,24 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
                     if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
                         JSONObject object = new JSONObject();
                         try {
-                            String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData,studentData);
+                            String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
 
                             object.put("username", "pratham");
                             object.put("password", "pratham");
                             if (checkEmptyness(requestString))
-                                getFacilityIdfromRaspberry(Assessment_Constants.FACILITY_ID, Assessment_Constants.RASP_IP + "/api/session/", object,requestString);
+                                getFacilityIdfromRaspberry(Assessment_Constants.FACILITY_ID, Assessment_Constants.RASP_IP + "/api/session/", object, requestString);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else if (AssessmentApplication.wiseF.isDeviceConnectedToMobileNetwork() || AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
                         if (AssessmentApplication.isTablet) {
-                            String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData,studentData);
+                            String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
+                            String requestStringScience = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
 
-                            if (checkEmptyness(requestString))
+                            if (checkEmptyness(requestString)) {
                                 pushDataToServer(requestString, AssessmentApplication.uploadDataUrl);
+                                pushDataScienceToServer(requestStringScience, AssessmentApplication.uploadScienceUrl);
+                            }
                         }
                     }
                     //WriteSettings(context, requestString, transferFileName);
@@ -194,6 +201,43 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void pushDataScienceToServer(String requestStringScience, String uploadDataUrl) {
+        try {
+            JSONObject jsonArrayData = new JSONObject(requestStringScience);
+            //final String entryId = data.get(0).getAsJsonObject().get("EntryId").getAsString();
+
+            final ProgressDialog dialog = new ProgressDialog(context);
+            Assessment_Utility.showDialogInApiCalling(dialog, context, "Uploading Data..");
+
+            AndroidNetworking.post(uploadDataUrl)
+                    .addHeaders("Content-Type", "application/json")
+                    .addJSONObjectBody(jsonArrayData)
+                    .addBodyParameter("facility", Assessment_Constants.FACILITY_ID)//FastSave.getInstance().getString(Assessment_Constants.FACILITY_ID, ""))
+                    .build()
+                    .getAsString(new StringRequestListener() {
+
+                        @Override
+                        public void onResponse(String response) {
+                            Toast.makeText(context, "Data pushed successfully", Toast.LENGTH_SHORT).show();
+                            Assessment_Utility.dismissDialog(dialog);
+                            view.finishActivity();
+                            setPushFlag();
+                        }
+
+                        @Override
+                        public void onError(ANError anError) {
+                            Toast.makeText(context, "Data push failed", Toast.LENGTH_SHORT).show();
+                            Assessment_Utility.dismissDialog(dialog);
+                            view.finishActivity();
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void pushDataToServer(String data, String url) {
@@ -231,6 +275,7 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
             e.printStackTrace();
         }
     }
+
     private boolean checkEmptyness(String requestString) {
         try {
             JSONObject jsonObject = new JSONObject(requestString);
@@ -249,7 +294,7 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("error : ","JSON Parsing error");
+            Log.d("error : ", "JSON Parsing error");
             return false;
         }
     }
@@ -400,13 +445,13 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
             JSONObject sessionObj = new JSONObject();
             JSONObject metaDataObj = new JSONObject();
             metaDataObj.put("ScoreCount", scoreData.length());
-           // metaDataObj.put("AttendanceCount", attendanceData.length());
-          //  metaDataObj.put("SessionsCount", sessionData.length());
-           // metaDataObj.put("learntWordsCount", learntWordsData.length());
-        //    metaDataObj.put("supervisorDataCount", supervisorData.length());
-          //  metaDataObj.put("logsCount", logsData.length());
-        //    metaDataObj.put("assessmentCount", assessmentData.length());
-        //    metaDataObj.put("TransId", AssessmentApplication.getUniqueID());
+            // metaDataObj.put("AttendanceCount", attendanceData.length());
+            //  metaDataObj.put("SessionsCount", sessionData.length());
+            // metaDataObj.put("learntWordsCount", learntWordsData.length());
+            //    metaDataObj.put("supervisorDataCount", supervisorData.length());
+            //  metaDataObj.put("logsCount", logsData.length());
+            //    metaDataObj.put("assessmentCount", assessmentData.length());
+            //    metaDataObj.put("TransId", AssessmentApplication.getUniqueID());
             metaDataObj.put("CRLID", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("CRLID"));
             metaDataObj.put("group1", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("group1"));
             metaDataObj.put("group2", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("group2"));
@@ -444,7 +489,7 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
             sessionObj.put("assessmentData", assessmentData);
             sessionObj.put("supervisor", supervisorData);
 
-            requestString = "{ \"session\": "  + sessionObj +
+            requestString = "{ \"session\": " + sessionObj +
                     ", \"metadata\": " + metaDataObj +
                     "}";
 /*
@@ -481,25 +526,25 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
         return newSessionsData;
     }
 
-   /* private JSONArray fillLearntWordsData(List<LearntWords> learntWordsList) {
-        JSONArray newLearntWords = new JSONArray();
-        JSONObject _learntWordsObj;
-        try {
-            for (int i = 0; i < learntWordsList.size(); i++) {
-                _learntWordsObj = new JSONObject();
-                _learntWordsObj.put("studentId", learntWordsList.get(i).getStudentId());
-                _learntWordsObj.put("synId", learntWordsList.get(i).getSynId());
-                _learntWordsObj.put("wordUUId", learntWordsList.get(i).getWordUUId());
-                _learntWordsObj.put("word", learntWordsList.get(i).getWord());
-                newLearntWords.put(_learntWordsObj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return newLearntWords;
-    }
-*/
+    /* private JSONArray fillLearntWordsData(List<LearntWords> learntWordsList) {
+         JSONArray newLearntWords = new JSONArray();
+         JSONObject _learntWordsObj;
+         try {
+             for (int i = 0; i < learntWordsList.size(); i++) {
+                 _learntWordsObj = new JSONObject();
+                 _learntWordsObj.put("studentId", learntWordsList.get(i).getStudentId());
+                 _learntWordsObj.put("synId", learntWordsList.get(i).getSynId());
+                 _learntWordsObj.put("wordUUId", learntWordsList.get(i).getWordUUId());
+                 _learntWordsObj.put("word", learntWordsList.get(i).getWord());
+                 newLearntWords.put(_learntWordsObj);
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+             return null;
+         }
+         return newLearntWords;
+     }
+ */
     private JSONArray fillCrlData(List<Crl> crlsList) {
 
         JSONArray crlsData = new JSONArray();
@@ -600,28 +645,28 @@ public class PushDataPresenterImpl implements PushDataContract.PushDataPresenter
         return scoreData;
     }
 
-  /*  private JSONArray fillSupervisorData(List<SupervisorData> supervisorDataList) {
-        JSONArray supervisorData = new JSONArray();
-        JSONObject _supervisorDataObj;
-        try {
-            for (int i = 0; i < supervisorDataList.size(); i++) {
-                _supervisorDataObj = new JSONObject();
-                SupervisorData supervisorDataTemp = supervisorDataList.get(i);
-                _supervisorDataObj.put("sId", supervisorDataTemp.getsId());
-                _supervisorDataObj.put("assessmentSessionId", supervisorDataTemp.getAssessmentSessionId());
-                _supervisorDataObj.put("supervisorId", supervisorDataTemp.getSupervisorId());
-                _supervisorDataObj.put("supervisorName", supervisorDataTemp.getSupervisorName());
-                _supervisorDataObj.put("supervisorPhoto", supervisorDataTemp.getSupervisorPhoto());
+    /*  private JSONArray fillSupervisorData(List<SupervisorData> supervisorDataList) {
+          JSONArray supervisorData = new JSONArray();
+          JSONObject _supervisorDataObj;
+          try {
+              for (int i = 0; i < supervisorDataList.size(); i++) {
+                  _supervisorDataObj = new JSONObject();
+                  SupervisorData supervisorDataTemp = supervisorDataList.get(i);
+                  _supervisorDataObj.put("sId", supervisorDataTemp.getsId());
+                  _supervisorDataObj.put("assessmentSessionId", supervisorDataTemp.getAssessmentSessionId());
+                  _supervisorDataObj.put("supervisorId", supervisorDataTemp.getSupervisorId());
+                  _supervisorDataObj.put("supervisorName", supervisorDataTemp.getSupervisorName());
+                  _supervisorDataObj.put("supervisorPhoto", supervisorDataTemp.getSupervisorPhoto());
 
-                supervisorData.put(_supervisorDataObj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return supervisorData;
-    }
-*/
+                  supervisorData.put(_supervisorDataObj);
+              }
+          } catch (Exception e) {
+              e.printStackTrace();
+              return null;
+          }
+          return supervisorData;
+      }
+  */
     private JSONArray fillLogsData(List<Modal_Log> logsList) {
         JSONArray logsData = new JSONArray();
         JSONObject _logsObj;

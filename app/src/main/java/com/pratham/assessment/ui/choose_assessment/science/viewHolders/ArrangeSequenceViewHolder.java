@@ -23,8 +23,10 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.ui.choose_assessment.science.DragDropAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
+import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder {
+public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder  implements StartDragListener {
     @BindView(R.id.tv_question)
     TextView question;
     @BindView(R.id.tv_question_image)
@@ -42,15 +44,20 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder {
     RecyclerView recyclerArrangeSeq;
     ScienceQuestion scienceQuestion;
     Context context;
+    ScienceAdapter scienceAdapter;
+    ItemTouchHelper touchHelper;
 
-    public ArrangeSequenceViewHolder(@NonNull View itemView, Context context) {
+
+    public ArrangeSequenceViewHolder(@NonNull View itemView, Context context, ScienceAdapter scienceAdapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = context;
-        this.scienceQuestion = scienceQuestion;
+        this.scienceAdapter= scienceAdapter;
+
     }
 
-    public void setArrangeSeqQuestion(ScienceQuestion scienceQuestion, int pos) {
+    public void setArrangeSeqQuestion(ScienceQuestion scienceQuestion1, int pos) {
+        this.scienceQuestion = scienceQuestion1;
         question.setText(scienceQuestion.getQname());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
@@ -68,7 +75,7 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder {
                     });
 
 
-        }
+        }else questionImage.setVisibility(View.GONE);
         List list1 = new ArrayList();
 
         List<ScienceQuestionChoice> pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
@@ -78,16 +85,22 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder {
                 list1.add(pairList.get(p).getChoicename());
             }
 
-
-            DragDropAdapter dragDropAdapter = new DragDropAdapter(list1, context);
+            DragDropAdapter dragDropAdapter = new DragDropAdapter(this, list1, context, scienceAdapter);
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            touchHelper = new ItemTouchHelper(callback);
+            touchHelper.attachToRecyclerView(null);
             touchHelper.attachToRecyclerView(recyclerArrangeSeq);
             LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context.getApplicationContext());
             recyclerArrangeSeq.setLayoutManager(linearLayoutManager1);
             recyclerArrangeSeq.setAdapter(dragDropAdapter);
 
         }
+    }
+
+    @Override
+    public void requestDrag(RecyclerView.ViewHolder viewHolder) {
+        touchHelper.startDrag(viewHolder);
+
     }
 }

@@ -81,7 +81,7 @@ public class  ScaleTransformer implements DiscreteScrollItemTransformer {
 
         private void assertAxis(Pivot pivot, @Pivot.Axis int axis) {
             if (pivot.getAxis() != axis) {
-                throw new IllegalArgumentException("You passed a Pivot for wrong axis.");
+                throw new IllegalArgumentException("You passed radio_button_bg Pivot for wrong axis.");
             }
         }
     }

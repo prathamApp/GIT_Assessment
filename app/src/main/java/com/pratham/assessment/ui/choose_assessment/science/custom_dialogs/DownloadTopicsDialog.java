@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment.science;
+package com.pratham.assessment.ui.choose_assessment.science.custom_dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,16 +23,24 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
+import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentSubjects;
+import com.pratham.assessment.domain.AssessmentTest;
+import com.pratham.assessment.domain.AssessmentTestModal;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.TopicSelectListener;
 import com.pratham.assessment.utilities.APIs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,19 +68,22 @@ public class DownloadTopicsDialog extends Dialog {
     @BindView(R.id.spinner_subject)
     Spinner spinnerSubject;
 
+    @BindView(R.id.txt_save)
+    TextView btnOk;
+
     String selectedLang, selectedSub;
 
 
     Context context;
-    List<AssessmentToipcsModal> toipcsModalList;
+    List<AssessmentPaperPattern> toipcsModalList;
     List<AssessmentLanguages> assessmentLanguagesList;
     List<AssessmentSubjects> assessmentSubjectsList;
     List<CheckBox> checkBoxes = new ArrayList<>();
     TopicSelectListener topicSelectListener;
     List<AssessmentToipcsModal> topics;
 
-    public DownloadTopicsDialog(@NonNull Context context, TopicSelectListener topicSelectListener, List<AssessmentToipcsModal> tv_topics, List<AssessmentLanguages> languages, List<AssessmentSubjects> subjects) {
-        super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+    public DownloadTopicsDialog(@NonNull Context context, TopicSelectListener topicSelectListener, List<AssessmentPaperPattern> tv_topics, List<AssessmentLanguages> languages, List<AssessmentSubjects> subjects) {
+        super(context, android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen);
         this.toipcsModalList = tv_topics;
         this.assessmentLanguagesList = languages;
         this.assessmentSubjectsList = subjects;
@@ -89,7 +100,7 @@ public class DownloadTopicsDialog extends Dialog {
         ll_filters.setVisibility(View.VISIBLE);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
-        tv_topics.setText("Select Topics");
+        tv_topics.setText("Download Exams");
 
         String[] lang = new String[assessmentLanguagesList.size() + 1];
         lang[0] = "Select Language";
@@ -129,7 +140,8 @@ public class DownloadTopicsDialog extends Dialog {
                 else {
                     selectedSub = spinnerSubject.getSelectedItem().toString();
                     String subId = AppDatabase.getDatabaseInstance(context).getSubjectDao().getIdByName(selectedSub);
-                    getTopicData(subId);
+//                    getTopicData(subId);
+                    getExamData(subId);
                 }
             }
 
@@ -169,86 +181,137 @@ public class DownloadTopicsDialog extends Dialog {
         }
     }
 
-    @OnClick(R.id.txt_ok)
+    @OnClick(R.id.txt_save)
     public void ok() {
         if (spinnerLang.getSelectedItem().toString().equalsIgnoreCase("Select Language")
                 || spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject")) {
             Toast.makeText(context, "Please select language and subject", Toast.LENGTH_SHORT).show();
         } else {
+            final List<String> topicIDList = new ArrayList();
+            for (int i = 0; i < checkBoxes.size(); i++) {
+                if (checkBoxes.get(i).isChecked()) {
+                    topicIDList.add(checkBoxes.get(i).getTag().toString());
+                }
+            }
+            if (!topicIDList.isEmpty()) {
+                new AlertDialog.Builder(context)
+                        .setTitle("Download Questions")
+                        .setMessage("Download selected topic questions?")
+                        .setPositiveButton(android.R.string.yes, new OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
 
-            new AlertDialog.Builder(context)
-                    .setTitle("Download Questions")
-                    .setMessage("Download selected topic questions?")
-                    .setPositiveButton(android.R.string.yes, new OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            ArrayList<String> topicIDList = new ArrayList();
-                            for (int i = 0; i < checkBoxes.size(); i++) {
-                                if (checkBoxes.get(i).isChecked()) {
-                                    topicIDList.add(checkBoxes.get(i).getTag().toString());
-                                }
-                            }
-                            if (!topicIDList.isEmpty()) {
                                 selectedLang = spinnerLang.getSelectedItem().toString();
 //                            spinnerSubject.setSelection();
                                 selectedSub = spinnerSubject.getSelectedItem().toString();
                                 dismiss();
                                 topicSelectListener.getSelectedItems(topicIDList, selectedLang, selectedSub, topics);
-                            } else
-                                Toast.makeText(context, "Please select topic", Toast.LENGTH_SHORT).show();
-                            dismiss();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+            } else
+                Toast.makeText(context, "Please select exam", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private void getTopicData(String selectedSub) {
+     /* private void getTopicData(String selectedSubId) {
 
-//        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
-        topics = new ArrayList<>();
+  //        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
+          topics = new ArrayList<>();
+          final ProgressDialog progressDialog = new ProgressDialog(context);
+          progressDialog.setMessage("Loading Topic");
+          progressDialog.setCancelable(false);
+          progressDialog.show();
+          AndroidNetworking.get(APIs.AssessmentSubjectWiseTopicAPI + selectedSubId)
+                  .build()
+                  .getAsJSONArray(new JSONArrayRequestListener() {
+                      @Override
+                      public void onResponse(JSONArray response) {
+                          try {
+                              if (response != null) {
+                                  for (int i = 0; i < response.length(); i++) {
+                                      AssessmentToipcsModal assessmentToipcsModal = new AssessmentToipcsModal();
+                                      assessmentToipcsModal.setTopicid(response.getJSONObject(i).getString("topicid"));
+                                      assessmentToipcsModal.setTopicname(response.getJSONObject(i).getString("topicname"));
+                                      assessmentToipcsModal.setSubjectid(response.getJSONObject(i).getString("subjectid"));
+                                      topics.add(assessmentToipcsModal);
+
+                                  }
+                                  progressDialog.dismiss();
+                                  setTopicsToCheckBox(topics);
+                              } else {
+                                  Toast.makeText(context, "No data", Toast.LENGTH_SHORT).show();
+                              }
+
+                          } catch (JSONException e) {
+                              e.printStackTrace();
+                          }
+                      }
+
+                      @Override
+                      public void onError(ANError anError) {
+                          Toast.makeText(context, "Error in loading", Toast.LENGTH_SHORT).show();
+                          progressDialog.dismiss();
+                      }
+                  });
+
+      }*/
+
+    private void getExamData(String subId) {
         final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading language");
+        progressDialog.setMessage("Loading Exams");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentSubjectWiseTopicAPI + selectedSub)
+        AndroidNetworking.get(APIs.AssessmentExamAPI + subId)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsString(new StringRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            if (response != null) {
-                                for (int i = 0; i < response.length(); i++) {
-                                    AssessmentToipcsModal assessmentToipcsModal = new AssessmentToipcsModal();
-                                    assessmentToipcsModal.setTopicid(response.getJSONObject(i).getString("topicid"));
-                                    assessmentToipcsModal.setTopicname(response.getJSONObject(i).getString("topicname"));
-                                    assessmentToipcsModal.setSubjectid(response.getJSONObject(i).getString("subjectid"));
-                                    topics.add(assessmentToipcsModal);
-
-                                }
-                                progressDialog.dismiss();
-                                setTopicsToCheckBox(topics);
-                            } else {
-                                Toast.makeText(context, "No data", Toast.LENGTH_SHORT).show();
+                    public void onResponse(String response) {
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<List<AssessmentTestModal>>() {
+                        }.getType();
+                        List<AssessmentTest> assessmentTests = new ArrayList<>();
+                        List<AssessmentTestModal> assessmentTestModals = new ArrayList<>();
+                        assessmentTestModals = gson.fromJson(response, listType);
+                        assessmentTests.clear();
+                        for (int i = 0; i < assessmentTestModals.size(); i++) {
+                            assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
+                            for (int j = 0; j < assessmentTests.size(); j++) {
+                                assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
+                                assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
                             }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        }
+                        if (!assessmentTests.isEmpty()) {
+                            AppDatabase.getDatabaseInstance(context).getTestDao().insertAllTest(assessmentTests);
+                            progressDialog.dismiss();
+                            flowLayout.removeAllViews();
+                            setTopicsToCheckBox(assessmentTests);
+                        } else {
+                            Toast.makeText(context, "No Exams..", Toast.LENGTH_SHORT).show();
+//                           btnOk.setEnabled(false);
                         }
                     }
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
+                        Toast.makeText(context, "" + anError, Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
 
-    private void setTopicsToCheckBox(List<AssessmentToipcsModal> topics) {
+    /*private void setTopicsToCheckBox(List<AssessmentToipcsModal> topics) {
+        btnOk.setEnabled(true);
+
         for (int i = 0; i < topics.size(); i++) {
             CheckBox checkBox = new CheckBox(context);
             checkBox.setText(topics.get(i).getTopicname());
@@ -259,6 +322,26 @@ public class DownloadTopicsDialog extends Dialog {
             param.setGravity(Gravity.FILL_HORIZONTAL);
             checkBox.setLayoutParams(param);
             flowLayout.addView(checkBox);
+            flowLayout.setColumnCount(2);
+            checkBoxes.add(checkBox);
+        }
+
+    }*/
+
+    private void setTopicsToCheckBox(List<AssessmentTest> topics) {
+//        btnOk.setEnabled(false);
+
+        for (int i = 0; i < topics.size(); i++) {
+            CheckBox checkBox = new CheckBox(context);
+            checkBox.setText(topics.get(i).getExamname());
+            checkBox.setTag(topics.get(i).getExamid());
+            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+            param.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            param.width = GridLayout.LayoutParams.WRAP_CONTENT;
+            param.setGravity(Gravity.FILL_HORIZONTAL);
+            checkBox.setLayoutParams(param);
+            flowLayout.addView(checkBox);
+            flowLayout.setColumnCount(2);
             checkBoxes.add(checkBox);
         }
 

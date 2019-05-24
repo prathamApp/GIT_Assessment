@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.pratham.assessment.R;
@@ -82,7 +83,7 @@ public class SelectVillageDialog extends Dialog {
         }
     }
 
-    @OnClick(R.id.txt_ok)
+    @OnClick(R.id.txt_save)
     public void ok() {
         ArrayList<String> villageIDList = new ArrayList();
         for (int i = 0; i < checkBoxes.size(); i++) {
@@ -90,8 +91,10 @@ public class SelectVillageDialog extends Dialog {
                 villageIDList.add(checkBoxes.get(i).getTag().toString());
             }
         }
-        villageSelectListener.getSelectedItems(villageIDList);
-        dismiss();
+        if (villageIDList.size() > 0) {
+            villageSelectListener.getSelectedItems(villageIDList);
+            dismiss();
+        }else Toast.makeText(context, "Please Select village", Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -11,7 +11,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,9 +23,12 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.ui.choose_assessment.science.DragDropAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
-import com.pratham.assessment.ui.choose_assessment.science.MatchPairAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
+import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MatchThePairViewHolder extends RecyclerView.ViewHolder {
+public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements StartDragListener {
     @BindView(R.id.tv_question)
     TextView question;
     @BindView(R.id.tv_question_image)
@@ -47,16 +49,25 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder {
     RecyclerView recyclerView2;
     ScienceQuestion scienceQuestion;
     Context context;
+    QuestionTypeListener questionTypeListener;
+
+    ScienceAdapter scienceAdapter;
 
 
-    public MatchThePairViewHolder(@NonNull View itemView, Context context) {
+    ItemTouchHelper touchHelper;
+
+    public MatchThePairViewHolder(@NonNull View itemView, Context context, ScienceAdapter scienceAdapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = context;
-        this.scienceQuestion = scienceQuestion;
+        questionTypeListener = scienceAdapter;
+        this.scienceAdapter = scienceAdapter;
+
     }
 
-    public void setMatchPairQuestion(ScienceQuestion scienceQuestion, int pos) {
+    public void setMatchPairQuestion(ScienceQuestion scienceQuestion1, int pos) {
+        this.scienceQuestion = scienceQuestion1;
+
         question.setText(scienceQuestion.getQname());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
@@ -72,14 +83,15 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder {
                             questionImage.setImageDrawable(bd);
                         }
                     });
-        }
+        }else questionImage.setVisibility(View.GONE);
 
 
         List<ScienceQuestionChoice> pairList = new ArrayList<>();
         List<ScienceQuestionChoice> shuffledList = new ArrayList<>();
 
-
-        pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+        pairList.clear();
+//        pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+        pairList = scienceQuestion.getLstquestionchoice();
         Log.d("wwwwwwwwwww", pairList.size() + "");
         if (!pairList.isEmpty()) {
           /*  for (int p = 0; p < pairList.size(); p++) {
@@ -90,18 +102,26 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context.getApplicationContext());
             recyclerView1.setLayoutManager(linearLayoutManager);
             recyclerView1.setAdapter(matchPairAdapter);
-
+            shuffledList.clear();
             shuffledList.addAll(pairList);
             Collections.shuffle(shuffledList);
-            DragDropAdapter dragDropAdapter = new DragDropAdapter(shuffledList, context);
+
+            DragDropAdapter dragDropAdapter = new DragDropAdapter(this,shuffledList, context, scienceAdapter);
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            touchHelper = new ItemTouchHelper(callback);
+            touchHelper.attachToRecyclerView(null);
             touchHelper.attachToRecyclerView(recyclerView2);
+
             LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context.getApplicationContext());
             recyclerView2.setLayoutManager(linearLayoutManager1);
             recyclerView2.setAdapter(dragDropAdapter);
             Log.d("wwwwwwwwwww", pairList.size() + "");
         }
+    }
+
+    @Override
+    public void requestDrag(RecyclerView.ViewHolder viewHolder) {
+        touchHelper.startDrag(viewHolder);
     }
 }

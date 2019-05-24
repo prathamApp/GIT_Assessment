@@ -208,7 +208,7 @@ public class LocationService implements GoogleApiClient.ConnectionCallbacks, Goo
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied. But could be fixed by showing the user
-                        // a dialog.
+                        // radio_button_bg dialog.
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().

@@ -91,9 +91,9 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
 
         /* 2) In case migration needed and want to keep data as it is then this would work
             but the case is
-            SQLite supports a limited subset of ALTER TABLE.
-             The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table.
-             It is not possible to rename a column, remove a column, or add or remove constraints from a table.
+            SQLite supports radio_button_bg limited subset of ALTER TABLE.
+             The ALTER TABLE command in SQLite allows the user to rename radio_button_bg table or to add radio_button_bg new column to an existing table.
+             It is not possible to rename radio_button_bg column, remove radio_button_bg column, or add or remove constraints from radio_button_bg table.
          */
     }
 

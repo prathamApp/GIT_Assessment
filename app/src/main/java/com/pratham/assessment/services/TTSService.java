@@ -353,7 +353,7 @@ public class TTSService implements TextToSpeech.OnInitListener {
     }
 
     /**
-     * Find the runnable for a given utterance id, run it on the main thread and then remove
+     * Find the runnable for radio_button_bg given utterance id, run it on the main thread and then remove
      * it from the map
      *
      * @param utteranceId the id key to use

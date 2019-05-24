@@ -1,9 +1,6 @@
-package com.pratham.assessment.ui.choose_assessment.science;
+package com.pratham.assessment.ui.choose_assessment.science.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,9 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.utilities.Assessment_Constants;

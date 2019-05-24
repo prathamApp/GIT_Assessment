@@ -32,8 +32,17 @@ public interface ScienceQuestionDao {
     @Query("SELECT * FROM ScienceQuestion WHERE qid=:qid")
     public ScienceQuestion getQuestionByQID(String qid);
 
+    @Query("SELECT * FROM ScienceQuestion WHERE topicid=:topicId and languageid=:langId and subjectid=:subId and examid=:examId")
+    public List<ScienceQuestion> getQuestionListByLangIdSubIdTopicIdExamId(String topicId, String langId, String subId, String examId);
+
     @Query("SELECT * FROM ScienceQuestion WHERE topicid=:topicId and languageid=:langId and subjectid=:subId")
     public List<ScienceQuestion> getQuestionListByLangIdSubIdTopicId(String topicId, String langId, String subId);
+
+    @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel order by random() limit :noOfQues")
+    public List<ScienceQuestion> getQuestionListByPattern1(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
+
+    @Query("select distinct qid from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId order by random() limit :noOfQues")
+    public String getQuestionListByPattern(String langId, String subId, String topicId, String qtid, int noOfQues);
 
   /*  @Query("select * from Groups WHERE DeviceID = 'deleted'")
     public List<Groups> GetAllDeletedGroups();

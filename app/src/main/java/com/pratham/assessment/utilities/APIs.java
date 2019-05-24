@@ -194,6 +194,9 @@ public class APIs {
     public static String AssessmentTopicAPI="http://www.apiassessment.openiscool.org/api/subjecttopic/Gettopic";
     public static String AssessmentSubjectWiseTopicAPI="http://www.apiassessment.openiscool.org/api/subjecttopic/Getsubjecttopic?subjectid=";
     public static String AssessmentQuestionAPI="http://www.apiassessment.openiscool.org/api/question/GetQuestion?";
+    public static String AssessmentExamAPI="http://www.apiassessment.openiscool.org/api/subjectexam/GetExam?subjectid=";
+    public static String AssessmentPaperAPI="http://www.apiassessment.openiscool.org/api/exampaper/GetPaper?examid=";
+    public static String AssessmentPaperPatternAPI="http://apiassessment.openiscool.org/api/exampattern/GetExamPattern?examid=";
 
 
 

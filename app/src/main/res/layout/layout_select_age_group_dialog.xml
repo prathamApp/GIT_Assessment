@@ -2,39 +2,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_250sdp"
-    android:orientation="vertical"
-    android:background="@drawable/age_group_bkgd">
+    android:orientation="vertical">
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/close"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="end"
-
-        android:src="@drawable/ic_close_black_24dp" />
+        android:src="@drawable/ic_close_black_24dp" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:padding="@dimen/_20sdp"
-        android:weightSum="2">
+        android:orientation="vertical"
+        android:padding="@dimen/_20sdp">
 
-        <ImageView
-            android:id="@+id/iv_age_3_to_6"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:layout_weight="1"
-            android:src="@drawable/img_3_to_6" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/iv_age_8_to_14"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_weight="1"
-            android:src="@drawable/img_8_to_14" />
+            <TextView
+                android:id="@+id/tv_age_3_to_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/iv_age_3_to_6"
+                android:layout_toLeftOf="@id/tv_age_3_to_6"
+                android:layout_weight="1"
+                android:layout_marginRight="-25dp"
+                android:background="@drawable/radio_button_bg"
+                android:padding="@dimen/_5sdp"
+                android:text="Age 3 to 6"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
 
+            <ImageView
+                android:id="@+id/iv_age_3_to_6"
+                android:layout_width="@dimen/_130sdp"
+                android:layout_height="match_parent"
+                android:elevation="@dimen/_5sdp"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:src="@drawable/storytelling" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@color/colorWhiteDark" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_age_8_to_14"
+                android:layout_width="@dimen/_110sdp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_weight="1"
+                android:elevation="@dimen/_5sdp"
+                android:src="@drawable/gitl_reading" />
+
+            <TextView
+                android:id="@+id/tv_age_8_to_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_age_8_to_14"
+                android:layout_weight="1"
+                android:layout_marginLeft="-25dp"
+                android:background="@drawable/radio_button_bg"
+                android:padding="@dimen/_5sdp"
+                android:text="Age 8 to 14"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

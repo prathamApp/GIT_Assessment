@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.pratham.assessment.ui.login_menu.MenuFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
@@ -21,6 +22,15 @@ public class SelectGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_group);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        Assessment_Utility.showFragment(this, new MenuFragment(), R.id.frame_group,
+                null, MenuFragment.class.getSimpleName());
+
+
+//    showAgeGroupDialog();
+
+    }
+
+   /* private void showAgeGroupDialog() {
         final SelectAgeGroupDialog selectAgeGroupDialog = new SelectAgeGroupDialog(this);
         selectAgeGroupDialog.iv_age_3_to_6.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,18 +53,19 @@ public class SelectGroupActivity extends AppCompatActivity {
             }
         });
 
-        selectAgeGroupDialog.close.setOnClickListener(new View.OnClickListener() {
+       *//* selectAgeGroupDialog.close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectAgeGroupDialog.dismiss();
                 finish();
 //                startActivity(new Intent(SelectGroupActivity.this, MenuActivity.class));
-       //         Toast.makeText(SelectGroupActivity.this, "age group selected", Toast.LENGTH_SHORT).show();
+                //         Toast.makeText(SelectGroupActivity.this, "age group selected", Toast.LENGTH_SHORT).show();
             }
-        });
-        selectAgeGroupDialog.setCancelable(false);
+        });*//*
+        selectAgeGroupDialog.setCancelable(true);
         selectAgeGroupDialog.show();
     }
+*/
     @Override
     public void onBackPressed() {
         int fragments = getSupportFragmentManager().getBackStackEntryCount();

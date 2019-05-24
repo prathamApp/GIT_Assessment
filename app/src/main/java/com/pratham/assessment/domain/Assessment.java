@@ -37,6 +37,27 @@ public class Assessment {
     @ColumnInfo(name = "sentFlag")
     private int sentFlag;
 
+    private boolean isAttempted;
+
+    public boolean getIsAttempted() {
+        return isAttempted;
+    }
+
+    public void setIsAttempted(boolean attempted) {
+        isAttempted = attempted;
+    }
+
+    public boolean getIsCorrect() {
+        return isCorrect;
+    }
+
+    public void setIsCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
+    private boolean isCorrect;
+
+
     public int getSentFlag() {
         return sentFlag;
     }

@@ -2,16 +2,16 @@ package com.pratham.assessment.domain;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-public class ScienceQuestion {
-    @NonNull
-    @PrimaryKey
-    private String qid;
+public class ScienceQuestion implements Serializable {
 
     private String ansdesc;
 
@@ -23,11 +23,16 @@ public class ScienceQuestion {
 
     private String languageid;
 
+    private String active;
+
     private String lessonid;
     @Embedded
     private ArrayList<ScienceQuestionChoice> lstquestionchoice;
 
     private String qtid;
+    @NonNull
+    @PrimaryKey
+    private String qid;
 
     private String subjectid;
 
@@ -37,29 +42,102 @@ public class ScienceQuestion {
 
     private String photourl;
 
+    private String examtime;
+
     private String topicid;
 
     private String answer;
+
+    private String outofmarks;
 
     private String qname;
 
     private String hint;
 
-    public String getPhotourl() {
-        return photourl;
+    private String examid;
+
+    private String pdid;
+    private String startTime;
+
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setPhotourl(String photourl) {
-        this.photourl = photourl;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getHint() {
-        return hint;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
+
+    private String endTime;
+
+
+    private String marksPerQuestion = "0";
+
+    private String paperid;
+
+    private String userAnswerId = "";
+
+    private String userAnswer = "";
+
+    private boolean isAttempted;
+
+    private boolean isCorrect;
+
+    public String getUserAnswer() {
+        if (userAnswer == null)
+            userAnswer = "";
+        return userAnswer;
+    }
+
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
+    }
+
+    public boolean getIsAttempted() {
+        return isAttempted;
+    }
+
+    public void setIsAttempted(boolean attempted) {
+        isAttempted = attempted;
+    }
+
+    public boolean getIsCorrect() {
+        return isCorrect;
+    }
+
+    public void setIsCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
+    public String getUserAnswerId() {
+        if (userAnswerId == null)
+            userAnswerId = "";
+        return userAnswerId;
+    }
+
+    public String getMarksPerQuestion() {
+        if(marksPerQuestion!=null)
+        return marksPerQuestion;
+        else return "0";
+    }
+
+    public void setMarksPerQuestion(String marksPerQuestion) {
+        if (marksPerQuestion != null)
+            this.marksPerQuestion = marksPerQuestion;
+        else marksPerQuestion = "0";
+    }
+
+    public void setUserAnswerId(String userAnswerId) {
+        this.userAnswerId = userAnswerId;
+    }
+
 
     public String getAnsdesc() {
         return ansdesc;
@@ -99,6 +177,14 @@ public class ScienceQuestion {
 
     public void setLanguageid(String languageid) {
         this.languageid = languageid;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
     }
 
     public String getLessonid() {
@@ -157,6 +243,21 @@ public class ScienceQuestion {
         this.updatedtime = updatedtime;
     }
 
+    public String getPhotourl() {
+        return photourl;
+    }
+
+    public void setPhotourl(String photourl) {
+        this.photourl = photourl;
+    }
+
+    public String getExamtime() {
+        return examtime;
+    }
+
+    public void setExamtime(String examtime) {
+        this.examtime = examtime;
+    }
 
     public String getTopicid() {
         return topicid;
@@ -174,6 +275,14 @@ public class ScienceQuestion {
         this.answer = answer;
     }
 
+    public String getOutofmarks() {
+        return outofmarks;
+    }
+
+    public void setOutofmarks(String outofmarks) {
+        this.outofmarks = outofmarks;
+    }
+
     public String getQname() {
         return qname;
     }
@@ -181,4 +290,38 @@ public class ScienceQuestion {
     public void setQname(String qname) {
         this.qname = qname;
     }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
+    public String getExamid() {
+        return examid;
+    }
+
+    public void setExamid(String examid) {
+        this.examid = examid;
+    }
+
+    public String getPdid() {
+        return pdid;
+    }
+
+    public void setPdid(String pdid) {
+        this.pdid = pdid;
+    }
+
+    public String getPaperid() {
+        return paperid;
+    }
+
+    public void setPaperid(String paperid) {
+        this.paperid = paperid;
+    }
+
+
 }

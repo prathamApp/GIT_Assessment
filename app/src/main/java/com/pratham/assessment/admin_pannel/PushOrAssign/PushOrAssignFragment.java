@@ -61,7 +61,14 @@ public class PushOrAssignFragment extends Fragment {
         /*Intent intent = new Intent(getActivity(), PushDataActivity.class);
         startActivityForResult(intent, 1);
         getActivity().startActivity(intent);*/
-        new PushDataToServer(getActivity(),false).execute();
+        new PushDataToServer(getActivity(), false).execute();
 
     }
+
+    /*@OnClick(R.id.btn_pull_exam_data)
+    public void onPullExam() {
+        Intent intent = new Intent(getActivity(), PushDataActivity.class);
+        startActivityForResult(intent, 1);
+        getActivity().startActivity(intent);
+    }*/
 }

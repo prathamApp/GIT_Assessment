@@ -33,8 +33,11 @@ public interface AssessmentDao {
     @Delete
     void deleteAll(Assessment... assessments);
 
-    @Query("select * from Assessment where sentFlag=0")
-    List<Assessment> getAllAssessment();
+    @Query("select * from Assessment where sentFlag=0 and Labela!='assessment'")
+    List<Assessment> getAllECEAssessment();
+
+    @Query("select * from Assessment where sentFlag=0 and Labela='assessment'")
+    List<Assessment> getAllScienceAssessment();
 
     @Query("DELETE FROM Assessment")
     void deleteAllAssessment();

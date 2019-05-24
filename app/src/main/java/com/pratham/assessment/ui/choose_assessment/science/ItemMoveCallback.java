@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
+
 public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
-    private final ItemTouchHelperContract mAdapter;
+    private  static ItemTouchHelperContract mAdapter;
 
     public ItemMoveCallback(ItemTouchHelperContract adapter) {
         mAdapter = adapter;
@@ -15,7 +17,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        return false;
     }
 
     @Override
@@ -29,6 +31,8 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
     }
+
+
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {

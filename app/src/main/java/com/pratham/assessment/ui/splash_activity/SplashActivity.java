@@ -42,19 +42,25 @@ import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.ui.login.MainActivity;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.ui.login_menu.MenuActivity;
+import com.pratham.assessment.ui.login_menu.MenuFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.SplashSupportActivity;
+
 import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 
 
@@ -64,10 +70,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     Button btn_start_game;
     @BindView(R.id.iv_logo)
     ImageView iv_logo;
-/*    @BindView(R.id.iv_logo_pradigi)
-    ImageView iv_logo_pradigi;
-    @BindView(R.id.temppp)
-    RelativeLayout temppp;*/
+    /*    @BindView(R.id.iv_logo_pradigi)
+        ImageView iv_logo_pradigi;
+        @BindView(R.id.temppp)
+        RelativeLayout temppp;*/
     static String fpath, appname;
     public static MediaPlayer bgMusic;
     public static AppDatabase appDatabase;
@@ -195,15 +201,14 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public void showButton() {
         new Handler().postDelayed(new Runnable() {
             @Override
-            public void run() { 
+            public void run() {
                 Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();
-                if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false) ) {
+                if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false)) {
                     if (!Assessment_Constants.SD_CARD_Content)
                         splashPresenter.copyZipAndPopulateMenu();
                     else
                         splashPresenter.populateSDCardMenu();
-                }
-                else
+                } else
                     gotoNextActivity();
             }
         }, 2000);
@@ -212,7 +217,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Override
     public void showUpdateDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Upgrade to a better version !");
+        builder.setTitle("Upgrade to radio_button_bg better version !");
         builder.setCancelable(false);
         builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             @Override
@@ -406,16 +411,16 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 }
                             })
                             .build();
-/*                    if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/cos_database").exists()) {
+                    if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/assessment_database").exists()) {
                         try {
                             splashPresenter.copyDataBase();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else {*/
+                    } else {
                         showButton();
                         //populateMenu();
-//                    }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -453,9 +458,15 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         } else {*/
 
         context.startService(new Intent(context, AppExitService.class));
-            dismissProgressDialog();
-            startActivity(new Intent(context, MenuActivity.class));
-//            startActivity(new Intent(context, MainActivity.class));
+        dismissProgressDialog();
+
+        startActivity(new Intent(context, SelectGroupActivity.class));
+
+
+//                    startActivity(new Intent(context, MenuActivity.class));
+
+
+// startActivity(new Intent(context, MainActivity.class));
 //        }
     }
 

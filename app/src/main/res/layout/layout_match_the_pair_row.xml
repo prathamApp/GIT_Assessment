@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_margin="@dimen/_3sdp"
+    android:background="@drawable/ripple_rectangle"
+    app:cardCornerRadius="@dimen/_8sdp"
+    app:cardElevation="@dimen/_3sdp"
+    app:cardMaxElevation="@dimen/_5sdp">
 
-    <TextView
-        android:id="@+id/tv_question"
-        style="@style/CustomQuestionStyle"
-        />
-
-    <ImageView
-        android:id="@+id/tv_question_image"
-        style="@style/CustomQuestionImageStyle" />
-
-
-    <LinearLayout
-        android:id="@+id/ll_match_pair"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="visible">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_2sdp"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rl_ans_options1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/ripple_rectangle"
-            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/tv_question"
+            style="@style/CustomQuestionStyle"
+            android:layout_margin="@dimen/_5sdp" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rl_ans_options2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/ripple_rectangle"
+        <ImageView
+            android:id="@+id/tv_question_image"
+            style="@style/CustomQuestionImageStyle" />
 
-            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/ll_match_pair"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="visible">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rl_ans_options1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_3sdp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:padding="@dimen/_2sdp" />
+
+            <ImageView
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_swap_vertical"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rl_ans_options2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_3sdp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_rectangle"
+                android:padding="@dimen/_2sdp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView>

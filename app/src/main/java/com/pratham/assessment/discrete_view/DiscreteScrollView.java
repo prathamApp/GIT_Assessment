@@ -75,7 +75,7 @@ public class DiscreteScrollView extends RecyclerView {
         if (layout instanceof DiscreteScrollLayoutManager) {
             super.setLayoutManager(layout);
         } else {
-            throw new IllegalArgumentException("You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\\'t call the method.");
+            throw new IllegalArgumentException("You should not set LayoutManager on DiscreteScrollView.class instance. Library uses radio_button_bg special one. Just don\\'t call the method.");
         }
     }
 

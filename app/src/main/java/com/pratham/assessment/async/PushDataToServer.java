@@ -1,10 +1,12 @@
 package com.pratham.assessment.async;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -21,6 +23,8 @@ import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.login.MainActivity;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +45,7 @@ public class PushDataToServer extends AsyncTask {
     JSONArray supervisorData;
     JSONArray groupsData;
     JSONArray assessmentData;
+    JSONArray assessmentScienceData;
     JSONArray logsData;
 
     public PushDataToServer(Context context, boolean autoPush) {
@@ -57,6 +62,8 @@ public class PushDataToServer extends AsyncTask {
         logsData = new JSONArray();
         studentData = new JSONArray();
         assessmentData = new JSONArray();
+        assessmentScienceData = new JSONArray();
+
     }
 
 
@@ -79,8 +86,11 @@ public class PushDataToServer extends AsyncTask {
         supervisorData = fillSupervisorData(supervisorDataList);*/
         List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
         logsData = fillLogsData(logsList);
-        List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllAssessment();
+        List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllECEAssessment();
         assessmentData = fillAssessmentData(assessmentList);
+        List<Assessment> scienceAssessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllScienceAssessment();
+        assessmentScienceData = fillAssessmentData(scienceAssessmentList);
+
         List<Groups> groupsList = AppDatabase.getDatabaseInstance(context).getGroupsDao().getAllGroups();
         groupsData = fillGroupsData(groupsList);
 
@@ -149,8 +159,12 @@ public class PushDataToServer extends AsyncTask {
             e.printStackTrace();
         }
         String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
-//        if (checkEmptyness(requestString))
+        String requestStringScience = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
+
+        //        if (checkEmptyness(requestString))
         pushDataToServer(context, requestString, AssessmentApplication.uploadDataUrl);
+        pushDataScienceToServer(context,requestStringScience, AssessmentApplication.uploadScienceUrl);
+
         return null;
     }
 
@@ -476,6 +490,55 @@ public class PushDataToServer extends AsyncTask {
     }
 
     private void pushDataToServer(final Context context, String data, String url) {
+        try {
+            JSONObject jsonArrayData = new JSONObject(data);
+
+            AndroidNetworking.post(url)
+                    .addHeaders("Content-Type", "application/json")
+                    .addJSONObjectBody(jsonArrayData)
+                    .build()
+                    .getAsString(new StringRequestListener() {
+
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("PUSH_STATUS", "Data pushed successfully");
+                            if (!autoPush) {
+                               /* new AlertDialog.Builder(context)
+                                        .setMessage("Data pushed successfully")
+                                        .setCancelable(false)
+                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                ((MainActivity) context).onResponseGet();
+                                            }
+                                        }).create().show();*/
+                            }
+//                            setPushFlag();
+                        }
+
+                        @Override
+                        public void onError(ANError anError) {
+                            Log.d("PUSH_STATUS", "Data push failed");
+                            if (!autoPush) {
+                                new AlertDialog.Builder(context)
+                                        .setMessage("Data push failed")
+                                        .setCancelable(false)
+                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                ((MainActivity) context).onResponseGet();
+                                            }
+                                        }).create().show();
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+   private void pushDataScienceToServer(final Context context, String data, String url) {
         try {
             JSONObject jsonArrayData = new JSONObject(data);
 

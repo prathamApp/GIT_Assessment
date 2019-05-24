@@ -1270,7 +1270,7 @@ public class Assessment_Utility {
 
         SimpleDateFormat Meeting_Time_SDF = new SimpleDateFormat("HH:mm",
                 Locale.US);
-        SimpleDateFormat Meeting_Time_SDF_Formatted = new SimpleDateFormat("hh:mm a",
+        SimpleDateFormat Meeting_Time_SDF_Formatted = new SimpleDateFormat("hh:mm radio_button_bg",
                 Locale.US);
         try {
             Date mDate = Meeting_Time_SDF.parse(str_Time);
@@ -1531,7 +1531,7 @@ public class Assessment_Utility {
         }
     }
 
-    /*This is some working code for downloading a given URL to a given File object.
+    /*This is some working code for downloading radio_button_bg given URL to radio_button_bg given File object.
     The File object (outputFile) has just been created using new File(path),
     I haven't called createNewFile or anything.*/
     private static void downloadFile(String url, File outputFile) {
@@ -1562,7 +1562,7 @@ public class Assessment_Utility {
      */
     public static void toggleHideyBar(AppCompatActivity activity) {
 
-        // The UI options currently enabled are represented by a bitfield.
+        // The UI options currently enabled are represented by radio_button_bg bitfield.
         // getSystemUiVisibility() gives us that bitfield.
         int uiOptions = activity.getWindow().getDecorView().getSystemUiVisibility();
         int newUiOptions = uiOptions;

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_count_down"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorProgress50">
+
+
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/_5sdp"
+        android:textColor="@color/colorWhiteDark"
+        android:text="5"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="@dimen/_80sdp"/>
+</LinearLayout>

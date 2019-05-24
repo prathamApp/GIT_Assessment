@@ -77,7 +77,7 @@ public class PushDataToServerold extends AsyncTask {
         supervisorData = fillSupervisorData(supervisorDataList);
         */List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
         logsData = fillLogsData(logsList);
-        List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllAssessment();
+        List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllECEAssessment();
         assessmentData = fillAssessmentData(assessmentList);
         List<Groups> groupsList = AppDatabase.getDatabaseInstance(context).getGroupsDao().getAllGroups();
         groupsData = fillGroupsData(groupsList);

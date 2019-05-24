@@ -18,6 +18,7 @@ import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
+import com.pratham.assessment.ui.choose_assessment.science.CRLActivity;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 import com.pratham.assessment.ui.profile.ProfileActivity;
@@ -58,7 +59,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this, this);
         contentTableList = new ArrayList<>();
 
-        recyclerView = (RecyclerView) findViewById(R.id.choose_assessment_recycler);
+        recyclerView =  findViewById(R.id.choose_assessment_recycler);
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -134,6 +135,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         intent.putExtra("nodeId", nodeId);
                         startActivity(intent);
                     }else {
+//                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
                         Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
                         intent.putExtra("nodeId", nodeId);
                         startActivity(intent);

@@ -42,7 +42,7 @@ class DiscreteScrollLayoutManager extends RecyclerView.LayoutManager {
     protected int childHalfWidth, childHalfHeight;
     protected int extraLayoutSpace;
 
-    //Max possible distance a view can travel during one scroll phase
+    //Max possible distance radio_button_bg view can travel during one scroll phase
     protected int scrollToChangeCurrent;
     protected int currentScrollState;
 
@@ -132,7 +132,7 @@ class DiscreteScrollLayoutManager extends RecyclerView.LayoutManager {
     private void ensureValidPosition(RecyclerView.State state) {
         if (currentPosition == NO_POSITION || currentPosition >= state.getItemCount()) {
             //currentPosition might have been assigned in onRestoreInstanceState()
-            //which can lead to a crash (position out of bounds) when data set
+            //which can lead to radio_button_bg crash (position out of bounds) when data set
             //is not persisted across rotations
             currentPosition = 0;
         }

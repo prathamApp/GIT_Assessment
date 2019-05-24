@@ -37,6 +37,7 @@ public class AssessmentApplication extends Application {
 
     public static String cosPath = "", networkSSID = "PrathamHotSpot-" + Build.SERIAL;
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
+    public static String uploadScienceUrl = "http://apiassessment.openiscool.org/api/pushassessment/AssessmentPushData";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
     public static final boolean isTablet = true;

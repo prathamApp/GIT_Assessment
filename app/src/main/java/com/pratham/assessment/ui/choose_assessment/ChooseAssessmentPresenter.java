@@ -157,7 +157,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
-                    downloadedContentTableList = appDatabase.getContentTableDao().getContentData(nodeIds.get(nodeIds.size() - 1));
+                    downloadedContentTableList = AppDatabase.getDatabaseInstance(context).getContentTableDao().getContentData(nodeIds.get(nodeIds.size() - 1));
                     BackupDatabase.backup(context);
 
                     assessView.clearContentList();

@@ -22,5 +22,11 @@
     <color name="colorRedLight">#ff908e</color>
     <color name="colorRedLightnew">#FFBBBB</color>
 
+    <color name="colorProgress">#FDA520</color>
+    <color name="colorProgress50">#FF8832</color>
+    <color name="colorProgress25">#FF3A16</color>
+    <color name="colorProgress15">#FF270E</color>
+
+
 
 </resources>

@@ -13,20 +13,25 @@
         android:text="text"
         android:layout_gravity="center"
         android:gravity="center"
+        android:drawableLeft="@color/colorAccentDark"
         android:textColor="@color/colorBlack"
         android:textAlignment="center"
-        android:textSize="@dimen/_15sdp" />
+        android:textSize="@dimen/_13sdp" />
 
     <ImageView
         android:id="@+id/iv_choice_image"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
+        android:layout_height="@dimen/_50sdp"
         android:layout_weight="1"
         android:adjustViewBounds="true"
         android:gravity="center"
         android:layout_margin="@dimen/_5sdp"
         android:scaleType="fitXY"
-        android:src="@drawable/g1"
+        android:src="@drawable/ic_warning"
         android:visibility="gone"
         />
+  <!--  <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/colorBlack"/>-->
 </LinearLayout>

@@ -3,6 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -34,7 +36,7 @@
         <item name="android:layout_weight">0.5</item>
         <item name="android:textSize">@dimen/_18sdp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorRed</item>
     </style>
     <style name="CustomQuestionImageStyle">
         <item name="android:layout_width">match_parent</item>
@@ -45,5 +47,25 @@
         <item name="android:gravity">center</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/colorGreen</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/ripple_rectangle</item>
+        <item name="android:layout_margin">30dp</item>
+    </style>
+
+
 
 </resources>
