@@ -23,7 +23,7 @@
     <ImageView
         android:id="@+id/iv_grp"
         android:layout_width="@dimen/_140sdp"
-        android:layout_height="@dimen/_130sdp"
+        android:layout_height="@dimen/_110sdp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/hexagone"
         android:gravity="center"

@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    >
+    android:layout_gravity="center">
 
     <!--  <TextView
           android:id="@+id/tv_title"
@@ -16,7 +15,6 @@
           android:textColor="@color/colorWhiteLight"
           android:textSize="@dimen/_20sdp"
           android:textStyle="bold|italic" />-->
-
 
 
     <RelativeLayout
@@ -35,24 +33,25 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/gradiance_bg"
-            android:paddingVertical="10dp"
             android:elevation="@dimen/_5sdp"
             android:scaleType="fitCenter"
             android:src="@drawable/selfi_placeholder"
             android:visibility="visible" />
 
 
-         <TextView
-             android:id="@+id/supervisor_name"
-             android:layout_width="match_parent"
-             android:layout_height="@dimen/_40sdp"
-             android:layout_below="@id/iv_image"
-             android:layout_marginHorizontal="@dimen/_20sdp"
-             android:layout_marginTop="@dimen/_35sdp"
-             android:paddingHorizontal="@dimen/_10sdp"
-             android:singleLine="true"
-             android:textColor="@color/colorBlack"
-             android:textSize="@dimen/_18sdp" />
+        <TextView
+            android:id="@+id/supervisor_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@id/iv_image"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:singleLine="true"
+            android:textStyle="bold"
+            android:text="Supervisor"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_25sdp" />
 
         <ImageButton
             android:id="@+id/btn_camera"
@@ -63,17 +62,17 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/camera_ripple"
-            android:padding="@dimen/_10sdp"
             android:elevation="@dimen/_5sdp"
+            android:padding="@dimen/_10sdp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_photo_camera" />
 
         <Button
             android:id="@+id/submitBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/_120sdp"
             android:layout_height="@dimen/_40sdp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/ripple_effect"

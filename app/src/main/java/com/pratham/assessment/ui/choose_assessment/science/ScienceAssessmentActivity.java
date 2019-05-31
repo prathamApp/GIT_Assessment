@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -548,6 +550,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     .setMinScale(0.5f)
                     .build());
             discreteScrollView.setAdapter(scienceAdapter);
+            scienceQuestionList.get(0).setStartTime(Assessment_Utility.GetCurrentDateTime());
+
             discreteScrollView.addScrollListener(new DiscreteScrollView.ScrollListener<RecyclerView.ViewHolder>() {
                 @Override
                 public void onScroll(float scrollPosition, int currentPosition, int newPosition, @Nullable RecyclerView.ViewHolder currentHolder, @Nullable RecyclerView.ViewHolder newCurrent) {
@@ -613,9 +617,60 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        chronometer.stop();
-        mCountDownTimer.cancel();
+
+     /*   new AlertDialog.Builder(this)
+                .setMessage("Do you want to leave this assessment?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ScienceAssessmentActivity.super.onBackPressed();
+                        chronometer.stop();
+                        mCountDownTimer.cancel();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();*/
+
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.exit_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView title = dialog.findViewById(R.id.dia_title);
+        Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
+        Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
+
+        title.setText("Do you want to leave assessment?");
+        restart_btn.setText("No");
+        exit_btn.setText("Yes");
+        dialog.show();
+
+        exit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                ScienceAssessmentActivity.super.onBackPressed();
+                chronometer.stop();
+                mCountDownTimer.cancel();
+
+
+            }
+        });
+
+        restart_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
     }
 
  /*   @OnClick(R.id.btn_next)
@@ -918,28 +973,32 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @Override
     public void onSaveAssessmentClick() {
-        List<Score> scores = new ArrayList<>();
-        for (int i = 0; i < scienceQuestionList.size(); i++) {
 
-            Score score = new Score();
-            score.setQuestionId(Integer.parseInt(scienceQuestionList.get(i).getQid()));
-            // TODO: 24-05-2019 add level
+            List<Score> scores = new ArrayList<>();
+            for (int i = 0; i < scienceQuestionList.size(); i++) {
+
+                Score score = new Score();
+                score.setQuestionId(Integer.parseInt(scienceQuestionList.get(i).getQid()));
+                // TODO: 24-05-2019 add level,isAttempted,isCorrect
 //            assessment.setLevela(Integer.parseInt(scienceQuestionList.get(i).getQlevel()));
            /* score.setIsAttempted(scienceQuestionList.get(i).getIsAttempted());
             score.setIsCorrect(scienceQuestionList.get(i).getIsCorrect());
             score.setExamId(scienceQuestionList.get(i).getExamid());
             score.setPaperId(scienceQuestionList.get(i).getPaperid());*/
-            score.setTotalMarks(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
-            score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
-            score.setLabel("assessment");
-            score.setEndDateTime(scienceQuestionList.get(i).getEndTime());
-            score.setStudentID(Assessment_Constants.currentStudentID);
-            score.setScoredMarks(Integer.parseInt(scienceQuestionList.get(i).getMarksPerQuestion()));
-            scores.add(score);
+                score.setTotalMarks(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
+                score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
+                score.setLabel("assessment");
+                score.setEndDateTime(scienceQuestionList.get(i).getEndTime());
+                score.setStudentID(Assessment_Constants.currentStudentID);
+                score.setDeviceID(AppDatabase.getDatabaseInstance(this).getStatusDao().getValue("DeviceId"));
+                score.setSessionID(Assessment_Constants.assessmentSession);
+                score.setScoredMarks(Integer.parseInt(scienceQuestionList.get(i).getMarksPerQuestion()));
+                scores.add(score);
 
-        }
-        AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scores);
-        Toast.makeText(this, "Assessment saved successfully", Toast.LENGTH_SHORT).show();
+            }
+            AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scores);
+            Toast.makeText(this, "Assessment saved successfully", Toast.LENGTH_SHORT).show();
+
     }
 
     /*@Override

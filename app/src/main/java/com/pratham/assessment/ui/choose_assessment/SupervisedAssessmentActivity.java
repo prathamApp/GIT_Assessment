@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.pratham.assessment.AssessmentApplication;
@@ -38,6 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.pratham.assessment.utilities.Assessment_Constants.assessmentSession;
 
 public class SupervisedAssessmentActivity extends AppCompatActivity {
@@ -85,6 +88,7 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 iv_image.setVisibility(View.VISIBLE);
                 iv_image.setImageBitmap(photo);
+                iv_image.setScaleType(ImageView.ScaleType.FIT_XY);
                 createDirectoryAndSaveFile(photo, imageName);
             }
         } catch (Exception e) {
