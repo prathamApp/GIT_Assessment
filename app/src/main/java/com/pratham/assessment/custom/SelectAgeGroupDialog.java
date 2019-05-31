@@ -3,6 +3,8 @@ package com.pratham.assessment.custom;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
@@ -63,5 +65,12 @@ public class SelectAgeGroupDialog extends Dialog {
         bundle.putBoolean(Assessment_Constants.GROUP_AGE_ABOVE_7, true);
         Assessment_Utility.showFragment(activity, new FragmentSelectGroup(), R.id.frame_group,
                 bundle, FragmentSelectGroup.class.getSimpleName());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
     }
 }

@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -21,9 +23,11 @@ import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.ui.choose_assessment.science.CRLActivity;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
+import java.security.cert.CRL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,6 +53,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     private RecyclerView recyclerView;
     List<ContentTable> contentTableList;
     ChooseAssessmentAdapter chooseAssessAdapter;
+    ECELoginDialog eceLoginDialog;
+    Crl loggedCrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +65,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this, this);
         contentTableList = new ArrayList<>();
 
-        recyclerView =  findViewById(R.id.choose_assessment_recycler);
+        recyclerView = findViewById(R.id.choose_assessment_recycler);
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, this), true));
+//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, this), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(chooseAssessAdapter);
 
@@ -108,18 +115,20 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
         presenter.endSession();
-        super.onBackPressed();
+//        super.onBackPressed();
+        finish();
+        startActivity(new Intent(this, SelectGroupActivity.class));
     }
 
     @Override
     public void assessmentClicked(final int position, final String nodeId) {
-        final ECELoginDialog eceLoginDialog = new ECELoginDialog(this);
-        eceLoginDialog.login.setOnClickListener(new View.OnClickListener() {
+        eceLoginDialog = new ECELoginDialog(this);
+        final String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
+
+        eceLoginDialog.btn_unsupervised.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
-
-                Crl loggedCrl = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().checkUserValidation(userName, password);
+                getLoggedInCrl(userName, password);
                 if (loggedCrl != null) {
                     String assessmentSession = "" + UUID.randomUUID().toString();
                     Assessment_Constants.assessmentSession = "test-" + assessmentSession;
@@ -134,14 +143,14 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
                         intent.putExtra("nodeId", nodeId);
                         startActivity(intent);
-                    }else {
+                    } else {
 //                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
                         Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
                         intent.putExtra("nodeId", nodeId);
                         startActivity(intent);
                     }
                     eceLoginDialog.dismiss();
-                } else {
+                } /*else {
                     AlertDialog alertDialog = new AlertDialog.Builder(ChooseAssessmentActivity.this).create();
                     alertDialog.setTitle("Invalid Credentials");
                     alertDialog.setIcon(R.drawable.ic_error_outline_black_24dp);
@@ -154,9 +163,44 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         }
                     });
                     alertDialog.show();
-                }
+                }*/
+            }
+        });
+
+
+        eceLoginDialog.btn_supervised.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getLoggedInCrl(userName, password);
+                String loggedCrlId = loggedCrl.getCRLId();
+                Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity.class);
+                intent.putExtra("loggedCrlId", loggedCrlId);
+                intent.putExtra("nodeId", nodeId);
+                startActivity(intent);
+                eceLoginDialog.dismiss();
             }
         });
         eceLoginDialog.show();
+    }
+
+    private void getLoggedInCrl(String userName, String password) {
+        Crl loggedCrl = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().checkUserValidation(userName, password);
+        if (loggedCrl == null) {
+            AlertDialog alertDialog = new AlertDialog.Builder(ChooseAssessmentActivity.this).create();
+            alertDialog.setTitle("Invalid Credentials");
+            alertDialog.setIcon(R.drawable.ic_error_outline_black_24dp);
+            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    eceLoginDialog.userNameET.setText("");
+                    eceLoginDialog.passwordET.setText("");
+                    eceLoginDialog.userNameET.requestFocus();
+                }
+            });
+            alertDialog.show();
+        } else
+            this.loggedCrl = loggedCrl;
+
     }
 }

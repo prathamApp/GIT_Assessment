@@ -8,7 +8,6 @@
         android:id="@+id/rv_child"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_attendance_next"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 

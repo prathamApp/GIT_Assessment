@@ -7,15 +7,13 @@
     app:cardBackgroundColor="#fff"
     app:cardCornerRadius="@dimen/_5sdp"
     app:cardElevation="@dimen/_10sdp"
-    app:cardUseCompatPadding="true">-->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    app:cardUseCompatPadding="true">--><!--<com.github.florent37.shapeofview.shapes.PolygonView
     android:id="@+id/rl_child_attendance"
-    android:layout_width="@dimen/_120sdp"
-    android:layout_height="wrap_content"
-    android:background="@color/colorWhiteDark"
-    android:clickable="true">
-
-    <!--  <com.airbnb.lottie.LottieAnimationView
+    android:layout_width="@dimen/_140sdp"
+    android:layout_height="@dimen/_140sdp"
+    android:padding="@dimen/_5sdp"
+    android:clickable="true"
+    app:shape_polygon_noOfSides="6">--><!--  <com.airbnb.lottie.LottieAnimationView
           android:id="@+id/child_avatar"
           android:layout_width="@dimen/_90sdp"
           android:layout_height="@dimen/_90sdp"
@@ -26,12 +24,35 @@
           app:lottie_autoPlay="true"
           app:lottie_loop="true" />
   -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_160sdp"
+    android:layout_centerInParent="true">
+
     <ImageView
         android:id="@+id/iv_child"
-        android:layout_width="@dimen/_80sdp"
-        android:layout_height="@dimen/_80sdp"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="@dimen/_125sdp"
+        android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
-        />
+        android:background="@drawable/hexagone"
+        android:padding="@dimen/_25sdp"
+        android:scaleType="fitXY"
+        android:elevation="@dimen/_10sdp"
+        android:src="@drawable/g1" />
+
+    <ImageView
+        android:id="@+id/iv_tick"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:src="@drawable/ic_check"
+        android:elevation="@dimen/_12sdp"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/_40sdp"
+        android:background="@drawable/ripple_rectangle" />
 
     <TextView
         android:id="@+id/child_name"
@@ -42,7 +63,7 @@
         android:gravity="center"
         android:paddingLeft="@dimen/_5sdp"
         android:paddingRight="@dimen/_5sdp"
-        android:text="aasdldsd"
+        android:text="aasdldsd gnfghg"
         android:textColor="#000"
         android:textSize="@dimen/_10sdp" />
-</RelativeLayout><!--</android.support.design.card.MaterialCardView>-->
+</RelativeLayout><!--</com.github.florent37.shapeofview.shapes.PolygonView>--><!--</android.support.design.card.MaterialCardView>-->

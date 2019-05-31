@@ -74,9 +74,16 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.ic_warning);
         requestOptions.error(R.drawable.ic_warning);
+        if (position == 0){
+            holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg));
+        }else if(position==1){
+            holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg_2));
+        }else
+        if(position%2==0){
+            holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg_3));
+        }
 
-
-        if ( (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1")) && !Assessment_Constants.SD_CARD_Content){
+    /*    if ( (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1")) && !Assessment_Constants.SD_CARD_Content){
             Glide.with(mContext).setDefaultRequestOptions(requestOptions)
                     .load(AssessmentApplication.assessPath + Assessment_Constants.THUMBS_PATH + assessList.getNodeImage())
                     .into(holder.thumbnail);
@@ -88,16 +95,16 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         }else
             Glide.with(mContext).setDefaultRequestOptions(requestOptions)
                     .load(assessList.getNodeServerImage())
-                    .into(holder.thumbnail);
+                    .into(holder.thumbnail);*/
 
-        holder.game_card_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (assessList.getNodeType() != null) {
-                    assessmentClicked.assessmentClicked(position, assessList.getNodeId());
+            holder.game_card_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (assessList.getNodeType() != null) {
+                        assessmentClicked.assessmentClicked(position, assessList.getNodeId());
+                    }
                 }
-            }
-        });
+            });
         holder.game_card_view.setVisibility(View.GONE);
         setAnimations(holder.game_card_view, position);
 

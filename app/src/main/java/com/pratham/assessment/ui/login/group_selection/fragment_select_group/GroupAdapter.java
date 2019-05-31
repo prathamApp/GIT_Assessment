@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -42,11 +44,15 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         pos = viewHolder.getAdapterPosition();
         viewHolder.group_name.setText(datalist.get(pos).getGroupName());
         if (datalist.get(pos).isSelected()) {
-            viewHolder.group_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorGreen));
-            viewHolder.group_name.setTextColor(context.getResources().getColor(R.color.colorBlack));
+
+//            viewHolder.group_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorGreen));
+//            viewHolder.group_name.setTextColor(context.getResources().getColor(R.color.colorBlack));
+            viewHolder.tick.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.group_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorAccent));
-            viewHolder.group_name.setTextColor(context.getResources().getColor(R.color.colorBlack));
+//            viewHolder.group_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+//            viewHolder.group_name.setTextColor(context.getResources().getColor(R.color.colorBlack));
+            viewHolder.tick.setVisibility(View.INVISIBLE);
+
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +74,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.group_card)
-        MaterialCardView group_card;
+        RelativeLayout group_card;
         @BindView(R.id.group_name)
         TextView group_name;
+        @BindView(R.id.iv_tick)
+        ImageView tick;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -203,6 +203,7 @@ public class ScienceAdapter extends RecyclerView.Adapter implements QuestionType
                 //  questionTypeListener.setType(MULTIPLE_SELECT, answer);
                 break;
             case TRUE_FALSE:
+                myViewHolder.setIsRecyclable(false);
                 TrueFalseViewHolder trueFalseViewHolder = (TrueFalseViewHolder) myViewHolder;
                 trueFalseViewHolder.setTrueFalseQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
                 //   questionTypeListener.setType(TRUE_FALSE, answer);

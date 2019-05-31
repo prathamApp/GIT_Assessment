@@ -116,6 +116,13 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
             checkBox.setLayoutParams(paramGrid);
             gridLayout.addView(checkBox);
         }
+
+        for (int j = 0; j < choices.size(); j++) {
+
+
+        }
+
+
      /*   for (int i = 0; i < gridLayout.getChildCount(); i++) {
             final CheckBox checkBox = (CheckBox) gridLayout.getChildAt(i);
             final int finalI = i;

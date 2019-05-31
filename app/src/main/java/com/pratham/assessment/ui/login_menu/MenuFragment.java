@@ -28,10 +28,10 @@ import butterknife.OnClick;
 
 
 public class MenuFragment extends Fragment {
-    @BindView(R.id.btn_qr)
-    ImageButton btn_qr;
-    @BindView(R.id.btn_grp)
-    ImageButton btn_grp;
+    /*  @BindView(R.id.btn_qr)
+      ImageButton btn_qr;
+      @BindView(R.id.btn_grp)
+      ImageButton btn_grp;*/
     @BindView(R.id.btn_admin)
     ImageButton btn_admin;
     @BindView(R.id.rl_admin)
@@ -56,20 +56,32 @@ public class MenuFragment extends Fragment {
         return view;
     }
 
-    @OnClick(R.id.btn_qr)
+    @OnClick(R.id.ib_age3to6)
     public void gotoQRActivity() {
         // ButtonClickSound.start();
-        startActivity(new Intent(getActivity(), QRScanActivity.class));
+//        startActivity(new Intent(getActivity(), QRScanActivity.class));
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Assessment_Constants.GROUP_AGE_BELOW_7, true);
+        Assessment_Utility.showFragment(getActivity(), new FragmentSelectGroup(), R.id.frame_group,
+                bundle, FragmentSelectGroup.class.getSimpleName());
+
 
     }
 
-    @OnClick(R.id.btn_grp)
+    @OnClick(R.id.ib_age8to14)
     public void gotoGroupLogin() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Assessment_Constants.GROUP_AGE_ABOVE_7, true);
+        Assessment_Utility.showFragment(getActivity(), new FragmentSelectGroup(), R.id.frame_group,
+                bundle, FragmentSelectGroup.class.getSimpleName());
+
+
 //        ButtonClickSound.start();
 //        startActivity(new Intent(getActivity(), SelectGroupActivity.class));
 
-            final SelectAgeGroupDialog selectAgeGroupDialog = new SelectAgeGroupDialog(getActivity());
-       /* selectAgeGroupDialog.iv_age_3_to_6.setOnClickListener(new View.OnClickListener() {
+       /*     final SelectAgeGroupDialog selectAgeGroupDialog = new SelectAgeGroupDialog(getActivity());
+        selectAgeGroupDialog.iv_age_3_to_6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectAgeGroupDialog.dismiss();
@@ -97,10 +109,10 @@ public class MenuFragment extends Fragment {
 //                startActivity(new Intent(SelectGroupActivity.this, MenuActivity.class));
        //         Toast.makeText(SelectGroupActivity.this, "age group selected", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
         selectAgeGroupDialog.setCancelable(true);
         selectAgeGroupDialog.show();
-
+*/
 
 
     }

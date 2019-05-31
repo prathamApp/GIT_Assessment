@@ -15,6 +15,7 @@ public class Assessment_Constants {
     public static String STORING_IN;
     public static String ext_path="";
     public static String ENGLISH = "English";
+    public static String currentsupervisorID;
 
     public static String ASSESSMENT_FOLDER_PATH = "/.Assessment/";
     public static String GAME_PATH = "/.Assessment/English/Game/";

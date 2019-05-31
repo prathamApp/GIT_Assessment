@@ -72,9 +72,15 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
 
 
         if (datalist.get(viewHolder.getAdapterPosition()).isChecked()) {
-            viewHolder.itemView.setBackground(context.getResources().getDrawable(R.drawable.correct_bg));
+//            viewHolder.child_avatar.setBackground(context.getResources().getDrawable(R.drawable.hexagone2));
+//            viewHolder.itemView.setBackground(context.getResources().getDrawable(R.drawable.correct_bg));
+            viewHolder.tick.setVisibility(View.VISIBLE);
+
         } else {
-            viewHolder.itemView.setBackground(context.getResources().getDrawable(R.drawable.ripple_rectangle));
+            viewHolder.child_avatar.setBackground(context.getResources().getDrawable(R.drawable.hexagone));
+//            viewHolder.itemView.setBackground(context.getResources().getDrawable(R.drawable.ripple_rectangle));
+            viewHolder.tick.setVisibility(View.GONE);
+
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +134,8 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
           LottieAnimationView child_avatar; */
         @BindView(R.id.iv_child)
         ImageView child_avatar;
+        @BindView(R.id.iv_tick)
+        ImageView tick;
        /* @BindView(R.id.child_card)
         MaterialCardView group_card;*/
 //        @BindView(R.id.card_avatar)

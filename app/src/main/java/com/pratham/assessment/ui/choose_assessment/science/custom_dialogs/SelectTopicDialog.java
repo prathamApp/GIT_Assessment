@@ -5,10 +5,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -44,12 +48,15 @@ public class SelectTopicDialog extends Dialog {
     Spinner spinner_lang;
     @BindView(R.id.txt_start_assessment)
     TextView txt_ok;
-    @BindView(R.id.tv_timer)
-    public TextView timer;
+   /* @BindView(R.id.tv_timer)
+    public TextView timer;*/
     @BindView(R.id.ll_count_down)
-    public LinearLayout ll_count_down;
+    public RelativeLayout ll_count_down;
     @BindView(R.id.ll_select_topic)
     public LinearLayout ll_select_topic;
+    @BindView(R.id.circle_progress_bar)
+    public ProgressBar circle_progress_bar;
+
 
     Context context;
     List<AssessmentPaperPattern> toipcsModalList;
@@ -75,13 +82,8 @@ public class SelectTopicDialog extends Dialog {
         setCanceledOnTouchOutside(false);
         setCancelable(false);
         topics.setText("Select Exams");
-        String[] topicNames = new String[toipcsModalList.size()];
-        for (int i = 0; i < toipcsModalList.size(); i++) {
-            topicNames[i] = toipcsModalList.get(i).getExamname();
-        }
-        ArrayAdapter topicAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, topicNames);
-        topicAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_topic.setAdapter(topicAdapter);
+
+
         String[] lang = new String[assessmentLanguagesList.size()];
         for (int i = 0; i < assessmentLanguagesList.size(); i++) {
             lang[i] = assessmentLanguagesList.get(i).getLanguagename();
@@ -89,7 +91,9 @@ public class SelectTopicDialog extends Dialog {
         ArrayAdapter langAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, lang);
         langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_lang.setAdapter(langAdapter);
-        String[] sub = new String[assessmentSubjectsList.size()];
+
+
+        final String[] sub = new String[assessmentSubjectsList.size()];
         for (int j = 0; j < assessmentSubjectsList.size(); j++) {
             sub[j] = assessmentSubjectsList.get(j).getSubjectname();
             if (assessmentSubjectsList.get(j).getSubjectname().equalsIgnoreCase("science")) {
@@ -100,6 +104,28 @@ public class SelectTopicDialog extends Dialog {
         subAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_subject.setAdapter(subAdapter);
 
+
+        spinner_subject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedSub = sub[position];
+                List<String> topicNames = new ArrayList<>();
+                for (int i = 0; i < toipcsModalList.size(); i++) {
+                    if (toipcsModalList.get(i).getSubjectname().equalsIgnoreCase(selectedSub))
+                        topicNames.add(toipcsModalList.get(i).getExamname());
+                }
+                if (topicNames.size() == 0) topicNames.add("No Exams");
+
+                ArrayAdapter topicAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, topicNames);
+                topicAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner_topic.setAdapter(topicAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
       /*  for (int i = 0; i < toipcsModalList.size(); i++) {
             CheckBox checkBox = new CheckBox(context);

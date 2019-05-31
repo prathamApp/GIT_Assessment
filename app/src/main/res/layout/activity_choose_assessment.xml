@@ -9,23 +9,34 @@
     <RelativeLayout
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:background="@color/colorPrimary">
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/tv_hey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Choose Assessment"
-            android:textColor="@color/colorWhiteLight"
-            android:textSize="@dimen/_15sdp" />
+            android:text="Hey,"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_22sdp"
+            />
+
+        <TextView
+            android:layout_below="@+id/tv_hey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose the assessment.."
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_17sdp" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title_bar">
+        android:layout_below="@+id/title_bar"
+        android:layout_marginTop="0dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/choose_assessment_recycler"
@@ -42,9 +53,9 @@
         android:id="@+id/rl_Profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:visibility="gone"
         android:layout_alignParentRight="true"
-        android:background="@drawable/admin_btn_bg">
+        android:background="@drawable/admin_btn_bg"
+        android:visibility="gone">
 
         <ImageButton
             android:id="@+id/btn_Profile"

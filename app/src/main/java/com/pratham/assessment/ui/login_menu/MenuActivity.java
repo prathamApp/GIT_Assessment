@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+//******this activity is not in use.Use MenuFragment instead**************
 public class MenuActivity extends BaseActivity {
 
     @BindView(R.id.btn_qr)

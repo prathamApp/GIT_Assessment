@@ -61,7 +61,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
         passwordET.setText("pratham123");
         /*  userNameET.setText("admin");
         passwordET.setText("admin");*/
-      /*  userNameET.setText("");
+       /* userNameET.setText("");
         passwordET.setText("");*/
         adminPanelPresenter = new AdminPanelPresenter(getActivity(), this);
     }

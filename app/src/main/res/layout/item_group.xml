@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/group_card"
@@ -9,32 +9,52 @@
     app:cardCornerRadius="@dimen/_5sdp"
     app:cardElevation="@dimen/_10sdp"
     app:cardUseCompatPadding="true">
+-->
 
-    <RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/group_card"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_145sdp"
+    android:layout_marginRight="@dimen/_3sdp"
+    android:layout_marginLeft="@dimen/_3sdp"
+
+    android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/iv_grp"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="@dimen/_130sdp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/hexagone"
+        android:gravity="center"
+        android:padding="@dimen/_20sdp"
+        android:src="@drawable/ic_group_black_24dp"
+
+        />
+
+    <ImageView
+        android:id="@+id/iv_tick"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:src="@drawable/ic_check"
+        android:elevation="@dimen/_12sdp"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/_40sdp"
+        android:background="@drawable/ripple_rectangle" />
+
+    <TextView
+        android:id="@+id/group_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
-
-        <ImageView
-            android:id="@+id/iv_grp"
-            android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_80sdp"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:src="@drawable/ic_group_black_24dp"
-
-            />
-
-        <TextView
-            android:id="@+id/group_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_grp"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:paddingRight="@dimen/_5sdp"
-            android:text="asanksjdnaks"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/_10sdp" />
-    </RelativeLayout>
-</android.support.design.card.MaterialCardView>
+        android:layout_below="@id/iv_grp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingRight="@dimen/_5sdp"
+        android:text="asanksjdnaks"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/_10sdp" />
+</RelativeLayout>
+    <!--</android.support.design.card.MaterialCardView>-->

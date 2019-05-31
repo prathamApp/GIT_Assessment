@@ -22,6 +22,9 @@ public interface ScoreDao {
     @Insert
     long[] insertAll(Score... scores);
 
+    @Insert
+    long[] insertAllScores(List<Score> scores);
+
     @Update
     int update(Score score);
 

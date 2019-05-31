@@ -52,7 +52,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4.5"
-                android:background="@color/colorRed"
                 android:weightSum="6"
                 android:orientation="vertical">
 

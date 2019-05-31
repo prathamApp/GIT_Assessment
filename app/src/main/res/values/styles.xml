@@ -48,7 +48,7 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="Dialog" parent="android:style/Theme.Dialog">
+    <style name="myDialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
         <item name="android:windowBackground">@color/colorGreen</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>

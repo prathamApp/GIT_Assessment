@@ -22,6 +22,7 @@ import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.discrete_view.ScaleTransformer;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.ECEModel;
+import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.json.JSONArray;
@@ -217,6 +218,33 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
     }
 
     private void saveAssessmentToDB() {
+        List<Score> scoreList = new ArrayList<>();
+
+        for (int i = 0; i < eceModelList.size(); i++) {
+            Score score = new Score();
+            score.setResourceID(resId);
+            score.setSessionID(Assessment_Constants.assessmentSession);
+//            score.setSessionIDm(Assessment_Constants.currentSession);
+            score.setQuestionId(0);
+            if (eceModelList.get(i).getIsSelected() == 1)
+                score.setScoredMarks(10);
+            else if (eceModelList.get(i).getIsSelected() == 2)
+                score.setScoredMarks(5);
+            score.setTotalMarks(10);
+            score.setStudentID(Assessment_Constants.currentStudentID);
+            score.setStartDateTime(eceStartTime);
+            score.setEndDateTime(AssessmentApplication.getCurrentDateTime());
+            score.setDeviceID(crlId);
+            score.setLevel(eceModelList.get(i).getIsSelected());
+            score.setLabel(eceModelList.get(i).getQuestion());
+            score.setSentFlag(0);
+            scoreList.add(score);
+        }
+        AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scoreList);
+        BackupDatabase.backup(this);
+    }
+/*
+ private void saveAssessmentToDB() {
         List<Assessment> assessmentList = new ArrayList<>();
 
         for (int i = 0; i < eceModelList.size(); i++) {
@@ -242,6 +270,7 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
         AppDatabase.getDatabaseInstance(this).getAssessmentDao().insertAllAssessments(assessmentList);
         BackupDatabase.backup(this);
     }
+*/
 
     @Override
     public void onAnswerClicked(int position, int answer) {

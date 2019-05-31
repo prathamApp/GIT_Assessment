@@ -376,7 +376,7 @@ public class Activity_AssignGroups extends AppCompatActivity {
                                     for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                                         fm.popBackStack();
                                     }*/
-                                    startActivity(new Intent(Activity_AssignGroups.this, MainActivity.class));
+                                    startActivity(new Intent(Activity_AssignGroups.this, SelectGroupActivity.class));
                                     finish();
                                     onBackPressed();
                                 }

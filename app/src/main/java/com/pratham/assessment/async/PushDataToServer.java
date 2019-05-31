@@ -22,6 +22,7 @@ import com.pratham.assessment.domain.Modal_Log;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
+import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -47,6 +48,8 @@ public class PushDataToServer extends AsyncTask {
     JSONArray assessmentData;
     JSONArray assessmentScienceData;
     JSONArray logsData;
+
+    boolean dataPushed = false;
 
     public PushDataToServer(Context context, boolean autoPush) {
 
@@ -82,8 +85,9 @@ public class PushDataToServer extends AsyncTask {
         sessionData = fillSessionData(sessionList);
 /*        List<LearntWords> learntWordsList = AppDatabase.getDatabaseInstance(context).getLearntWordDao().getAllData();
         learntWords = fillLearntWordsData(learntWordsList);
+    */
         List<SupervisorData> supervisorDataList = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().getAllSupervisorData();
-        supervisorData = fillSupervisorData(supervisorDataList);*/
+        supervisorData = fillSupervisorData(supervisorDataList);
         List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
         logsData = fillLogsData(logsList);
         List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllECEAssessment();
@@ -163,7 +167,7 @@ public class PushDataToServer extends AsyncTask {
 
         //        if (checkEmptyness(requestString))
         pushDataToServer(context, requestString, AssessmentApplication.uploadDataUrl);
-        pushDataScienceToServer(context,requestStringScience, AssessmentApplication.uploadScienceUrl);
+        pushDataScienceToServer(context, requestStringScience, AssessmentApplication.uploadScienceUrl);
 
         return null;
     }
@@ -384,7 +388,7 @@ public class PushDataToServer extends AsyncTask {
         }
         return scoreData;
     }
-/*
+
     private JSONArray fillSupervisorData(List<SupervisorData> supervisorDataList) {
         JSONArray supervisorData = new JSONArray();
         JSONObject _supervisorDataObj;
@@ -406,7 +410,6 @@ public class PushDataToServer extends AsyncTask {
         }
         return supervisorData;
     }
-*/
 
     private JSONArray fillLogsData(List<Modal_Log> logsList) {
         JSONArray logsData = new JSONArray();
@@ -454,6 +457,10 @@ public class PushDataToServer extends AsyncTask {
                 _assessmentobj.put("StartDateTimea", _Assessment.getStartDateTimea());
                 _assessmentobj.put("StudentIDa", _Assessment.getStudentIDa());
                 _assessmentobj.put("TotalMarksa", _Assessment.getTotalMarksa());
+                _assessmentobj.put("isAttempted", _Assessment.getIsAttempted());
+                _assessmentobj.put("isCorrect", _Assessment.getIsCorrect());
+                _assessmentobj.put("paperId", _Assessment.getPaperId());
+                _assessmentobj.put("examId", _Assessment.getExamId());
 
                 assessmentData.put(_assessmentobj);
             }
@@ -502,6 +509,7 @@ public class PushDataToServer extends AsyncTask {
                         @Override
                         public void onResponse(String response) {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
+                            dataPushed = true;
                             if (!autoPush) {
                                /* new AlertDialog.Builder(context)
                                         .setMessage("Data pushed successfully")
@@ -520,7 +528,8 @@ public class PushDataToServer extends AsyncTask {
                         @Override
                         public void onError(ANError anError) {
                             Log.d("PUSH_STATUS", "Data push failed");
-                            if (!autoPush) {
+                            dataPushed=false;
+                           /* if (!autoPush) {
                                 new AlertDialog.Builder(context)
                                         .setMessage("Data push failed")
                                         .setCancelable(false)
@@ -531,14 +540,15 @@ public class PushDataToServer extends AsyncTask {
                                                 ((MainActivity) context).onResponseGet();
                                             }
                                         }).create().show();
-                            }
+                            }*/
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-   private void pushDataScienceToServer(final Context context, String data, String url) {
+
+    private void pushDataScienceToServer(final Context context, String data, String url) {
         try {
             JSONObject jsonArrayData = new JSONObject(data);
 
@@ -552,8 +562,13 @@ public class PushDataToServer extends AsyncTask {
                         public void onResponse(String response) {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
                             if (!autoPush) {
+                                String msg = "Data pushed successfully";
+                                if (!dataPushed) {
+                                    msg = "Science data pushed successfully. Other data push failed";
+                                }
+
                                 new AlertDialog.Builder(context)
-                                        .setMessage("Data pushed successfully")
+                                        .setMessage(msg)
                                         .setCancelable(false)
                                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                             @Override
@@ -568,10 +583,15 @@ public class PushDataToServer extends AsyncTask {
 
                         @Override
                         public void onError(ANError anError) {
-                            Log.d("PUSH_STATUS", "Data push failed");
+                            Log.d("PUSH_STATUS", "Science Data push failed");
                             if (!autoPush) {
+                                String msg = "Science Data push failed";
+                                if (dataPushed) {
+                                    msg = "Other data pushed successfully.Science data push failed.";
+                                }
+
                                 new AlertDialog.Builder(context)
-                                        .setMessage("Data push failed")
+                                        .setMessage(msg)
                                         .setCancelable(false)
                                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                             @Override

@@ -73,7 +73,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
     @Override
     public void checkVersion() {
-        String currentVersion = Assessment_Utility.getCurrentVersion(context);
+       /* String currentVersion = Assessment_Utility.getCurrentVersion(context);
         String updatedVersion = sharedPreferences.getString(CURRENT_VERSION, "-1");
         if (updatedVersion != null) {
             if (updatedVersion.equalsIgnoreCase("-1")) {
@@ -94,7 +94,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 } else
                     splashView.startApp();
             }
-        } else splashView.startApp();
+        } else*/ splashView.startApp();
 
     }
 

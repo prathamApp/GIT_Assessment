@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_margin="@dimen/_10sdp"
+    android:background="@drawable/rounded_corner_dialog"
+    android:layout_height="match_parent">
+
+    <CheckBox
+        android:id="@+id/chk_start_assessment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_login_credential"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/_5sdp"
+        android:visibility="gone"
+        android:text="Start Assessment" />
+
+    <LinearLayout
+        android:id="@+id/ll_login_credential"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="@dimen/_25sdp"
+        android:elevation="@dimen/_20sdp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/login_credential"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:orientation="vertical"
+
+            android:weightSum="4">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputLayout_userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/userName"
+                    style="@style/CustomText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="User name"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputLayout_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout_userName"
+                app:passwordToggleEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/password"
+                    style="@style/CustomText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Password"
+                    android:inputType="textWebPassword"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@+id/login_credential"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="20dp"
+            android:paddingRight="@dimen/_10sdp">
+
+            <Button
+                android:id="@+id/btn_supervised"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/ripple_effect"
+                android:text="Supervised"
+                android:textColor="#ffffff" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3" />
+
+            <Button
+                android:id="@+id/btn_unsupervised"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/ripple_effect"
+                android:text="Unsupervised"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

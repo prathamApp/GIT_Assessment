@@ -6,8 +6,8 @@ android {
         applicationId "com.pratham.assessment"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -68,10 +68,14 @@ dependencies {
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 
     implementation "org.androidannotations:androidannotations-api:4.5.2"
-    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
 
-//stepbar
-    implementation 'com.github.imaNNeoFighT:StepBarView:1.1.0'
+
+
+    implementation 'com.github.florent37:shapeofview:1.3.2'
+
+    //circular progress
+    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
+    implementation 'com.github.CardinalNow:Android-CircleProgressIndicator:v0.2'
 
 
 }

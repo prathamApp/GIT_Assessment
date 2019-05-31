@@ -39,6 +39,27 @@ public class Assessment {
 
     private boolean isAttempted;
 
+    private boolean isCorrect;
+
+    public String getPaperId() {
+        return paperId;
+    }
+
+    public void setPaperId(String paperId) {
+        this.paperId = paperId;
+    }
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
+
+    private String paperId="";
+    private String examId="";
+
     public boolean getIsAttempted() {
         return isAttempted;
     }
@@ -54,8 +75,6 @@ public class Assessment {
     public void setIsCorrect(boolean correct) {
         isCorrect = correct;
     }
-
-    private boolean isCorrect;
 
 
     public int getSentFlag() {

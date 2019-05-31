@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_77sdp"
         android:layout_marginHorizontal="@dimen/_10sdp" />

@@ -93,6 +93,8 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
 //                radioButton.setButtonDrawable(android.R.color.transparent);
                 radioButton.setBackground(context.getResources().getDrawable(R.drawable.custom_radio_button));
                 RadioGroup.LayoutParams layoutParams;
+                String ans = scienceQuestion1.getUserAnswer();
+                String ansId = scienceQuestion1.getUserAnswer();
 
 //                radioButton.setLayoutParams(layoutParams);
                 radioButton.setTextSize(23);
@@ -103,11 +105,11 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
                     layoutParams = new RadioGroup.LayoutParams(MATCH_PARENT, getDp(150), 1);
                     radioButton.setLayoutParams(layoutParams);
                     final int finalR = r;
-                    final String path=Assessment_Constants.loadOnlineImagePath + options.get(r).getChoiceurl();
+                    final String path = Assessment_Constants.loadOnlineImagePath + options.get(r).getChoiceurl();
                     radioButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ZoomImageDialog zoomImageDialog=new ZoomImageDialog(context,path);
+                            ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path);
                             zoomImageDialog.show();
                         }
                     });
@@ -123,13 +125,29 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
                             tempRadio.setButtonDrawable(bd);
                         }
                     });
+                    layoutParams.setMargins(15, 10, 10, 10);
+                    radioButton.setLayoutParams(layoutParams);
+                    radioGroupMcq.addView(radioButton);
+                    if (ansId.equals(options.get(r).getQcid())) {
+                        radioButton.setChecked(true);
+                    } else {
+                        radioButton.setChecked(false);
+                    }
+
                 } else {
                     radioButton.setText(options.get(r).getChoicename());
                     layoutParams = new RadioGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 1);
+                    layoutParams.setMargins(15, 10, 10, 10);
+                    radioButton.setLayoutParams(layoutParams);
+                    radioGroupMcq.addView(radioButton);
+                    if (ans.equals(options.get(r).getChoicename())) {
+                        radioButton.setChecked(true);
+                    } else {
+                        radioButton.setChecked(false);
+                    }
+
                 }
-                layoutParams.setMargins(15, 10, 10, 10);
-                radioButton.setLayoutParams(layoutParams);
-                radioGroupMcq.addView(radioButton);
+
             }
 
             if (!scienceQuestion.getUserAnswerId().equalsIgnoreCase("")) {

@@ -42,7 +42,6 @@ public class TrueFalseViewHolder extends RecyclerView.ViewHolder {
     RadioButton radioButtonFalse;
     ScienceQuestion scienceQuestion;
     QuestionTypeListener questionTypeListener;
-
     Context context;
 
     public TrueFalseViewHolder(@NonNull View itemView, Context context, ScienceAdapter scienceAdapter) {
@@ -71,15 +70,25 @@ public class TrueFalseViewHolder extends RecyclerView.ViewHolder {
                             questionImage.setImageDrawable(bd);
                         }
                     });
-        }else questionImage.setVisibility(View.GONE);
+        } else questionImage.setVisibility(View.GONE);
+
+
         rg_true_false.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == radioButtonTrue.getId())
+                if (checkedId == radioButtonTrue.getId()/* && (!isFirstLoad)*/) {
                     questionTypeListener.setAnswer("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
-                else if (checkedId == radioButtonFalse.getId())
+                    radioButtonTrue.setChecked(true);
+                    radioButtonFalse.setChecked(false);
+
+                } else if (checkedId == radioButtonFalse.getId() /*&& (!isFirstLoad)*/) {
                     questionTypeListener.setAnswer("", radioButtonFalse.getText().toString(), scienceQuestion.getQid(), null);
-                else Toast.makeText(context, "Select Answer", Toast.LENGTH_SHORT).show();
+                    radioButtonFalse.setChecked(true);
+                    radioButtonTrue.setChecked(false);
+
+                } else {
+                    Toast.makeText(context, "Select Answer", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -91,5 +100,6 @@ public class TrueFalseViewHolder extends RecyclerView.ViewHolder {
             radioButtonFalse.setChecked(false);
             radioButtonTrue.setChecked(false);
         }
+
     }
 }

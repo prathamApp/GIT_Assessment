@@ -3,6 +3,8 @@ package com.pratham.assessment.ui.choose_assessment.science.custom_dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.pratham.assessment.R;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,10 +25,12 @@ public class AssessmentTimeUpDialog extends Dialog {
     @BindView(R.id.btn_ok_time_up)
     Button btn_ok;
     Context context;
+    QuestionTrackerListener questionTrackerListener;
 
     public AssessmentTimeUpDialog(@NonNull Context context) {
-        super(context,android.R.style.);
+        super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar);
         this.context = context;
+        questionTrackerListener = (QuestionTrackerListener) context;
     }
 
     @Override
@@ -33,7 +38,9 @@ public class AssessmentTimeUpDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.assessment_time_up_dialog);
         ButterKnife.bind(this);
-
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        setCancelable(false);
+        setCanceledOnTouchOutside(false);
 
     }
 
@@ -41,6 +48,7 @@ public class AssessmentTimeUpDialog extends Dialog {
     public void closeDialog() {
         ((Activity) context).finish();
         dismiss();
+        questionTrackerListener.onSaveAssessmentClick();
     }
 }
 

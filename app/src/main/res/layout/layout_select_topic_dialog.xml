@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ripple_rectangle"
@@ -54,8 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:padding="@dimen/_10sdp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp">
 
             <Spinner
                 android:id="@+id/select_spinner_lang"
@@ -87,10 +86,10 @@
             android:id="@+id/bottomControls"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="@dimen/_30sdp"
             android:layout_weight="1"
             android:gravity="bottom|center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/_30sdp">
 
             <TextView
                 android:id="@+id/tv_update_topics"
@@ -120,24 +119,74 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ll_count_down"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorProgress50"
+        android:background="@color/white"
         android:visibility="gone">
+        <!--
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/app_name"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:paddingTop="80dp"
+                    android:gravity="center_horizontal" />-->
 
 
-        <TextView
-            android:id="@+id/tv_timer"
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="@dimen/_5sdp"
+            android:layout_centerInParent="true"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="100"
+            android:progressDrawable="@drawable/circle_progress_foreground" />
+
+        <ProgressBar
+            android:id="@+id/circle_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:indeterminate="false"
+            android:max="5"
+            android:progressDrawable="@drawable/circle_progress_background"
+            android:rotation="-90" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="5"
-            android:textColor="@color/colorWhiteDark"
-            android:textSize="@dimen/_80sdp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:text="Wish you"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_25sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:text="all the best"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_25sdp" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

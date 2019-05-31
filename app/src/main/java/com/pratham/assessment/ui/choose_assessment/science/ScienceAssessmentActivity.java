@@ -8,14 +8,18 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,14 +30,12 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.discrete_view.DSVOrientation;
 import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.discrete_view.ScaleTransformer;
-import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentPatternDetails;
@@ -41,6 +43,7 @@ import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
+import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.AssessmentTimeUpDialog;
@@ -99,6 +102,11 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @BindView(R.id.current_cnt)
     TextView currentCount;
+
+    @BindView(R.id.iv_prev)
+    ImageView iv_prev;
+    @BindView(R.id.iv_next)
+    ImageView iv_next;
 
     String answer = "", ansId = "";
     String questionType = "";
@@ -185,11 +193,11 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(ScienceAssessmentActivity.this, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScienceAssessmentActivity.this, "Error in loading..Check internet connection lang", Toast.LENGTH_SHORT).show();
+                        finish();
                         progressDialog.dismiss();
                         downloadTopicDialog.dismiss();
-                        selectTopicDialog.show();
-
+//                        selectTopicDialog.show();
                     }
                 });
 
@@ -314,7 +322,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
         generatePaperPattern(examId, subId, langId);
 
-        showQuestions(selectTopicDialog);
+        showQuestions();
 
     }
 
@@ -493,7 +501,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
         }
     }
 
-    private void showQuestions(final SelectTopicDialog selectTopicDialog1) {
+    private void showQuestions() {
         Collections.shuffle(scienceQuestionList);
         for (int i = 0; i < scienceQuestionList.size(); i++) {
             String qid = scienceQuestionList.get(i).getQid();
@@ -505,18 +513,27 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
         } else {
             selectTopicDialog.ll_count_down.setVisibility(View.VISIBLE);
             selectTopicDialog.ll_select_topic.setVisibility(View.GONE);
-
-            CountDownTimer countDownTimer = new CountDownTimer(5000, 1000) {
+//            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.circle_progress_bar);
+            CountDownTimer countDownTimer = new CountDownTimer(4000, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     int time = (int) (millisUntilFinished / 1000);
-                    selectTopicDialog.timer.setText("" + time);
+                    //selectTopicDialog.timer.setText("" + time);
+                    selectTopicDialog.circle_progress_bar.setProgress(time);
+                    Log.d("jjjjjjjj", time + "");
                 }
 
                 @Override
                 public void onFinish() {
-                    selectTopicDialog.dismiss();
-                    setProgressBarAndTimer();
+                    selectTopicDialog.circle_progress_bar.setProgress(0);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            selectTopicDialog.dismiss();
+                            setProgressBarAndTimer();
+                        }
+                    }, 800);
+
                 }
             };
             countDownTimer.start();
@@ -555,7 +572,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     private void setProgressBarAndTimer() {
         progressBarTimer.setProgress(100);
         ExamTime = Integer.parseInt(assessmentPaperPatterns.getExamduration());
-        final int timer = ExamTime * 500;
+        final int timer = ExamTime * 60000;
 
         mCountDownTimer = new CountDownTimer(timer, 1000) {
             @Override
@@ -584,10 +601,11 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
             @Override
             public void onFinish() {
-                AssessmentTimeUpDialog timeUpDialog=new AssessmentTimeUpDialog(ScienceAssessmentActivity.this);
+                AssessmentTimeUpDialog timeUpDialog = new AssessmentTimeUpDialog(ScienceAssessmentActivity.this);
                 timeUpDialog.show();
                 progressBarTimer.setProgress(0);
-                Toast.makeText(ScienceAssessmentActivity.this, "Time up...", Toast.LENGTH_SHORT).show();
+//                onSaveAssessmentClick();
+//                Toast.makeText(ScienceAssessmentActivity.this, "Time up...", Toast.LENGTH_SHORT).show();
             }
         };
         mCountDownTimer.start();
@@ -597,6 +615,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     public void onBackPressed() {
         super.onBackPressed();
         chronometer.stop();
+        mCountDownTimer.cancel();
     }
 
  /*   @OnClick(R.id.btn_next)
@@ -620,13 +639,29 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @OnClick(R.id.iv_prev)
     public void prevClick() {
+        Animation animation;
+
         if (queCnt > 1) {
-            scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.GetCurrentDateTime());
+
+            scienceQuestionList.get(queCnt - 1).setEndTime(Assessment_Utility.GetCurrentDateTime());
             queCnt--;
             discreteScrollView.smoothScrollToPosition(queCnt - 1);
             scienceQuestionList.get(queCnt).setStartTime(Assessment_Utility.GetCurrentDateTime());
 
         }
+
+
+       /* if (queCnt == 1) {
+            animation = AnimationUtils.loadAnimation(this, R.anim.move_to_right);
+            iv_prev.startAnimation(animation);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    iv_prev.setVisibility(View.GONE);
+                    iv_prev.setEnabled(false);
+                }
+            }, 800);
+        }*/
         currentCount.setText(queCnt + "/" + scienceQuestionList.size());
 
 
@@ -635,18 +670,31 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @OnClick(R.id.iv_next)
     public void nextClick() {
+        Animation animation;
+
         if (queCnt < scienceQuestionList.size()) {
+          /*  iv_next.setVisibility(View.VISIBLE);
+            iv_prev.setVisibility(View.VISIBLE);*/
             scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.GetCurrentDateTime());
             discreteScrollView.smoothScrollToPosition(queCnt);
             queCnt++;
-            scienceQuestionList.get(queCnt).setStartTime(Assessment_Utility.GetCurrentDateTime());
+            scienceQuestionList.get(queCnt - 1).setStartTime(Assessment_Utility.GetCurrentDateTime());
 
+        } else if (queCnt == scienceQuestionList.size()) {
+            queCnt = scienceQuestionList.size();
+           /* animation = AnimationUtils.loadAnimation(this, R.anim.move_to_left);
+            iv_next.startAnimation(animation);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    iv_next.setVisibility(View.GONE);
+                    iv_next.setEnabled(false);
+                }
+            }, 800);*/
         }
-
-        /*if (queCnt == scienceQuestionList.size()) {
-//            chronometer.setVisibility(View.GONE);
-            save.setVisibility(View.VISIBLE);
-            Log.d("qCnt", queCnt + "");
+     /*   if (queCnt == 2) {
+            animation = AnimationUtils.loadAnimation(this, R.anim.move_to_left);
+            iv_prev.startAnimation(animation);
         }*/
         currentCount.setText(queCnt + "/" + scienceQuestionList.size());
 
@@ -687,11 +735,14 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 if (scienceQuestionList.get(i).getQid().equalsIgnoreCase(qid)) {
                     scienceQuestionList.get(i).setIsAttempted(true);
-                    if (answer != null) {
-                        scienceQuestionList.get(i).setUserAnswer(answer);
+                    if (userAnsList.size() > 0) {
+                        scienceQuestionList.get(i).setUserAnswer(userAnsList.get(0).getChoicename());
+                        scienceQuestionList.get(i).setUserAnswerId(userAnsList.get(0).getQcid());
 //                        scienceQuestionList.get(i).setMarksPerQuestion(marksPerQuestion);
-                    } else scienceQuestionList.get(i).setUserAnswer("");
-                    scienceQuestionList.get(i).setUserAnswerId(ansId);
+                    } else {
+                        scienceQuestionList.get(i).setUserAnswer("");
+                        scienceQuestionList.get(i).setUserAnswerId(ansId);
+                    }
                     break;
                 }
             }
@@ -722,7 +773,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     }*/
 
 
-    private void saveAssessmentToDB() {
+  /*  private void saveAssessmentToDB() {
         List<Assessment> assessmentList = new ArrayList<>();
 
         for (int i = 0; i < scienceQuestionList.size(); i++) {
@@ -731,11 +782,11 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             assessment.setSessionIDa(Assessment_Constants.assessmentSession);
             assessment.setSessionIDm(Assessment_Constants.currentSession);
             assessment.setQuestionIda(0);
-            /*if (eceModelList.get(i).getIsSelected() == 1)
+            *//*if (eceModelList.get(i).getIsSelected() == 1)
                 assessment.setScoredMarksa(10);
             else if (eceModelList.get(i).getIsSelected() == 2)
                 assessment.setScoredMarksa(5);
-          */
+          *//*
             assessment.setTotalMarksa(0);
             assessment.setStudentIDa(Assessment_Constants.currentStudentID);
             assessment.setStartDateTimea("");
@@ -748,7 +799,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
         }
         AppDatabase.getDatabaseInstance(this).getAssessmentDao().insertAllAssessments(assessmentList);
         BackupDatabase.backup(this);
-    }
+    }*/
 
     private void checkAssessment(int queCnt) {
         ScienceQuestion scienceQuestion = scienceQuestionList.get(queCnt - 1);
@@ -860,16 +911,43 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @Override
     public void onSaveAssessmentClick() {
+        List<Score> scores = new ArrayList<>();
+        for (int i = 0; i < scienceQuestionList.size(); i++) {
+
+            Score score = new Score();
+            score.setQuestionId(Integer.parseInt(scienceQuestionList.get(i).getQid()));
+            // TODO: 24-05-2019 add level
+//            assessment.setLevela(Integer.parseInt(scienceQuestionList.get(i).getQlevel()));
+           /* score.setIsAttempted(scienceQuestionList.get(i).getIsAttempted());
+            score.setIsCorrect(scienceQuestionList.get(i).getIsCorrect());
+            score.setExamId(scienceQuestionList.get(i).getExamid());
+            score.setPaperId(scienceQuestionList.get(i).getPaperid());*/
+            score.setTotalMarks(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
+            score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
+            score.setLabel("assessment");
+            score.setEndDateTime(scienceQuestionList.get(i).getEndTime());
+            score.setStudentID(Assessment_Constants.currentStudentID);
+            score.setScoredMarks(Integer.parseInt(scienceQuestionList.get(i).getMarksPerQuestion()));
+            scores.add(score);
+
+        }
+        AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scores);
+        Toast.makeText(this, "Assessment saved successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    /*@Override
+    public void onSaveAssessmentClick() {
         List<Assessment> assessments = new ArrayList<>();
         for (int i = 0; i < scienceQuestionList.size(); i++) {
 
             Assessment assessment = new Assessment();
             assessment.setQuestionIda(Integer.parseInt(scienceQuestionList.get(i).getQid()));
+            // TODO: 24-05-2019 add level
 //            assessment.setLevela(Integer.parseInt(scienceQuestionList.get(i).getQlevel()));
             assessment.setIsAttempted(scienceQuestionList.get(i).getIsAttempted());
             assessment.setIsCorrect(scienceQuestionList.get(i).getIsCorrect());
-//            score.setExamid(scienceQuestionList.get(i).getExamid());
-//            score.setPaperid(scienceQuestionList.get(i).getPaperid());
+            assessment.setExamId(scienceQuestionList.get(i).getExamid());
+            assessment.setPaperId(scienceQuestionList.get(i).getPaperid());
             assessment.setTotalMarksa(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
             assessment.setStartDateTimea(scienceQuestionList.get(i).getStartTime());
             assessment.setLabel("assessment");
@@ -881,7 +959,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
         }
         AppDatabase.getDatabaseInstance(this).getAssessmentDao().insertAllAssessments(assessments);
         Toast.makeText(this, "Assessment saved successfully", Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
 
 
