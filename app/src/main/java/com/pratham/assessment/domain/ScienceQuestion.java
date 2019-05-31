@@ -28,6 +28,8 @@ public class ScienceQuestion implements Serializable {
     private String lessonid;
     @Embedded
     private ArrayList<ScienceQuestionChoice> lstquestionchoice;
+    @Ignore
+    List<ScienceQuestionChoice> matchingNameList = null;
 
     private String qtid;
     @NonNull
@@ -323,5 +325,11 @@ public class ScienceQuestion implements Serializable {
         this.paperid = paperid;
     }
 
+    public List<ScienceQuestionChoice> getMatchingNameList() {
+        return matchingNameList;
+    }
 
+    public void setMatchingNameList(List<ScienceQuestionChoice> matchingNameList) {
+        this.matchingNameList = matchingNameList;
+    }
 }

@@ -83,7 +83,7 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
                             questionImage.setImageDrawable(bd);
                         }
                     });
-        }else questionImage.setVisibility(View.GONE);
+        } else questionImage.setVisibility(View.GONE);
 
 
         List<ScienceQuestionChoice> pairList = new ArrayList<>();
@@ -102,11 +102,15 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context.getApplicationContext());
             recyclerView1.setLayoutManager(linearLayoutManager);
             recyclerView1.setAdapter(matchPairAdapter);
-            shuffledList.clear();
-            shuffledList.addAll(pairList);
-            Collections.shuffle(shuffledList);
+            if (scienceQuestion.getMatchingNameList() == null) {
+                shuffledList.clear();
+                shuffledList.addAll(pairList);
+                Collections.shuffle(shuffledList);
+            } else {
+                shuffledList = scienceQuestion.getMatchingNameList();
+            }
 
-            DragDropAdapter dragDropAdapter = new DragDropAdapter(this,shuffledList, context, scienceAdapter);
+            DragDropAdapter dragDropAdapter = new DragDropAdapter(this, shuffledList, context, scienceAdapter);
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);

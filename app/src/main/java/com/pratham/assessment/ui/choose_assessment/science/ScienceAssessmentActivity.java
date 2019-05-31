@@ -726,7 +726,12 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                 }
             }
         } else if (list != null) {
-            userAnsList = list;
+            for (int i = 0; i < scienceQuestionList.size(); i++) {
+                if (scienceQuestionList.get(i).getQid().equalsIgnoreCase(qid)) {
+                    scienceQuestionList.get(i).setMatchingNameList(list);
+                }
+            }
+            // userAnsList = list;
 
             if (!attemptedQIds.contains(qid)) {
                 attemptedQIds.add(qid);
@@ -735,9 +740,9 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 if (scienceQuestionList.get(i).getQid().equalsIgnoreCase(qid)) {
                     scienceQuestionList.get(i).setIsAttempted(true);
-                    if (userAnsList.size() > 0) {
-                        scienceQuestionList.get(i).setUserAnswer(userAnsList.get(0).getChoicename());
-                        scienceQuestionList.get(i).setUserAnswerId(userAnsList.get(0).getQcid());
+                    if (scienceQuestionList.get(i).getMatchingNameList().size() > 0) {
+                        scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename());
+                        scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
 //                        scienceQuestionList.get(i).setMarksPerQuestion(marksPerQuestion);
                     } else {
                         scienceQuestionList.get(i).setUserAnswer("");
@@ -809,7 +814,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             case MULTIPLE_CHOICE:
 
                 if (scienceQuestion.getIsAttempted())
-                    if (userAnsList.get(0).getCorrect().equalsIgnoreCase("true")) {
+                    if (scienceQuestion.getMatchingNameList().get(0).getCorrect().equalsIgnoreCase("true")) {
                         scienceQuestionList.get(queCnt - 1).setIsCorrect(true);
                         scienceQuestionList.get(queCnt - 1).
                                 setMarksPerQuestion(scienceQuestionList.get(queCnt - 1).getOutofmarks());
@@ -823,21 +828,23 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                 break;
             case MULTIPLE_SELECT:
                 boolean flag = true;
-                for (ScienceQuestionChoice scienceQuestionChoice : userAnsList) {
-                    if (!scienceQuestionChoice.getCorrect().trim().equals(scienceQuestionChoice.getMyIscorrect().trim())) {
-                        flag = false;
-                        break;
+                if (scienceQuestion.getIsAttempted()) {
+                    for (ScienceQuestionChoice scienceQuestionChoice : scienceQuestion.getMatchingNameList()) {
+                        if (!scienceQuestionChoice.getCorrect().trim().equals(scienceQuestionChoice.getMyIscorrect().trim())) {
+                            flag = false;
+                            break;
+                        }
                     }
-                }
-                if (flag) {
-                    scienceQuestionList.get(queCnt - 1).setIsCorrect(true);
-                    scienceQuestionList.get(queCnt - 1).
-                            setMarksPerQuestion(scienceQuestionList.get(queCnt - 1).getOutofmarks());
+                    if (flag) {
+                        scienceQuestionList.get(queCnt - 1).setIsCorrect(true);
+                        scienceQuestionList.get(queCnt - 1).
+                                setMarksPerQuestion(scienceQuestionList.get(queCnt - 1).getOutofmarks());
 
-                } else {
-                    scienceQuestionList.get(queCnt - 1).setIsCorrect(false);
-                    scienceQuestionList.get(queCnt - 1).
-                            setMarksPerQuestion("0");
+                    } else {
+                        scienceQuestionList.get(queCnt - 1).setIsCorrect(false);
+                        scienceQuestionList.get(queCnt - 1).
+                                setMarksPerQuestion("0");
+                    }
                 }
                 break;
             case FILL_IN_THE_BLANK:
@@ -858,7 +865,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     int matchPairCnt = 0;
                     List<ScienceQuestionChoice> queOptions = AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
                     for (int i = 0; i < queOptions.size(); i++) {
-                        if (queOptions.get(i).getQcid().equalsIgnoreCase(userAnsList.get(i).getQcid())) {
+                        if (queOptions.get(i).getQcid().equalsIgnoreCase(scienceQuestion.getMatchingNameList().get(i).getQcid())) {
                             matchPairCnt++;
                         }
                     }

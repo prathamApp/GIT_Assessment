@@ -128,14 +128,19 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
                     layoutParams.setMargins(15, 10, 10, 10);
                     radioButton.setLayoutParams(layoutParams);
                     radioGroupMcq.addView(radioButton);
-                    if (ansId.equals(options.get(r).getQcid())) {
+                    radioButton.setText(options.get(r).getChoicename());
+                    if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
                         radioButton.setChecked(true);
-                    } else {
-                        radioButton.setChecked(false);
-                    }
+                    } else radioButton.setChecked(false);
+
 
                 } else {
                     radioButton.setText(options.get(r).getChoicename());
+                    if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
+                        radioButton.setChecked(true);
+                    } else radioButton.setChecked(false);
+
+
                     layoutParams = new RadioGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 1);
                     layoutParams.setMargins(15, 10, 10, 10);
                     radioButton.setLayoutParams(layoutParams);
@@ -150,24 +155,25 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
 
             }
 
-            if (!scienceQuestion.getUserAnswerId().equalsIgnoreCase("")) {
+          /*  if (!scienceQuestion.getUserAnswerId().equalsIgnoreCase("")) {
                 for (int i = 0; i < options.size(); i++) {
                     if (options.get(i).getQcid().equalsIgnoreCase(scienceQuestion.getUserAnswerId())) {
                         ((RadioButton) radioGroupMcq.getChildAt(i)).setChecked(true);
                     }
                 }
-            }
+            }*/
         }
 
         radioGroupMcq.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((RadioButton) radioGroupMcq.getChildAt(checkedId)).setChecked(true);
+                //((RadioButton) radioGroupMcq.getChildAt(checkedId)).setChecked(true);
 
                 for (int i = 0; i < group.getChildCount(); i++) {
                     if ((group.getChildAt(i)).getId() == checkedId) {
                         List<ScienceQuestionChoice> ans = new ArrayList<>();
                         ans.add(options.get(i));
+                        scienceQuestion.setMatchingNameList(ans);
 //                        String answer = ((RadioButton) group.getChildAt(i)).getText().toString();
 //                        String ansId = options.get(i).getQcid();
                         questionTypeListener.setAnswer("", "", scienceQuestion.getQid(), ans);

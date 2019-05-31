@@ -76,7 +76,7 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
                         }
                     });
         } else questionImage.setVisibility(View.GONE);
-        final List<ScienceQuestionChoice> choices = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+        final List<ScienceQuestionChoice> choices = scienceQuestion.getLstquestionchoice();
 
         gridLayout.setColumnCount(1);
         gridLayout.removeAllViews();
@@ -84,8 +84,13 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
             final CheckBox checkBox = new CheckBox(context);
             checkBox.setText(choices.get(j).getChoicename());
             checkBox.setTag(choices.get(j).getQcid());
+            if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
+                checkBox.setChecked(true);
+            } else {
+                checkBox.setChecked(false);
+            }
             checkBox.setTextSize(25);
-            checkBox.setPadding(5,5,5,5);
+            checkBox.setPadding(5, 5, 5, 5);
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -106,7 +111,7 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
                             mScienceQuestionChoice.setMyIscorrect("false");
                     }
 
-                    questionTypeListener.setAnswer("","", scienceQuestion.getQid(),choices );
+                    questionTypeListener.setAnswer("", "", scienceQuestion.getQid(), choices);
                 }
             });
             GridLayout.LayoutParams paramGrid = new GridLayout.LayoutParams();
