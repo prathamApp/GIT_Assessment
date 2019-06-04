@@ -13,7 +13,7 @@ public class Assessment_Constants {
     public static final String SD_CARD_Content_STR = "sd_card_content_str";
     public static boolean SD_CARD_Content = false;
     public static String STORING_IN;
-    public static String ext_path="";
+    public static String ext_path = "";
     public static String ENGLISH = "English";
     public static String currentsupervisorID;
 
@@ -56,7 +56,8 @@ public class Assessment_Constants {
     public static final String GROUPID5 = "group5";
     public static final String GROUP_AGE_BELOW_7 = "GROUP_AGE_BELOW_7";
     public static final String GROUP_AGE_ABOVE_7 = "GROUP_AGE_ABOVE_7";
-    public static final String STUDENT_LIST = "STUDENT_LIST";    public static final String SESSIONID = "sessionid";
+    public static final String STUDENT_LIST = "STUDENT_LIST";
+    public static final String SESSIONID = "sessionid";
     public static String currentStudentID;
     public static String currentSession;
     public static boolean supervisedAssessment = false;
@@ -66,6 +67,7 @@ public class Assessment_Constants {
 
     public static String loadOnlineImagePath = "http://pef1.prathamskills.org//";
 
+    public static boolean isShowcaseDisplayed = false;
 
 
     public static enum URL {

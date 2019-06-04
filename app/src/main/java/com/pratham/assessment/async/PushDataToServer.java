@@ -380,6 +380,9 @@ public class PushDataToServer extends AsyncTask {
                 _obj.put("EndDateTime", _score.getEndDateTime());
                 _obj.put("Level", _score.getLevel());
                 _obj.put("Label", _score.getLabel());
+                _obj.put("isAttempted",_score.getIsAttempted());
+                _obj.put("isCorrect", _score.getIsCorrect());
+                _obj.put("examId",_score.getExamId());
                 scoreData.put(_obj);
             }
         } catch (Exception e) {
@@ -457,10 +460,7 @@ public class PushDataToServer extends AsyncTask {
                 _assessmentobj.put("StartDateTimea", _Assessment.getStartDateTimea());
                 _assessmentobj.put("StudentIDa", _Assessment.getStudentIDa());
                 _assessmentobj.put("TotalMarksa", _Assessment.getTotalMarksa());
-                _assessmentobj.put("isAttempted", _Assessment.getIsAttempted());
-                _assessmentobj.put("isCorrect", _Assessment.getIsCorrect());
-                _assessmentobj.put("paperId", _Assessment.getPaperId());
-                _assessmentobj.put("examId", _Assessment.getExamId());
+
 
                 assessmentData.put(_assessmentobj);
             }

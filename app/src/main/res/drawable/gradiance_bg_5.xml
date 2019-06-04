@@ -9,9 +9,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="45"
-        android:startColor="#ff758c"
-        android:endColor="#FCC8CA"
+        android:startColor="#EB3349"
+        android:endColor="#F45C43"
         />
     <corners
-        android:topRightRadius="@dimen/_15sdp" android:topLeftRadius="@dimen/_15sdp"/>
+        android:radius="15dp" />
 </shape>

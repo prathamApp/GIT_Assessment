@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginHorizontal="@dimen/_25sdp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
         android:elevation="@dimen/_20sdp"
         android:orientation="vertical">
 
@@ -85,9 +85,8 @@
             android:layout_marginBottom="@dimen/_15sdp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingTop="20dp"
-            android:paddingRight="@dimen/_10sdp">
+            android:paddingTop="10dp"
+            android:paddingRight="@dimen/_5sdp">
 
             <Button
                 android:id="@+id/btn_supervised"
@@ -95,14 +94,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@drawable/ripple_effect"
-                android:text="Supervised"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/_10sdp" />
+                android:text="Supervise"
+                android:layout_margin="@dimen/_3sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3" />
 
             <Button
                 android:id="@+id/btn_unsupervised"
@@ -110,10 +106,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@drawable/ripple_effect"
-
-                android:text="Unsupervised"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/_10sdp" />
+                android:text="Practice"
+                android:layout_margin="@dimen/_3sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

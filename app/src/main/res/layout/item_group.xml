@@ -17,7 +17,6 @@
     android:layout_height="@dimen/_145sdp"
     android:layout_marginRight="@dimen/_3sdp"
     android:layout_marginLeft="@dimen/_3sdp"
-
     android:layout_gravity="center">
 
     <ImageView

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +12,8 @@
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,69 +30,100 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/topPanel">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:clipToPadding="false"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/_40sdp"
-            android:weightSum="6">
+            android:orientation="vertical">
 
-
-            <ImageButton
-                android:id="@+id/ib_age3to6"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_130sdp"
-                android:layout_gravity="center"
-                android:layout_marginVertical="@dimen/_10sdp"
-                android:background="@drawable/gradiance_bg"
-                android:elevation="7dp"
-                android:gravity="center"
-                android:padding="@dimen/_10sdp"
-                android:scaleType="centerInside"
-                android:src="@drawable/storytelling" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/_20sdp"
+                app:cardCornerRadius="@dimen/_15sdp"
+                app:cardElevation="@dimen/_6sdp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/_5sdp"
-                android:elevation="@dimen/_7sdp"
-                android:text="Age 3 to 6"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/radio_button_bg"
-                android:padding="@dimen/_5sdp"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/_15sdp" />
+                <RelativeLayout
+                    android:id="@+id/rl_age3to6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:elevation="@dimen/_10sdp">
 
-            <ImageButton
-                android:id="@+id/ib_age8to14"
+                    <ImageButton
+                        android:id="@+id/ib_age3to6"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@+id/text"
+                        android:background="@drawable/gradiance_bg"
+                        android:gravity="center"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/storytelling" />
+
+                    <RelativeLayout
+                        android:id="@+id/text"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/ripple_rectangle">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Age 3 to 6"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/_30sdp" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_130sdp"
-                android:layout_below="@+id/ib_age3to6"
-                android:layout_gravity="center"
-                android:layout_marginVertical="@dimen/_10sdp"
-                android:background="@drawable/gradiance_bg_2"
-                android:elevation="7dp"
-                android:padding="@dimen/_10sdp"
-                android:scaleType="centerInside"
-                android:src="@drawable/gitl_reading" />
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/_20sdp"
+                android:layout_weight="1"
+                app:cardCornerRadius="@dimen/_15sdp"
+                app:cardElevation="@dimen/_6sdp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ib_age3to6"
-                android:elevation="@dimen/_7sdp"
-                android:text="Age 8 to 14"
-                android:padding="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:background="@drawable/radio_button_bg"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/_15sdp" />
+                <RelativeLayout
+                    android:id="@+id/rl_age8to14"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white">
 
-        </RelativeLayout>
+                    <ImageButton
+                        android:id="@+id/ib_age8to14"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@+id/text3_6"
+                        android:background="@drawable/gradiance_bg_2"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/gitl_reading" />
+
+                    <RelativeLayout
+                        android:id="@+id/text3_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/ripple_rectangle">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Age 8 to 14"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/_30sdp" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
 
     </RelativeLayout>
 

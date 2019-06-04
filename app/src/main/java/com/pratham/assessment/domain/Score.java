@@ -35,8 +35,12 @@ public class Score {
     private String Label;
     @ColumnInfo(name = "sentFlag")
     private int sentFlag;
-
-
+    @ColumnInfo(name = "isAttempted")
+    private boolean isAttempted;
+    @ColumnInfo(name = "isCorrect")
+    private boolean isCorrect;
+    @ColumnInfo(name = "examId")
+    private String examId="";
     @Override
     public String toString() {
         return "Score{" +
@@ -52,6 +56,22 @@ public class Score {
                 ", EndDateTime='" + EndDateTime + '\'' +
                 ", Level=" + Level +
                 '}';
+    }
+
+    public boolean getIsAttempted() {
+        return isAttempted;
+    }
+
+    public void setIsAttempted(boolean attempted) {
+        isAttempted = attempted;
+    }
+
+    public boolean getIsCorrect() {
+        return isCorrect;
+    }
+
+    public void setIsCorrect(boolean correct) {
+        isCorrect = correct;
     }
 
     public int getSentFlag() {
@@ -158,4 +178,14 @@ public class Score {
     public void setLabel(String label) {
         Label = label;
     }
+
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
+
 }

@@ -16,7 +16,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.pratham.assessment.AssessmentApplication;
@@ -30,8 +29,6 @@ import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActi
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
-import org.androidannotations.annotations.Fullscreen;
-
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -39,8 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.pratham.assessment.utilities.Assessment_Constants.assessmentSession;
 
 public class SupervisedAssessmentActivity extends AppCompatActivity {
@@ -55,7 +50,7 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
 
     String imageName = "";
     boolean isPhotoSaved = false;
-    String superviserId = "";
+    String supervisorId = "";
     String nodeId = "";
     private static final int CAMERA_REQUEST = 1888;
 
@@ -65,16 +60,19 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_supervised_assessment);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        superviserId = getIntent().getStringExtra("loggedCrlId");
+        supervisorId = getIntent().getStringExtra("loggedCrlId");
         nodeId = getIntent().getStringExtra("nodeId");
-        Crl crl = AppDatabase.getDatabaseInstance(this).getCrlDao().getCrl(superviserId);
-        supervisor_name.setText(crl.getFirstName() + " " + crl.getLastName());
-
+        if (nodeId.equals("1302") || nodeId.equals("1304")) {
+            goToAssessment();
+        } else {
+            Crl crl = AppDatabase.getDatabaseInstance(this).getCrlDao().getCrl(supervisorId);
+            supervisor_name.setText(crl.getFirstName() + " " + crl.getLastName());
+        }
     }
 
     @OnClick(R.id.btn_camera)
     public void openCamera() {
-        imageName = superviserId + ".jpg";
+        imageName = supervisorId + ".jpg";
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(takePicture, CAMERA_REQUEST);
     }
@@ -102,7 +100,7 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
         if (isPhotoSaved) {
             if (sName.length() != 0) {
                 Assessment_Constants.supervisedAssessment = true;
-                AddSupervisorToDB(superviserId, sName, imageName);
+                AddSupervisorToDB(supervisorId, sName, imageName);
             }
         } else {
             AnimateCamButtom(this, btn_camera);
@@ -162,18 +160,22 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
         if (nodeId.equalsIgnoreCase("1304")) {
             Intent intent = new Intent(SupervisedAssessmentActivity.this, ECEActivity.class);
             intent.putExtra("resId", "9962");
-            intent.putExtra("crlId", superviserId);
+            intent.putExtra("crlId", supervisorId);
             startActivity(intent);
             finish();
         } else if (nodeId.equalsIgnoreCase("1302")) {
             Intent intent = new Intent(SupervisedAssessmentActivity.this, TestDisplayActivity.class);
             intent.putExtra("nodeId", nodeId);
+            intent.putExtra("crlId", supervisorId);
+
             startActivity(intent);
             finish();
         } else {
 //                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
             Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);
             intent.putExtra("nodeId", nodeId);
+            intent.putExtra("crlId", supervisorId);
+
             startActivity(intent);
             finish();
         }

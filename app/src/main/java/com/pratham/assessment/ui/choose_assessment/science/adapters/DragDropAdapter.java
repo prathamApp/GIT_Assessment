@@ -1,8 +1,10 @@
 package com.pratham.assessment.ui.choose_assessment.science.adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.elconfidencial.bubbleshowcase.BubbleShowCaseBuilder;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
@@ -81,7 +84,7 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
         draggedList.clear();
         ScienceQuestionChoice scienceQuestionChoice = data.get(position);
         if (!scienceQuestionChoice.getMatchingurl().equalsIgnoreCase("")) {
-            final String path=Assessment_Constants.loadOnlineImagePath + scienceQuestionChoice.getMatchingurl();
+            final String path = Assessment_Constants.loadOnlineImagePath + scienceQuestionChoice.getMatchingurl();
             holder.iv_choice_image.setVisibility(View.VISIBLE);
             holder.mTitle.setVisibility(View.GONE);
             Glide.with(context).asBitmap().
@@ -94,7 +97,7 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
             holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ZoomImageDialog zoomImageDialog=new ZoomImageDialog(context,path);
+                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path);
                     zoomImageDialog.show();
                 }
             });
@@ -121,6 +124,17 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
                 return false;
             }
         });
+
+        if (!Assessment_Constants.isShowcaseDisplayed)
+            if (position == 0) {
+                Assessment_Constants.isShowcaseDisplayed = true;
+                new BubbleShowCaseBuilder((Activity) context)
+                        .title("Note: ")
+                        .description("swap to match the answer on the right to the word on the left")
+                        .backgroundColor(ContextCompat.getColor(context, R.color.colorAccentDark))
+                        .closeActionImage(ContextCompat.getDrawable(context, R.drawable.ic_close))
+                        .targetView(holder.itemView).show();
+            }
 
     }
 

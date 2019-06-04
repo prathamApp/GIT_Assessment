@@ -89,31 +89,33 @@
             android:layout_weight="1"
             android:gravity="bottom|center"
             android:orientation="vertical"
-            android:padding="@dimen/_30sdp">
+            android:padding="@dimen/_25sdp">
 
             <TextView
                 android:id="@+id/tv_update_topics"
                 android:layout_width="@dimen/_200sdp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_7sdp"
                 android:layout_weight="0.5"
                 android:background="@drawable/ripple_effect"
                 android:gravity="center"
                 android:text="Update topics"
-                android:textColor="#ffff"
+                android:padding="@dimen/_7sdp"
+                android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:id="@+id/txt_start_assessment"
                 android:layout_width="@dimen/_200sdp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_7sdp"
                 android:layout_weight="1"
+                android:padding="@dimen/_7sdp"
                 android:background="@drawable/ripple_effect"
                 android:gravity="center"
                 android:text="Start Assessment"
-                android:textColor="#ffff"
+                android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -146,7 +148,7 @@
             android:indeterminate="false"
             android:max="100"
             android:progress="100"
-            android:progressDrawable="@drawable/circle_progress_foreground" />
+            android:progressDrawable="@drawable/circle_progress_background" />
 
         <ProgressBar
             android:id="@+id/circle_progress_bar"
@@ -155,10 +157,11 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:indeterminate="false"
-            android:max="5"
+            android:max="100"
             android:progress="0"
-            android:progressDrawable="@drawable/circle_progress_background"
-            android:rotation="-90" />
+            android:progressDrawable="@drawable/circle_progress_foreground"
+            android:rotation="90"
+            android:layoutDirection="rtl" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -56,7 +56,7 @@ public class MenuFragment extends Fragment {
         return view;
     }
 
-    @OnClick(R.id.ib_age3to6)
+    @OnClick({R.id.ib_age3to6,R.id.rl_age3to6})
     public void gotoQRActivity() {
         // ButtonClickSound.start();
 //        startActivity(new Intent(getActivity(), QRScanActivity.class));
@@ -69,7 +69,7 @@ public class MenuFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.ib_age8to14)
+    @OnClick({R.id.ib_age8to14,R.id.rl_age8to14})
     public void gotoGroupLogin() {
         Bundle bundle = new Bundle();
         bundle.putBoolean(Assessment_Constants.GROUP_AGE_ABOVE_7, true);

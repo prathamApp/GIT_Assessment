@@ -32,7 +32,6 @@
         <activity
             android:name=".ui.choose_assessment.SupervisedAssessmentActivity"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".ui.choose_assessment.science.CRLActivity" />
         <activity
             android:name=".ui.choose_assessment.science.ScienceAssessmentActivity"
             android:screenOrientation="portrait"

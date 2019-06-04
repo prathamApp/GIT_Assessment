@@ -26,7 +26,7 @@
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_145sdp"
+    android:layout_height="@dimen/_160sdp"
     android:layout_centerInParent="true">
 
     <ImageView
