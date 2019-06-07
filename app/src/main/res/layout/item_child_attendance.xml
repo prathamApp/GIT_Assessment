@@ -37,7 +37,7 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/hexagone"
         android:padding="@dimen/_25sdp"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         android:elevation="@dimen/_10sdp"
         android:src="@drawable/g1" />
 

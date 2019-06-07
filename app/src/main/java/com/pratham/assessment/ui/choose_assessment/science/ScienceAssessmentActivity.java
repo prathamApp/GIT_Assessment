@@ -111,7 +111,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     @BindView(R.id.iv_next)
     ImageView iv_next;
 
-    int i=0;
+    int i = 0;
 
 
     String answer = "", ansId = "";
@@ -147,7 +147,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
         // setQuestions();
 
-        Assessment_Constants.isShowcaseDisplayed=false;
+        Assessment_Constants.isShowcaseDisplayed = false;
 
     }
 
@@ -557,14 +557,13 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             countDownTimer.start();*/
 
 
-
             final long period = 50;
-            final Timer timer=new Timer();
+            final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     //this repeats every 100 ms
-                    if (i<100){
+                    if (i < 100) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -572,14 +571,12 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                                 selectTopicDialog.timer.setText("" + time);
                                 selectTopicDialog*/
                                 selectTopicDialog.circle_progress_bar.setProgress(i);
-                                Log.d("progress",""+i);
+                                Log.d("progress", "" + i);
                             }
                         });
 //                        progressBar.setProgress(i);
-
-
                         i++;
-                    }else{
+                    } else {
                         //closing the timer
                         runOnUiThread(new Runnable() {
                             @Override
@@ -590,16 +587,16 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                                     public void run() {
                                         selectTopicDialog.dismiss();
                                         setProgressBarAndTimer();
-                                        timer.cancel();
+
                                     }
                                 }, 800);
                             }
                         });
-
+                        timer.cancel();
+                        timer.purge();
                     }
                 }
             }, 0, period);
-
 
 
 //            selectTopicDialog.dismiss();
@@ -637,8 +634,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     private void setProgressBarAndTimer() {
         progressBarTimer.setProgress(100);
         ExamTime = Integer.parseInt(assessmentPaperPatterns.getExamduration());
-//        if(ExamTime==0)
-            ExamTime=1;
+        if(ExamTime==0)
+        ExamTime = 30;
         final int timer = ExamTime * 60000;
 
         mCountDownTimer = new CountDownTimer(timer, 1000) {
@@ -669,9 +666,14 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             @Override
             public void onFinish() {
                 if (isActivityRunning) {
-                    AssessmentTimeUpDialog timeUpDialog = new AssessmentTimeUpDialog(ScienceAssessmentActivity.this);
-                    timeUpDialog.show();
-                    progressBarTimer.setProgress(0);
+                    try {
+                        AssessmentTimeUpDialog timeUpDialog = new AssessmentTimeUpDialog(ScienceAssessmentActivity.this);
+                        timeUpDialog.show();
+                        progressBarTimer.setProgress(0);
+//                        isActivityRunning=false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 //                onSaveAssessmentClick();
 //                Toast.makeText(ScienceAssessmentActivity.this, "Time up...", Toast.LENGTH_SHORT).show();
                 }
