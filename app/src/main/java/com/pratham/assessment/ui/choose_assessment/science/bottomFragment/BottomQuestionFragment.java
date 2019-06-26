@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.bottomFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,8 +20,6 @@ import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.QuestionTrackerAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class BottomQuestionFragment extends BottomSheetDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.question_list_fragment, container, false);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this, view);

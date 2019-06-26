@@ -38,6 +38,7 @@ import com.pratham.assessment.discrete_view.DSVOrientation;
 import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.discrete_view.ScaleTransformer;
 import com.pratham.assessment.domain.AssessmentLanguages;
+import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentPatternDetails;
 import com.pratham.assessment.domain.AssessmentSubjects;
@@ -112,7 +113,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     ImageView iv_next;
 
     int i = 0;
-
+    int totalMarks = 0;
+    int outOfMarks = 0;
 
     String answer = "", ansId = "";
     String questionType = "";
@@ -587,7 +589,6 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                                     public void run() {
                                         selectTopicDialog.dismiss();
                                         setProgressBarAndTimer();
-
                                     }
                                 }, 800);
                             }
@@ -634,8 +635,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     private void setProgressBarAndTimer() {
         progressBarTimer.setProgress(100);
         ExamTime = Integer.parseInt(assessmentPaperPatterns.getExamduration());
-        if(ExamTime==0)
-        ExamTime = 30;
+        if (ExamTime == 0)
+            ExamTime = 30;
         final int timer = ExamTime * 60000;
 
         mCountDownTimer = new CountDownTimer(timer, 1000) {
@@ -834,8 +835,6 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     scienceQuestionList.get(i).setMatchingNameList(list);
                 }
             }
-            // userAnsList = list;
-
             if (!attemptedQIds.contains(qid)) {
                 attemptedQIds.add(qid);
                 ansCnt++;
@@ -844,9 +843,22 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                 if (scienceQuestionList.get(i).getQid().equalsIgnoreCase(qid)) {
                     scienceQuestionList.get(i).setIsAttempted(true);
                     if (scienceQuestionList.get(i).getMatchingNameList().size() > 0) {
-                        scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename());
-                        scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
+                        if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(MATCHING_PAIR) || scienceQuestionList.get(i).getQtid().equalsIgnoreCase(MULTIPLE_SELECT)) {
+                            String ans = "";
+                            for (int m = 0; m < scienceQuestionList.get(i).getMatchingNameList().size(); m++) {
+                                if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(MULTIPLE_SELECT)) {
+                                    if (scienceQuestionList.get(i).getMatchingNameList().get(m).getMyIscorrect().equalsIgnoreCase("true"))
+                                        ans += scienceQuestionList.get(i).getMatchingNameList().get(m).getQcid() + ",";
+
+                                } else
+                                    ans += scienceQuestionList.get(i).getMatchingNameList().get(m).getQcid() + ",";
+                            }
+                            scienceQuestionList.get(i).setUserAnswer(ans);
+                        } else {
+                            scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename());
+                            scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
 //                        scienceQuestionList.get(i).setMarksPerQuestion(marksPerQuestion);
+                        }
                     } else {
                         scienceQuestionList.get(i).setUserAnswer("");
                         scienceQuestionList.get(i).setUserAnswerId(ansId);
@@ -1021,17 +1033,20 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @Override
     public void onSaveAssessmentClick() {
+        calculateMarks();
+        AssessmentPaperForPush paper = new AssessmentPaperForPush();
+        paper.setExamId(scienceQuestionList.get(0).getExamid());
+        paper.setPaperId(scienceQuestionList.get(0).getPaperid());
+        paper.setOutOfMarks("" + outOfMarks);
+        paper.setTotalMarks("" + totalMarks);
 
-        List<Score> scores = new ArrayList<>();
+        ArrayList<Score> scores = new ArrayList<>();
         for (int i = 0; i < scienceQuestionList.size(); i++) {
-
             Score score = new Score();
             score.setQuestionId(Integer.parseInt(scienceQuestionList.get(i).getQid()));
-            // TODO: 24-05-2019 add level,isAttempted,isCorrect
             score.setLevel(getLevel(scienceQuestionList.get(i).getQlevel()));
             score.setIsAttempted(scienceQuestionList.get(i).getIsAttempted());
             score.setIsCorrect(scienceQuestionList.get(i).getIsCorrect());
-            score.setExamId(scienceQuestionList.get(i).getExamid());
             score.setTotalMarks(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
             score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
             if (supervisorId.equalsIgnoreCase(""))
@@ -1042,12 +1057,25 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             score.setDeviceID(AppDatabase.getDatabaseInstance(this).getStatusDao().getValue("DeviceId"));
             score.setSessionID(Assessment_Constants.assessmentSession);
             score.setScoredMarks(Integer.parseInt(scienceQuestionList.get(i).getMarksPerQuestion()));
+            if (!scienceQuestionList.get(i).getUserAnswer().equalsIgnoreCase(""))
+                score.setUserAnswer(scienceQuestionList.get(i).getUserAnswerId());
+            else if (scienceQuestionList.get(i).getUserAnswer().equalsIgnoreCase("") && !scienceQuestionList.get(i).getUserAnswerId().equalsIgnoreCase(""))
+                score.setUserAnswer(scienceQuestionList.get(i).getUserAnswerId());
             scores.add(score);
-
         }
+        paper.setScoreList(scores);
         AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scores);
+        AppDatabase.getDatabaseInstance(this).getAssessmentPaperForPushDao().insertPaperForPush(paper);
         Toast.makeText(this, "Assessment saved successfully", Toast.LENGTH_SHORT).show();
+        BackupDatabase.backup(this);
+    }
 
+    private void calculateMarks() {
+
+        for (int i = 0; i < scienceQuestionList.size(); i++) {
+            totalMarks += Integer.parseInt(scienceQuestionList.get(i).getMarksPerQuestion());
+            outOfMarks += Integer.parseInt(scienceQuestionList.get(i).getOutofmarks());
+        }
     }
 
     private int getLevel(String qlevel) {
@@ -1080,7 +1108,6 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
             Assessment assessment = new Assessment();
             assessment.setQuestionIda(Integer.parseInt(scienceQuestionList.get(i).getQid()));
-            // TODO: 24-05-2019 add level
 //            assessment.setLevela(Integer.parseInt(scienceQuestionList.get(i).getQlevel()));
             assessment.setIsAttempted(scienceQuestionList.get(i).getIsAttempted());
             assessment.setIsCorrect(scienceQuestionList.get(i).getIsCorrect());

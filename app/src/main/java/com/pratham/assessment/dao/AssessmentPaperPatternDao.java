@@ -5,7 +5,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.pratham.assessment.domain.AssessmentPaper;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 
 import java.util.List;

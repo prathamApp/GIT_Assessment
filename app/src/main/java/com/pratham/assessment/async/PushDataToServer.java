@@ -32,7 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
+/******* This async task is used for data push******/
 public class PushDataToServer extends AsyncTask {
 
     Context context;
@@ -368,7 +368,7 @@ public class PushDataToServer extends AsyncTask {
             for (int i = 0; i < scoreList.size(); i++) {
                 _obj = new JSONObject();
                 Score _score = scoreList.get(i);
-                _obj.put("ScoreId", _score.getScoreId());
+//                _obj.put("ScoreId", _score.getScoreId());
                 _obj.put("SessionID", _score.getSessionID());
                 _obj.put("StudentID", _score.getStudentID());
                 _obj.put("DeviceID", _score.getDeviceID());
@@ -382,7 +382,6 @@ public class PushDataToServer extends AsyncTask {
                 _obj.put("Label", _score.getLabel());
                 _obj.put("isAttempted",_score.getIsAttempted());
                 _obj.put("isCorrect", _score.getIsCorrect());
-                _obj.put("examId",_score.getExamId());
                 scoreData.put(_obj);
             }
         } catch (Exception e) {

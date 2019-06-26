@@ -39,8 +39,9 @@ public class Score {
     private boolean isAttempted;
     @ColumnInfo(name = "isCorrect")
     private boolean isCorrect;
-    @ColumnInfo(name = "examId")
-    private String examId="";
+    @ColumnInfo(name = "userAnswer")
+    private String userAnswer;
+
     @Override
     public String toString() {
         return "Score{" +
@@ -56,6 +57,14 @@ public class Score {
                 ", EndDateTime='" + EndDateTime + '\'' +
                 ", Level=" + Level +
                 '}';
+    }
+
+    public String getUserAnswer() {
+        return userAnswer;
+    }
+
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
     }
 
     public boolean getIsAttempted() {
@@ -177,15 +186,6 @@ public class Score {
 
     public void setLabel(String label) {
         Label = label;
-    }
-
-
-    public String getExamId() {
-        return examId;
-    }
-
-    public void setExamId(String examId) {
-        this.examId = examId;
     }
 
 }

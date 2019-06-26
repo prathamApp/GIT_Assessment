@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.pratham.assessment.dao.AssessmentDao;
-import com.pratham.assessment.dao.AssessmentPaperDao;
+import com.pratham.assessment.dao.AssessmentPaperForPushDao;
 import com.pratham.assessment.dao.AssessmentPaperPatternDao;
 import com.pratham.assessment.dao.AssessmentPatternDetailsDao;
 import com.pratham.assessment.dao.AttendanceDao;
@@ -29,7 +29,7 @@ import com.pratham.assessment.dao.SupervisorDataDao;
 import com.pratham.assessment.dao.VillageDao;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.AssessmentLanguages;
-import com.pratham.assessment.domain.AssessmentPaper;
+import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentPatternDetails;
 import com.pratham.assessment.domain.AssessmentSubjects;
@@ -55,7 +55,7 @@ import com.pratham.assessment.domain.Village;
         Status.class, Village.class, Groups.class, Assessment.class, Modal_Log.class,
         ContentTable.class, AssessmentToipcsModal.class, ScienceQuestion.class,
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
-        AssessmentTest.class, AssessmentPaper.class, ScienceAssessmentAnswer.class,
+        AssessmentTest.class, AssessmentPaperForPush.class, ScienceAssessmentAnswer.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
@@ -96,7 +96,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract AssessmentTestDao getTestDao();
 
-    public abstract AssessmentPaperDao getAssessmentPaperDao();
+    public abstract AssessmentPaperForPushDao getAssessmentPaperForPushDao();
 
     public abstract AssessmentPaperPatternDao getAssessmentPaperPatternDao();
 

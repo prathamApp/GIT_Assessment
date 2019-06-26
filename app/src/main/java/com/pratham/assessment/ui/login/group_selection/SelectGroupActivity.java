@@ -23,14 +23,13 @@ import com.pratham.assessment.ui.login.group_selection.fragment_select_group.Fra
 
 public class SelectGroupActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_group);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Assessment_Utility.showFragment(this, new MenuFragment(), R.id.frame_group,
+               Assessment_Utility.showFragment(this, new MenuFragment(), R.id.frame_group,
                 null, MenuFragment.class.getSimpleName());
 
 

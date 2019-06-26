@@ -41,6 +41,6 @@ public class AssessmentToipcsModal {
 
    /* @Override
     public String toString() {
-        return "[topicid = " + topicid + ", topicname = " + topicname + ", subjectid = " + subjectid + "]";
+        return "[topicid = " + topicid + ", topicname = " + topicname + ", subjectId = " + subjectId + "]";
     }*/
 }
