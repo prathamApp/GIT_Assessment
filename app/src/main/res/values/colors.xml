@@ -9,6 +9,7 @@
     <color name="primaryText">#212121</color>
     <color name="secondaryText">#757575</color>
     <color name="colorGreen">#AED581</color>
+    <color name="colorGreenLight">#C5DFA7</color>
     <color name="colorBlack">#000</color>
     <color name="colorWhiteDark">#d4d4d4</color>
     <color name="color_bg">#F0F0F0</color>
@@ -22,6 +23,10 @@
     <color name="colorRed">#EF5350</color>
     <color name="colorRedLight">#ff908e</color>
     <color name="colorRedLightnew">#FFBBBB</color>
+    <color name="colorButtonPressedBg">#dedede</color>
+    <color name="light_red">#FFCDD2</color>
+    <color name="light_green">#D0F8DB</color>
+    <color name="green">#07992F</color>
 
     <color name="colorProgress">#FDA520</color>
     <color name="colorProgress50">#FF8832</color>

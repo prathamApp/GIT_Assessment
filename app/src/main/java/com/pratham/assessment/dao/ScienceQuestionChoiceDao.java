@@ -33,6 +33,9 @@ public interface ScienceQuestionChoiceDao {
     @Query("SELECT * FROM ScienceQuestionChoice WHERE qcid=:qcid")
     public ScienceQuestionChoice getQuestionChoicesByQcID(String qcid);
 
+   @Query("SELECT choiceurl FROM ScienceQuestionChoice WHERE qcid=:qcid")
+    public String getImageByQcID(String qcid);
+
   /*  @Query("select * from Groups WHERE DeviceID = 'deleted'")
     public List<Groups> GetAllDeletedGroups();
 */

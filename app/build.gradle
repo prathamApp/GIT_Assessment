@@ -6,9 +6,10 @@ android {
         applicationId "com.pratham.assessment"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.01"
+        versionCode 3
+        versionName "1.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -16,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {

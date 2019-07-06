@@ -210,7 +210,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.pro
 
 /*            if(Assessment_Constants.GROUP_LOGIN) {
                 String sId = assessmentLists.get(position).getStartDateTimea().split("_")[0];
-                String sName = profilePresenter.getStudentName(sId);
+                String sName = profilePresenter.getStudentFirstName(sId);
                 tv_assessment.setText("#" + (position + 1)+ " "+sName);
             }else*/
                 tv_assessment.setText("Certificate  #" + (position + 1));

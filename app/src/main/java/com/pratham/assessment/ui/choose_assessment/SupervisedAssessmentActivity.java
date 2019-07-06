@@ -26,7 +26,6 @@ import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.io.File;
@@ -51,7 +50,7 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
     String imageName = "";
     boolean isPhotoSaved = false;
     String supervisorId = "";
-    String nodeId = "";
+    String subId = "";
     private static final int CAMERA_REQUEST = 1888;
 
     @Override
@@ -60,9 +59,9 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_supervised_assessment);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        supervisorId = getIntent().getStringExtra("loggedCrlId");
-        nodeId = getIntent().getStringExtra("nodeId");
-        if (nodeId.equals("1302") || nodeId.equals("1304")) {
+        supervisorId = getIntent().getStringExtra("crlId");
+        subId = getIntent().getStringExtra("subId");
+        if (subId.equals("0")) {
             goToAssessment();
         } else {
             Crl crl = AppDatabase.getDatabaseInstance(this).getCrlDao().getCrl(supervisorId);
@@ -157,23 +156,23 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
     }
 
     private void goToAssessment() {
-        if (nodeId.equalsIgnoreCase("1304")) {
+        if (subId.equalsIgnoreCase("0")) {
             Intent intent = new Intent(SupervisedAssessmentActivity.this, ECEActivity.class);
             intent.putExtra("resId", "9962");
             intent.putExtra("crlId", supervisorId);
             startActivity(intent);
             finish();
-        } else if (nodeId.equalsIgnoreCase("1302")) {
+        }/* else if (subId.equalsIgnoreCase("1302")) {
             Intent intent = new Intent(SupervisedAssessmentActivity.this, TestDisplayActivity.class);
-            intent.putExtra("nodeId", nodeId);
+            intent.putExtra("subId", subId);
             intent.putExtra("crlId", supervisorId);
 
             startActivity(intent);
             finish();
-        } else {
+        }*/ else {
 //                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
             Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);
-            intent.putExtra("nodeId", nodeId);
+            intent.putExtra("subId", subId);
             intent.putExtra("crlId", supervisorId);
 
             startActivity(intent);

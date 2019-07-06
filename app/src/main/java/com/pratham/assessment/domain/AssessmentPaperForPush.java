@@ -5,23 +5,58 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity
-public class AssessmentPaperForPush {
+public class AssessmentPaperForPush implements Serializable {
+
     String languageId;
     String subjectId;
-    @NonNull
-    @PrimaryKey
     String examId;
-    String paperId;
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    int paperId;
     String paperStartTime;
     String paperEndTime;
+    String examTime;
     String outOfMarks;
     String totalMarks;
+    String studentId;
+    int CorrectCnt;
+    int wrongCnt;
+    int SkipCnt;
 
+
+    private int sentFlag;
+
+    private String SessionID;
     @Embedded
     ArrayList<Score> scoreList;
+
+    public String getExamTime() {
+        return examTime;
+    }
+
+    public void setExamTime(String examTime) {
+        this.examTime = examTime;
+    }
+
+    public String getSessionID() {
+        return SessionID;
+    }
+
+    public void setSessionID(String sessionID) {
+        SessionID = sessionID;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
 
     public String getLanguageId() {
         return languageId;
@@ -47,11 +82,12 @@ public class AssessmentPaperForPush {
         this.examId = examId;
     }
 
-    public String getPaperId() {
+    @NonNull
+    public int getPaperId() {
         return paperId;
     }
 
-    public void setPaperId(String paperId) {
+    public void setPaperId(@NonNull int paperId) {
         this.paperId = paperId;
     }
 
@@ -93,5 +129,37 @@ public class AssessmentPaperForPush {
 
     public void setScoreList(ArrayList<Score> scoreList) {
         this.scoreList = scoreList;
+    }
+
+    public int getCorrectCnt() {
+        return CorrectCnt;
+    }
+
+    public void setCorrectCnt(int correctCnt) {
+        CorrectCnt = correctCnt;
+    }
+
+    public int getWrongCnt() {
+        return wrongCnt;
+    }
+
+    public void setWrongCnt(int wrongCnt) {
+        this.wrongCnt = wrongCnt;
+    }
+
+    public int getSkipCnt() {
+        return SkipCnt;
+    }
+
+    public void setSkipCnt(int skipCnt) {
+        SkipCnt = skipCnt;
+    }
+
+    public int getSentFlag() {
+        return sentFlag;
+    }
+
+    public void setSentFlag(int sentFlag) {
+        this.sentFlag = sentFlag;
     }
 }

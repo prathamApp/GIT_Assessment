@@ -8,8 +8,10 @@
         android:id="@+id/rv_child"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_attendance_next"
+        android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_marginBottom="13dp" />
 
        <!-- <include
             layout="@layout/item_add_child"

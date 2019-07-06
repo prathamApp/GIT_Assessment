@@ -2,10 +2,12 @@ package com.pratham.assessment.domain;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 @Entity
-public class AssessmentSubjects {
+public class AssessmentSubjects implements Comparable, Parcelable {
     @NonNull
     @PrimaryKey
     private String subjectid;
@@ -27,5 +29,38 @@ public class AssessmentSubjects {
         this.subjectid = subjectid;
     }
 
+    public AssessmentSubjects() {
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
+
+    public static final Creator<AssessmentSubjects> CREATOR = new Creator<AssessmentSubjects>() {
+        @Override
+        public AssessmentSubjects createFromParcel(Parcel in) {
+            return new AssessmentSubjects(in);
+        }
+
+        @Override
+        public AssessmentSubjects[] newArray(int size) {
+            return new AssessmentSubjects[size];
+        }
+    };
+
+    public AssessmentSubjects(Parcel in) {
+        subjectid = in.readString();
+        subjectname = in.readString();
+    }
 }

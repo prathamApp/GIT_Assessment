@@ -29,6 +29,9 @@ public interface ScienceQuestionDao {
     @Query("SELECT qname FROM ScienceQuestion WHERE qid=:qID")
     public String getQuestionNameByQID(String qID);
 
+    @Query("SELECT answer FROM ScienceQuestion WHERE qid=:qID")
+    public String getAnswerNameByQID(String qID);
+
     @Query("SELECT * FROM ScienceQuestion WHERE qid=:qid")
     public ScienceQuestion getQuestionByQID(String qid);
 

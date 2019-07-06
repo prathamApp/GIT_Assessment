@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TopicSelectListener {
-    void getSelectedItems(List<String> topicIDList, String selectedLang, String selectedSub, List<AssessmentToipcsModal> topics);
-    void getSelectedTopic(String topic, String selectedSub, String selectedLang, SelectTopicDialog selectTopicDialog);
+    void getSelectedItems(List<String> topicIDList, String selectedLang, List<AssessmentToipcsModal> topics);
+    void getSelectedTopic(String topic, String selectedLang, SelectTopicDialog selectTopicDialog);
 
 }

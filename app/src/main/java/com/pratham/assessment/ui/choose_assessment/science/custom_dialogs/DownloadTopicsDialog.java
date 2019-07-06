@@ -65,9 +65,9 @@ public class DownloadTopicsDialog extends Dialog {
     @BindView(R.id.spinner_lang)
     Spinner spinnerLang;
 
-    @BindView(R.id.spinner_subject)
+   /* @BindView(R.id.spinner_subject)
     Spinner spinnerSubject;
-
+*/
     @BindView(R.id.txt_save)
     TextView btnOk;
 
@@ -77,16 +77,17 @@ public class DownloadTopicsDialog extends Dialog {
     Context context;
     List<AssessmentPaperPattern> toipcsModalList;
     List<AssessmentLanguages> assessmentLanguagesList;
-    List<AssessmentSubjects> assessmentSubjectsList;
+    //    List<AssessmentSubjects> assessmentSubjectsList;
+    String subjectId;
     List<CheckBox> checkBoxes = new ArrayList<>();
     TopicSelectListener topicSelectListener;
     List<AssessmentToipcsModal> topics;
 
-    public DownloadTopicsDialog(@NonNull Context context, TopicSelectListener topicSelectListener, List<AssessmentPaperPattern> tv_topics, List<AssessmentLanguages> languages, List<AssessmentSubjects> subjects) {
+    public DownloadTopicsDialog(@NonNull Context context, TopicSelectListener topicSelectListener, List<AssessmentPaperPattern> tv_topics, List<AssessmentLanguages> languages, String subjectId) {
         super(context, android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen);
         this.toipcsModalList = tv_topics;
         this.assessmentLanguagesList = languages;
-        this.assessmentSubjectsList = subjects;
+        this.subjectId = subjectId;
         this.context = context;
         this.topicSelectListener = topicSelectListener;
 
@@ -107,9 +108,9 @@ public class DownloadTopicsDialog extends Dialog {
         for (int i = 0; i < assessmentLanguagesList.size(); i++) {
             lang[i + 1] = assessmentLanguagesList.get(i).getLanguagename();
         }
-        spinnerLang.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, lang));
+        spinnerLang.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, lang));
 
-        String[] sub = new String[assessmentSubjectsList.size() + 1];
+      /*  String[] sub = new String[assessmentSubjectsList.size() + 1];
         sub[0] = "Select Subject";
 
         for (int j = 0; j < assessmentSubjectsList.size(); j++) {
@@ -117,31 +118,15 @@ public class DownloadTopicsDialog extends Dialog {
         }
 
         spinnerSubject.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, sub));
-
+*/
         spinnerLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (spinnerLang.getSelectedItem().toString().equalsIgnoreCase("Select Language"))
                     Toast.makeText(context, "Please select language", Toast.LENGTH_SHORT).show();
-                else selectedLang = spinnerLang.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinnerSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject"))
-                    Toast.makeText(context, "Please select subject", Toast.LENGTH_SHORT).show();
                 else {
-                    selectedSub = spinnerSubject.getSelectedItem().toString();
-                    String subId = AppDatabase.getDatabaseInstance(context).getSubjectDao().getIdByName(selectedSub);
-//                    getTopicData(subId);
-                    getExamData(subId);
+                    selectedLang = spinnerLang.getSelectedItem().toString();
+                    getExamData(subjectId);
                 }
             }
 
@@ -151,7 +136,26 @@ public class DownloadTopicsDialog extends Dialog {
             }
         });
 
+       /* spinnerSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject"))
+                    Toast.makeText(context, "Please select subject", Toast.LENGTH_SHORT).show();
+                else {
+//                    selectedSub = spinnerSubject.getSelectedItem().toString();
+//                    String subId = AppDatabase.getDatabaseInstance(context).getSubjectDao().getIdByName(selectedSub);
+//                    getTopicData(subId);
+//                    getExamData(subId);
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+*/
        /* for (int i = 0; i < toipcsModalList.size(); i++) {
             CheckBox checkBox = new CheckBox(context);
             checkBox.setText(toipcsModalList.get(i).getTopicname());
@@ -184,7 +188,7 @@ public class DownloadTopicsDialog extends Dialog {
     @OnClick(R.id.txt_save)
     public void ok() {
         if (spinnerLang.getSelectedItem().toString().equalsIgnoreCase("Select Language")
-                || spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject")) {
+            /*|| spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject")*/) {
             Toast.makeText(context, "Please select language and subject", Toast.LENGTH_SHORT).show();
         } else {
             final List<String> topicIDList = new ArrayList();
@@ -202,9 +206,9 @@ public class DownloadTopicsDialog extends Dialog {
 
                                 selectedLang = spinnerLang.getSelectedItem().toString();
 //                            spinnerSubject.setSelection();
-                                selectedSub = spinnerSubject.getSelectedItem().toString();
+//                                selectedSub = spinnerSubject.getSelectedItem().toString();
                                 dismiss();
-                                topicSelectListener.getSelectedItems(topicIDList, selectedLang, selectedSub, topics);
+                                topicSelectListener.getSelectedItems(topicIDList, selectedLang, topics);
 
                             }
                         })
@@ -295,6 +299,7 @@ public class DownloadTopicsDialog extends Dialog {
                             flowLayout.removeAllViews();
                             setTopicsToCheckBox(assessmentTests);
                         } else {
+                            progressDialog.dismiss();
                             Toast.makeText(context, "No Exams..", Toast.LENGTH_SHORT).show();
 //                           btnOk.setEnabled(false);
                         }

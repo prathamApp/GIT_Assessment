@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,13 +15,15 @@ import android.widget.RelativeLayout;
 
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.display_english_list.TestDisplayActivity;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
-import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
@@ -46,7 +49,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     ImageButton btn_Profile;
 
     private RecyclerView recyclerView;
-    List<ContentTable> contentTableList;
+    List<AssessmentSubjects> contentTableList;
     ChooseAssessmentAdapter chooseAssessAdapter;
     ECELoginDialog eceLoginDialog;
     Crl loggedCrl;
@@ -63,9 +66,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         recyclerView = findViewById(R.id.choose_assessment_recycler);
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
 //        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,2);
         recyclerView.setLayoutManager(mLayoutManager);
-//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, this), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, this), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(chooseAssessAdapter);
 
@@ -78,14 +81,21 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     }
 
     @Override
-    public void addContentToViewList(ContentTable contentTable) {
+    public void addContentToViewList(List<AssessmentSubjects> contentTable) {
 
-        contentTableList.add(contentTable);
-
-        Collections.sort(contentTableList, new Comparator<ContentTable>() {
+        contentTableList.addAll(contentTable);
+        AssessmentSubjects ece = new AssessmentSubjects();
+        ece.setSubjectid("0");
+        ece.setSubjectname("ECE");
+        contentTableList.add(ece);
+        for (int i = 0; i < contentTableList.size(); i++) {
+            if (contentTableList.get(i).getSubjectname().equalsIgnoreCase("english"))
+                contentTableList.remove(contentTableList.get(i));
+        }
+        Collections.sort(contentTableList, new Comparator<AssessmentSubjects>() {
             @Override
-            public int compare(ContentTable o1, ContentTable o2) {
-                return o1.getNodeId().compareTo(o2.getNodeId());
+            public int compare(AssessmentSubjects o1, AssessmentSubjects o2) {
+                return o1.getSubjectid().compareTo(o2.getSubjectid());
             }
         });
         Log.d("sorted", contentTableList.toString());
@@ -104,7 +114,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @OnClick({R.id.btn_Profile, R.id.rl_Profile})
     public void gotoProfileActivity() {
 //        ButtonClickSound.start();
-        startActivity(new Intent(this, ProfileActivity.class));
+
+
+//        startActivity(new Intent(this, ResultActivity.class));
+//        startActivity(new Intent(this, ProfileActivity.class));
+        startActivity(new Intent(this, AssessmentCertificateActivity.class));
     }
 
     @Override
@@ -116,19 +130,22 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     }
 
     @Override
-    public void assessmentClicked(final int position, final String nodeId) {
-        loggedCrl=null;
+    public void assessmentClicked(final int position, final String subId) {
+        loggedCrl = null;
         eceLoginDialog = new ECELoginDialog(this);
         String crlId = "";
+       if(subId.equalsIgnoreCase("0")){
+           eceLoginDialog.btn_unsupervised.setVisibility(View.GONE);
+       }else  eceLoginDialog.btn_unsupervised.setVisibility(View.VISIBLE);
 
-        if (nodeId.equalsIgnoreCase("1304") || nodeId.equalsIgnoreCase("1302")) {
+       /* if (subId.equalsIgnoreCase("1304") || subId.equalsIgnoreCase("1302")) {
             eceLoginDialog.btn_unsupervised.setVisibility(View.GONE);
 //            getLoggedInCrl(userName, password);
-           /* String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
-            crlId = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().getCrlId(userName, password);*/
+           *//* String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
+            crlId = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().getCrlId(userName, password);*//*
         } else
             eceLoginDialog.btn_unsupervised.setVisibility(View.VISIBLE);
-
+*/
 
         final String finalCrlId = crlId;
         eceLoginDialog.btn_unsupervised.setOnClickListener(new View.OnClickListener() {
@@ -138,21 +155,21 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 String assessmentSession = "" + UUID.randomUUID().toString();
                 Assessment_Constants.assessmentSession = "test-" + assessmentSession;
                 presenter.startAssessSession();
-                if (nodeId.equalsIgnoreCase("1304")) {
+                if (subId.equalsIgnoreCase("0")) {
                     Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
                     intent.putExtra("resId", "9962");
                     intent.putExtra("crlId", finalCrlId);
                     startActivity(intent);
-                } else if (nodeId.equalsIgnoreCase("1302")) {
+                }/* else if (subId.equalsIgnoreCase("1302")) {
                     Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
-                    intent.putExtra("nodeId", nodeId);
+                    intent.putExtra("subId", subId);
                     intent.putExtra("crlId", "");
 
                     startActivity(intent);
-                } else {
+                }*/ else {
 //                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
                     Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
-                    intent.putExtra("nodeId", nodeId);
+                    intent.putExtra("subId", subId);
                     intent.putExtra("crlId", "");
                     startActivity(intent);
                 }
@@ -184,8 +201,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 if (loggedCrl != null) {
                     String loggedCrlId = loggedCrl.getCRLId();
                     Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity.class);
-                    intent.putExtra("loggedCrlId", loggedCrlId);
-                    intent.putExtra("nodeId", nodeId);
+                    intent.putExtra("crlId", loggedCrlId);
+                    intent.putExtra("subId", subId);
                     startActivity(intent);
                     eceLoginDialog.dismiss();
                 }
@@ -195,7 +212,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     }
 
     private void getLoggedInCrl(String userName, String password) {
-         Crl loggedCrl = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().checkUserValidation(userName, password);
+        Crl loggedCrl = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getCrlDao().checkUserValidation(userName, password);
         if (loggedCrl == null) {
             AlertDialog alertDialog = new AlertDialog.Builder(ChooseAssessmentActivity.this).create();
             alertDialog.setTitle("Invalid Credentials");
@@ -206,7 +223,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     eceLoginDialog.userNameET.setText("");
                     eceLoginDialog.passwordET.setText("");
                     eceLoginDialog.userNameET.requestFocus();
-                    ChooseAssessmentActivity.this.loggedCrl=null;
+                    ChooseAssessmentActivity.this.loggedCrl = null;
                 }
             });
             alertDialog.show();

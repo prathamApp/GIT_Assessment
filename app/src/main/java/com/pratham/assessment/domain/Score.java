@@ -5,8 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "Score")
-public class Score {
+public class Score implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ScoreId")
@@ -41,6 +43,9 @@ public class Score {
     private boolean isCorrect;
     @ColumnInfo(name = "userAnswer")
     private String userAnswer;
+    @ColumnInfo(name = "examId")
+    private String examId;
+
 
     @Override
     public String toString() {
@@ -57,6 +62,14 @@ public class Score {
                 ", EndDateTime='" + EndDateTime + '\'' +
                 ", Level=" + Level +
                 '}';
+    }
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
     }
 
     public String getUserAnswer() {

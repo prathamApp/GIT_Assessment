@@ -3,7 +3,9 @@ package com.pratham.assessment.ui.choose_assessment.science;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -43,9 +46,11 @@ import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentPatternDetails;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
+import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.Score;
+import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.AssessmentTimeUpDialog;
@@ -68,6 +73,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -91,7 +97,6 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     int paperPatternCnt = 0;
     int ansCnt = 0, queCnt = 1;
     List attemptedQIds = new ArrayList();
-    List<ScienceQuestionChoice> userAnsList = new ArrayList();
     @BindView(R.id.question_discrete_view)
     DiscreteScrollView discreteScrollView;
     @BindView(R.id.timer)
@@ -113,15 +118,14 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     ImageView iv_next;
 
     int i = 0;
-    int totalMarks = 0;
-    int outOfMarks = 0;
-
+    int totalMarks = 0, outOfMarks = 0;
+    String examStartTime, examEndTime;
     String answer = "", ansId = "";
     String questionType = "";
     SelectTopicDialog selectTopicDialog;
     Dialog downloadTopicDialog;
     CountDownTimer mCountDownTimer;
-    String supervisorId;
+    String supervisorId, subjectId;
     static boolean isActivityRunning = false;
 
     public static final String MULTIPLE_CHOICE = "1";
@@ -134,14 +138,20 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     public static final String VIDEO = "8";
     public static final String AUDIO = "9";
     public static int ExamTime = 0;
+    private int correctAnsCnt = 0, wrongAnsCnt = 0, skippedCnt = 0;
+    String langId;
+    String assessmentSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_science_assessment);
         ButterKnife.bind(this);
+        assessmentSession = "" + UUID.randomUUID().toString();
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         supervisorId = getIntent().getStringExtra("crlId");
+        subjectId = getIntent().getStringExtra("subId");
         progressDialog = new ProgressDialog(this);
         showSelectTopicDialog();
         //getTopicData();
@@ -157,7 +167,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
         exams = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAllAssessmentPaperPatterns();
         subjects = AppDatabase.getDatabaseInstance(this).getSubjectDao().getAllSubjects();
         languages = AppDatabase.getDatabaseInstance(this).getLanguageDao().getAllLangs();
-        selectTopicDialog = new SelectTopicDialog(this, this, exams, languages, subjects);
+        selectTopicDialog = new SelectTopicDialog(this, this, exams, languages, subjectId);
 
 
         if (exams.size() > 0) {
@@ -195,8 +205,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                             }
                             AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getLanguageDao().insertAllLanguages(languages);
 
-                            getSubjectData();
-//                            showDownloadTopicDialog();
+//                            getSubjectData();
+                            showDownloadTopicDialog();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -207,6 +217,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     public void onError(ANError anError) {
                         Toast.makeText(ScienceAssessmentActivity.this, "Error in loading..Check internet connection.", Toast.LENGTH_SHORT).show();
                         finish();
+                        AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().deletePaperPatterns();
+
                         progressDialog.dismiss();
                         downloadTopicDialog.dismiss();
 //                        selectTopicDialog.show();
@@ -215,7 +227,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     }
 
-    private void getSubjectData() {
+ /*   private void getSubjectData() {
         subjects.clear();
         progressDialog.setMessage("Loading subjects");
         AndroidNetworking.get(APIs.AssessmentSubjectAPI)
@@ -242,15 +254,17 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     @Override
                     public void onError(ANError anError) {
                         Toast.makeText(ScienceAssessmentActivity.this, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().deletePaperPatterns();
                         progressDialog.dismiss();
+                        finish();
                     }
                 });
 
     }
-
+*/
 
     private void showDownloadTopicDialog() {
-        downloadTopicDialog = new DownloadTopicsDialog(this, this, exams, languages, subjects);
+        downloadTopicDialog = new DownloadTopicsDialog(this, this, exams, languages, subjectId);
         downloadTopicDialog.show();
     }
 
@@ -283,14 +297,14 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     }
 
     @Override
-    public void getSelectedItems(List<String> examIdList, String selectedLang, String selectedSub, List<AssessmentToipcsModal> topics) {
+    public void getSelectedItems(List<String> examIdList, String selectedLang, List<AssessmentToipcsModal> topics) {
         /*this.exams = exams;
         for (int i = 0; i < examIDList.size(); i++) {
             insertTopicsToDB(examIDList.get(i));
         }*/
         this.examIDList = examIdList;
 
-        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
+//        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
         String langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
         //  topicIdList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPatternDetailsDao().getDistinctTopicIds();
 
@@ -317,7 +331,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
         } else {*/
         progressDialog.show();
-        downloadPaperPattern(examIdList.get(paperPatternCnt), langId, subId);
+        downloadPaperPattern(examIdList.get(paperPatternCnt), langId, subjectId);
        /* }
 
         topicIdList = AppDatabase.getDatabaseInstance(this).getAssessmentPatternDetailsDao().getDistinctTopicIds();
@@ -326,13 +340,13 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
     }
 
     @Override
-    public void getSelectedTopic(String exam, String selectedSub, String selectedLang, SelectTopicDialog selectTopicDialog) {
+    public void getSelectedTopic(String exam, String selectedLang, SelectTopicDialog selectTopicDialog) {
 //        String topicId = AppDatabase.getDatabaseInstance(this).getAssessmentTopicDao().getTopicIdByTopicName(topic);
         String examId = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getExamIdByExamName(exam);
-        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
-        String langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
+//        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
+        langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
 
-        generatePaperPattern(examId, subId, langId);
+        generatePaperPattern(examId, subjectId, langId);
 
         showQuestions();
 
@@ -398,7 +412,9 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     @Override
                     public void onError(ANError anError) {
                         Toast.makeText(ScienceAssessmentActivity.this, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().deletePaperPatterns();
                         progressDialog.dismiss();
+                        finish();
                     }
                 });
     }
@@ -609,7 +625,6 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     .setMinScale(0.5f)
                     .build());
             discreteScrollView.setAdapter(scienceAdapter);
-            scienceQuestionList.get(0).setStartTime(Assessment_Utility.GetCurrentDateTime());
 
             discreteScrollView.addScrollListener(new DiscreteScrollView.ScrollListener<RecyclerView.ViewHolder>() {
                 @Override
@@ -624,6 +639,10 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                 public void onCurrentItemChanged(@Nullable RecyclerView.ViewHolder viewHolder, int adapterPosition) {
                     queCnt = adapterPosition + 1;
                     currentCount.setText(queCnt + "/" + scienceQuestionList.size());
+
+                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+
 
                 }
 
@@ -661,6 +680,8 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
                     progressBarTimer.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorProgress50)));
 
                 progressBarTimer.setProgress(timeRemaining);
+                examStartTime = Assessment_Utility.GetCurrentDateTime();
+                scienceQuestionList.get(0).setStartTime(Assessment_Utility.GetCurrentDateTime());
 
             }
 
@@ -743,6 +764,10 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @OnClick(R.id.iv_prev)
     public void prevClick() {
+
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+
         Animation animation;
 
         if (queCnt > 1) {
@@ -773,7 +798,13 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
 
     @OnClick(R.id.iv_next)
+
     public void nextClick() {
+
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+
+
         Animation animation;
 
         if (queCnt < scienceQuestionList.size()) {
@@ -1033,12 +1064,24 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
 
     @Override
     public void onSaveAssessmentClick() {
+        examEndTime = Assessment_Utility.GetCurrentDateTime();
         calculateMarks();
+        calculateCorrectWorngCount();
         AssessmentPaperForPush paper = new AssessmentPaperForPush();
-        paper.setExamId(scienceQuestionList.get(0).getExamid());
-        paper.setPaperId(scienceQuestionList.get(0).getPaperid());
+        paper.setPaperStartTime(examStartTime);
+        paper.setPaperEndTime(examEndTime);
+        paper.setLanguageId(langId);
+//        paper.setExamId(scienceQuestionList.get(0).getExamid());
+        paper.setSubjectId(scienceQuestionList.get(0).getSubjectid());
+//        paper.setPaperId(scienceQuestionList.get(0).getPaperid());
         paper.setOutOfMarks("" + outOfMarks);
         paper.setTotalMarks("" + totalMarks);
+        paper.setExamTime(""+ExamTime);
+        paper.setCorrectCnt(correctAnsCnt);
+        paper.setWrongCnt(wrongAnsCnt);
+        paper.setSkipCnt(skippedCnt);
+        paper.setSessionID(assessmentSession);
+        paper.setStudentId("" + Assessment_Constants.currentStudentID);
 
         ArrayList<Score> scores = new ArrayList<>();
         for (int i = 0; i < scienceQuestionList.size(); i++) {
@@ -1048,6 +1091,7 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             score.setIsAttempted(scienceQuestionList.get(i).getIsAttempted());
             score.setIsCorrect(scienceQuestionList.get(i).getIsCorrect());
             score.setTotalMarks(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
+            score.setExamId(scienceQuestionList.get(i).getExamid());
             score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
             if (supervisorId.equalsIgnoreCase(""))
                 score.setLabel("practice");
@@ -1055,10 +1099,11 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
             score.setEndDateTime(scienceQuestionList.get(i).getEndTime());
             score.setStudentID(Assessment_Constants.currentStudentID);
             score.setDeviceID(AppDatabase.getDatabaseInstance(this).getStatusDao().getValue("DeviceId"));
-            score.setSessionID(Assessment_Constants.assessmentSession);
+//            score.setSessionID(Assessment_Constants.assessmentSession);
+            score.setSessionID(assessmentSession);
             score.setScoredMarks(Integer.parseInt(scienceQuestionList.get(i).getMarksPerQuestion()));
             if (!scienceQuestionList.get(i).getUserAnswer().equalsIgnoreCase(""))
-                score.setUserAnswer(scienceQuestionList.get(i).getUserAnswerId());
+                score.setUserAnswer(scienceQuestionList.get(i).getUserAnswer());
             else if (scienceQuestionList.get(i).getUserAnswer().equalsIgnoreCase("") && !scienceQuestionList.get(i).getUserAnswerId().equalsIgnoreCase(""))
                 score.setUserAnswer(scienceQuestionList.get(i).getUserAnswerId());
             scores.add(score);
@@ -1066,8 +1111,49 @@ public class ScienceAssessmentActivity extends AppCompatActivity implements Disc
         paper.setScoreList(scores);
         AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scores);
         AppDatabase.getDatabaseInstance(this).getAssessmentPaperForPushDao().insertPaperForPush(paper);
+
+        generateResultData(paper);
+
+
         Toast.makeText(this, "Assessment saved successfully", Toast.LENGTH_SHORT).show();
         BackupDatabase.backup(this);
+    }
+
+    private void calculateCorrectWorngCount() {
+        for (int i = 0; i < scienceQuestionList.size(); i++) {
+            if (scienceQuestionList.get(i).getIsCorrect()) correctAnsCnt++;
+            else if (!scienceQuestionList.get(i).getIsCorrect() && scienceQuestionList.get(i).getIsAttempted())
+                wrongAnsCnt++;
+            if (!scienceQuestionList.get(i).getIsAttempted()) skippedCnt++;
+        }
+    }
+
+    private void generateResultData(AssessmentPaperForPush paper) {
+        ArrayList<ResultModalClass> resultList = new ArrayList<>();
+        for (int i = 0; i < scienceQuestionList.size(); i++) {
+            ResultModalClass result = new ResultModalClass();
+            result.setQuestion(scienceQuestionList.get(i).getQname());
+            result.setqId(scienceQuestionList.get(i).getQid());
+            result.setUserAnswer(scienceQuestionList.get(i).getUserAnswer());
+            result.setUserAnswerId(scienceQuestionList.get(i).getUserAnswerId());
+            result.setCorrectAnswer(scienceQuestionList.get(i).getAnswer());
+            result.setCorrect(scienceQuestionList.get(i).getIsCorrect());
+            result.setAttempted(scienceQuestionList.get(i).getIsAttempted());
+            resultList.add(result);
+        }
+
+        if (resultList.size() > 0) {
+            Intent intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("result", resultList);
+            intent.putExtra("outOfMarks", "" + outOfMarks);
+            intent.putExtra("marksObtained", "" + totalMarks);
+            intent.putExtra("studentId", Assessment_Constants.currentStudentID);
+            intent.putExtra("examStartTime", examStartTime);
+            intent.putExtra("examId", paper.getExamId());
+            intent.putExtra("subjectId", paper.getSubjectId());
+            intent.putExtra("examEndTime", examEndTime);
+            startActivity(intent);
+        }
     }
 
     private void calculateMarks() {

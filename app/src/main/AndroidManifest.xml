@@ -30,8 +30,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.choose_assessment.SupervisedAssessmentActivity"
+            android:name=".ui.choose_assessment.science.certificate.AssessmentCertificateActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.choose_assessment.result.ResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.choose_assessment.SupervisedAssessmentActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.choose_assessment.science.ScienceAssessmentActivity"
             android:screenOrientation="portrait"
@@ -83,6 +89,9 @@
             android:name=".services.AppExitService"
             android:enabled="true"
             android:stopWithTask="false" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

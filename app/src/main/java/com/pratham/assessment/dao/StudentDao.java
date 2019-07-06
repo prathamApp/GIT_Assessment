@@ -62,7 +62,7 @@ public interface StudentDao {
     void setFlagFalse(String studentID);
 
     @Query("select FirstName from Student where StudentID = :studentID")
-    String getStudentName(String studentID);
+    String getStudentFirstName(String studentID);
 
     @Query("select FullName from Student where StudentID = :studentID")
     String getFullName(String studentID);

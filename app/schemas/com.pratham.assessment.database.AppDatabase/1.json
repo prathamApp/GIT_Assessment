@@ -1,0 +1,1525 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "4574062ce918550ddb1e986dc6e1d08c",
+    "entities": [
+      {
+        "tableName": "Crl",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`CrlTableId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `CRLId` TEXT, `FirstName` TEXT, `LastName` TEXT, `UserName` TEXT, `Password` TEXT, `ProgramId` INTEGER NOT NULL, `ProgramName` TEXT, `Mobile` TEXT, `State` TEXT, `Email` TEXT, `CreatedBy` TEXT, `newCrl` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "CrlTableId",
+            "columnName": "CrlTableId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CRLId",
+            "columnName": "CRLId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "FirstName",
+            "columnName": "FirstName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "LastName",
+            "columnName": "LastName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "UserName",
+            "columnName": "UserName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Password",
+            "columnName": "Password",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ProgramId",
+            "columnName": "ProgramId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ProgramName",
+            "columnName": "ProgramName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Mobile",
+            "columnName": "Mobile",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "State",
+            "columnName": "State",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Email",
+            "columnName": "Email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "CreatedBy",
+            "columnName": "CreatedBy",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "newCrl",
+            "columnName": "newCrl",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "CrlTableId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Student",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`StudentID` TEXT NOT NULL, `FullName` TEXT, `Gender` TEXT, `Age` INTEGER NOT NULL, `Stud_Class` TEXT, `GroupId` TEXT, `GroupName` TEXT, `sentFlag` INTEGER NOT NULL, `DeviceId` TEXT, `StudentUID` TEXT, `FirstName` TEXT, `MiddleName` TEXT, `LastName` TEXT, `regDate` TEXT, `villageName` TEXT, `newFlag` INTEGER NOT NULL, `avatarName` TEXT, PRIMARY KEY(`StudentID`))",
+        "fields": [
+          {
+            "fieldPath": "StudentID",
+            "columnName": "StudentID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "FullName",
+            "columnName": "FullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Gender",
+            "columnName": "Gender",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Age",
+            "columnName": "Age",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Stud_Class",
+            "columnName": "Stud_Class",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "GroupId",
+            "columnName": "GroupId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "GroupName",
+            "columnName": "GroupName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "DeviceId",
+            "columnName": "DeviceId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "StudentUID",
+            "columnName": "StudentUID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "FirstName",
+            "columnName": "FirstName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "MiddleName",
+            "columnName": "MiddleName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "LastName",
+            "columnName": "LastName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "regDate",
+            "columnName": "regDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "villageName",
+            "columnName": "villageName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "newFlag",
+            "columnName": "newFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avatarName",
+            "columnName": "avatarName",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "StudentID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Score",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ScoreId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `SessionID` TEXT, `StudentID` TEXT, `DeviceID` TEXT, `ResourceID` TEXT, `QuestionId` INTEGER NOT NULL, `ScoredMarks` INTEGER NOT NULL, `TotalMarks` INTEGER NOT NULL, `StartDateTime` TEXT, `EndDateTime` TEXT, `Level` INTEGER NOT NULL, `Label` TEXT, `sentFlag` INTEGER NOT NULL, `isAttempted` INTEGER NOT NULL, `isCorrect` INTEGER NOT NULL, `userAnswer` TEXT, `examId` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "ScoreId",
+            "columnName": "ScoreId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "SessionID",
+            "columnName": "SessionID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "StudentID",
+            "columnName": "StudentID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "DeviceID",
+            "columnName": "DeviceID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ResourceID",
+            "columnName": "ResourceID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "QuestionId",
+            "columnName": "QuestionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ScoredMarks",
+            "columnName": "ScoredMarks",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TotalMarks",
+            "columnName": "TotalMarks",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "StartDateTime",
+            "columnName": "StartDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "EndDateTime",
+            "columnName": "EndDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Level",
+            "columnName": "Level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Label",
+            "columnName": "Label",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isAttempted",
+            "columnName": "isAttempted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCorrect",
+            "columnName": "isCorrect",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userAnswer",
+            "columnName": "userAnswer",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examId",
+            "columnName": "examId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ScoreId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Session",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`SessionID` TEXT NOT NULL, `fromDate` TEXT, `toDate` TEXT, `sentFlag` INTEGER NOT NULL, PRIMARY KEY(`SessionID`))",
+        "fields": [
+          {
+            "fieldPath": "SessionID",
+            "columnName": "SessionID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromDate",
+            "columnName": "fromDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toDate",
+            "columnName": "toDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "SessionID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Attendance",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attendanceID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `SessionID` TEXT, `StudentID` TEXT, `Date` TEXT, `GroupID` TEXT, `sentFlag` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "attendanceID",
+            "columnName": "attendanceID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "SessionID",
+            "columnName": "SessionID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "StudentID",
+            "columnName": "StudentID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Date",
+            "columnName": "Date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "GroupID",
+            "columnName": "GroupID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "attendanceID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Status",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `statusKey` TEXT, `value` TEXT NOT NULL, `description` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "statusID",
+            "columnName": "statusID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusKey",
+            "columnName": "statusKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "statusID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Village",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`VillageId` INTEGER NOT NULL, `VillageCode` TEXT, `VillageName` TEXT, `Block` TEXT, `District` TEXT, `State` TEXT, `CRLId` TEXT, PRIMARY KEY(`VillageId`))",
+        "fields": [
+          {
+            "fieldPath": "VillageId",
+            "columnName": "VillageId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "VillageCode",
+            "columnName": "VillageCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "VillageName",
+            "columnName": "VillageName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Block",
+            "columnName": "Block",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "District",
+            "columnName": "District",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "State",
+            "columnName": "State",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "CRLId",
+            "columnName": "CRLId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "VillageId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Groups",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`GroupId` TEXT NOT NULL, `GroupName` TEXT, `VillageId` TEXT, `ProgramId` INTEGER NOT NULL, `GroupCode` TEXT, `SchoolName` TEXT, `VIllageName` TEXT, `DeviceId` TEXT, PRIMARY KEY(`GroupId`))",
+        "fields": [
+          {
+            "fieldPath": "GroupId",
+            "columnName": "GroupId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "GroupName",
+            "columnName": "GroupName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "VillageId",
+            "columnName": "VillageId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ProgramId",
+            "columnName": "ProgramId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "GroupCode",
+            "columnName": "GroupCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "SchoolName",
+            "columnName": "SchoolName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "VIllageName",
+            "columnName": "VIllageName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "DeviceId",
+            "columnName": "DeviceId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "GroupId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Assessment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ScoreIda` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `SessionIDm` TEXT, `SessionIDa` TEXT, `StudentIDa` TEXT, `DeviceIDa` TEXT, `ResourceIDa` TEXT, `QuestionIda` INTEGER NOT NULL, `ScoredMarksa` INTEGER NOT NULL, `TotalMarksa` INTEGER NOT NULL, `StartDateTimea` TEXT, `EndDateTimea` TEXT, `Levela` INTEGER NOT NULL, `Labela` TEXT, `sentFlag` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "ScoreIda",
+            "columnName": "ScoreIda",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "SessionIDm",
+            "columnName": "SessionIDm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "SessionIDa",
+            "columnName": "SessionIDa",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "StudentIDa",
+            "columnName": "StudentIDa",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "DeviceIDa",
+            "columnName": "DeviceIDa",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ResourceIDa",
+            "columnName": "ResourceIDa",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "QuestionIda",
+            "columnName": "QuestionIda",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ScoredMarksa",
+            "columnName": "ScoredMarksa",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TotalMarksa",
+            "columnName": "TotalMarksa",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "StartDateTimea",
+            "columnName": "StartDateTimea",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "EndDateTime",
+            "columnName": "EndDateTimea",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Levela",
+            "columnName": "Levela",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Label",
+            "columnName": "Labela",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ScoreIda"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Logs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`logId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `currentDateTime` TEXT, `exceptionMessage` TEXT, `exceptionStackTrace` TEXT, `methodName` TEXT, `errorType` TEXT, `groupId` TEXT, `deviceId` TEXT, `LogDetail` TEXT, `sentFlag` INTEGER NOT NULL, `sessionId` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "logId",
+            "columnName": "logId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentDateTime",
+            "columnName": "currentDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "exceptionMessage",
+            "columnName": "exceptionMessage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "exceptionStackTrace",
+            "columnName": "exceptionStackTrace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "methodName",
+            "columnName": "methodName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "errorType",
+            "columnName": "errorType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deviceId",
+            "columnName": "deviceId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "LogDetail",
+            "columnName": "LogDetail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "logId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ContentTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nodeId` TEXT NOT NULL, `level` TEXT, `resourceId` TEXT, `parentId` TEXT, `nodeDesc` TEXT, `nodeType` TEXT, `nodeTitle` TEXT, `resourcePath` TEXT, `resourceType` TEXT, `nodeServerImage` TEXT, `nodeImage` TEXT, `nodeAge` TEXT, `isDownloaded` TEXT, `contentType` TEXT, `contentLanguage` TEXT, `nodeKeywords` TEXT, `onSDCard` INTEGER NOT NULL, PRIMARY KEY(`nodeId`))",
+        "fields": [
+          {
+            "fieldPath": "nodeId",
+            "columnName": "nodeId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resourceId",
+            "columnName": "resourceId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parentId",
+            "columnName": "parentId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nodeDesc",
+            "columnName": "nodeDesc",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nodeType",
+            "columnName": "nodeType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nodeTitle",
+            "columnName": "nodeTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resourcePath",
+            "columnName": "resourcePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resourceType",
+            "columnName": "resourceType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nodeServerImage",
+            "columnName": "nodeServerImage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nodeImage",
+            "columnName": "nodeImage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nodeAge",
+            "columnName": "nodeAge",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isDownloaded",
+            "columnName": "isDownloaded",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contentType",
+            "columnName": "contentType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contentLanguage",
+            "columnName": "contentLanguage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nodeKeywords",
+            "columnName": "nodeKeywords",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "onSDCard",
+            "columnName": "onSDCard",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "nodeId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AssessmentTopic",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`topicid` TEXT NOT NULL, `topicname` TEXT, `subjectid` TEXT, PRIMARY KEY(`topicid`))",
+        "fields": [
+          {
+            "fieldPath": "topicid",
+            "columnName": "topicid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "topicname",
+            "columnName": "topicname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subjectid",
+            "columnName": "subjectid",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "topicid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ScienceQuestion",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ansdesc` TEXT, `updatedby` TEXT, `qlevel` TEXT, `addedby` TEXT, `languageid` TEXT, `active` TEXT, `lessonid` TEXT, `qtid` TEXT, `qid` TEXT NOT NULL, `subjectid` TEXT, `addedtime` TEXT, `updatedtime` TEXT, `photourl` TEXT, `examtime` TEXT, `topicid` TEXT, `answer` TEXT, `outofmarks` TEXT, `qname` TEXT, `hint` TEXT, `examid` TEXT, `pdid` TEXT, `startTime` TEXT, `endTime` TEXT, `marksPerQuestion` TEXT, `paperid` TEXT, `userAnswerId` TEXT, `userAnswer` TEXT, `isAttempted` INTEGER NOT NULL, `isCorrect` INTEGER NOT NULL, PRIMARY KEY(`qid`))",
+        "fields": [
+          {
+            "fieldPath": "ansdesc",
+            "columnName": "ansdesc",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedby",
+            "columnName": "updatedby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qlevel",
+            "columnName": "qlevel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "addedby",
+            "columnName": "addedby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "languageid",
+            "columnName": "languageid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lessonid",
+            "columnName": "lessonid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qtid",
+            "columnName": "qtid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qid",
+            "columnName": "qid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectid",
+            "columnName": "subjectid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "addedtime",
+            "columnName": "addedtime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedtime",
+            "columnName": "updatedtime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "photourl",
+            "columnName": "photourl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examtime",
+            "columnName": "examtime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "topicid",
+            "columnName": "topicid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "answer",
+            "columnName": "answer",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outofmarks",
+            "columnName": "outofmarks",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qname",
+            "columnName": "qname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hint",
+            "columnName": "hint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examid",
+            "columnName": "examid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pdid",
+            "columnName": "pdid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startTime",
+            "columnName": "startTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endTime",
+            "columnName": "endTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "marksPerQuestion",
+            "columnName": "marksPerQuestion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "paperid",
+            "columnName": "paperid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userAnswerId",
+            "columnName": "userAnswerId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userAnswer",
+            "columnName": "userAnswer",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isAttempted",
+            "columnName": "isAttempted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCorrect",
+            "columnName": "isCorrect",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "qid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ScienceQuestionChoice",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`qcid` TEXT NOT NULL, `qid` TEXT, `matchingname` TEXT, `choicename` TEXT, `correct` TEXT, `matchingurl` TEXT, `choiceurl` TEXT, PRIMARY KEY(`qcid`))",
+        "fields": [
+          {
+            "fieldPath": "qcid",
+            "columnName": "qcid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qid",
+            "columnName": "qid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "matchingname",
+            "columnName": "matchingname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "choicename",
+            "columnName": "choicename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "correct",
+            "columnName": "correct",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "matchingurl",
+            "columnName": "matchingurl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "choiceurl",
+            "columnName": "choiceurl",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "qcid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AssessmentSubjects",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subjectid` TEXT NOT NULL, `subjectname` TEXT, PRIMARY KEY(`subjectid`))",
+        "fields": [
+          {
+            "fieldPath": "subjectid",
+            "columnName": "subjectid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectname",
+            "columnName": "subjectname",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "subjectid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AssessmentLanguages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`languageid` TEXT NOT NULL, `languagename` TEXT, PRIMARY KEY(`languageid`))",
+        "fields": [
+          {
+            "fieldPath": "languageid",
+            "columnName": "languageid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "languagename",
+            "columnName": "languagename",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "languageid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AssessmentTest",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`examname` TEXT, `lstexampaper` TEXT, `examid` TEXT NOT NULL, `subjectid` TEXT, `subjectname` TEXT, PRIMARY KEY(`examid`))",
+        "fields": [
+          {
+            "fieldPath": "examname",
+            "columnName": "examname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lstexampaper",
+            "columnName": "lstexampaper",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examid",
+            "columnName": "examid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectid",
+            "columnName": "subjectid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subjectname",
+            "columnName": "subjectname",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "examid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AssessmentPaperForPush",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`languageId` TEXT, `subjectId` TEXT, `examId` TEXT, `paperId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `paperStartTime` TEXT, `paperEndTime` TEXT, `examTime` TEXT, `outOfMarks` TEXT, `totalMarks` TEXT, `studentId` TEXT, `CorrectCnt` INTEGER NOT NULL, `wrongCnt` INTEGER NOT NULL, `SkipCnt` INTEGER NOT NULL, `sentFlag` INTEGER NOT NULL, `SessionID` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "languageId",
+            "columnName": "languageId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subjectId",
+            "columnName": "subjectId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examId",
+            "columnName": "examId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "paperId",
+            "columnName": "paperId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paperStartTime",
+            "columnName": "paperStartTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "paperEndTime",
+            "columnName": "paperEndTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examTime",
+            "columnName": "examTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outOfMarks",
+            "columnName": "outOfMarks",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalMarks",
+            "columnName": "totalMarks",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "studentId",
+            "columnName": "studentId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "CorrectCnt",
+            "columnName": "CorrectCnt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wrongCnt",
+            "columnName": "wrongCnt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "SkipCnt",
+            "columnName": "SkipCnt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "SessionID",
+            "columnName": "SessionID",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "paperId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AssessmentPaperPattern",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subjectname` TEXT, `examname` TEXT, `examduration` TEXT, `outofmarks` TEXT, `examid` TEXT NOT NULL, `subjectid` TEXT, PRIMARY KEY(`examid`))",
+        "fields": [
+          {
+            "fieldPath": "subjectname",
+            "columnName": "subjectname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examname",
+            "columnName": "examname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examduration",
+            "columnName": "examduration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outofmarks",
+            "columnName": "outofmarks",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examid",
+            "columnName": "examid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectid",
+            "columnName": "subjectid",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "examid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AssessmentPatternDetails",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`totalmarks` TEXT, `noofquestion` TEXT, `qtname` TEXT, `marksperquestion` TEXT, `topicid` TEXT, `qlevel` TEXT, `topicname` TEXT, `examId` TEXT, `patternId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `qtid` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "totalmarks",
+            "columnName": "totalmarks",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "noofquestion",
+            "columnName": "noofquestion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qtname",
+            "columnName": "qtname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "marksperquestion",
+            "columnName": "marksperquestion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "topicid",
+            "columnName": "topicid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qlevel",
+            "columnName": "qlevel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "topicname",
+            "columnName": "topicname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "examId",
+            "columnName": "examId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "patternId",
+            "columnName": "patternId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtid",
+            "columnName": "qtid",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "patternId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "SupervisorData",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `supervisorId` TEXT, `assessmentSessionId` TEXT, `supervisorName` TEXT, `supervisorPhoto` TEXT, `sentFlag` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "sId",
+            "columnName": "sId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "supervisorId",
+            "columnName": "supervisorId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "assessmentSessionId",
+            "columnName": "assessmentSessionId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "supervisorName",
+            "columnName": "supervisorName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "supervisorPhoto",
+            "columnName": "supervisorPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentFlag",
+            "columnName": "sentFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "sId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4574062ce918550ddb1e986dc6e1d08c\")"
+    ]
+  }
+}

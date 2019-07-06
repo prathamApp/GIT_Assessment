@@ -1,14 +1,16 @@
 package com.pratham.assessment.ui.choose_assessment;
 
 
-import com.pratham.assessment.domain.ContentTable;
+import com.pratham.assessment.domain.AssessmentSubjects;
+
+import java.util.List;
 
 public interface ChooseAssessmentContract {
 
     public interface ChooseAssessmentView{
         void clearContentList();
 
-        void addContentToViewList(ContentTable contentTable);
+        void addContentToViewList(List<AssessmentSubjects> contentTable);
 
         void notifyAdapter();
     }

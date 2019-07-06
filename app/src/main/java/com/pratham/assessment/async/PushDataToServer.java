@@ -1,12 +1,10 @@
 package com.pratham.assessment.async;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -15,6 +13,7 @@ import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Assessment;
+import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.Groups;
@@ -24,20 +23,20 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.login.MainActivity;
-import com.pratham.assessment.utilities.Assessment_Constants;
-import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
 /******* This async task is used for data push******/
 public class PushDataToServer extends AsyncTask {
 
     Context context;
     boolean autoPush;
     JSONArray scoreData;
+    JSONArray assessmentScoreData;
     JSONArray attendanceData;
     JSONArray studentData;
     JSONArray crlData;
@@ -75,6 +74,8 @@ public class PushDataToServer extends AsyncTask {
 
         List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores();
         scoreData = fillScoreData(scoreList);
+        List<AssessmentPaperForPush> assessmentScoreList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAllAssessmentPapersForPush();
+        assessmentScoreData = fillAssessmentScoreData(assessmentScoreList);
         List<Attendance> attendanceList = AppDatabase.getDatabaseInstance(context).getAttendanceDao().getAllPushAttendanceEntries();
         attendanceData = fillAttendanceData(attendanceList);
         List<Student> studentList = AppDatabase.getDatabaseInstance(context).getStudentDao().getAllStudents();
@@ -162,12 +163,12 @@ public class PushDataToServer extends AsyncTask {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String requestString = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
-        String requestStringScience = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
+        JSONObject requestJsonObject = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
+        JSONObject requestJsonObjectScience = generateRequestString(assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
 
         //        if (checkEmptyness(requestString))
-        pushDataToServer(context, requestString, AssessmentApplication.uploadDataUrl);
-        pushDataScienceToServer(context, requestStringScience, AssessmentApplication.uploadScienceUrl);
+        pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
+        pushDataScienceToServer(context, requestJsonObjectScience, AssessmentApplication.uploadScienceUrl);
 
         return null;
     }
@@ -199,8 +200,10 @@ public class PushDataToServer extends AsyncTask {
         }
     }
 
-    private String generateRequestString(JSONArray scoreData, JSONArray attendanceData, JSONArray sessionData, JSONArray learntWordsData, JSONArray supervisorData, JSONArray logsData, JSONArray assessmentData, JSONArray studentData) {
+    private JSONObject generateRequestString(JSONArray scoreData, JSONArray attendanceData, JSONArray sessionData, JSONArray learntWordsData, JSONArray supervisorData, JSONArray logsData, JSONArray assessmentData, JSONArray studentData) {
         String requestString = "";
+        JSONObject rootJson = new JSONObject();
+
         try {
             JSONObject sessionObj = new JSONObject();
             JSONObject metaDataObj = new JSONObject();
@@ -242,11 +245,15 @@ public class PushDataToServer extends AsyncTask {
             requestString = "{ \"session\": " + sessionObj +
                     ", \"metadata\": " + metaDataObj +
                     "}";
+
+            rootJson.put("session", sessionObj);
+            rootJson.put("metadata", metaDataObj);
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-        return requestString;
+        return rootJson;
     }
 
     private JSONArray fillSessionData(List<Session> sessionList) {
@@ -380,8 +387,10 @@ public class PushDataToServer extends AsyncTask {
                 _obj.put("EndDateTime", _score.getEndDateTime());
                 _obj.put("Level", _score.getLevel());
                 _obj.put("Label", _score.getLabel());
-                _obj.put("isAttempted",_score.getIsAttempted());
+                _obj.put("isAttempted", _score.getIsAttempted());
                 _obj.put("isCorrect", _score.getIsCorrect());
+                _obj.put("userAnswer", _score.getUserAnswer());
+                _obj.put("examId", _score.getExamId());
                 scoreData.put(_obj);
             }
         } catch (Exception e) {
@@ -389,6 +398,58 @@ public class PushDataToServer extends AsyncTask {
             return null;
         }
         return scoreData;
+    }
+
+    private JSONArray fillAssessmentScoreData(List<AssessmentPaperForPush> paperList) {
+        JSONArray scoreData = new JSONArray();
+        JSONArray paperData = new JSONArray();
+        JSONObject _obj_paper = new JSONObject();
+
+        JSONObject _obj_score;
+        try {
+            for (int p = 0; p < paperList.size(); p++) {
+                _obj_paper = new JSONObject();
+                AssessmentPaperForPush _paper = paperList.get(p);
+                _obj_paper.put("languageId", _paper.getLanguageId());
+                _obj_paper.put("subjectId", _paper.getSubjectId());
+                _obj_paper.put("examId", _paper.getExamId());
+                _obj_paper.put("paperId", _paper.getPaperId());
+                _obj_paper.put("paperStartTime", _paper.getPaperStartTime());
+                _obj_paper.put("paperEndTime", _paper.getPaperEndTime());
+                _obj_paper.put("outOfMarks", _paper.getOutOfMarks());
+                _obj_paper.put("totalMarks", _paper.getTotalMarks());
+                _obj_paper.put("studentId", _paper.getStudentId());
+                _obj_paper.put("SessionID", _paper.getSessionID());
+                List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllNewScores(paperList.get(p).getSessionID());
+                for (int i = 0; i < scoreList.size(); i++) {
+                    _obj_score = new JSONObject();
+                    Score _score = scoreList.get(i);
+//                _obj.put("ScoreId", _score.getScoreId());
+                    _obj_score.put("SessionID", _score.getSessionID());
+                    _obj_score.put("StudentID", _score.getStudentID());
+                    _obj_score.put("DeviceID", _score.getDeviceID());
+                    _obj_score.put("ResourceID", _score.getResourceID());
+                    _obj_score.put("QuestionId", _score.getQuestionId());
+                    _obj_score.put("ScoredMarks", _score.getScoredMarks());
+                    _obj_score.put("TotalMarks", _score.getTotalMarks());
+                    _obj_score.put("StartDateTime", _score.getStartDateTime());
+                    _obj_score.put("EndDateTime", _score.getEndDateTime());
+                    _obj_score.put("Level", _score.getLevel());
+                    _obj_score.put("Label", _score.getLabel());
+                    _obj_score.put("isAttempted", _score.getIsAttempted());
+                    _obj_score.put("isCorrect", _score.getIsCorrect());
+                    _obj_score.put("userAnswer", _score.getUserAnswer());
+                    _obj_score.put("examId", _score.getExamId());
+                    scoreData.put(_obj_score);
+                }
+                _obj_paper.put("assessmentScoreData", scoreData);
+            }
+            paperData.put(_obj_paper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return paperData;
     }
 
     private JSONArray fillSupervisorData(List<SupervisorData> supervisorDataList) {
@@ -495,13 +556,13 @@ public class PushDataToServer extends AsyncTask {
         return groupsData;
     }
 
-    private void pushDataToServer(final Context context, String data, String url) {
+    private void pushDataToServer(final Context context, JSONObject requestJsonObject, String url) {
         try {
-            JSONObject jsonArrayData = new JSONObject(data);
+//            JSONObject jsonArrayData = new JSONObject(data);
 
             AndroidNetworking.post(url)
                     .addHeaders("Content-Type", "application/json")
-                    .addJSONObjectBody(jsonArrayData)
+                    .addJSONObjectBody(requestJsonObject)
                     .build()
                     .getAsString(new StringRequestListener() {
 
@@ -527,7 +588,7 @@ public class PushDataToServer extends AsyncTask {
                         @Override
                         public void onError(ANError anError) {
                             Log.d("PUSH_STATUS", "Data push failed");
-                            dataPushed=false;
+                            dataPushed = false;
                            /* if (!autoPush) {
                                 new AlertDialog.Builder(context)
                                         .setMessage("Data push failed")
@@ -547,13 +608,13 @@ public class PushDataToServer extends AsyncTask {
         }
     }
 
-    private void pushDataScienceToServer(final Context context, String data, String url) {
+    private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject, String url) {
         try {
-            JSONObject jsonArrayData = new JSONObject(data);
+//            JSONObject jsonArrayData = new JSONObject(data);
 
             AndroidNetworking.post(url)
                     .addHeaders("Content-Type", "application/json")
-                    .addJSONObjectBody(jsonArrayData)
+                    .addJSONObjectBody(requestJsonObject)
                     .build()
                     .getAsString(new StringRequestListener() {
 
@@ -615,6 +676,7 @@ public class PushDataToServer extends AsyncTask {
         AppDatabase.getDatabaseInstance(context).getAssessmentDao().setSentFlag();
 //        AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
+        AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().setSentFlag();
 //        AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();
 
     }

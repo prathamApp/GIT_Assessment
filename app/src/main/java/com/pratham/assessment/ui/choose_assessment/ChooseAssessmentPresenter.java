@@ -1,13 +1,25 @@
 package com.pratham.assessment.ui.choose_assessment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
+
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
+import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Session;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,17 +27,17 @@ import java.util.List;
 import static com.pratham.assessment.BaseActivity.appDatabase;
 
 
-public class ChooseAssessmentPresenter implements ChooseAssessmentContract.ChooseAssessmentPresenter{
+public class ChooseAssessmentPresenter implements ChooseAssessmentContract.ChooseAssessmentPresenter {
 
     Context context;
     ChooseAssessmentContract.ChooseAssessmentView assessView;
-    List<ContentTable> contentTableList, downloadedContentTableList;
+    List<AssessmentSubjects> contentTableList=new ArrayList<>(), downloadedContentTableList;
     ArrayList<String> nodeIds;
 
 
     public ChooseAssessmentPresenter(Context context, ChooseAssessmentContract.ChooseAssessmentView assessView) {
         this.context = context;
-        this.assessView= assessView;
+        this.assessView = assessView;
         nodeIds = new ArrayList<>();
         nodeIds.add("1299");
     }
@@ -75,7 +87,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                                     if (content_cursor.moveToFirst()) {
                                                         while (!content_cursor.isAfterLast()) {
                                                             ContentTable detail = new ContentTable();
-                                                            detail.setNodeId(content_cursor.getString(content_cursor.getColumnIndex("nodeId")));
+                                                            detail.setNodeId(content_cursor.getString(content_cursor.getColumnIndex("subId")));
                                                             detail.setNodeType(content_cursor.getString(content_cursor.getColumnIndex("nodeType")));
                                                             detail.setNodeTitle(content_cursor.getString(content_cursor.getColumnIndex("nodeTitle")));
                                                             detail.setNodeKeywords(content_cursor.getString(content_cursor.getColumnIndex("nodeKeywords")));
@@ -153,6 +165,102 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     }
 
     private void getListData() {
+        downloadedContentTableList = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
+        assessView.clearContentList();
+
+        if (downloadedContentTableList.size() <= 0) {
+            getSubjectData();
+        }else {
+            BackupDatabase.backup(context);
+            contentTableList.addAll(downloadedContentTableList);
+            assessView.addContentToViewList(contentTableList);
+            assessView.notifyAdapter();
+        }
+
+       /* new AsyncTask<Object, Void, Object>() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                try {
+
+                    try {
+                        *//*for (int j = 0; j < downloadedContentTableList.size(); j++) {
+                            ContentTable contentTable = new ContentTable();
+                            contentTable.setNodeId("" + downloadedContentTableList.get(j).getNodeId());
+                            contentTable.setNodeType("" + downloadedContentTableList.get(j).getNodeType());
+                            contentTable.setNodeTitle("" + downloadedContentTableList.get(j).getNodeTitle());
+                            contentTable.setNodeKeywords("" + downloadedContentTableList.get(j).getNodeKeywords());
+                            contentTable.setNodeAge("" + downloadedContentTableList.get(j).getNodeAge());
+                            contentTable.setNodeDesc("" + downloadedContentTableList.get(j).getNodeDesc());
+                            contentTable.setNodeServerImage("" + downloadedContentTableList.get(j).getNodeServerImage());
+                            contentTable.setNodeImage("" + downloadedContentTableList.get(j).getNodeImage());
+                            contentTable.setResourceId("" + downloadedContentTableList.get(j).getResourceId());
+                            contentTable.setResourceType("" + downloadedContentTableList.get(j).getNodeType());
+                            contentTable.setResourcePath("" + downloadedContentTableList.get(j).getResourcePath());
+                            contentTable.setParentId("" + downloadedContentTableList.get(j).getParentId());
+                            contentTable.setLevel("" + downloadedContentTableList.get(j).getLevel());
+                            contentTable.setContentType(downloadedContentTableList.get(j).getContentType());
+                            contentTable.setIsDownloaded("true");
+                            contentTable.setOnSDCard(true);
+
+                        }*//*
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+
+            }
+        }.execute();*/
+    }
+
+    private void getSubjectData() {
+        contentTableList.clear();
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Loading subjects");
+        AndroidNetworking.get(APIs.AssessmentSubjectAPI)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                AssessmentSubjects assessmentSubjects = new AssessmentSubjects();
+                                assessmentSubjects.setSubjectid(response.getJSONObject(i).getString("subjectid"));
+                                assessmentSubjects.setSubjectname(response.getJSONObject(i).getString("subjectname"));
+                                contentTableList.add(assessmentSubjects);
+                            }
+                            AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(contentTableList);
+                            progressDialog.dismiss();
+                            BackupDatabase.backup(context);
+                            contentTableList.addAll(downloadedContentTableList);
+                            assessView.addContentToViewList(contentTableList);
+                            assessView.notifyAdapter();
+                            //getTopicData();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
+                        progressDialog.dismiss();
+                    }
+                });
+
+    }
+
+    /*private void getListData() {
         new AsyncTask<Object, Void, Object>() {
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -200,8 +308,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 assessView.notifyAdapter();
             }
         }.execute();
-    }
-    
+    }*/
+
     @Override
     public void clearNodeIds() {
         nodeIds.clear();
@@ -232,7 +340,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     }
 
     @Override
-    public void startActivity(String activityName) {}
+    public void startActivity(String activityName) {
+    }
 
 }
 

@@ -1,9 +1,12 @@
 package com.pratham.assessment.database;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.pratham.assessment.dao.AssessmentDao;
 import com.pratham.assessment.dao.AssessmentPaperForPushDao;
@@ -15,7 +18,6 @@ import com.pratham.assessment.dao.CrlDao;
 import com.pratham.assessment.dao.GroupDao;
 import com.pratham.assessment.dao.LanguageDao;
 import com.pratham.assessment.dao.LogDao;
-import com.pratham.assessment.dao.ScienceAssessmentAnswerDao;
 import com.pratham.assessment.dao.ScienceQuestionChoiceDao;
 import com.pratham.assessment.dao.ScienceQuestionDao;
 import com.pratham.assessment.dao.ScoreDao;
@@ -40,7 +42,6 @@ import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Modal_Log;
-import com.pratham.assessment.domain.ScienceAssessmentAnswer;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.Score;
@@ -55,7 +56,7 @@ import com.pratham.assessment.domain.Village;
         Status.class, Village.class, Groups.class, Assessment.class, Modal_Log.class,
         ContentTable.class, AssessmentToipcsModal.class, ScienceQuestion.class,
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
-        AssessmentTest.class, AssessmentPaperForPush.class, ScienceAssessmentAnswer.class,
+        AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
@@ -101,9 +102,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract AssessmentPaperPatternDao getAssessmentPaperPatternDao();
 
     public abstract AssessmentPatternDetailsDao getAssessmentPatternDetailsDao();
+
     public abstract SupervisorDataDao getSupervisorDataDao();
 
-    public abstract ScienceAssessmentAnswerDao getScienceAssessmentAnswerDao();
 
 
    /* public static AppDatabase getDatabaseInstance(Context context) {
@@ -118,7 +119,34 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getDatabaseInstance(Context context) {
         if (appDatabase == null)
-            appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database").fallbackToDestructiveMigration().allowMainThreadQueries().build();
+            appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")/*.addMigrations(MIGRATION_1_2)*/.allowMainThreadQueries().build();
         return appDatabase;
     }
+
+
+    /* static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+
+
+       @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE  AssessmentPaperForPush  ( languageId  TEXT,  subjectId  TEXT, " +
+                    " examId  TEXT,  paperId  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,  paperStartTime  TEXT," +
+                    "  paperEndTime  TEXT,  outOfMarks  TEXT,  totalMarks  TEXT,  studentId  TEXT, " +
+                    " CorrectCnt  INTEGER NOT NULL,  wrongCnt  INTEGER NOT NULL,  SkipCnt  INTEGER NOT NULL, " +
+                    " sentFlag  INTEGER NOT NULL,  SessionID  TEXT)");
+
+            database.execSQL("CREATE TABLE  SupervisorData  ( sId  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "  supervisorId  TEXT,  assessmentSessionId  TEXT,  supervisorName  TEXT,  supervisorPhoto  TEXT," +
+                    "  sentFlag  INTEGER NOT NULL)");
+
+            database.execSQL("drop table ScienceAssesmentAnswer");
+
+            database.execSQL("ALTER TABLE Score add COLUMN isAttempted boolean");
+            database.execSQL("ALTER TABLE Score add COLUMN isCorrect boolean");
+            database.execSQL("ALTER TABLE Score add COLUMN userAnswer text");
+            database.execSQL("ALTER TABLE Score add COLUMN examId text");
+        }
+    };*/
+
+
 }

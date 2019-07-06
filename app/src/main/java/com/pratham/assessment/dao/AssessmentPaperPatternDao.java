@@ -28,4 +28,14 @@ public interface AssessmentPaperPatternDao {
 
     @Query("select examid from ASSESSMENTPAPERPATTERN where examname=:examname")
     public String getExamIdByExamName(String examname);
+
+    @Query("select examname from ASSESSMENTPAPERPATTERN where examid=:examid")
+    public String getExamNameById(String examid);
+
+
+  @Query("select examname from ASSESSMENTPAPERPATTERN where subjectname=:subName")
+    public String[] getExamNameBySubjectName(String subName);
+
+    @Query("select subjectname from ASSESSMENTPAPERPATTERN where examid=:examid")
+    public String getSubjectNameById(String examid);
 }

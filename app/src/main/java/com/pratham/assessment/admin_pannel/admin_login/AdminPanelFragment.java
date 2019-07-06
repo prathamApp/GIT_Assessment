@@ -59,7 +59,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
         ButterKnife.bind(this, view);
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-        /*userNameET.setText("pravinthorat");
+       /* userNameET.setText("pravinthorat");
         passwordET.setText("pratham123");*/
         /*  userNameET.setText("admin");
         passwordET.setText("admin");*/

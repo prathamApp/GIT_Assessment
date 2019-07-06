@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
@@ -25,7 +26,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
 
     private Context mContext;
     private int lastPos = -1;
-    private List<ContentTable> assessmentViewList;
+    private List<AssessmentSubjects> assessmentViewList;
     ChoseAssessmentClicked assessmentClicked;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -43,7 +44,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         }
     }
 
-    public ChooseAssessmentAdapter(Context mContext, List<ContentTable> assessmentViewList, ChoseAssessmentClicked assessmentClicked) {
+    public ChooseAssessmentAdapter(Context mContext, List<AssessmentSubjects> assessmentViewList, ChoseAssessmentClicked assessmentClicked) {
         this.mContext = mContext;
         this.assessmentViewList = assessmentViewList;
         this.assessmentClicked = assessmentClicked;
@@ -59,29 +60,29 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         //final ContentView gamesList = gamesViewList.get(position);
-        final ContentTable assessList = assessmentViewList.get(position);
+        final AssessmentSubjects assessList = assessmentViewList.get(position);
 
         Animation animation = null;
         animation = AnimationUtils.loadAnimation(mContext, R.anim.item_fall_down);
         animation.setDuration(500);
 
-        if (assessList.getNodeTitle().equalsIgnoreCase("test"))
+        if (assessList.getSubjectid().equalsIgnoreCase("test"))
             holder.title.setText("English");
         else
-            holder.title.setText(assessList.getNodeTitle());
+            holder.title.setText(assessList.getSubjectname());
 
         holder.iv_download.setVisibility(View.GONE);
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.ic_warning);
         requestOptions.error(R.drawable.ic_warning);
-        if (position == 0){
-            holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg));
-        }else if(position==1){
-            holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg_2));
-        }else
-        if(position%2==0){
+        if ((position) % 3 == 0) {
             holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg_3));
+        } else if ((position) % 2 == 0) {
+            holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg));
+        } else if ((position) % 2 == 1) {
+            holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg_2));
         }
+
 
     /*    if ( (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1")) && !Assessment_Constants.SD_CARD_Content){
             Glide.with(mContext).setDefaultRequestOptions(requestOptions)
@@ -97,14 +98,14 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
                     .load(assessList.getNodeServerImage())
                     .into(holder.thumbnail);*/
 
-            holder.game_card_view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (assessList.getNodeType() != null) {
-                        assessmentClicked.assessmentClicked(position, assessList.getNodeId());
-                    }
-                }
-            });
+        holder.game_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                    if (assessList.getNodeType() != null) {
+                assessmentClicked.assessmentClicked(position, assessList.getSubjectid());
+//                    }
+            }
+        });
         holder.game_card_view.setVisibility(View.GONE);
         setAnimations(holder.game_card_view, position);
 
