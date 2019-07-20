@@ -44,15 +44,14 @@
                 android:layout_weight="1"
                 android:layout_margin="@dimen/_20sdp"
                 app:cardCornerRadius="@dimen/_15sdp"
-                app:cardElevation="@dimen/_6sdp">
+                app:cardElevation="@dimen/_3sdp">
 
                 <RelativeLayout
                     android:id="@+id/rl_age3to6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/white"
-                    android:elevation="@dimen/_10sdp">
+                    android:background="@color/white">
 
                     <ImageButton
                         android:id="@+id/ib_age3to6"
@@ -62,7 +61,7 @@
                         android:background="@drawable/gradiance_bg"
                         android:gravity="center"
                         android:scaleType="centerInside"
-                        android:src="@drawable/storytelling" />
+                        android:src="@drawable/img_3_6_yrs" />
 
                     <RelativeLayout
                         android:id="@+id/text"
@@ -88,7 +87,7 @@
                 android:layout_margin="@dimen/_20sdp"
                 android:layout_weight="1"
                 app:cardCornerRadius="@dimen/_15sdp"
-                app:cardElevation="@dimen/_6sdp">
+                app:cardElevation="@dimen/_3sdp">
 
                 <RelativeLayout
                     android:id="@+id/rl_age8to14"
@@ -104,7 +103,7 @@
                         android:layout_above="@+id/text3_6"
                         android:background="@drawable/gradiance_bg_2"
                         android:scaleType="centerInside"
-                        android:src="@drawable/gitl_reading" />
+                        android:src="@drawable/img_8_14_yrs" />
 
                     <RelativeLayout
                         android:id="@+id/text3_6"
@@ -144,6 +143,25 @@
             android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/admin" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_qr"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/qr_btn_bg">
+
+        <ImageButton
+            android:id="@+id/btn_qr"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_qr_code_white" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -3,8 +3,10 @@ package com.pratham.assessment.ui.choose_assessment.science.custom_dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,6 +24,7 @@ import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.TopicSelectListener;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +37,7 @@ import butterknife.OnClick;
 public class SelectTopicDialog extends Dialog {
 
     @BindView(R.id.tv_update_topics)
-    public
-    TextView updateTopics;
+    public TextView updateTopics;
     @BindView(R.id.btn_close)
     ImageButton btn_close;
     @BindView(R.id.txt_message)
@@ -48,8 +50,8 @@ public class SelectTopicDialog extends Dialog {
     Spinner spinner_lang;
     @BindView(R.id.txt_start_assessment)
     TextView txt_ok;
-   /* @BindView(R.id.tv_timer)
-    public TextView timer;*/
+    /* @BindView(R.id.tv_timer)
+     public TextView timer;*/
     @BindView(R.id.ll_count_down)
     public RelativeLayout ll_count_down;
     @BindView(R.id.ll_select_topic)
@@ -60,8 +62,8 @@ public class SelectTopicDialog extends Dialog {
 
     Context context;
     List<AssessmentPaperPattern> toipcsModalList;
-    List<AssessmentLanguages> assessmentLanguagesList;
-//    List<AssessmentSubjects> assessmentSubjectsList;
+//    List<AssessmentLanguages> assessmentLanguagesList;
+    //    List<AssessmentSubjects> assessmentSubjectsList;
     String subjectId;
     List<CheckBox> checkBoxes = new ArrayList<>();
     TopicSelectListener topicSelectListener;
@@ -71,7 +73,7 @@ public class SelectTopicDialog extends Dialog {
         this.toipcsModalList = topicList;
         this.context = context;
         this.topicSelectListener = topicSelectListener;
-        this.assessmentLanguagesList = languages;
+//        this.assessmentLanguagesList = languages;
         this.subjectId = subjectId;
     }
 
@@ -83,32 +85,31 @@ public class SelectTopicDialog extends Dialog {
         setCanceledOnTouchOutside(false);
         setCancelable(false);
         topics.setText("Select Exams");
+        updateTopics.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
+        List<String> topicNames = new ArrayList<>();
+        for (int i = 0; i < toipcsModalList.size(); i++) {
+            if (toipcsModalList.get(i).getSubjectid().equalsIgnoreCase(subjectId))
+                topicNames.add(toipcsModalList.get(i).getExamname());
+        }
+        if (topicNames.size() == 0) topicNames.add("No Exams");
 
-        String[] lang = new String[assessmentLanguagesList.size()];
+        ArrayAdapter topicAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, topicNames);
+        topicAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_topic.setAdapter(topicAdapter);
+       /* String[] lang = new String[assessmentLanguagesList.size()];
         for (int i = 0; i < assessmentLanguagesList.size(); i++) {
             lang[i] = assessmentLanguagesList.get(i).getLanguagename();
         }
-        ArrayAdapter langAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, lang);
-        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter langAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, lang);
         spinner_lang.setAdapter(langAdapter);
-
 
 
         spinner_lang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                String selectedSub = sub[position];
-                List<String> topicNames = new ArrayList<>();
-                for (int i = 0; i < toipcsModalList.size(); i++) {
-                    if (toipcsModalList.get(i).getSubjectid().equalsIgnoreCase(subjectId))
-                        topicNames.add(toipcsModalList.get(i).getExamname());
-                }
-                if (topicNames.size() == 0) topicNames.add("No Exams");
 
-                ArrayAdapter topicAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, topicNames);
-                topicAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner_topic.setAdapter(topicAdapter);
 
 
             }
@@ -117,7 +118,7 @@ public class SelectTopicDialog extends Dialog {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
 
 
@@ -174,10 +175,14 @@ public class SelectTopicDialog extends Dialog {
     public void ok() {
         String selectedTopic = spinner_topic.getSelectedItem().toString();
 //        String selectedSub = spinner_subject.getSelectedItem().toString();
-        String selectedLang = spinner_lang.getSelectedItem().toString();
-        topicSelectListener.getSelectedTopic(selectedTopic, selectedLang, this);
+//        String selectedLang = spinner_lang.getSelectedItem().toString();
+        topicSelectListener.getSelectedTopic(selectedTopic, Assessment_Constants.SELECTED_LANGUAGE, this);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        ((Activity) context).finish();
+        dismiss();
+    }
 }
 

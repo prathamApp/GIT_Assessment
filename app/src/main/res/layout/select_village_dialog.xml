@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
-            android:layout_weight="1" />
+            android:layout_weight="1" android:visibility="gone"/>
 
        <!-- <Spinner
             android:id="@+id/spinner_subject"

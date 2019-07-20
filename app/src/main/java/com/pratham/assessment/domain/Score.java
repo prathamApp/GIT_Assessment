@@ -45,6 +45,8 @@ public class Score implements Serializable {
     private String userAnswer;
     @ColumnInfo(name = "examId")
     private String examId;
+    @ColumnInfo(name = "paperId")
+    private String paperId;
 
 
     @Override
@@ -201,4 +203,11 @@ public class Score implements Serializable {
         Label = label;
     }
 
+    public String getPaperId() {
+        return paperId;
+    }
+
+    public void setPaperId(String paperId) {
+        this.paperId = paperId;
+    }
 }

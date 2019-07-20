@@ -59,7 +59,7 @@ public class PushDataToServerold extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
 
-        List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores();
+        List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores("ece_assessment");
         scoreData = fillScoreData(scoreList);
         List<Attendance> attendanceList = AppDatabase.getDatabaseInstance(context).getAttendanceDao().getAllPushAttendanceEntries();
         attendanceData = fillAttendanceData(attendanceList);

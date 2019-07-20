@@ -11,9 +11,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 
-
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.interfaces.PermissionResult;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import java.util.List;
  * Created by Ameya on 15-Mar-18.
  */
 
-public class SplashSupportActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
+public class SplashSupportActivity extends BaseActivity implements MediaPlayer.OnCompletionListener {
 
   /*  public static TTSService ttsService;
     public static STTService sttService;

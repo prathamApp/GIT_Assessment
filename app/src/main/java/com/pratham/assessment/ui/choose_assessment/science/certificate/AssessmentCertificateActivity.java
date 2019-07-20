@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
@@ -23,7 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AssessmentCertificateActivity extends AppCompatActivity implements AssessmentCertificateContract.CertificateView {
+public class AssessmentCertificateActivity extends BaseActivity implements AssessmentCertificateContract.CertificateView {
     @BindView(R.id.spinner_sub)
     Spinner spinnerSubject;
     @BindView(R.id.spinner_paper)
@@ -159,7 +160,7 @@ public class AssessmentCertificateActivity extends AppCompatActivity implements 
     public void showPaperList(final List<AssessmentPaperForPush> paperList) {
         String[] paperIds = new String[paperList.size()];
         for (int i = 0; i < paperList.size(); i++) {
-            paperIds[i] = "" + paperList.get(i).getPaperId();
+            paperIds[i] = "" + paperList.get(i).getExamName();
         }
         if (paperIds.length <= 0) {
             paperIds = new String[1];

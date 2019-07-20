@@ -29,10 +29,10 @@ public class ECELoginDialog extends Dialog {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.assessment_login_dialog);
         ButterKnife.bind(this);
-       /* userNameET.setText("pravinthorat");
-        passwordET.setText("pratham123");*/
-        userNameET.setText("");
-        passwordET.setText("");
+        userNameET.setText("pravinthorat");
+        passwordET.setText("pratham123");
+        /*userNameET.setText("");
+        passwordET.setText("");*/
     }
 
 /*@OnClick(R.id.btn_clearData)

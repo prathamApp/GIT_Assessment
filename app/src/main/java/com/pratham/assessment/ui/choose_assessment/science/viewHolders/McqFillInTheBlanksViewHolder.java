@@ -2,15 +2,12 @@ package com.pratham.assessment.ui.choose_assessment.science.viewHolders;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -44,7 +41,7 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.tv_question)
     TextView question;
-    @BindView(R.id.tv_question_image)
+    @BindView(R.id.iv_question_image)
     ImageView questionImage;
     @BindView(R.id.rg_mcq)
     RadioGroup radioGroupMcq;
@@ -97,7 +94,7 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
                 String ansId = scienceQuestion1.getUserAnswer();
 
 //                radioButton.setLayoutParams(layoutParams);
-                radioButton.setTextSize(23);
+                radioButton.setTextSize(18);
 
 
                 final RadioButton tempRadio = radioButton;
@@ -168,7 +165,8 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 //((RadioButton) radioGroupMcq.getChildAt(checkedId)).setChecked(true);
-
+                RadioButton rb =  group.findViewById(checkedId);
+                if (rb != null) rb.setChecked(true);
                 for (int i = 0; i < group.getChildCount(); i++) {
                     if ((group.getChildAt(i)).getId() == checkedId) {
                         List<ScienceQuestionChoice> ans = new ArrayList<>();

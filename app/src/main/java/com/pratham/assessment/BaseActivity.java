@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.interfaces.PermissionResult;
+import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import java.util.Locale;
 public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     public static TTSService ttsService;
-//    public static STTService sttService;
+    public static STTService sttService;
 
     static CountDownTimer cd;
     static Long timeout = (long) 20000 * 60;
@@ -66,7 +67,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         ttsService.setActivity(this);
         ttsService.setSpeechRate(0.7f);
         ttsService.setLanguage(new Locale("en", "IN"));
-//        sttService = STTService.init(getApplicationContext());
+        sttService = STTService.init(getApplicationContext());
 //        appDatabase = Room.databaseBuilder(BaseActivity.this,
 //                AppDatabase.class, AppDatabase.DB_NAME)
 //                .allowMainThreadQueries()

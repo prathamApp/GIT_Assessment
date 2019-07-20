@@ -36,6 +36,7 @@ import com.pratham.assessment.domain.AssessmentTestModal;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.TopicSelectListener;
 import com.pratham.assessment.utilities.APIs;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,30 +104,24 @@ public class DownloadTopicsDialog extends Dialog {
         setCancelable(false);
         tv_topics.setText("Download Exams");
 
-        String[] lang = new String[assessmentLanguagesList.size() + 1];
+      /*  String[] lang = new String[assessmentLanguagesList.size() + 1];
         lang[0] = "Select Language";
         for (int i = 0; i < assessmentLanguagesList.size(); i++) {
             lang[i + 1] = assessmentLanguagesList.get(i).getLanguagename();
         }
         spinnerLang.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, lang));
-
-      /*  String[] sub = new String[assessmentSubjectsList.size() + 1];
-        sub[0] = "Select Subject";
-
-        for (int j = 0; j < assessmentSubjectsList.size(); j++) {
-            sub[j + 1] = assessmentSubjectsList.get(j).getSubjectname();
-        }
-
-        spinnerSubject.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, sub));
 */
-        spinnerLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        getExamData(subjectId);
+
+
+       /* spinnerLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (spinnerLang.getSelectedItem().toString().equalsIgnoreCase("Select Language"))
                     Toast.makeText(context, "Please select language", Toast.LENGTH_SHORT).show();
                 else {
                     selectedLang = spinnerLang.getSelectedItem().toString();
-                    getExamData(subjectId);
                 }
             }
 
@@ -135,7 +130,7 @@ public class DownloadTopicsDialog extends Dialog {
 
             }
         });
-
+*/
        /* spinnerSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -187,10 +182,10 @@ public class DownloadTopicsDialog extends Dialog {
 
     @OnClick(R.id.txt_save)
     public void ok() {
-        if (spinnerLang.getSelectedItem().toString().equalsIgnoreCase("Select Language")
-            /*|| spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject")*/) {
+      /*  if (spinnerLang.getSelectedItem().toString().equalsIgnoreCase("Select Language")
+            *//*|| spinnerSubject.getSelectedItem().toString().equalsIgnoreCase("Select Subject")*//*) {
             Toast.makeText(context, "Please select language and subject", Toast.LENGTH_SHORT).show();
-        } else {
+        } else {*/
             final List<String> topicIDList = new ArrayList();
             for (int i = 0; i < checkBoxes.size(); i++) {
                 if (checkBoxes.get(i).isChecked()) {
@@ -204,7 +199,8 @@ public class DownloadTopicsDialog extends Dialog {
                         .setPositiveButton(android.R.string.yes, new OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-                                selectedLang = spinnerLang.getSelectedItem().toString();
+                                selectedLang = Assessment_Constants.SELECTED_LANGUAGE;
+//                                selectedLang = spinnerLang.getSelectedItem().toString();
 //                            spinnerSubject.setSelection();
 //                                selectedSub = spinnerSubject.getSelectedItem().toString();
                                 dismiss();
@@ -222,7 +218,7 @@ public class DownloadTopicsDialog extends Dialog {
 
             } else
                 Toast.makeText(context, "Please select exam", Toast.LENGTH_SHORT).show();
-        }
+//        }
     }
 
 
@@ -350,6 +346,12 @@ public class DownloadTopicsDialog extends Dialog {
             checkBoxes.add(checkBox);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        ((Activity) context).finish();
+        dismiss();
     }
 }
 

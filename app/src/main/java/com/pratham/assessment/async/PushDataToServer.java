@@ -3,32 +3,48 @@ package com.pratham.assessment.async;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.Crl;
+import com.pratham.assessment.domain.DownloadMedia;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Modal_Log;
+import com.pratham.assessment.domain.Modal_RaspFacility;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.login.MainActivity;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 /******* This async task is used for data push******/
 public class PushDataToServer extends AsyncTask {
@@ -47,8 +63,15 @@ public class PushDataToServer extends AsyncTask {
     JSONArray assessmentData;
     JSONArray assessmentScienceData;
     JSONArray logsData;
+    Boolean isConnectedToRasp = false;
+
+    String programID = "";
 
     boolean dataPushed = false;
+    int mediaCnt = 0;
+    int videoRecCnt = 0;
+    List<DownloadMedia> downloadMediaList = new ArrayList<>();
+    List<DownloadMedia> videoRecordingList = new ArrayList<>();
 
     public PushDataToServer(Context context, boolean autoPush) {
 
@@ -72,7 +95,7 @@ public class PushDataToServer extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
 
-        List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores();
+        List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores("ece_assessment");
         scoreData = fillScoreData(scoreList);
         List<AssessmentPaperForPush> assessmentScoreList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAllAssessmentPapersForPush();
         assessmentScoreData = fillAssessmentScoreData(assessmentScoreList);
@@ -102,7 +125,6 @@ public class PushDataToServer extends AsyncTask {
         JSONObject rootJson = new JSONObject();
 
         try {
-            String programID = "";
             Gson gson = new Gson();
             //iterate through all new sessions
             JSONObject metadataJson = new JSONObject();
@@ -160,17 +182,118 @@ public class PushDataToServer extends AsyncTask {
             metadataJson.put(COS_Constants.SCORE_COUNT, (metadata.size() > 0) ? metadata.size() : 0);
             rootJson.put(COS_Constants.METADATA, metadataJson);
 */
+
+
+            if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
+                if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
+                    try {
+                        JSONObject object = new JSONObject();
+                        object.put("username", "pratham");
+                        object.put("password", "pratham");
+/*                    new PD_ApiRequest(context, ContentPresenterImpl.this)
+                            .getacilityIdfromRaspberry(COS_Constants.FACILITY_ID, COS_Constants.RASP_IP + "/api/session/", object);*/
+                        AndroidNetworking.post(Assessment_Constants.RASP_IP + "/api/session/")
+                                .addHeaders("Content-Type", "application/json")
+                                .addJSONObjectBody(object)
+                                .build()
+                                .getAsString(new StringRequestListener() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        Gson gson = new Gson();
+                                        Modal_RaspFacility facility = gson.fromJson(response, Modal_RaspFacility.class);
+                                        FastSave.getInstance().saveString(Assessment_Constants.FACILITY_ID, facility.getFacilityId());
+                                        isConnectedToRasp = true;
+                                    }
+
+                                    @Override
+                                    public void onError(ANError anError) {
+//                            apiResult.notifyError(requestType/*, null*/);
+                                        isConnectedToRasp = false;
+                                        Log.d("Error::", anError.getErrorDetail());
+                                        Log.d("Error::", anError.getMessage());
+                                        Log.d("Error::", anError.getResponse().toString());
+                                    }
+                                });
+                    } catch (Exception e) {
+                        isConnectedToRasp = false;
+                        e.printStackTrace();
+                    }
+                }
+            } else isConnectedToRasp = false;
+            programID = AppDatabase.appDatabase.getStatusDao().getValue("programId");
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JSONObject requestJsonObject = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
-        JSONObject requestJsonObjectScience = generateRequestString(assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
+//        JSONObject requestJsonObject = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
+        JSONObject requestJsonObjectScience = generateRequestString(scoreData,assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
 
         //        if (checkEmptyness(requestString))
-        pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
-        pushDataScienceToServer(context, requestJsonObjectScience, AssessmentApplication.uploadScienceUrl);
+
+        if (!isConnectedToRasp) {
+//            pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
+            pushDataScienceToServer(context, requestJsonObjectScience, AssessmentApplication.uploadScienceUrl);
+            //todo uncomment createMediaFileToPush();
+            // createMediaFileToPush();
+        } else {
+            pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
+                    "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
+        }
+
 
         return null;
+    }
+
+    private void createMediaFileToPush() {
+        String filePath = downloadMediaList.get(mediaCnt).getPhotoUrl();
+        if (!filePath.equalsIgnoreCase("")) {
+            File file = new File(filePath);
+            pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, file, "answerVideo");
+
+        }
+    }
+
+    private void pushMediaToServer(String url, File file, final String videoType) {
+        AndroidNetworking.upload(url)
+                .addMultipartFile(videoType, file)
+//                .addMultipartParameter("key", "value")
+//                .setTag("uploadTest")
+//                .setPriority(Priority.HIGH)
+                .build()
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+                        // do anything with progress
+
+                    }
+                })
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // do anything with response
+                        if (videoType.equalsIgnoreCase("answerVideo")) {
+                            mediaCnt++;
+                            if (mediaCnt < downloadMediaList.size())
+                                createMediaFileToPush();
+                            else Toast.makeText(context, "Answer videos pushed successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            videoRecCnt++;
+                            if (videoRecCnt < videoRecordingList.size())
+                                createMediaFileToPush();
+                            else Toast.makeText(context, "Video recordings pushed successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+                        Toast.makeText(context, "video monitoring Media push failed", Toast.LENGTH_SHORT).show();
+                        PushDataToServer.this.mediaCnt++;
+                        if (PushDataToServer.this.mediaCnt < downloadMediaList.size())
+                            createMediaFileToPush();
+                    }
+                });
     }
 
     @Override
@@ -200,14 +323,14 @@ public class PushDataToServer extends AsyncTask {
         }
     }
 
-    private JSONObject generateRequestString(JSONArray scoreData, JSONArray attendanceData, JSONArray sessionData, JSONArray learntWordsData, JSONArray supervisorData, JSONArray logsData, JSONArray assessmentData, JSONArray studentData) {
+    private JSONObject generateRequestString(JSONArray eceScoreData, JSONArray assessmentScoreData, JSONArray attendanceData, JSONArray sessionData, JSONArray learntWordsData, JSONArray supervisorData, JSONArray logsData, JSONArray assessmentData, JSONArray studentData) {
         String requestString = "";
         JSONObject rootJson = new JSONObject();
 
         try {
             JSONObject sessionObj = new JSONObject();
             JSONObject metaDataObj = new JSONObject();
-            metaDataObj.put("ScoreCount", scoreData.length());
+            metaDataObj.put("ScoreCount", assessmentScoreData.length());
 
             metaDataObj.put("CRLID", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("CRLID"));
             metaDataObj.put("group1", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("group1"));
@@ -232,7 +355,8 @@ public class PushDataToServer extends AsyncTask {
             metaDataObj.put("Latitude", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Latitude"));
             metaDataObj.put("Longitude", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Longitude"));
 
-            sessionObj.put("scoreData", scoreData);
+            sessionObj.put("scoreData", assessmentScoreData);
+            sessionObj.put("eceScoreData", eceScoreData);
 /*            if (!COS_Constants.SD_CARD_Content)
                 sessionObj.put("studentData", studentData);*/
             sessionObj.put("attendanceData", attendanceData);
@@ -242,10 +366,10 @@ public class PushDataToServer extends AsyncTask {
             sessionObj.put("assessmentData", assessmentData);
             sessionObj.put("supervisor", supervisorData);
 
-            requestString = "{ \"session\": " + sessionObj +
+           /* requestString = "{ \"session\": " + sessionObj +
                     ", \"metadata\": " + metaDataObj +
                     "}";
-
+*/
             rootJson.put("session", sessionObj);
             rootJson.put("metadata", metaDataObj);
 
@@ -387,10 +511,10 @@ public class PushDataToServer extends AsyncTask {
                 _obj.put("EndDateTime", _score.getEndDateTime());
                 _obj.put("Level", _score.getLevel());
                 _obj.put("Label", _score.getLabel());
-                _obj.put("isAttempted", _score.getIsAttempted());
-                _obj.put("isCorrect", _score.getIsCorrect());
-                _obj.put("userAnswer", _score.getUserAnswer());
-                _obj.put("examId", _score.getExamId());
+//                _obj.put("isAttempted", _score.getIsAttempted());
+//                _obj.put("isCorrect", _score.getIsCorrect());
+//                _obj.put("userAnswer", _score.getUserAnswer());
+//                _obj.put("examId", _score.getExamId());
                 scoreData.put(_obj);
             }
         } catch (Exception e) {
@@ -401,50 +525,59 @@ public class PushDataToServer extends AsyncTask {
     }
 
     private JSONArray fillAssessmentScoreData(List<AssessmentPaperForPush> paperList) {
-        JSONArray scoreData = new JSONArray();
         JSONArray paperData = new JSONArray();
-        JSONObject _obj_paper = new JSONObject();
+        JSONObject _obj_paper = null;
+        JSONArray scoreData = new JSONArray();
 
         JSONObject _obj_score;
         try {
             for (int p = 0; p < paperList.size(); p++) {
                 _obj_paper = new JSONObject();
                 AssessmentPaperForPush _paper = paperList.get(p);
-                _obj_paper.put("languageId", _paper.getLanguageId());
-                _obj_paper.put("subjectId", _paper.getSubjectId());
-                _obj_paper.put("examId", _paper.getExamId());
-                _obj_paper.put("paperId", _paper.getPaperId());
-                _obj_paper.put("paperStartTime", _paper.getPaperStartTime());
-                _obj_paper.put("paperEndTime", _paper.getPaperEndTime());
-                _obj_paper.put("outOfMarks", _paper.getOutOfMarks());
-                _obj_paper.put("totalMarks", _paper.getTotalMarks());
-                _obj_paper.put("studentId", _paper.getStudentId());
-                _obj_paper.put("SessionID", _paper.getSessionID());
                 List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllNewScores(paperList.get(p).getSessionID());
-                for (int i = 0; i < scoreList.size(); i++) {
-                    _obj_score = new JSONObject();
-                    Score _score = scoreList.get(i);
+                if (scoreList.size() > 0) {
+                    _obj_paper.put("languageId", _paper.getLanguageId());
+                    _obj_paper.put("subjectId", _paper.getSubjectId());
+                    _obj_paper.put("examId", _paper.getExamId());
+                    _obj_paper.put("paperId", _paper.getPaperId());
+                    _obj_paper.put("paperStartTime", _paper.getPaperStartTime());
+                    _obj_paper.put("paperEndTime", _paper.getPaperEndTime());
+                    _obj_paper.put("outOfMarks", _paper.getOutOfMarks());
+                    _obj_paper.put("totalMarks", _paper.getTotalMarks());
+                    _obj_paper.put("studentId", _paper.getStudentId());
+                    _obj_paper.put("SessionID", _paper.getSessionID());
+                    DownloadMedia video = new DownloadMedia();
+                    video.setPaperId(_paper.getPaperId());
+                    video.setPhotoUrl(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + _paper.getPaperId() + ".mp4");
+                    videoRecordingList.add(video);
+                    scoreData = new JSONArray();
+                    for (int i = 0; i < scoreList.size(); i++) {
+                        _obj_score = new JSONObject();
+                        Score _score = scoreList.get(i);
 //                _obj.put("ScoreId", _score.getScoreId());
-                    _obj_score.put("SessionID", _score.getSessionID());
-                    _obj_score.put("StudentID", _score.getStudentID());
-                    _obj_score.put("DeviceID", _score.getDeviceID());
-                    _obj_score.put("ResourceID", _score.getResourceID());
-                    _obj_score.put("QuestionId", _score.getQuestionId());
-                    _obj_score.put("ScoredMarks", _score.getScoredMarks());
-                    _obj_score.put("TotalMarks", _score.getTotalMarks());
-                    _obj_score.put("StartDateTime", _score.getStartDateTime());
-                    _obj_score.put("EndDateTime", _score.getEndDateTime());
-                    _obj_score.put("Level", _score.getLevel());
-                    _obj_score.put("Label", _score.getLabel());
-                    _obj_score.put("isAttempted", _score.getIsAttempted());
-                    _obj_score.put("isCorrect", _score.getIsCorrect());
-                    _obj_score.put("userAnswer", _score.getUserAnswer());
-                    _obj_score.put("examId", _score.getExamId());
-                    scoreData.put(_obj_score);
+                        _obj_score.put("SessionID", _score.getSessionID());
+                        _obj_score.put("StudentID", _score.getStudentID());
+                        _obj_score.put("DeviceID", _score.getDeviceID());
+                        _obj_score.put("ResourceID", _score.getResourceID());
+                        _obj_score.put("QuestionId", _score.getQuestionId());
+                        _obj_score.put("ScoredMarks", _score.getScoredMarks());
+                        _obj_score.put("TotalMarks", _score.getTotalMarks());
+                        _obj_score.put("StartDateTime", _score.getStartDateTime());
+                        _obj_score.put("EndDateTime", _score.getEndDateTime());
+                        _obj_score.put("questionLevel", _score.getLevel());
+                        _obj_score.put("questionLabel", _score.getLabel());
+                        _obj_score.put("isAttempted", _score.getIsAttempted());
+                        _obj_score.put("isCorrect", _score.getIsCorrect());
+                        _obj_score.put("userAnswer", _score.getUserAnswer());
+                        _obj_score.put("paperId", _score.getPaperId());
+                        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByQidAndPaperId(_score.getQuestionId() + "", _score.getPaperId()));
+//                    _obj_score.put("examId", _score.getExamId());
+                        scoreData.put(_obj_score);
+                    }
                 }
                 _obj_paper.put("assessmentScoreData", scoreData);
+                paperData.put(_obj_paper);
             }
-            paperData.put(_obj_paper);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -608,6 +741,7 @@ public class PushDataToServer extends AsyncTask {
         }
     }
 
+
     private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject, String url) {
         try {
 //            JSONObject jsonArrayData = new JSONObject(data);
@@ -621,15 +755,19 @@ public class PushDataToServer extends AsyncTask {
                         @Override
                         public void onResponse(String response) {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
+                            Drawable icon = context.getResources().getDrawable(R.drawable.ic_check);
                             if (!autoPush) {
+                                CreateFilesforVideoMonitoring();
                                 String msg = "Data pushed successfully";
-                                if (!dataPushed) {
-                                    msg = "Science data pushed successfully. Other data push failed";
-                                }
+                              /*  if (!dataPushed) {
+                                    icon = context.getResources().getDrawable(R.drawable.ic_warning);
+                                    msg = "Science data pushed successfully. ECE data push failed";
+                                }*/
 
                                 new AlertDialog.Builder(context)
                                         .setMessage(msg)
                                         .setCancelable(false)
+                                        .setIcon(icon)
                                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -667,6 +805,71 @@ public class PushDataToServer extends AsyncTask {
             e.printStackTrace();
         }
     }
+
+    private void CreateFilesforVideoMonitoring() {
+        if (videoRecordingList.size() > 0) {
+            String filePath = videoRecordingList.get(videoRecCnt).getPhotoUrl();
+            if (!filePath.equalsIgnoreCase("")) {
+                try {
+                    File file = new File(filePath);
+                    if (file.exists())
+                        pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, file, "videoMonitoring");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private String getAuthHeader() {
+        String encoded = Base64.encodeToString(("pratham" + ":" + "pratham").getBytes(), Base64.NO_WRAP);
+        return "Basic " + encoded;
+    }
+
+    public void pushDataToRaspberry(/*final String requestType, */String url, String data,
+                                                                  String filter_name, String table_name) {
+        AndroidNetworking.post(url)
+                .addHeaders("Content-Type", "application/json")
+                .addHeaders("Authorization", getAuthHeader())
+                .addBodyParameter("filter_name", filter_name)
+                .addBodyParameter("table_name", table_name)
+                .addBodyParameter("facility", FastSave.getInstance().getString(Assessment_Constants.FACILITY_ID, ""))
+                .addBodyParameter("data", data)
+                .setExecutor(Executors.newSingleThreadExecutor())
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (!autoPush) {
+                            dataPushed = true;
+                        }
+                        setPushFlag();
+                        BackupDatabase.backup(AssessmentApplication.getInstance());
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        if (!autoPush) {
+                            new AlertDialog.Builder(context)
+                                    .setMessage("Data push failed")
+                                    .setCancelable(false)
+                                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            ((MainActivity) context).onResponseGet();
+
+                                        }
+                                    }).create().show();
+                        }
+                        Log.d("Error::", anError.getErrorDetail());
+                        Log.d("Error::", anError.getMessage());
+                        Log.d("Error::", anError.getResponse().toString());
+                    }
+                });
+    }
+
 
     private void setPushFlag() {
         AppDatabase.getDatabaseInstance(context).getLogsDao().setSentFlag();

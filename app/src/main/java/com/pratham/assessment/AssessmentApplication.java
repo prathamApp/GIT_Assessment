@@ -28,16 +28,12 @@ import java.util.UUID;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.PREFS_VERSION;
 
-
-/**
- * Created by Pravin on 2 Feb 2018.
- */
-
 public class AssessmentApplication extends Application {
 
     public static String cosPath = "", networkSSID = "PrathamHotSpot-" + Build.SERIAL;
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
     public static String uploadScienceUrl = "http://apiassessment.openiscool.org/api/pushassessment/AssessmentPushData";
+    public static String uploadScienceFilesUrl = "http://apiassessment.openiscool.org/api/question/pushFiles";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
     public static final boolean isTablet = true;

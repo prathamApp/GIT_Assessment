@@ -1,5 +1,7 @@
 package com.pratham.assessment.admin_pannel.PullData;
 
+import com.pratham.assessment.domain.ModalProgram;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,9 @@ public interface PullDataContract {
 
 
         void showNoConnectivity();
+
+        void showProgram(List<ModalProgram> prgrmList);
+
     }
 
     public interface PullDataPresenter {
@@ -53,5 +58,7 @@ public interface PullDataContract {
         public void onSaveClick();
 
         void checkConnectivity();
+        void loadPrgramsSpinner();
+
     }
 }

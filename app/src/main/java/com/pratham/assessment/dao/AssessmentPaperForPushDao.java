@@ -20,7 +20,7 @@ public interface AssessmentPaperForPushDao {
     @Query("DELETE FROM AssessmentPaperForPush")
     public void deletePapers();
 
-    @Query("select * from AssessmentPaperForPush")
+    @Query("select * from AssessmentPaperForPush where sentFlag=0")
     public List<AssessmentPaperForPush> getAllAssessmentPapersForPush();
 
     @Query("select * from AssessmentPaperForPush where examid=:examId")

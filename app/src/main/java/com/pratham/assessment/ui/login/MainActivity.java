@@ -5,13 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment;
 import com.pratham.assessment.interfaces.DataPushListener;
 
-public class MainActivity extends AppCompatActivity implements DataPushListener {
+public class MainActivity extends BaseActivity implements DataPushListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

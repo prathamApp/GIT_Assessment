@@ -34,7 +34,7 @@ public class TrueFalseViewHolder extends RecyclerView.ViewHolder {
     TextView question;
     @BindView(R.id.rg_true_false)
     RadioGroup rg_true_false;
-    @BindView(R.id.tv_question_image)
+    @BindView(R.id.iv_question_image)
     ImageView questionImage;
     @BindView(R.id.rb_true)
     RadioButton radioButtonTrue;

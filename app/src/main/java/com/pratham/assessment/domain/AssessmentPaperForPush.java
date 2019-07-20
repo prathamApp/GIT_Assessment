@@ -14,9 +14,10 @@ public class AssessmentPaperForPush implements Serializable {
     String languageId;
     String subjectId;
     String examId;
+    String examName;
     @NonNull
-    @PrimaryKey(autoGenerate = true)
-    int paperId;
+    @PrimaryKey
+    String paperId;
     String paperStartTime;
     String paperEndTime;
     String examTime;
@@ -83,11 +84,11 @@ public class AssessmentPaperForPush implements Serializable {
     }
 
     @NonNull
-    public int getPaperId() {
+    public String getPaperId() {
         return paperId;
     }
 
-    public void setPaperId(@NonNull int paperId) {
+    public void setPaperId(@NonNull String paperId) {
         this.paperId = paperId;
     }
 
@@ -161,5 +162,13 @@ public class AssessmentPaperForPush implements Serializable {
 
     public void setSentFlag(int sentFlag) {
         this.sentFlag = sentFlag;
+    }
+
+    public String getExamName() {
+        return examName;
+    }
+
+    public void setExamName(String examName) {
+        this.examName = examName;
     }
 }

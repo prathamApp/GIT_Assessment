@@ -256,23 +256,32 @@ public class Assessment_Utility {
     }
 
     public static String getInternalPath(Context context) {
+
+
         File[] intDir = context.getExternalFilesDirs("");
-        if (intDir.length > 1) {
-            try {
-                File file = new File(intDir[1].getAbsolutePath(), "hello.txt");
-                if (!file.exists())
-                    file.createNewFile();
-                file.delete();
-                Assessment_Constants.STORING_IN = "SD-Card";
-                return intDir[1].getAbsolutePath();
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            if (intDir.length > 1) {
+                try {
+                    File file = new File(intDir[1].getAbsolutePath(), "hello.txt");
+                    if (!file.exists())
+                        file.createNewFile();
+                    file.delete();
+                    Assessment_Constants.STORING_IN = "SD-Card";
+                    return intDir[1].getAbsolutePath();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Assessment_Constants.STORING_IN = "Internal Storage";
+                    return intDir[0].getAbsolutePath();
+                }
+            } else {
                 Assessment_Constants.STORING_IN = "Internal Storage";
                 return intDir[0].getAbsolutePath();
             }
-        } else {
-            Assessment_Constants.STORING_IN = "Internal Storage";
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("getInternalPath@@@", e.getMessage());
             return intDir[0].getAbsolutePath();
+
         }
     }
 
@@ -296,7 +305,7 @@ public class Assessment_Utility {
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
                     .commit();
-        } else if (mActivity instanceof SelectGroupActivity ) {
+        } else if (mActivity instanceof SelectGroupActivity) {
             ((SelectGroupActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
@@ -440,6 +449,7 @@ public class Assessment_Utility {
         String word = avatars[new Random().nextInt(avatars.length)];
         return word;*/
     }
+
     public static String getDeviceSerialID() {
         return Build.SERIAL;
     }

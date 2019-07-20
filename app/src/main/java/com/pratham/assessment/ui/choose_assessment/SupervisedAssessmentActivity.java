@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -30,6 +31,7 @@ import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +39,7 @@ import butterknife.OnClick;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.assessmentSession;
 
-public class SupervisedAssessmentActivity extends AppCompatActivity {
+public class SupervisedAssessmentActivity extends BaseActivity {
     @BindView(R.id.submitBtn)
     Button submitBtn;
     @BindView(R.id.btn_camera)
@@ -118,7 +120,7 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
-                    assessmentSession = "test-" + AssessmentApplication.getUniqueID();
+//                    assessmentSession = "test-" + AssessmentApplication.getUniqueID();
                     SupervisorData supervisorData = new SupervisorData();
                     supervisorData.setSupervisorId(supervisorID);
                     supervisorData.setSupervisorName(sName);
@@ -157,6 +159,20 @@ public class SupervisedAssessmentActivity extends AppCompatActivity {
 
     private void goToAssessment() {
         if (subId.equalsIgnoreCase("0")) {
+            String assessmentSession = "" + UUID.randomUUID().toString();
+            Assessment_Constants.assessmentSession = "test-" + assessmentSession;
+            try {
+                Session startSesion = new Session();
+                startSesion.setSessionID("" + Assessment_Constants.assessmentSession);
+                String timerTime = AssessmentApplication.getCurrentDateTime(false, AssessmentApplication.getCurrentDateTime());
+                startSesion.setFromDate(timerTime);
+                startSesion.setToDate("NA");
+                startSesion.setSentFlag(0);
+                AppDatabase.getDatabaseInstance(this).getSessionDao().insert(startSesion);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            presenter.startAssessSession();
             Intent intent = new Intent(SupervisedAssessmentActivity.this, ECEActivity.class);
             intent.putExtra("resId", "9962");
             intent.putExtra("crlId", supervisorId);

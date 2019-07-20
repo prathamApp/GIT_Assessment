@@ -37,8 +37,8 @@ public interface ScoreDao {
     @Query("select * from Score")
     List<Score> getAllScores();
 
-    @Query("select * from Score where sentFlag=0")
-    List<Score> getAllPushScores();
+    @Query("select * from Score where sentFlag=0 and examId=:ece_assessment")
+    List<Score> getAllPushScores(String ece_assessment);
 
 
     @Query("DELETE FROM Score")

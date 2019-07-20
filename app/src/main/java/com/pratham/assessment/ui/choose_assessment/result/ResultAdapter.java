@@ -109,6 +109,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             ((TextView) myViewHolder.ll_correct_ans.getChildAt(0)).setText("Answer");
 
         } else {
+            myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+            myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+            myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
             myViewHolder.iv_correct_wrong_indicator.setImageResource(R.drawable.ic_close_black_24dp);
             myViewHolder.iv_correct_wrong_indicator.setBackgroundColor(context.getResources().getColor(R.color.colorRed));
             myViewHolder.cardView.setBackground(context.getResources().getDrawable(R.drawable.red_bg));

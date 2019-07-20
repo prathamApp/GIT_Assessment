@@ -12,9 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -23,15 +21,12 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.R;
-import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,7 +35,7 @@ import butterknife.ButterKnife;
 public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_question)
     TextView question;
-    @BindView(R.id.tv_question_image)
+    @BindView(R.id.iv_question_image)
     ImageView questionImage;
     @BindView(R.id.gl_multiselect)
     GridLayout gridLayout;

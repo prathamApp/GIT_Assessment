@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,14 +19,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
 
-import com.pratham.assessment.ui.login.MainActivity;
-import com.pratham.assessment.utilities.Assessment_Constants;
-import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Village;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONException;
 
@@ -39,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class Activity_AssignGroups extends AppCompatActivity {
+public class Activity_AssignGroups extends BaseActivity {
 
     @BindView(R.id.spinner_SelectState)
     Spinner spinner_SelectState;

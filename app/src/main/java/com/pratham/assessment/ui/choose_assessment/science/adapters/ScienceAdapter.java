@@ -15,11 +15,13 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.Assessment
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.DragDropListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.ArrangeSequenceViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.AudioViewHolder;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.FillInTheBlanksWithoutOptionsViewHolder;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.MatchThePairViewHolder;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.McqFillInTheBlanksViewHolder;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.MultipleSelectViewHolder;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.TrueFalseViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewHolders.VideoViewHolder;
 
 import java.util.List;
 
@@ -136,10 +138,13 @@ public class ScienceAdapter extends RecyclerView.Adapter implements QuestionType
 
         switch (viewType) {
             case MULTIPLE_CHOICE:
-                LayoutInflater mcq = LayoutInflater.from(viewGroup.getContext());
+            /*    LayoutInflater fill = LayoutInflater.from(viewGroup.getContext());
+                v = fill.inflate(R.layout.layout_fill_in_the_blanks_wo_option_row, viewGroup, false);
+                return new FillInTheBlanksWithoutOptionsViewHolder(v, context, this);
+*/
+                            LayoutInflater mcq = LayoutInflater.from(viewGroup.getContext());
                 v = mcq.inflate(R.layout.layout_mcq_fill_in_the_blanks_with_options_row, viewGroup, false);
-                return new McqFillInTheBlanksViewHolder(v, context, this);
-
+              return new McqFillInTheBlanksViewHolder(v, context, this);
             case MULTIPLE_SELECT:
                 LayoutInflater multipleSelect = LayoutInflater.from(viewGroup.getContext());
                 v = multipleSelect.inflate(R.layout.layout_multiple_select_row, viewGroup, false);
@@ -156,8 +161,8 @@ public class ScienceAdapter extends RecyclerView.Adapter implements QuestionType
                 return new MatchThePairViewHolder(v, context, this);
 
             case FILL_IN_THE_BLANK:
-                LayoutInflater fill = LayoutInflater.from(viewGroup.getContext());
-                v = fill.inflate(R.layout.layout_fill_in_the_blanks_wo_option_row, viewGroup, false);
+                LayoutInflater fill1 = LayoutInflater.from(viewGroup.getContext());
+                v = fill1.inflate(R.layout.layout_fill_in_the_blanks_wo_option_row, viewGroup, false);
                 return new FillInTheBlanksWithoutOptionsViewHolder(v, context, this);
 
             case FILL_IN_THE_BLANK_WITH_OPTION:
@@ -170,15 +175,15 @@ public class ScienceAdapter extends RecyclerView.Adapter implements QuestionType
                 v = arrangeSeq.inflate(R.layout.layout_arrange_seq_row, viewGroup, false);
                 return new ArrangeSequenceViewHolder(v, context,this);
 
-           /* case VIDEO:
+            case VIDEO:
                 LayoutInflater video = LayoutInflater.from(viewGroup.getContext());
-                v = video.inflate(R.layout.item_content_header, viewGroup, false);
-                return new EmptyHolder(v);
+                v = video.inflate(R.layout.layout_video_row, viewGroup, false);
+                return new VideoViewHolder(v,context,this);
 
             case AUDIO:
                 LayoutInflater audio = LayoutInflater.from(viewGroup.getContext());
-                v = audio.inflate(R.layout.item_content_header, viewGroup, false);
-                return new EmptyHolder(v);*/
+                v = audio.inflate(R.layout.layout_audio_row, viewGroup, false);
+                return new AudioViewHolder(v,context,this);
 
         }
         return null;
@@ -193,10 +198,12 @@ public class ScienceAdapter extends RecyclerView.Adapter implements QuestionType
             case 0:
                 break;
             case MULTIPLE_CHOICE:
+              /*  FillInTheBlanksWithoutOptionsViewHolder fill1 = (FillInTheBlanksWithoutOptionsViewHolder) myViewHolder;
+                fill1.setFillInTheBlanksQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+*/
                 McqFillInTheBlanksViewHolder mcqFillInTheBlanksViewHolder = (McqFillInTheBlanksViewHolder) myViewHolder;
                 mcqFillInTheBlanksViewHolder.setMcqsQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
-                // questionTypeListener.setType(MULTIPLE_CHOICE, answer);
-                break;
+            break;
             case MULTIPLE_SELECT:
                 MultipleSelectViewHolder multipleSelectViewHolder = (MultipleSelectViewHolder) myViewHolder;
                 multipleSelectViewHolder.setMultipleSelectQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
@@ -238,15 +245,15 @@ public class ScienceAdapter extends RecyclerView.Adapter implements QuestionType
 
                 break;
 
-            /*case VIDEO:
-                MultipleSelectViewHolder multipleSelectViewHolder = (MultipleSelectViewHolder) myViewHolder;
-                multipleSelectViewHolder.setMultipleSelectQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+            case VIDEO:
+                VideoViewHolder videoViewHolder = (VideoViewHolder) myViewHolder;
+                videoViewHolder.setVideoQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
                 break;
 
             case AUDIO:
-                MultipleSelectViewHolder multipleSelectViewHolder = (MultipleSelectViewHolder) myViewHolder;
-                multipleSelectViewHolder.setMultipleSelectQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
-                break;*/
+                AudioViewHolder audioViewHolder= (AudioViewHolder) myViewHolder;
+                audioViewHolder.setAudioQuestion(scienceQuestion, myViewHolder.getAdapterPosition());
+                break;
 
         }
     }

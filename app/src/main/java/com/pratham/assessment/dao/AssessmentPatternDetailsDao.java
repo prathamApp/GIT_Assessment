@@ -30,6 +30,10 @@ public interface AssessmentPatternDetailsDao {
     @Query("select * from AssessmentPatternDetails where examId=:examId")
     public List<AssessmentPatternDetails> getAssessmentPatternDetailsByExamId(String examId);
 
+    @Query("select distinct topicid from AssessmentPatternDetails where examId=:examId")
+    public List<String> getTopicsByExamId(String examId);
+
+
     @Query("select distinct topicid from AssessmentPatternDetails")
     public List<String> getDistinctTopicIds();
 

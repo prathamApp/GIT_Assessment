@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ResultModalClass;
 
@@ -18,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ResultActivity extends AppCompatActivity implements ResultContract.ResultView {
+public class ResultActivity extends BaseActivity implements ResultContract.ResultView {
     List<ResultModalClass> resultList;
     String outOfMarks, marksObtained, studentId, examStartTime, examEndTime, examId,subjectId;
     @BindView(R.id.rv_question_answers)
@@ -57,8 +58,8 @@ public class ResultActivity extends AppCompatActivity implements ResultContract.
         mToolbar.setSubtitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
 
-        String subName = presenter.getSubjectName(subjectId);
-        String topicName = presenter.getTopicName(subjectId);
+        String subName = presenter.getSubjectName(examId);
+        String topicName = presenter.getTopicName(examId);
         tv_topic.setText(topicName);
         tv_subject.setText(subName);
         ResultAdapter resultAdapter = new ResultAdapter(this, resultList);

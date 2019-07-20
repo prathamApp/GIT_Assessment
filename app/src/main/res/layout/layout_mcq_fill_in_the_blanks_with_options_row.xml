@@ -22,7 +22,7 @@
             android:layout_weight="0.25" />
 
         <ImageView
-            android:id="@+id/tv_question_image"
+            android:id="@+id/iv_question_image"
             style="@style/CustomQuestionImageStyle"
             android:layout_weight="0.5" />
 

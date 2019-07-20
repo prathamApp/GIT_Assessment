@@ -19,6 +19,7 @@ public class Assessment_Constants {
 
     public static String ASSESSMENT_FOLDER_PATH = "/.Assessment/";
     public static String GAME_PATH = "/.Assessment/English/Game/";
+    public static String STORE_ANSWER_MEDIA_PATH = "/.Assessment/Content/Answers";
     public static String ENGLISH_FOLDER_PATH = "/.Assessment/English/";
     public static String THUMBS_PATH = "/.Assessment/English/app_Thumbs/";
 
@@ -63,10 +64,22 @@ public class Assessment_Constants {
     public static boolean supervisedAssessment = false;
     public static String assessmentSession = "";
     public static String currentSupervisorID = "";
+    public static  String SELECTED_LANGUAGE = "Select Language";
+
+    public static final String KOLIBRI_BLOCK = "kolibri_block";
+    public static final String SERVER_BLOCK = "server_block";
+    public static final String KOLIBRI_CRL = "kolibri_crl";
+    public static final String SERVER_CRL = "server_crl";
+    public static final String KOLIBRI_GRP = "kolibri_grp";
+    public static final String SERVER_GRP = "server_grp";
+    public static final String KOLIBRI_STU = "kolibri_stu";
+    public static final String SERVER_STU = "server_stu";
+    public static final String KOLIBRI_PROGRAM = "kolibri_program";
+    public static final String SERVER_PROGRAM = "server_program";
+
 //    public static boolean GROUP_LOGIN = false;
 
     public static String loadOnlineImagePath = "http://pef1.prathamskills.org//";
-
     public static boolean isShowcaseDisplayed = false;
 
 
@@ -80,7 +93,10 @@ public class Assessment_Constants {
         GET_RASPBERRY_HEADER(RASP_IP + "/api/contentnode?content_id=f9da12749d995fa197f8b4c0192e7b2c"),
         POST_SMART_INTERNET_URL("http://www.rpi.prathamskills.org/api/pushdatasmartphone/post/"),
         POST_TAB_INTERNET_URL("http://www.rpi.prathamskills.org/api/pushdatapradigi/post/"),
-        DOWNLOAD_RESOURCE(BASE_URL + "DownloadResource?resid=");
+        DATASTORE_RASPBERY_PROGRAM_STATE_URL(RASP_IP + "/pratham/datastore/?table_name=ProgramState"),
+        DOWNLOAD_RESOURCE(BASE_URL + "DownloadResource?resid="),
+        PULL_PROGRAMS("http://swap.prathamcms.org/api/program");
+
         public static final String SCORE_COUNT = "ScoreCount";
         public static final String STUDENTS = "students";
         public static final String METADATA = "metadata";

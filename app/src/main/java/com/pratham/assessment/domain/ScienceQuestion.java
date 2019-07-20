@@ -60,22 +60,8 @@ public class ScienceQuestion implements Serializable {
 
     private String pdid;
     private String startTime;
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
+    @Ignore
+    boolean isMediaDownloaded;
 
     private String endTime;
 
@@ -125,8 +111,8 @@ public class ScienceQuestion implements Serializable {
     }
 
     public String getMarksPerQuestion() {
-        if(marksPerQuestion!=null)
-        return marksPerQuestion;
+        if (marksPerQuestion != null)
+            return marksPerQuestion;
         else return "0";
     }
 
@@ -331,5 +317,29 @@ public class ScienceQuestion implements Serializable {
 
     public void setMatchingNameList(List<ScienceQuestionChoice> matchingNameList) {
         this.matchingNameList = matchingNameList;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public boolean isMediaDownloaded() {
+        return isMediaDownloaded;
+    }
+
+    public void setMediaDownloaded(boolean mediaDownloaded) {
+        isMediaDownloaded = mediaDownloaded;
     }
 }

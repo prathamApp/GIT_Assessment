@@ -15,6 +15,7 @@ import com.pratham.assessment.dao.AssessmentPatternDetailsDao;
 import com.pratham.assessment.dao.AttendanceDao;
 import com.pratham.assessment.dao.ContentTableDao;
 import com.pratham.assessment.dao.CrlDao;
+import com.pratham.assessment.dao.DownloadMediaDao;
 import com.pratham.assessment.dao.GroupDao;
 import com.pratham.assessment.dao.LanguageDao;
 import com.pratham.assessment.dao.LogDao;
@@ -40,6 +41,7 @@ import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
+import com.pratham.assessment.domain.DownloadMedia;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Modal_Log;
 import com.pratham.assessment.domain.ScienceQuestion;
@@ -57,7 +59,7 @@ import com.pratham.assessment.domain.Village;
         ContentTable.class, AssessmentToipcsModal.class, ScienceQuestion.class,
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
-        AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class}, version = 1)
+        AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class, DownloadMedia.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -104,6 +106,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract AssessmentPatternDetailsDao getAssessmentPatternDetailsDao();
 
     public abstract SupervisorDataDao getSupervisorDataDao();
+    public abstract DownloadMediaDao getDownloadMediaDao();
 
 
 

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/assessment_content_card"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_90sdp"
-    android:padding="@dimen/_5sdp"
-    app:cardCornerRadius="@dimen/_15sdp"
-    app:cardBackgroundColor="@color/transparent_white_btn"
-    app:cardElevation="@dimen/_3sdp"
+    android:layout_height="@dimen/_120sdp"
+    android:padding="@dimen/_8sdp"
+    app:cardCornerRadius="@dimen/_10sdp"
+    android:layout_margin="@dimen/_10sdp"
+    app:cardElevation="@dimen/_2sdp"
     app:cardMaxElevation="@dimen/_5sdp">
 
     <RelativeLayout
@@ -47,10 +47,6 @@
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/iv_download_icon"
                 android:gravity="center"
-                android:paddingLeft="2dp"
-                android:paddingTop="5dp"
-                android:paddingRight="2dp"
-                android:paddingBottom="5dp"
                 android:text="@string/app_name"
                 android:shadowColor="@color/colorWhiteLight"
                 android:textStyle="bold"
@@ -59,7 +55,7 @@
                 android:shadowRadius="5"
                 android:fontFamily="@font/cabin"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/_25sdp" />
+                android:textSize="@dimen/_15sdp" />
 
         </RelativeLayout>
 

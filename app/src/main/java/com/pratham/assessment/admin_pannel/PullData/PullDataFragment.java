@@ -19,13 +19,14 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
-import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment;
+import com.pratham.assessment.domain.ModalProgram;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +41,10 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
     @BindView(R.id.rg_programs)
     RadioGroup radioGroupPrograms;
 
+    @BindView(R.id.programSpinner)
+    Spinner programSpinner;
+
+
     @BindView(R.id.stateSpinner)
     Spinner stateSpinner;
 
@@ -49,8 +54,12 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
     @BindView(R.id.save_button)
     Button save_button;
 
+
+    String selectedProgram;
+
     PullDataContract.PullDataPresenter pullDataPresenter;
     ProgressDialog progressDialog;
+    List<ModalProgram> prgrmList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -62,8 +71,11 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        Assessment_Utility.HideInputKeypad(getActivity());
         pullDataPresenter = new PullDataPresenterImp(getActivity(), this);
-        pullDataPresenter.loadSpinner();
+//        pullDataPresenter.loadSpinner();
+        pullDataPresenter.loadPrgramsSpinner();
+
         radioGroupPrograms.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -72,6 +84,36 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
         });
         //pullDataPresenter.checkConnectivity();
     }
+
+
+    @Override
+    public void showProgram(final List<ModalProgram> prgrmList) {
+        this.prgrmList = prgrmList;
+        List<String> prgrms = new ArrayList<>();
+        for (ModalProgram mp : prgrmList) {
+            prgrms.add(mp.getProgramName());
+        }
+        ArrayAdapter arrayStateAdapter = new ArrayAdapter(Objects.requireNonNull(Objects.requireNonNull(getActivity())), android.R.layout.simple_spinner_item, prgrms);
+        arrayStateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        programSpinner.setAdapter(arrayStateAdapter);
+        programSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                disableSaveButton();
+                if (position <= 0) {
+                    pullDataPresenter.clearLists();
+                } else {
+                    selectedProgram = prgrmList.get(position).getProgramId();
+                    pullDataPresenter.loadSpinner();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
 
     @Override
     public void showStatesSpinner(String[] states) {
@@ -86,14 +128,15 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
                     clearBlockSpinner();
 
                 } else {
-                    int selectedRadioButtonId = radioGroupPrograms.getCheckedRadioButtonId();
+                   /* int selectedRadioButtonId = radioGroupPrograms.getCheckedRadioButtonId();
                     if (selectedRadioButtonId == -1) {
                         Toast.makeText(getContext(), "Please Select Program", Toast.LENGTH_SHORT).show();
                     } else {
                         RadioButton radioButton = radioGroupPrograms.findViewById(selectedRadioButtonId);
                         String selectedProgram = radioButton.getText().toString();
-                        pullDataPresenter.loadBlockSpinner(pos, selectedProgram);
-                    }
+                    }*/
+                    pullDataPresenter.loadBlockSpinner(pos, selectedProgram);
+
                 }
             }
 
@@ -210,6 +253,8 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
     public void showNoConnectivity() {
         Toast.makeText(getActivity(), "No Internet Connection..", Toast.LENGTH_SHORT).show();
     }
+
+
 
     @Override
     public void getSelectedItems(ArrayList<String> villageIDList) {

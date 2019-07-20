@@ -20,7 +20,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.R;
-import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
@@ -41,7 +40,7 @@ import butterknife.ButterKnife;
 public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements StartDragListener {
     @BindView(R.id.tv_question)
     TextView question;
-    @BindView(R.id.tv_question_image)
+    @BindView(R.id.iv_question_image)
     ImageView questionImage;
     @BindView(R.id.rl_ans_options1)
     RecyclerView recyclerView1;

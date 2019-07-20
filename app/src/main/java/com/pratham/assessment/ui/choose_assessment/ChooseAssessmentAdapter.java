@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -75,13 +76,13 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.ic_warning);
         requestOptions.error(R.drawable.ic_warning);
-        if ((position) % 3 == 0) {
+        /*if ((position) % 3 == 0) {
             holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg_3));
         } else if ((position) % 2 == 0) {
             holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg));
         } else if ((position) % 2 == 1) {
             holder.title.setBackground(mContext.getResources().getDrawable(R.drawable.gradiance_bg_2));
-        }
+        }*/
 
 
     /*    if ( (assessList.getIsDownloaded().equalsIgnoreCase("true") || assessList.getIsDownloaded().equalsIgnoreCase("1")) && !Assessment_Constants.SD_CARD_Content){
@@ -102,7 +103,10 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
             @Override
             public void onClick(View v) {
 //                    if (assessList.getNodeType() != null) {
-                assessmentClicked.assessmentClicked(position, assessList.getSubjectid());
+                if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase("Select Language"))
+                    Toast.makeText(mContext, "Select Language", Toast.LENGTH_SHORT).show();
+                else
+                    assessmentClicked.assessmentClicked(position, assessList.getSubjectid());
 //                    }
             }
         });

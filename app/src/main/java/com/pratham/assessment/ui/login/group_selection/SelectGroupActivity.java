@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.ui.login_menu.MenuFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -21,17 +23,21 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.custom.SelectAgeGroupDialog;
 import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup;
 
-public class SelectGroupActivity extends AppCompatActivity {
+public class SelectGroupActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_group);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        try {
+            setContentView(R.layout.activity_select_group);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-               Assessment_Utility.showFragment(this, new MenuFragment(), R.id.frame_group,
-                null, MenuFragment.class.getSimpleName());
-
+            Assessment_Utility.showFragment(this, new MenuFragment(), R.id.frame_group,
+                    null, MenuFragment.class.getSimpleName());
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.d("SelectGroupActivity@@@",e.getMessage());
+        }
 
 //    showAgeGroupDialog();
 
@@ -122,4 +128,8 @@ public class SelectGroupActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }

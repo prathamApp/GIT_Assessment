@@ -33,6 +33,7 @@
     <color name="colorProgress25">#FF3A16</color>
     <color name="colorProgress15">#FF270E</color>
 
+    <color name="transparent">#05000000</color>
 
 
 </resources>

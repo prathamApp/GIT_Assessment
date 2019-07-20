@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder  implements StartDragListener {
     @BindView(R.id.tv_question)
     TextView question;
-    @BindView(R.id.tv_question_image)
+    @BindView(R.id.iv_question_image)
     ImageView questionImage;
     @BindView(R.id.rl_arrange_seq)
     RecyclerView recyclerArrangeSeq;

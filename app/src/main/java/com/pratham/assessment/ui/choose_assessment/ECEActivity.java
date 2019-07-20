@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,13 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.discrete_view.DSVOrientation;
 import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.discrete_view.ScaleTransformer;
-import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.ECEModel;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -36,9 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.pratham.assessment.BaseActivity.appDatabase;
-
-public class ECEActivity extends AppCompatActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
+public class ECEActivity extends BaseActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
     @BindView(R.id.attendance_recycler_view)
     DiscreteScrollView discreteScrollView;
 
@@ -236,8 +233,9 @@ public class ECEActivity extends AppCompatActivity implements DiscreteScrollView
             score.setEndDateTime(AssessmentApplication.getCurrentDateTime());
             score.setDeviceID(crlId);
             score.setLevel(eceModelList.get(i).getIsSelected());
-            score.setLabel(eceModelList.get(i).getQuestion());
+            score.setLabel("ECE-" + eceModelList.get(i).getQuestion());
             score.setSentFlag(0);
+            score.setExamId("ece_assessment");
             scoreList.add(score);
         }
         AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scoreList);

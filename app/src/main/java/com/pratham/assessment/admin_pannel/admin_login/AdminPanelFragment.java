@@ -13,15 +13,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-
-import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.PullData.PullDataFragment;
 import com.pratham.assessment.admin_pannel.PushOrAssign.PushOrAssignFragment;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,14 +55,13 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-       /* userNameET.setText("pravinthorat");
-        passwordET.setText("pratham123");*/
+       Assessment_Utility.HideInputKeypad(getActivity());
+        userNameET.setText("pravinthorat");
+        passwordET.setText("pratham123");
         /*  userNameET.setText("admin");
         passwordET.setText("admin");*/
-        userNameET.setText("");
-        passwordET.setText("");
+      /*  userNameET.setText("");
+        passwordET.setText("");*/
         adminPanelPresenter = new AdminPanelPresenter(getActivity(), this);
     }
 

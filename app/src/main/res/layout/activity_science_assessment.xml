@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rl_que"
@@ -56,20 +57,32 @@
                 android:textSize="@dimen/_18sdp"
                 android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tv_timer"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_margin="@dimen/_5sdp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_rectangle"
-                android:padding="@dimen/_10sdp"
-                android:textAlignment="center"
-                android:textSize="@dimen/_18sdp"
-                android:text="00:00"
-                 />
+                android:layout_weight="1">
 
+                <TextureView
+                    android:id="@+id/texture_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_timer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:text="00:00"
+                    android:elevation="@dimen/_3sdp"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp" />
+            </FrameLayout>
         </LinearLayout>
 
         <!--  <android.support.v7.widget.CardView
@@ -129,10 +142,7 @@
                 android:layout_marginTop="@dimen/_3sdp"
                 android:background="@drawable/ripple_effect_save_btn"
                 android:elevation="@dimen/_10sdp"
-                android:paddingLeft="@dimen/_10sdp"
-                android:paddingTop="@dimen/_10sdp"
-                android:paddingRight="@dimen/_10sdp"
-                android:paddingBottom="@dimen/_10sdp"
+                android:padding="@dimen/_11sdp"
                 android:text="Save"
                 android:textSize="@dimen/_20sdp"
                 android:textStyle="bold" />
@@ -156,6 +166,8 @@
                 android:layout_toRightOf="@id/btn_save_Assessment"
                 android:background="@drawable/ripple_round"
                 android:src="@drawable/ic_right_arrow" />
+
+
             <!--</FrameLayout>-->
         </RelativeLayout>
 
