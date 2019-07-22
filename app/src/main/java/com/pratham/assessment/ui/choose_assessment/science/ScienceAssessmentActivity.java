@@ -182,6 +182,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         supervisorId = getIntent().getStringExtra("crlId");
         subjectId = getIntent().getStringExtra("subId");
+//        subjectId = Assessment_Constants.SELECTED_SUBJECT_ID;
         progressDialog = new ProgressDialog(this);
         mediaProgressDialog = new ProgressDialog(this);
         showSelectTopicDialog();
@@ -394,7 +395,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 //        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
         langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
 
-        generatePaperPattern(examId, subjectId, langId);
+        generatePaperPattern(examId, subjectId, Assessment_Constants.SELECTED_LANGUAGE);
 
         showQuestions();
 

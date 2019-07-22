@@ -24,6 +24,9 @@ public interface AssessmentTestDao {
     @Query("select * from AssessmentTest")
     public List<AssessmentTest> getAllAssessmentTests();
 
+    @Query("select * from AssessmentTest where examid=:examId")
+    public List<AssessmentTest> getTopicByExamId(String examId);
+
     @Query("select examname from AssessmentTest where examid=:examId")
     public String getExamNameById(String examId);
 }
