@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +29,6 @@ import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.domain.Modal_FileDownloading;
 import com.pratham.assessment.ui.certificate.CertificateActivity;
-import com.pratham.assessment.ui.profile.ProfileActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -45,7 +43,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class TestDisplayActivity extends BaseActivity implements TestClicked, TestDiaplayContract.TestDisplayView {
 
@@ -83,7 +80,7 @@ public class TestDisplayActivity extends BaseActivity implements TestClicked, Te
         rl_Profile.setVisibility(View.GONE);
         nodeId = getIntent().getStringExtra("nodeId");
        // Assessment_Constants.currentsupervisorID = getIntent().getStringExtra("supervisorID");
-        recyclerView = (RecyclerView) findViewById(R.id.choose_assessment_recycler);
+        recyclerView = (RecyclerView) findViewById(R.id.choose_subject_recycler);
         presenter = new TestDisplayPresenter(TestDisplayActivity.this, this);
         gameWebViewList = new ArrayList<>();
         ContentTableList = new ArrayList<>();

@@ -63,20 +63,27 @@
                 android:layout_height="@dimen/_25sdp"
                 android:layout_below="@+id/tv_choose_assessment"
                 android:layout_margin="@dimen/_5sdp"
+                android:visibility="gone"
                 android:background="@drawable/gradient_spinner" />
 
 
         </RelativeLayout>
         <!--</android.support.v7.widget.Toolbar>-->
-
-
-        <RelativeLayout
+        <FrameLayout
+            android:id="@+id/nav_frame_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/title_bar">
+            android:layout_below="@+id/title_bar" />
+
+        <RelativeLayout
+            android:id="@+id/rl_choose_sub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title_bar"
+            android:visibility="visible">
             <!--android:layout_marginTop="@dimen/minus_margin"-->
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/choose_assessment_recycler"
+                android:id="@+id/choose_subject_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -107,6 +114,7 @@
         </RelativeLayout>
         <!-- Your contents -->
     </RelativeLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"
         android:layout_width="wrap_content"

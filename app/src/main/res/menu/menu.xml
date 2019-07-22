@@ -15,5 +15,9 @@
         android:id="@+id/menu_supervision_type"
         android:title="Supervision type" />
 
+ <item
+        android:id="@+id/menu_language"
+        android:title="Language" />
+
 
 </menu>

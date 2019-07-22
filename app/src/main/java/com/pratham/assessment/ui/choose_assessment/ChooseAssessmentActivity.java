@@ -1,9 +1,11 @@
 package com.pratham.assessment.ui.choose_assessment;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,37 +14,34 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
+import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.Crl;
+import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment;
+import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
-import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
-import com.pratham.assessment.utilities.APIs;
+import com.pratham.assessment.ui.login_menu.MenuFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,15 +70,18 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     DrawerLayout drawerLayout;
     @BindView(R.id.navigation)
     NavigationView navigation;
-  /*  @BindView(R.id.userName)
-    TextView name;*/
+    @BindView(R.id.rl_choose_sub)
+    RelativeLayout rlSubject;
+    @BindView(R.id.nav_frame_layout)
+    FrameLayout frameLayout;
+    @BindView(R.id.tv_choose_assessment)
+    TextView tv_choose_assessment;
 
     private RecyclerView recyclerView;
     List<AssessmentSubjects> contentTableList;
     ChooseAssessmentAdapter chooseAssessAdapter;
     ECELoginDialog eceLoginDialog;
     Crl loggedCrl;
-    List<AssessmentLanguages> assessmentLanguagesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,18 +93,31 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         TextView name = view.findViewById(R.id.userName);
         name.setText(studentName);
 
-
+        eceLoginDialog = new ECELoginDialog(this);
 
         navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.menu_Subject:
+                        rlSubject.setVisibility(View.VISIBLE);
+                        frameLayout.setVisibility(View.GONE);
+                        tv_choose_assessment.setText("Choose subject");
                         break;
                     case R.id.menu_certificate:
                         startActivity(new Intent(ChooseAssessmentActivity.this, AssessmentCertificateActivity.class));
                         break;
-                    case R.id.menu_supervision_type:/* eceLoginDialog.show();*/
+                    case R.id.menu_supervision_type:
+                        showSupervisionDialog();
+                        break;
+                    case R.id.menu_language:
+                        rlSubject.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.VISIBLE);
+
+                        tv_choose_assessment.setText("Choose language");
+                        Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new LanguageFragment(), R.id.nav_frame_layout,
+                                null, LanguageFragment.class.getSimpleName());
+
                         break;
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -113,14 +128,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
         presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this, this);
         contentTableList = new ArrayList<>();
-        assessmentLanguagesList = new ArrayList<>();
-        assessmentLanguagesList = AppDatabase.getDatabaseInstance(this).getLanguageDao().getAllLangs();
-        if (assessmentLanguagesList.size() <= 0) {
-            getLanguageData();
-        } else setLanguageSpinner();
 
 
-        recyclerView = findViewById(R.id.choose_assessment_recycler);
+        recyclerView = findViewById(R.id.choose_subject_recycler);
         chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
 //        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
@@ -132,6 +142,36 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         presenter.copyListData();
     }
 
+    private void showSupervisionDialog() {
+        loggedCrl = null;
+       /* if (Assessment_Constants.SELECTED_SUBJECT.equalsIgnoreCase("ece")) {
+            eceLoginDialog.btn_unsupervised.setVisibility(View.GONE);
+        } else eceLoginDialog.btn_unsupervised.setVisibility(View.VISIBLE);
+*/
+
+        eceLoginDialog.btn_supervised.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Assessment_Constants.ASSESSMENT_TYPE = "supervised";
+                String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
+                getLoggedInCrl(userName, password);
+                if (loggedCrl != null) {
+                    String loggedCrlId = loggedCrl.getCRLId();
+                    Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity.class);
+                    intent.putExtra("crlId", loggedCrlId);
+//                    intent.putExtra("subId", sub);
+                    startActivity(intent);
+                    eceLoginDialog.dismiss();
+                }
+            }
+        });
+
+
+        eceLoginDialog.show();
+
+    }
+
     @OnClick(R.id.menu_icon)
     public void openMenu() {
         if (drawerLayout.isDrawerOpen(Gravity.START))
@@ -140,77 +180,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             drawerLayout.openDrawer(Gravity.START);
     }
 
-    private void getLanguageData() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentLanguageAPI)
-                .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            progressDialog.dismiss();
-
-                            for (int i = 0; i < response.length(); i++) {
-                                AssessmentLanguages assessmentLanguages = new AssessmentLanguages();
-                                assessmentLanguages.setLanguageid(response.getJSONObject(i).getString("languageid"));
-                                assessmentLanguages.setLanguagename(response.getJSONObject(i).getString("languagename"));
-                                assessmentLanguagesList.add(assessmentLanguages);
-                            }
-                            AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getLanguageDao().insertAllLanguages(assessmentLanguagesList);
-                            setLanguageSpinner();
 
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Toast.makeText(ChooseAssessmentActivity.this, "Error in loading..Check internet connection.", Toast.LENGTH_SHORT).show();
-                        finish();
-                        AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getAssessmentPaperPatternDao().deletePaperPatterns();
-
-                        progressDialog.dismiss();
-//                        selectTopicDialog.show();
-                    }
-                });
-
-    }
-
-    private void setLanguageSpinner() {
-        String[] lang = new String[assessmentLanguagesList.size() + 1];
-        lang[0] = "Select Language";
-
-        for (int i = 0; i < assessmentLanguagesList.size(); i++) {
-            lang[i + 1] = assessmentLanguagesList.get(i).getLanguagename();
-        }
-        ArrayAdapter langAdapter = new ArrayAdapter(ChooseAssessmentActivity.this, android.R.layout.simple_spinner_dropdown_item, lang);
-        spinner_choose_lang.setAdapter(langAdapter);
-
-
-        spinner_choose_lang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (spinner_choose_lang.getSelectedItem().toString().equalsIgnoreCase("Select Language")) {
-                    Toast.makeText(ChooseAssessmentActivity.this, "Please select language", Toast.LENGTH_SHORT).show();
-//                                        makeSubjectsNonClickable(false);
-                } else {
-                    Assessment_Constants.SELECTED_LANGUAGE = spinner_choose_lang.getSelectedItem().toString();
-//                                        makeSubjectsNonClickable(true);
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
 
    /* private void makeSubjectsNonClickable(boolean clickable) {
         if (clickable) {
@@ -275,21 +246,85 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        presenter.endSession();
+      /*  presenter.endSession();
 //        super.onBackPressed();
         finish();
-        startActivity(new Intent(this, SelectGroupActivity.class));
+        startActivity(new Intent(this, SelectGroupActivity.class));*/
+        showExitDialog();
+    }
+
+    public void showExitDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.exit_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView title = dialog.findViewById(R.id.dia_title);
+        Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
+        Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
+
+        title.setText("Do you want to exit?");
+        restart_btn.setText("No");
+        exit_btn.setText("Yes");
+        dialog.show();
+
+        exit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                finishAffinity();
+
+            }
+        });
+
+        restart_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
-    public void assessmentClicked(final int position, final String subId) {
+    public void subjectClicked(final int position, final AssessmentSubjects sub) {
+        Assessment_Constants.SELECTED_SUBJECT = sub.getSubjectname();
+        Assessment_Constants.SELECTED_SUBJECT_ID = sub.getSubjectid();
         loggedCrl = null;
-        eceLoginDialog = new ECELoginDialog(this);
         String crlId = "";
-        if (subId.equalsIgnoreCase("0")) {
+        tv_choose_assessment.setText("Choose topic");
+
+        rlSubject.setVisibility(View.GONE);
+
+    /*    if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice")) {
+
+
+        } else if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {
+            if (sub.getSubjectid().equalsIgnoreCase("0")) {
+                String assessmentSession = "" + UUID.randomUUID().toString();
+                Assessment_Constants.assessmentSession = "test-" + assessmentSession;
+                presenter.startAssessSession();
+                crlId=loggedCrl.getCRLId();
+                Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
+                intent.putExtra("resId", "9962");
+                intent.putExtra("crlId",crlId );
+                startActivity(intent);
+            } else {
+
+            }
+        }*/
+
+
+
+
+
+
+
+
+      /*  eceLoginDialog = new ECELoginDialog(this);
+        if (sub.getSubjectid().equalsIgnoreCase("0")) {
             eceLoginDialog.btn_unsupervised.setVisibility(View.GONE);
         } else eceLoginDialog.btn_unsupervised.setVisibility(View.VISIBLE);
-
+*/
        /* if (subId.equalsIgnoreCase("1304") || subId.equalsIgnoreCase("1302")) {
             eceLoginDialog.btn_unsupervised.setVisibility(View.GONE);
 //            getLoggedInCrl(userName, password);
@@ -305,7 +340,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             public void onClick(View v) {
 //                if (loggedCrl != null) {
 
-                if (subId.equalsIgnoreCase("0")) {
+                if (sub.getSubjectid().equalsIgnoreCase("0")) {
                     String assessmentSession = "" + UUID.randomUUID().toString();
                     Assessment_Constants.assessmentSession = "test-" + assessmentSession;
                     presenter.startAssessSession();
@@ -321,10 +356,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     startActivity(intent);
                 }*/ else {
 //                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
-                    Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
-                    intent.putExtra("subId", subId);
+                  /*  Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
+                    intent.putExtra("subId", sub);
                     intent.putExtra("crlId", "");
-                    startActivity(intent);
+                    startActivity(intent);*/
+                    Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new TopicFragment(), R.id.nav_frame_layout,
+                            null, TopicFragment.class.getSimpleName());
+
                 }
                 eceLoginDialog.dismiss();
                 /*} else {
@@ -355,13 +393,27 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     String loggedCrlId = loggedCrl.getCRLId();
                     Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity.class);
                     intent.putExtra("crlId", loggedCrlId);
-                    intent.putExtra("subId", subId);
+                    intent.putExtra("subId", sub);
                     startActivity(intent);
                     eceLoginDialog.dismiss();
                 }
             }
         });
         eceLoginDialog.show();
+    }
+
+    @Override
+    public void languageClicked(int pos, AssessmentLanguages languages) {
+        Assessment_Constants.SELECTED_LANGUAGE = languages.getLanguagename();
+        drawerLayout.closeDrawer(GravityCompat.START);
+        Toast.makeText(this, "Language " + languages.getLanguagename(), Toast.LENGTH_SHORT).show();
+
+
+    }
+
+    @Override
+    public void topicClicked(int pos, AssessmentTest test) {
+        Toast.makeText(this, ""+test.getExamname(), Toast.LENGTH_SHORT).show();
     }
 
     private void getLoggedInCrl(String userName, String password) {

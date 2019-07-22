@@ -52,7 +52,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
     String imageName = "";
     boolean isPhotoSaved = false;
     String supervisorId = "";
-    String subId = "";
+//    String subId = "";
     private static final int CAMERA_REQUEST = 1888;
 
     @Override
@@ -62,8 +62,8 @@ public class SupervisedAssessmentActivity extends BaseActivity {
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         supervisorId = getIntent().getStringExtra("crlId");
-        subId = getIntent().getStringExtra("subId");
-        if (subId.equals("0")) {
+//        subId = getIntent().getStringExtra("subId");
+        if (Assessment_Constants.SELECTED_SUBJECT.equals("ece")) {
             goToAssessment();
         } else {
             Crl crl = AppDatabase.getDatabaseInstance(this).getCrlDao().getCrl(supervisorId);
@@ -158,7 +158,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
     }
 
     private void goToAssessment() {
-        if (subId.equalsIgnoreCase("0")) {
+        if (Assessment_Constants.SELECTED_SUBJECT.equalsIgnoreCase("ece")) {
             String assessmentSession = "" + UUID.randomUUID().toString();
             Assessment_Constants.assessmentSession = "test-" + assessmentSession;
             try {
@@ -188,7 +188,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
         }*/ else {
 //                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
             Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);
-            intent.putExtra("subId", subId);
+//            intent.putExtra("subId", subId);
             intent.putExtra("crlId", supervisorId);
 
             startActivity(intent);

@@ -58,7 +58,7 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
     Button btn_reset_btn;
 
     private AppDatabase appDatabase;
-   // QRScanContract.QRScanPresenter presenter;
+    // QRScanContract.QRScanPresenter presenter;
     int totalStudents = 0;
     String stdFirstName, stdId;
     Dialog dialog;
@@ -74,11 +74,11 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-      //  presenter = new QRScanPresenter(this, this);
+        //  presenter = new QRScanPresenter(this, this);
         mScannerView.setResultHandler(this);
         content_frame.addView((mScannerView));
 
-      //  Log.d("tag", "SD Path: " + COS_Constants.ext_path);
+        //  Log.d("tag", "SD Path: " + COS_Constants.ext_path);
         initCamera();
         /* 1) In case migration needed and no problem with data loss then this would work
 
@@ -215,7 +215,7 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
         stdFirstName = "";
         stdId = "";
         hideButtonsAnimation(this, button_ll, tv_stud_one);
-     //   ButtonClickSound.start();
+        //   ButtonClickSound.start();
         scanNextQRCode();
     }
 
@@ -230,11 +230,11 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
         enterStudentData(stdId, stdFirstName);
         startSession();
         Assessment_Constants.currentStudentID = stdId;
-       // ButtonClickSound.start();
+        // ButtonClickSound.start();
         //Assessment_Constants.GROUP_LOGIN = false;
         //startActivity(new Intent(this, RCGameActivity.class));
         startActivity(new Intent(this, ChooseAssessmentActivity.class));
-
+        finish();
 /*        Intent dataConfirmationIntent = new Intent(this, DataConfirmation.class);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("playerModalArrayList", playerModalList);

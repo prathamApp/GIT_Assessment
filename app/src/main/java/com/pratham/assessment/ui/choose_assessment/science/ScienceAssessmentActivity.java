@@ -200,7 +200,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
         android.content.res.Configuration conf = res.getConfiguration();
 
-        conf.locale = new Locale("mr");
+        conf.locale = new Locale("en");
         res.updateConfiguration(conf, dm);
 //        serviceIntent = startService(new Intent(ScienceAssessmentActivity.this, BkgdVideoRecordingService.class));
         serviceIntent = new Intent(getApplicationContext(), VideoMonitoringService.class);

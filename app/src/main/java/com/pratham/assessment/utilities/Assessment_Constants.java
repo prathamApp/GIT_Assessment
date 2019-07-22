@@ -64,7 +64,12 @@ public class Assessment_Constants {
     public static boolean supervisedAssessment = false;
     public static String assessmentSession = "";
     public static String currentSupervisorID = "";
-    public static  String SELECTED_LANGUAGE = "Select Language";
+
+    //new
+    public static  String SELECTED_LANGUAGE = "english";
+    public static  String SELECTED_SUBJECT = "";
+    public static  String SELECTED_SUBJECT_ID = "";
+    public static  String ASSESSMENT_TYPE = "";
 
     public static final String KOLIBRI_BLOCK = "kolibri_block";
     public static final String SERVER_BLOCK = "server_block";

@@ -54,6 +54,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.ui.login.MainActivity;
 
@@ -307,6 +308,12 @@ public class Assessment_Utility {
                     .commit();
         } else if (mActivity instanceof SelectGroupActivity) {
             ((SelectGroupActivity) mActivity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(frame, mFragment, TAG)
+                    .addToBackStack(TAG)
+                    .commit();
+        }else if (mActivity instanceof ChooseAssessmentActivity) {
+            ((ChooseAssessmentActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)

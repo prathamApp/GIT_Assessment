@@ -13,12 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.List;
@@ -106,7 +103,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
                 if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase("Select Language"))
                     Toast.makeText(mContext, "Select Language", Toast.LENGTH_SHORT).show();
                 else
-                    assessmentClicked.assessmentClicked(position, assessList.getSubjectid());
+                    assessmentClicked.subjectClicked(position, assessList);
 //                    }
             }
         });
