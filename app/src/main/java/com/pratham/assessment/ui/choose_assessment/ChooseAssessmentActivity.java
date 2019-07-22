@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
+import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -95,6 +96,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     FrameLayout frameLayout;
     @BindView(R.id.tv_choose_assessment)
     TextView tv_choose_assessment;
+    @BindView(R.id.menu_icon)
+    ImageButton menu_icon;
 
     private RecyclerView recyclerView;
     List<AssessmentSubjects> contentTableList;
@@ -103,7 +106,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     Crl loggedCrl;
     int mediaDownloadCnt = 0;
     int topicCnt = 0;
-    ProgressDialog progressDialog,mediaProgressDialog;
+    ProgressDialog progressDialog, mediaProgressDialog;
     List<DownloadMedia> downloadMediaList;
     List<String> topicsList;
 
@@ -139,10 +142,19 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         rlSubject.setVisibility(View.GONE);
                         frameLayout.setVisibility(View.VISIBLE);
 
+                    case R.id.menu_admin_panel:
+                        rlSubject.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.VISIBLE);
+                        Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new AdminPanelFragment(), R.id.nav_frame_layout,
+                                null, AdminPanelFragment.class.getSimpleName());
+
+                       /* rlSubject.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.VISIBLE);
+
                         tv_choose_assessment.setText("Choose language");
                         Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new LanguageFragment(), R.id.nav_frame_layout,
                                 null, LanguageFragment.class.getSimpleName());
-
+*/
                         break;
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -317,9 +329,20 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         loggedCrl = null;
         String crlId = "";
         tv_choose_assessment.setText("Choose topic");
+        menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
 
         rlSubject.setVisibility(View.GONE);
         frameLayout.setVisibility(View.VISIBLE);
+
+        if (sub.getSubjectid().equalsIgnoreCase("0")) {
+            Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
+            intent.putExtra("resId", "9962");
+            intent.putExtra("crlId", "");
+        } else {
+            Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new TopicFragment(), R.id.nav_frame_layout,
+                    null, TopicFragment.class.getSimpleName());
+        }
+
 
     /*    if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice")) {
 
@@ -360,7 +383,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             eceLoginDialog.btn_unsupervised.setVisibility(View.VISIBLE);
 */
 
-        final String finalCrlId = crlId;
+       /* final String finalCrlId = crlId;
         eceLoginDialog.btn_unsupervised.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -374,24 +397,23 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     intent.putExtra("resId", "9962");
                     intent.putExtra("crlId", finalCrlId);
                     startActivity(intent);
-                }/* else if (subId.equalsIgnoreCase("1302")) {
+                }*//* else if (subId.equalsIgnoreCase("1302")) {
                     Intent intent = new Intent(ChooseAssessmentActivity.this, TestDisplayActivity.class);
                     intent.putExtra("subId", subId);
                     intent.putExtra("crlId", "");
 
                     startActivity(intent);
-                }*/ else {
+                }*//* else {
 //                        Intent intent = new Intent(ChooseAssessmentActivity.this, CRLActivity.class);
-                    Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
+                  *//*  Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
                     intent.putExtra("subId", sub.getSubjectid());
                     intent.putExtra("crlId", "");
-                    startActivity(intent);
-                 /*   Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new TopicFragment(), R.id.nav_frame_layout,
-                            null, TopicFragment.class.getSimpleName());
-*/
+                    startActivity(intent);*//*
+                    eceLoginDialog.dismiss();
+
+
                 }
-                eceLoginDialog.dismiss();
-                /*} else {
+                *//*} else {
                     AlertDialog alertDialog = new AlertDialog.Builder(ChooseAssessmentActivity.this).create();
                     alertDialog.setTitle("Invalid Credentials");
                     alertDialog.setIcon(R.drawable.ic_error_outline_black_24dp);
@@ -404,12 +426,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         }
                     });
                     alertDialog.show();
-                }*/
+                }*//*
             }
-        });
+        });*/
 
 
-        eceLoginDialog.btn_supervised.setOnClickListener(new View.OnClickListener() {
+        /*eceLoginDialog.btn_supervised.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
@@ -425,7 +447,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 }
             }
         });
-        eceLoginDialog.show();
+        eceLoginDialog.show();*/
     }
 
     @Override
@@ -439,15 +461,14 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @Override
     public void topicClicked(int pos, AssessmentTest test) {
-        Toast.makeText(this, "" + test.getExamname(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "" + test.getExamname(), Toast.LENGTH_SHORT).show();
         Assessment_Constants.SELECTED_EXAM_ID = test.getExamid();
-
        /* List<AssessmentTest> tests = AppDatabase.getDatabaseInstance(this).getTestDao().getTopicByExamId(Assessment_Constants.SELECTED_EXAM_ID);
         if (tests.size() <= 0) {
             downloadPaperPattern();
         }*/
-       /* Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
-        startActivity(intent);*/
+        Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
+        startActivity(intent);
     }
 
     private void downloadPaperPattern() {
@@ -582,6 +603,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     }
                 });
     }
+
     private void generatePaperPattern(String examId, String subId, String langId) {
      /*   assessmentPaperPatterns = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(examId);
         assessmentPatternDetails = AppDatabase.getDatabaseInstance(this).getAssessmentPatternDetailsDao().getAssessmentPatternDetailsByExamId(examId);
@@ -654,6 +676,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             e.printStackTrace();
         }
     }
+
     private void downloadMedia(String qid, String photoUrl) {
         String dirPath = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded";
 //       String url="http://pef1.prathamskills.org/CourseContent/Image/Question/9f602206-4732-442c-a880-4c6848a0a2eb1280.mp4";

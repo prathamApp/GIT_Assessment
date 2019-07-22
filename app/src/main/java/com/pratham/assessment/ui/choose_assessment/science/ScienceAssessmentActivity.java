@@ -41,6 +41,7 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
@@ -149,8 +150,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     String examStartTime, examEndTime;
     String answer = "", ansId = "";
     String questionType = "";
-    SelectTopicDialog selectTopicDialog;
-    Dialog downloadTopicDialog;
+    //    SelectTopicDialog selectTopicDialog;
+//    Dialog downloadTopicDialog;
     CountDownTimer mCountDownTimer;
     String supervisorId, subjectId;
     static boolean isActivityRunning = false;
@@ -166,7 +167,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     public static final String AUDIO = "9";
     public static int ExamTime = 0;
     private int correctAnsCnt = 0, wrongAnsCnt = 0, skippedCnt = 0;
-    String langId;
+    //    String langId;
     String assessmentSession;
     String videoName = "", filePath;
     RecyclerView.ViewHolder currentViewHolder;
@@ -181,11 +182,26 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         supervisorId = getIntent().getStringExtra("crlId");
-        subjectId = getIntent().getStringExtra("subId");
-//        subjectId = Assessment_Constants.SELECTED_SUBJECT_ID;
+//        subjectId = getIntent().getStringExtra("subId");
+        subjectId = Assessment_Constants.SELECTED_SUBJECT_ID;
         progressDialog = new ProgressDialog(this);
         mediaProgressDialog = new ProgressDialog(this);
-        showSelectTopicDialog();
+//        showSelectTopicDialog();
+        serviceIntent = new Intent(getApplicationContext(), VideoMonitoringService.class);
+
+        AssessmentPaperPattern assessmentPaperPatterns = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
+        if (assessmentPaperPatterns != null) {
+            generatePaperPattern();
+            showQuestions();
+        } else {
+            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                downloadPaperPattern();
+            }else {
+                finish();
+                Toast.makeText(this, "Check internet connection to download paper", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         //getTopicData();
         //scienceModalClassList = fetchJson("science.json");
 
@@ -201,21 +217,22 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
         android.content.res.Configuration conf = res.getConfiguration();
 
-        conf.locale = new Locale("en");
+        conf.locale = new
+
+                Locale("en");
         res.updateConfiguration(conf, dm);
 //        serviceIntent = startService(new Intent(ScienceAssessmentActivity.this, BkgdVideoRecordingService.class));
-        serviceIntent = new Intent(getApplicationContext(), VideoMonitoringService.class);
     }
 
     private void showSelectTopicDialog() {
         exams = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAllAssessmentPaperPatterns();
         subjects = AppDatabase.getDatabaseInstance(this).getSubjectDao().getAllSubjects();
 //        languages = AppDatabase.getDatabaseInstance(this).getLanguageDao().getAllLangs();
-        selectTopicDialog = new SelectTopicDialog(this, this, exams, languages, subjectId);
+//        selectTopicDialog = new SelectTopicDialog(this, this, exams, languages, subjectId);
 
 
         if (exams.size() > 0) {
-            selectTopicDialog.show();
+        /*    selectTopicDialog.show();
             selectTopicDialog.updateTopics.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -225,11 +242,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                     showDownloadTopicDialog();
 
                 }
-            });
+            });*/
         } else {
 
 //            getLanguageData();
-            showDownloadTopicDialog();
+//            showDownloadTopicDialog();
 
         }
     }
@@ -254,7 +271,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                             AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getLanguageDao().insertAllLanguages(languages);
 
 //                            getSubjectData();
-                            showDownloadTopicDialog();
+//                            showDownloadTopicDialog();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -268,7 +285,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                         AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().deletePaperPatterns();
 
                         progressDialog.dismiss();
-                        downloadTopicDialog.dismiss();
+//                        downloadTopicDialog.dismiss();
 //                        selectTopicDialog.show();
                     }
                 });
@@ -311,10 +328,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     }
 */
 
-    private void showDownloadTopicDialog() {
+    /*private void showDownloadTopicDialog() {
         downloadTopicDialog = new DownloadTopicsDialog(this, this, exams, languages, subjectId);
         downloadTopicDialog.show();
-    }
+    }*/
 
     /*  private List<ScienceModalClass> fetchJson(String jasonName) {
           List<ScienceModalClass> scienceModalClasses = new ArrayList<>();
@@ -380,8 +397,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         } else {*/
         progressDialog.show();
         paperPatternCnt = 0;
-        downloadPaperPattern(examIdList.get(paperPatternCnt), langId, subjectId);
+
+//        downloadPaperPattern(examIdList.get(paperPatternCnt), langId, subjectId);
        /* }
+
 
         topicIdList = AppDatabase.getDatabaseInstance(this).getAssessmentPatternDetailsDao().getDistinctTopicIds();
         downloadQuestions(topicIdList.get(queDownloadIndex), langId, subId);
@@ -393,27 +412,27 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 //        String topicId = AppDatabase.getDatabaseInstance(this).getAssessmentTopicDao().getTopicIdByTopicName(topic);
         String examId = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getExamIdByExamName(exam);
 //        String subId = AppDatabase.getDatabaseInstance(this).getSubjectDao().getIdByName(selectedSub);
-        langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
+//        langId = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(selectedLang);
 
-        generatePaperPattern(examId, subjectId, Assessment_Constants.SELECTED_LANGUAGE);
+//        generatePaperPattern(examId, subjectId, Assessment_Constants.SELECTED_LANGUAGE);
 
         showQuestions();
 
     }
 
-    private void generatePaperPattern(String examId, String subId, String langId) {
-        assessmentPaperPatterns = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(examId);
-        assessmentPatternDetails = AppDatabase.getDatabaseInstance(this).getAssessmentPatternDetailsDao().getAssessmentPatternDetailsByExamId(examId);
+    private void generatePaperPattern() {
+        assessmentPaperPatterns = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
+        assessmentPatternDetails = AppDatabase.getDatabaseInstance(this).getAssessmentPatternDetailsDao().getAssessmentPatternDetailsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
         // topicIdList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPatternDetailsDao().getDistinctTopicIds();
 
 //        for (int i = 0; i < topicIdList.size(); i++) {
         if (assessmentPatternDetails.size() > 0)
             for (int j = 0; j < assessmentPatternDetails.size(); j++) {
                 int noOfQues = Integer.parseInt(assessmentPatternDetails.get(j).getNoofquestion());
-                List<ScienceQuestion> scienceQuestions = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getQuestionListByPattern1(langId, subId, assessmentPatternDetails.get(j).getTopicid(), assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
+                List<ScienceQuestion> scienceQuestions = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getQuestionListByPattern1(Assessment_Constants.SELECTED_LANGUAGE, Assessment_Constants.SELECTED_SUBJECT_ID, assessmentPatternDetails.get(j).getTopicid(), assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
                 for (int i = 0; i < scienceQuestions.size(); i++) {
                     scienceQuestions.get(i).setOutofmarks(assessmentPatternDetails.get(j).getMarksperquestion());
-                    scienceQuestions.get(i).setExamid(examId);
+                    scienceQuestions.get(i).setExamid(Assessment_Constants.SELECTED_EXAM_ID);
                 }
                 if (scienceQuestions.size() > 0)
                     scienceQuestionList.addAll(scienceQuestions);
@@ -421,9 +440,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 //        }
     }
 
-    private void downloadQuestions(final String topicId, final String selectedLang,
-                                   final String selectedSub) {
-        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + selectedSub + "&topicid=" + topicId;
+    private void downloadQuestions(final String topicId) {
+        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + Assessment_Constants.SELECTED_LANGUAGE + "&subjectid=" + Assessment_Constants.SELECTED_SUBJECT_ID + "&topicid=" + topicId;
         progressDialog.show();
         progressDialog.setMessage("Downloading questions...");
         AndroidNetworking.get(questionUrl)
@@ -437,26 +455,37 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                             queDownloadIndex++;
                             if (queDownloadIndex < topicIdList.size()) {
                                 if (downloadFailedExamList.size() == 0)
-                                    downloadQuestions(topicIdList.get(queDownloadIndex), selectedLang, selectedSub);
+                                    downloadQuestions(topicIdList.get(queDownloadIndex));
                             } else {
                                 progressDialog.dismiss();
-                                if (downloadFailedExamList.size() == 0)
-                                    showSelectTopicDialog();
+                                if (downloadFailedExamList.size() == 0) {
+//                                    showSelectTopicDialog();
+                                    generatePaperPattern();
+                                    showQuestions();
+                                }
+
                             }
                         } else if (response.length() == 0) {
                             queDownloadIndex++;
                             if (queDownloadIndex < topicIdList.size())
-                                downloadQuestions(topicIdList.get(queDownloadIndex), selectedLang, selectedSub);
+                                downloadQuestions(topicIdList.get(queDownloadIndex));
                             else {
                                 progressDialog.dismiss();
-                                if (downloadFailedExamList.size() == 0)
-                                    showSelectTopicDialog();
+                                if (downloadFailedExamList.size() == 0) {
+//                                    showSelectTopicDialog();
+                                    generatePaperPattern();
+                                    showQuestions();
+                                }
                             }
                         } else {
                             progressDialog.dismiss();
-                            if (downloadFailedExamList.size() == 0)
-                                showSelectTopicDialog();
+                            if (downloadFailedExamList.size() == 0) {
+//                                showSelectTopicDialog();
+                                generatePaperPattern();
+                                showQuestions();
+                            }
                         }
+
                     }
 
                     @Override
@@ -469,11 +498,12 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 });
     }
 
-    private void downloadPaperPattern(final String examId, final String langId,
-                                      final String subId) {
+    private void downloadPaperPattern(/*final String examId, final String langId,
+                                      final String subId*/) {
+        progressDialog.show();
         progressDialog.setMessage("Downloading paper pattern...");
 //        progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + examId)
+        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + Assessment_Constants.SELECTED_EXAM_ID)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
@@ -490,49 +520,49 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                         if (!assessmentPatternDetails.isEmpty())
                             insertPatternDetailsToDB(assessmentPatternDetails);
 
-                        paperPatternCnt++;
+                       /* paperPatternCnt++;
                         if (paperPatternCnt < examIDList.size()) {
-                            downloadPaperPattern(examIDList.get(paperPatternCnt), langId, subId);
-                        } else {
-                            progressDialog.dismiss();
-                            for (int i = 0; i < examIDList.size(); i++) {
-                                List<String> topicsList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this)
-                                        .getAssessmentPatternDetailsDao().getTopicsByExamId(examIDList.get(i));
-                                for (int j = 0; j < topicsList.size(); j++) {
-                                    if (!topicIdList.contains(topicsList.get(j)))
-                                        topicIdList.add(topicsList.get(j));
-                                }
-                            }
+                            downloadPaperPattern();
+                        } else {*/
+                        progressDialog.dismiss();
+//                            for (int i = 0; i < examIDList.size(); i++) {
+                        List<String> topicsList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this)
+                                .getAssessmentPatternDetailsDao().getTopicsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
+                        for (int j = 0; j < topicsList.size(); j++) {
+                            if (!topicIdList.contains(topicsList.get(j)))
+                                topicIdList.add(topicsList.get(j));
+//                                }
+//                            }
                             if (downloadFailedExamList.size() == 0)
                                 if (topicIdList.size() > 0) {
                                     queDownloadIndex = 0;
-                                    downloadQuestions(topicIdList.get(queDownloadIndex), langId, subId);
-                                } else if (!downloadTopicDialog.isShowing())
-                                    downloadTopicDialog.show();
+                                    downloadQuestions(topicIdList.get(queDownloadIndex));
+                                } else finish();/*if (!downloadTopicDialog.isShowing())
+                                    downloadTopicDialog.show();*/
 
 //                            selectTopicDialog.show();
 
                             if (downloadFailedExamList.size() > 0)
-                                showDownloadFailedDialog(langId, subId);
+                                showDownloadFailedDialog(Assessment_Constants.SELECTED_LANGUAGE);
                         }
                     }
 
                     @Override
                     public void onError(ANError anError) {
                         downloadFailedExamList.add(AppDatabase.getDatabaseInstance
-                                (ScienceAssessmentActivity.this).getTestDao().getExamNameById(examIDList.get(paperPatternCnt)));
+                                (ScienceAssessmentActivity.this).getTestDao().getExamNameById(Assessment_Constants.SELECTED_EXAM_ID));
                         paperPatternCnt++;
-                        if (paperPatternCnt < examIDList.size()) {
+                      /*  if (paperPatternCnt < examIDList.size()) {
 
                             downloadPaperPattern(examIDList.get(paperPatternCnt), langId, subId);
-                        } else {
-                            progressDialog.dismiss();
+                        } else {*/
+                        progressDialog.dismiss();
 //                            selectTopicDialog.show();
 
 
-                            if (downloadFailedExamList.size() > 0)
-                                showDownloadFailedDialog(langId, subId);
-                        }
+                        if (downloadFailedExamList.size() > 0)
+                            showDownloadFailedDialog(Assessment_Constants.SELECTED_LANGUAGE);
+                        /* }*/
 //                        progressDialog.dismiss();
 //                        Toast.makeText(ScienceAssessmentActivity.this, "Error downloading paper pattern..", Toast.LENGTH_SHORT).show();
                     }
@@ -541,7 +571,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
     }
 
-    private void showDownloadFailedDialog(final String langId, final String subId) {
+    private void showDownloadFailedDialog(final String langId) {
         String failedExams = "";
         for (int i = 0; i < downloadFailedExamList.size(); i++) {
             failedExams = failedExams + "\n" + downloadFailedExamList.get(i);
@@ -563,9 +593,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                         }
                         downloadFailedExamList.clear();
                         if (topicIdList.size() > 0)
-                            downloadQuestions(topicIdList.get(queDownloadIndex), langId, subId);
-                        else if (!downloadTopicDialog.isShowing())
-                            downloadTopicDialog.show();
+                            downloadQuestions(topicIdList.get(queDownloadIndex));
+                        else finish();
+
+                            /* if (!downloadTopicDialog.isShowing())
+                            downloadTopicDialog.show();*/
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -682,8 +714,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         if (scienceQuestionList.isEmpty()) {
             Toast.makeText(this, "No questions", Toast.LENGTH_SHORT).show();
         } else {
-            selectTopicDialog.ll_count_down.setVisibility(View.VISIBLE);
-            selectTopicDialog.ll_select_topic.setVisibility(View.GONE);
+            //todo show wish u all the best
+           /* selectTopicDialog.ll_count_down.setVisibility(View.VISIBLE);
+            selectTopicDialog.ll_select_topic.setVisibility(View.GONE);*/
 //            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.circle_progress_bar);
           /*  CountDownTimer countDownTimer = new CountDownTimer(4000, 1000) {
                 @Override
@@ -724,7 +757,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                              /*   selectTopicDialog.timer.setText(String.valueOf(i)+"%");
                                 selectTopicDialog.timer.setText("" + time);
                                 selectTopicDialog*/
-                                selectTopicDialog.circle_progress_bar.setProgress(i);
+//                                selectTopicDialog.circle_progress_bar.setProgress(i);
                                 Log.d("progress", "" + i);
                             }
                         });
@@ -735,11 +768,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                selectTopicDialog.dismiss();
+//                                selectTopicDialog.dismiss();
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        selectTopicDialog.dismiss();
+//                                        selectTopicDialog.dismiss();
                                         setProgressBarAndTimer();
                                     }
                                 }, 800);
@@ -867,7 +900,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 dialog.dismiss();
                 ScienceAssessmentActivity.super.onBackPressed();
                 chronometer.stop();
-                mCountDownTimer.cancel();
+                if (mCountDownTimer != null)
+                    mCountDownTimer.cancel();
 
 
             }
@@ -898,7 +932,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
             scienceQuestionList.get(queCnt).setStartTime(Assessment_Utility.GetCurrentDateTime());
 
         }
-
 
 
         currentCount.setText(queCnt + "/" + scienceQuestionList.size());
@@ -1193,7 +1226,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         AssessmentPaperForPush paper = new AssessmentPaperForPush();
         paper.setPaperStartTime(examStartTime);
         paper.setPaperEndTime(examEndTime);
-        paper.setLanguageId(langId);
+        paper.setLanguageId(Assessment_Constants.SELECTED_LANGUAGE);
         paper.setExamId(scienceQuestionList.get(0).getExamid());
         paper.setSubjectId(scienceQuestionList.get(0).getSubjectid());
 //        paper.setPaperId(scienceQuestionList.get(0).getPaperid());
@@ -1218,9 +1251,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
             score.setTotalMarks(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
             score.setExamId(scienceQuestionList.get(i).getExamid());
             score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
-            if (supervisorId.equalsIgnoreCase(""))
+            //todo add supervision type
+        /*    if (supervisorId.equalsIgnoreCase(""))
                 score.setLabel("practice");
-            else score.setLabel("supervised assessment");
+            else score.setLabel("supervised assessment");*/
             score.setEndDateTime(scienceQuestionList.get(i).getEndTime());
             score.setStudentID(Assessment_Constants.currentStudentID);
             score.setDeviceID(AppDatabase.getDatabaseInstance(this).getStatusDao().getValue("DeviceId"));
@@ -1301,8 +1335,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
             level = 2;
         return level;
     }
-
-
 
 
     @Override

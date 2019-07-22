@@ -47,10 +47,7 @@ public class TopicFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            getExamData();
-        } else
-            assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getAllAssessmentTests();
+
     }
 
     @Override
@@ -116,6 +113,12 @@ public class TopicFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
+             /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+            getExamData();
+        } else*/
+        assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getAllAssessmentTests();
+        setTopicsToRecyclerView();
+
     }
 }
