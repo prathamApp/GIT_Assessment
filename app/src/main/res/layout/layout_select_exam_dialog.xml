@@ -15,10 +15,12 @@
             android:id="@+id/txt_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
             android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="6"
+            android:fontFamily="@font/quicksand_bold"
             android:padding="5dp"
             android:text="Exam"
+
             android:textColor="@color/colorPrimaryDark"
             android:textSize="25dp"
             android:textStyle="bold" />
@@ -38,7 +40,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
-        android:background="@color/colorAccentDark"/>
+        android:background="@color/colorAccentDark" />
 
     <LinearLayout
         android:id="@+id/ll_select_paper"
@@ -76,6 +78,8 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
+
+                android:fontFamily="@font/quicksand_bold"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Update Tests"
@@ -89,6 +93,8 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
+
+                android:fontFamily="@font/quicksand_bold"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Ok"
@@ -109,7 +115,9 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_margin="@dimen/_5sdp"
+
             android:layout_weight="1"
+            android:fontFamily="@font/quicksand_bold"
             android:text="Total No of question : "
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
@@ -120,6 +128,8 @@
             android:layout_height="0dp"
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="1"
+            android:fontFamily="@font/quicksand_bold"
+
             android:text="Out of Marks : "
 
             android:textSize="@dimen/_12sdp"
@@ -131,6 +141,8 @@
             android:layout_height="0dp"
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="1"
+            android:fontFamily="@font/quicksand_bold"
+
             android:text="Time Alloted : "
             android:textSize="@dimen/_12sdp"
 
@@ -149,6 +161,8 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
+
+                android:fontFamily="@font/quicksand_bold"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Back"
@@ -161,7 +175,9 @@
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
+
                 android:background="@drawable/ripple_effect"
+                android:fontFamily="@font/quicksand_bold"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Start Assessment"

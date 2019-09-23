@@ -5,10 +5,11 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity
-public class AssessmentPaperPattern {
+public class AssessmentPaperPattern implements Serializable {
     private String subjectname;
     @Embedded
     private ArrayList<AssessmentPatternDetails> lstpatterndetail;

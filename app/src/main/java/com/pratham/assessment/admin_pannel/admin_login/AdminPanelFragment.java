@@ -37,8 +37,6 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     @BindView(R.id.password)
     android.support.design.widget.TextInputEditText passwordET;
 
-    @BindView(R.id.chk_start_assessment)
-    CheckBox startAssessment;
 
     @Override
     public void onAttach(Context context) {
@@ -55,13 +53,13 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-       Assessment_Utility.HideInputKeypad(getActivity());
-        userNameET.setText("pravinthorat");
-        passwordET.setText("pratham123");
+        Assessment_Utility.HideInputKeypad(getActivity());
+       /* userNameET.setText("pravinthorat");
+        passwordET.setText("pratham123");*/
         /*  userNameET.setText("admin");
         passwordET.setText("admin");*/
-      /*  userNameET.setText("");
-        passwordET.setText("");*/
+        userNameET.setText("");
+        passwordET.setText("");
         adminPanelPresenter = new AdminPanelPresenter(getActivity(), this);
     }
 
@@ -74,7 +72,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
 
     @OnClick(R.id.btn_clearData)
     public void clearData() {
-        AlertDialog clearDataDialog = new AlertDialog.Builder(getActivity())
+        /*AlertDialog clearDataDialog = new AlertDialog.Builder(getActivity())
                 //set message, title, and icon
                 .setTitle("Clear Data")
                 .setMessage("Are you sure you want to clear everything ?")
@@ -95,6 +93,9 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
                 .create();
         clearDataDialog.show();
         clearDataDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
+*/
+        userNameET.getText().clear();
+        passwordET.getText().clear();
 
     }
 
@@ -134,10 +135,10 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
 
     @Override
     public void onLoginSuccess() {
-       /* if (!startAssessment)*/
-            Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
-                    null, PushOrAssignFragment.class.getSimpleName());
-       // else startActivity(new Intent(getActivity(), MenuActivity.class));
+        /* if (!startAssessment)*/
+        Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
+                null, PushOrAssignFragment.class.getSimpleName());
+        // else startActivity(new Intent(getActivity(), MenuActivity.class));
             /*Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
                     null, PushOrAssignFragment.class.getSimpleName());
 */

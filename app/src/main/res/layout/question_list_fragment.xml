@@ -5,7 +5,8 @@
     style="@style/AppModalStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_10sdp"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:background="@drawable/main_card_bg"
     android:paddingBottom="@dimen/_10sdp">
 
 
@@ -13,10 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_10sdp">
+            >
 
             <LinearLayout
                 android:id="@+id/ll_indicators"
@@ -31,6 +32,8 @@
                     android:layout_margin="@dimen/_2sdp"
                     android:layout_weight="1"
                     android:background="@drawable/ripple_round_attempted"
+
+                    android:fontFamily="@font/quicksand_bold"
                     android:text=""
                     android:textAlignment="center"
                     android:textSize="@dimen/_15sdp" />
@@ -39,9 +42,11 @@
                     android:id="@+id/tv_answered"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_30sdp"
+
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/_2sdp"
                     android:layout_weight="3"
+                    android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
                     android:text="Answered"
                     android:textSize="@dimen/_12sdp"
@@ -50,16 +55,18 @@
                 <android.support.v4.widget.Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tv_not_answered_color"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
+
                     android:layout_margin="@dimen/_2sdp"
                     android:layout_weight="1"
                     android:background="@drawable/ripple_round_not_attempted"
+                    android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
                     android:text=""
                     android:textAlignment="center"
@@ -71,7 +78,9 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/_2sdp"
+
                     android:layout_weight="3"
+                    android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
                     android:text="Not Answered"
                     android:textSize="@dimen/_12sdp"
@@ -84,8 +93,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:layout_below="@+id/ll_indicators"
-                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginLeft="@dimen/_3sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginRight="@dimen/_3sdp"
                 android:background="@color/colorPrimary"
                 app:layout_constraintTop_toBottomOf="@+id/ll_indicators"
@@ -95,6 +104,7 @@
                 android:id="@+id/rv_questions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/view1"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="8dp"
                 android:padding="@dimen/_5sdp"
@@ -105,6 +115,8 @@
                 android:id="@+id/btn_save"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
+                android:layout_below="@+id/rv_questions"
+                android:layout_alignParentBottom="true"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/ripple_effect"
@@ -114,7 +126,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/rv_questions"
                 tools:layout_editor_absoluteX="0dp" />
 
-        </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
 
     </ScrollView>
 

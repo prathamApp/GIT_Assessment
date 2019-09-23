@@ -2,11 +2,14 @@ package com.pratham.assessment.ui.choose_assessment.science.viewHolders;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,14 +26,20 @@ import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_question)
@@ -41,6 +50,8 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
     GridLayout gridLayout;
     ScienceQuestion scienceQuestion;
     QuestionTypeListener questionTypeListener;
+    AssessmentAnswerListener assessmentAnswerListener;
+
 
     Context context;
 
@@ -49,6 +60,7 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
         this.context = context;
         questionTypeListener = scienceAdapter;
+        assessmentAnswerListener=(ScienceAssessmentActivity)context;
 
     }
 
@@ -59,7 +71,7 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().
-                    load(Assessment_Constants.loadOnlineImagePath + scienceQuestion.getPhotourl()).apply(new RequestOptions()
+                    load(/*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestion.getPhotourl()).apply(new RequestOptions()
                     .fitCenter()
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(Target.SIZE_ORIGINAL))
@@ -76,21 +88,53 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
         gridLayout.setColumnCount(1);
         gridLayout.removeAllViews();
         for (int j = 0; j < choices.size(); j++) {
-            final CheckBox checkBox = new CheckBox(context);
-            checkBox.setText(choices.get(j).getChoicename());
-            checkBox.setTag(choices.get(j).getQcid());
-            if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
-                checkBox.setChecked(true);
-            } else {
-                checkBox.setChecked(false);
+            View view = LayoutInflater.from(context).inflate(R.layout.layout_multiple_select_item, gridLayout, false);
+            final CheckBox checkBox = (CheckBox) view;
+            checkBox.setButtonTintList(Assessment_Utility.colorStateList);
+            checkBox.setTextColor(context.getResources().getColor(R.color.white));
+            if (!choices.get(j).getChoicename().equalsIgnoreCase(""))
+                checkBox.setText(choices.get(j).getChoicename());
+            else if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
+
+
+                final String path =/* Assessment_Constants.loadOnlineImagePath + */choices.get(j).getChoiceurl();
+                checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path);
+                        zoomImageDialog.show();*/
+                    }
+                });
+                Glide.with(context).asBitmap().
+                        load(path)
+                        .apply(new RequestOptions()
+                                .fitCenter()
+                                .format(DecodeFormat.PREFER_ARGB_8888)
+                                .override(getDp(200), getDp(300))).into(new SimpleTarget<Bitmap>(MATCH_PARENT, MATCH_PARENT) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        Drawable bd = new BitmapDrawable(resource);
+                        checkBox.setButtonDrawable(bd);
+                    }
+                });
             }
-            checkBox.setTextSize(25);
-            checkBox.setPadding(5, 5, 5, 5);
+            checkBox.setTag(choices.get(j).getQcid());
+            if (scienceQuestion.getIsAttempted()) {
+                if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
+                    checkBox.setChecked(true);
+                checkBox.setTextColor(Assessment_Utility.selectedColor);
+                } else {
+                    checkBox.setChecked(false);
+                checkBox.setTextColor(context.getResources().getColor(R.color.white));
+
+                }
+            }
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //                    Toast.makeText(context, "" + checkBox.getText(), Toast.LENGTH_SHORT).show();
                     String mQcID = buttonView.getTag().toString();
+//                    buttonView.setTextColor(Assessment_Utility.selectedColor);
                     ScienceQuestionChoice mScienceQuestionChoice = null;
                     for (ScienceQuestionChoice scienceQuestionChoice : choices) {
                         if (scienceQuestionChoice.getQcid().equals(mQcID)) {
@@ -106,21 +150,29 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
                             mScienceQuestionChoice.setMyIscorrect("false");
                     }
 
-                    questionTypeListener.setAnswer("", "", scienceQuestion.getQid(), choices);
+                    for (int i = 0; i < gridLayout.getRowCount(); i++) {
+                        if (((CheckBox) gridLayout.getChildAt(i)).isChecked()) {
+                            ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Assessment_Utility.selectedColor);
+                        } else
+                            ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Color.WHITE);
+
+                    }
+
+
+//                    questionTypeListener.setAnswer("", "", scienceQuestion.getQid(), choices);
+                    assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), choices);
                 }
             });
             GridLayout.LayoutParams paramGrid = new GridLayout.LayoutParams();
           /*  paramGrid.height = GridLayout.LayoutParams.WRAP_CONTENT;
             paramGrid.width = GridLayout.LayoutParams.WRAP_CONTENT;*/
             paramGrid.setGravity(Gravity.FILL_HORIZONTAL);
+            paramGrid.setMargins(10, 10, 10, 10);
             checkBox.setLayoutParams(paramGrid);
             gridLayout.addView(checkBox);
         }
 
-        for (int j = 0; j < choices.size(); j++) {
 
-
-        }
 
 
      /*   for (int i = 0; i < gridLayout.getChildCount(); i++) {
@@ -150,6 +202,10 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
 
         });*/
 
+    }
+
+    private int getDp(int value) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, context.getResources().getDisplayMetrics());
     }
 
 }

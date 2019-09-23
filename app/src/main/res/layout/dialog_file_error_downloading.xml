@@ -37,6 +37,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginRight="@dimen/_15sdp"
                 android:gravity="center"
+                android:fontFamily="@font/quicksand_bold"
                 android:maxLines="3"
                 android:text="Problem Downloading File"
                 android:textColor="@color/primaryText"

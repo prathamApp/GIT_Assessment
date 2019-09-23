@@ -2,11 +2,14 @@ package com.pratham.assessment.ui.choose_assessment.science.viewHolders;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -23,10 +26,13 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +56,14 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
     private ScienceQuestion scienceQuestion;
     private Context context;
     private QuestionTypeListener questionTypeListener;
+    AssessmentAnswerListener assessmentAnswerListener;
 
     public McqFillInTheBlanksViewHolder(@NonNull View itemView, Context context, ScienceAdapter scienceAdapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = context;
         questionTypeListener = scienceAdapter;
+        assessmentAnswerListener=(ScienceAssessmentActivity)context;
     }
 
     public void setMcqsQuestion(ScienceQuestion scienceQuestion1, int pos) {
@@ -65,7 +73,7 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().
-                    load(Assessment_Constants.loadOnlineImagePath + scienceQuestion.getPhotourl()).apply(new RequestOptions()
+                    load(/*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestion.getPhotourl()).apply(new RequestOptions()
                     .fitCenter()
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(Target.SIZE_ORIGINAL))
@@ -83,31 +91,33 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
             radioGroupMcq.removeAllViews();
 
             for (int r = 0; r < options.size(); r++) {
-                final RadioButton radioButton = new RadioButton(context);
+//                final RadioButton radioButton = new RadioButton(context);
+                final View view = LayoutInflater.from(context).inflate(R.layout.layout_mcq_radio_item, radioGroupMcq, false);
+                final RadioButton radioButton = (RadioButton) view;
+                radioButton.setButtonTintList(Assessment_Utility.colorStateList);
+
                 radioButton.setId(r);
-                radioButton.setPadding(25, 25, 25, 25);
                 radioButton.setElevation(3);
+
 //                radioButton.setButtonDrawable(android.R.color.transparent);
-                radioButton.setBackground(context.getResources().getDrawable(R.drawable.custom_radio_button));
                 RadioGroup.LayoutParams layoutParams;
                 String ans = scienceQuestion1.getUserAnswer();
                 String ansId = scienceQuestion1.getUserAnswer();
 
 //                radioButton.setLayoutParams(layoutParams);
-                radioButton.setTextSize(18);
 
 
-                final RadioButton tempRadio = radioButton;
+//                final RadioButton tempRadio = (RadioButton) radioButton;
                 if (!options.get(r).getChoiceurl().equalsIgnoreCase("")) {
                     layoutParams = new RadioGroup.LayoutParams(MATCH_PARENT, getDp(150), 1);
                     radioButton.setLayoutParams(layoutParams);
                     final int finalR = r;
-                    final String path = Assessment_Constants.loadOnlineImagePath + options.get(r).getChoiceurl();
+                    final String path = /*Assessment_Constants.loadOnlineImagePath +*/ options.get(r).getChoiceurl();
                     radioButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path);
-                            zoomImageDialog.show();
+                           /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path);
+                            zoomImageDialog.show();*/
                         }
                     });
                     Glide.with(context).asBitmap().
@@ -119,7 +129,7 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             Drawable bd = new BitmapDrawable(resource);
-                            tempRadio.setButtonDrawable(bd);
+                            radioButton.setButtonDrawable(bd);
                         }
                     });
                     layoutParams.setMargins(15, 10, 10, 10);
@@ -135,7 +145,11 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
                     radioButton.setText(options.get(r).getChoicename());
                     if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
                         radioButton.setChecked(true);
-                    } else radioButton.setChecked(false);
+                        radioButton.setTextColor(Assessment_Utility.selectedColor);
+                    } else {
+                        radioButton.setChecked(false);
+                        radioButton.setTextColor(Color.WHITE);
+                    }
 
 
                     layoutParams = new RadioGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 1);
@@ -165,16 +179,26 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 //((RadioButton) radioGroupMcq.getChildAt(checkedId)).setChecked(true);
-                RadioButton rb =  group.findViewById(checkedId);
-                if (rb != null) rb.setChecked(true);
+                RadioButton rb = group.findViewById(checkedId);
+                if (rb != null) {
+                    rb.setChecked(true);
+                    rb.setTextColor(Assessment_Utility.selectedColor);
+                }
+
                 for (int i = 0; i < group.getChildCount(); i++) {
                     if ((group.getChildAt(i)).getId() == checkedId) {
+                        ((RadioButton) group.getChildAt(i)).setTextColor(Assessment_Utility.selectedColor);
+
                         List<ScienceQuestionChoice> ans = new ArrayList<>();
                         ans.add(options.get(i));
                         scienceQuestion.setMatchingNameList(ans);
 //                        String answer = ((RadioButton) group.getChildAt(i)).getText().toString();
 //                        String ansId = options.get(i).getQcid();
-                        questionTypeListener.setAnswer("", "", scienceQuestion.getQid(), ans);
+                        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), ans);
+//                        questionTypeListener.setAnswer("", "", scienceQuestion.getQid(), ans);
+                    } else {
+                        ((RadioButton) group.getChildAt(i)).setTextColor(context.getResources().getColor(R.color.white));
+
                     }
                 }
             }

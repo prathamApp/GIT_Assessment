@@ -10,7 +10,7 @@
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_bg"
+        android:background="@drawable/subjects_bg"
         tools:context=".ui.choose_assessment.ChooseAssessmentActivity">
 
         <!--<android.support.v7.widget.Toolbar
@@ -18,15 +18,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="4dp" >-->
+        <ImageButton
+            android:id="@+id/menu_icon"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_margin="@dimen/_7sdp"
+            android:background="@drawable/ripple_round"
+            android:elevation="@dimen/_3sdp"
+            android:src="@drawable/ic_menu" />
 
+        <com.pratham.assessment.custom.toggle_button.SwipeableButton
+            android:id="@+id/toggle_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_alignParentEnd="true"
+            app:checkedBackground="@drawable/shape_scrolling_view_checked"
+            app:checkedIcon="@drawable/ic_play"
+            android:layout_margin="@dimen/_7sdp"
+            app:checkedToggleBackground="@drawable/shape_checked_toggle"
+            app:durationAnimation="250"
+            app:isClickToSwipeEnable="true"
+            app:textChecked="@string/checked_text"
+            app:textColorChecked="@color/black"
+            app:textColorUnChecked="@color/black"
+            app:textUnchecked="@string/unchecked_text"
+            app:thresholdEnd="0.1"
+            app:thresholdStart="0.9"
+            app:uncheckedBackground="@drawable/shape_scrolling_view_unchecked"
+            app:uncheckedIcon="@drawable/ic_stop"
+            app:uncheckedToggleBackground="@drawable/shape_unchecked_toggle" />
 
         <RelativeLayout
             android:id="@+id/title_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_120sdp">
+            android:layout_height="@dimen/_120sdp"
+            android:visibility="gone">
 
             <ImageButton
-                android:id="@+id/menu_icon"
+                android:id="@+id/menu_icon1"
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginLeft="@dimen/_10sdp"
@@ -34,13 +63,15 @@
                 android:background="@drawable/ripple_round"
                 android:src="@drawable/ic_menu" />
 
+
             <TextView
                 android:id="@+id/tv_hey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_toRightOf="@+id/menu_icon"
+                android:layout_toRightOf="@+id/menu_icon1"
+                android:fontFamily="@font/quicksand_bold"
                 android:text="Hey,"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/_22sdp" />
@@ -52,7 +83,8 @@
                 android:layout_below="@+id/tv_hey"
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_toRightOf="@+id/menu_icon"
+                android:layout_toRightOf="@+id/menu_icon1"
+                android:fontFamily="@font/quicksand_bold"
                 android:text="Choose the assessment.."
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/_17sdp" />
@@ -63,8 +95,8 @@
                 android:layout_height="@dimen/_25sdp"
                 android:layout_below="@+id/tv_choose_assessment"
                 android:layout_margin="@dimen/_5sdp"
-                android:visibility="gone"
-                android:background="@drawable/gradient_spinner" />
+                android:background="@drawable/gradient_spinner"
+                android:visibility="gone" />
 
 
         </RelativeLayout>
@@ -72,14 +104,13 @@
         <FrameLayout
             android:id="@+id/nav_frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/title_bar" />
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:id="@+id/rl_choose_sub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/title_bar"
+            android:layout_below="@+id/menu_icon"
             android:visibility="visible">
             <!--android:layout_marginTop="@dimen/minus_margin"-->
             <android.support.v7.widget.RecyclerView

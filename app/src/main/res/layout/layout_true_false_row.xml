@@ -3,11 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/_3sdp"
-    android:background="@drawable/ripple_rectangle"
-    app:cardCornerRadius="@dimen/_8sdp"
-    app:cardElevation="@dimen/_3sdp"
-    app:cardMaxElevation="@dimen/_5sdp">
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -18,11 +15,18 @@
         <TextView
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
-            android:layout_margin="@dimen/_5sdp" />
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="0.5" />
 
         <ImageView
             android:id="@+id/iv_question_image"
             style="@style/CustomQuestionImageStyle" />
+
+        <com.pratham.assessment.custom.gif_viewer.GifView
+            android:id="@+id/iv_question_gif"
+            style="@style/CustomQuestionImageStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.5" />
 
         <RadioGroup
             android:id="@+id/rg_true_false"
@@ -30,26 +34,29 @@
             android:layout_height="0dp"
             android:layout_margin="@dimen/_10sdp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <RadioButton
+            <Button
                 android:id="@+id/rb_true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
                 android:layout_margin="@dimen/_5sdp"
-                android:layout_weight="1"
                 android:background="@drawable/custom_radio_button"
+                android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
                 android:padding="@dimen/_10sdp"
                 android:text="True"
                 android:textSize="@dimen/_15sdp" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rb_false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
                 android:layout_margin="@dimen/_5sdp"
-                android:layout_weight="1"
                 android:background="@drawable/custom_radio_button"
+
+                android:fontFamily="@font/quicksand_bold"
                 android:padding="@dimen/_10sdp"
                 android:text="False"
                 android:textSize="@dimen/_15sdp" />

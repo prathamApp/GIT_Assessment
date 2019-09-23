@@ -24,6 +24,9 @@ import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
+import com.pratham.assessment.utilities.Assessment_Utility;
+
+import net.alhazmy13.catcho.library.Catcho;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -58,7 +61,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Assessment_Utility utility = new Assessment_Utility();
         audioManager = (AudioManager) getSystemService(this.AUDIO_SERVICE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        ButtonClickSound = MediaPlayer.create(this, R.raw.click);//new MediaPlayer instance
@@ -78,9 +81,8 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         //new MediaPlayer instance
          /*Catcho.Builder(this)
                 .activity(CatchoTransparentActivity.class)
-                .recipients("your-email@domain.com")
-                .build();
-*/
+                .recipients("ankita.lakhamade27@gmail.com")
+                .build();*/
     }
 
     public static void setMute(int m) {
@@ -90,7 +92,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
                 muteFlg = true;
             } else if (m == 0 && muteFlg) {
-                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
+                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE, 0);
                 muteFlg = false;
             }
         } else {

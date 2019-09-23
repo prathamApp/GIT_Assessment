@@ -13,10 +13,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
@@ -55,8 +58,13 @@ import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.ui.login.MainActivity;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -93,6 +101,28 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class Assessment_Utility {
+    private static List<Integer> colors;
+    public static Integer selectedColor = 0;
+    public static ColorStateList colorStateList;
+
+
+    public Assessment_Utility() {
+        colors = getAllMaterialColors();
+    }
+
+    public static void setSelectedColor(int defaultColor) {
+        selectedColor = defaultColor;
+        colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_enabled}, //disabled
+                        new int[]{android.R.attr.state_enabled} //enabled
+                },
+                new int[]{
+                        Color.TRANSPARENT //disabled
+                        , selectedColor //enabled
+                }
+        );
+    }
 
     public static String getPhoneModel() {
         String str1 = Build.BRAND;
@@ -312,8 +342,20 @@ public class Assessment_Utility {
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
                     .commit();
-        }else if (mActivity instanceof ChooseAssessmentActivity) {
+        } else if (mActivity instanceof ChooseAssessmentActivity) {
             ((ChooseAssessmentActivity) mActivity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(frame, mFragment, TAG)
+                    .addToBackStack(TAG)
+                    .commit();
+        } else if (mActivity instanceof AssessmentCertificateActivity) {
+            ((AssessmentCertificateActivity) mActivity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(frame, mFragment, TAG)
+                    .addToBackStack(TAG)
+                    .commit();
+        }else if (mActivity instanceof ResultActivity) {
+            ((ResultActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
@@ -455,6 +497,21 @@ public class Assessment_Utility {
        /* String[] avatars = context.getResources().getStringArray(R.array.avatars);
         String word = avatars[new Random().nextInt(avatars.length)];
         return word;*/
+    }
+ public static String getRandomAvatarNames(Context context) {
+        String[] drawables = {"b1.png", "b2.png", "b3.png",
+                "g1.png", "g2.png", "g3.png"};
+        String a = drawables[new Random().nextInt(drawables.length)];
+        return a;
+       /* String[] avatars = context.getResources().getStringArray(R.array.avatars);
+        String word = avatars[new Random().nextInt(avatars.length)];
+        return word;*/
+    }
+
+    public static int getRandomCertificateBackground(Context context) {
+        Integer[] drawables = {R.drawable.pattern_1, R.drawable.pattern_2, R.drawable.pattern_3};
+        int a = drawables[new Random().nextInt(drawables.length)];
+        return a;
     }
 
     public static String getDeviceSerialID() {
@@ -1697,6 +1754,57 @@ public class Assessment_Utility {
     public static <T> String beanToJson(T clz) {
         Gson gson = new Gson();
         return gson.toJson(clz);
+    }
+
+    private static List<Integer> getAllMaterialColors() {
+        try {
+            XmlResourceParser xrp = AssessmentApplication.getInstance().getResources().getXml(R.xml.material_colors);
+            List<Integer> allColors = new ArrayList<>();
+            int nextEvent;
+            while ((nextEvent = xrp.next()) != XmlResourceParser.END_DOCUMENT) {
+                String s = xrp.getName();
+                if ("color".equals(s)) {
+                    String color = xrp.nextText();
+                    allColors.add(Color.parseColor(color));
+                }
+            }
+            return allColors;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static int getRandomColorGradient() {
+        if (colors != null) {
+            int randomIndex = new Random().nextInt(colors.size());
+            int randomColor = colors.get(randomIndex);
+            return randomColor;
+        } else {
+            return 0;
+        }
+    }
+
+    public static String getFileName(String qid, String photoUrl) {
+        String[] splittedPath = photoUrl.split("/");
+        String fileName = qid + "_" + splittedPath[splittedPath.length - 1];
+        return fileName;
+    }
+
+    public static Date stringToDate(String date) {
+        try {
+            return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static void showZoomDialog(Context context,String path, String localPath) {
+        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+        zoomImageDialog.show();
     }
 
 }

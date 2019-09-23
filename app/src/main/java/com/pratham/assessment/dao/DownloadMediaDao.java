@@ -34,18 +34,16 @@ public interface DownloadMediaDao {
     void deleteAll(DownloadMedia... downloadMedia);
 
 
-
-    @Query("select * from DownloadMedia where qId=:qid and paperId=:paperId")
-    List<DownloadMedia> getMediaByQidAndPaperId(String qid,String paperId);
+    @Query("select * from DownloadMedia where qId=:qid and paperId=:paperId and sentFlag=0")
+    List<DownloadMedia> getMediaByQidAndPaperId(String qid, String paperId);
 
     @Query("DELETE FROM DownloadMedia")
     void deleteAllMedia();
 
 
-
     @Query("select * from DownloadMedia WHERE qId=:qid")
-     List<DownloadMedia> getediaByQid(String qid);
+    List<DownloadMedia> getediaByQid(String qid);
 
-  /*  @Query("update Assessment set sentFlag=1 where sentFlag=0")
-    public void setSentFlag();*/
+    @Query("update DownloadMedia set sentFlag=1 where sentFlag=0")
+    public void setSentFlag();
 }

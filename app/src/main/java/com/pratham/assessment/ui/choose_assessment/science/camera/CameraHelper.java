@@ -21,6 +21,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
+import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.utilities.Assessment_Constants;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -177,7 +180,8 @@ public class CameraHelper {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_" + timeStamp + ".jpg");
         } else if (type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + "myVideo.mp4");
+//            mediaFile = new File(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + "myVideo.mp4");
+            mediaFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "myVideo.mp4");
         } else {
             return null;
         }

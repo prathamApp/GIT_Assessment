@@ -14,6 +14,7 @@
             android:layout_margin="@dimen/_5sdp"
             android:gravity="center"
             android:text="1"
+            android:fontFamily="@font/quicksand_bold"
             android:elevation="@dimen/_3sdp"
             android:textAlignment="center"
             android:background="@drawable/ripple_round"

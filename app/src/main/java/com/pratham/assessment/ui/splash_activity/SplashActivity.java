@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,11 +29,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.async.PushDataToServer;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
+import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -75,6 +80,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         dialog = new ProgressDialog(this);
         fpath = "";
         appname = "";
@@ -224,9 +230,11 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Override
     public void startApp() {
         createDataBase();
-/*        if (Assessment_Constants.SMART_PHONE && !Assessment_Constants.SD_CARD_Content) {
-            splashPresenter.pushData();
-        }*/
+        if (!AssessmentApplication.isTablet) {
+//            splashPresenter.pushData();
+            new PushDataToServer(this, false).execute();
+
+        }
     }
 
     /*public void getSdCardPath() {
@@ -355,6 +363,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                showBottomFragment();
             }
         });
 
@@ -437,16 +446,30 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Override
     public void gotoNextActivity() {
 /*        if (Assessment_Constants.SMART_PHONE && !Assessment_Constants.SD_CARD_Content) {
-            Assessment_Constants.ext_path = COSApplication.assessPath + "/.LLA/English/";
+            Assessment_Constants.ext_path = COSApplication.contentSDPath + "/.LLA/English/";
             dismissProgressDialog();
-            showBottomFragment();
         } else {*/
 
         context.startService(new Intent(context, AppExitService.class));
         dismissProgressDialog();
 
-        startActivity(new Intent(context, SelectGroupActivity.class));
 
+
+        if (!AssessmentApplication.isTablet) {
+            if (!FastSave.getInstance().getBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, false))
+                show_STT_Dialog();
+            else
+                showBottomFragment();
+        } else {
+            startActivity(new Intent(context, SelectGroupActivity.class));
+        }
+
+
+
+
+       /* if (AssessmentApplication.isTablet)
+            startActivity(new Intent(context, SelectGroupActivity.class));
+        else showBottomFragment();*/
 
 //                    startActivity(new Intent(context, MenuActivity.class));
 
@@ -455,13 +478,12 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 //        }
     }
 
-/*    @Override
     public void showBottomFragment() {
         fragmentBottomOpenFlg = true;
         firstPause = false;
         BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
         bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
-    }*/
+    }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
@@ -504,5 +526,65 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
     @Override
     public void failedCopyingExisting() {
+    }
+
+
+    private void show_STT_Dialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.lang_custom_dialog);
+/*        Bitmap map=COS_Utility.takeScreenShot(HomeActivity.this);
+        Bitmap fast=COS_Utility.fastblur(map, 20);
+        final Drawable draw=new BitmapDrawable(getResources(),fast);
+        dialog.getWindow().setBackgroundDrawable(draw);*/
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        dialog.show();
+
+        TextView dia_title = dialog.findViewById(R.id.dia_title);
+        Button skip = dialog.findViewById(R.id.dia_btn_green);
+        Button ok = dialog.findViewById(R.id.dia_btn_yellow);
+        dia_title.setText("Please download language packs offline for better performance");
+        ok.setText("OK");
+        skip.setText("SKIP");
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomFragment();
+                FastSave.getInstance().saveBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, true);
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setComponent(new ComponentName("com.google.android.googlequicksearchbox",
+                        "com.google.android.voicesearch.greco3.languagepack.InstallActivity"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomFragment();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 }

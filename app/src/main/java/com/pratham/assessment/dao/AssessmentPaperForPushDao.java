@@ -26,11 +26,23 @@ public interface AssessmentPaperForPushDao {
     @Query("select * from AssessmentPaperForPush where examid=:examId")
     public List<AssessmentPaperForPush> getAssessmentPapersByExamId(String examId);
 
+    @Query("select * from AssessmentPaperForPush where paperId=:paperId")
+    public AssessmentPaperForPush getAssessmentPapersByPaperId(String paperId);
+
+    @Query("select distinct subjectId from AssessmentPaperForPush where languageId=:langId")
+    public List<String> getAssessmentPapersByUniqueSubId(String langId);
+
+    @Query("select distinct languageId from AssessmentPaperForPush")
+    public List<String> getAssessmentPapersByUniqueLang();
+
     @Query("select * from AssessmentPaperForPush where examid=:examId and subjectId=:subId and studentId=:studentId")
     public List<AssessmentPaperForPush> getAssessmentPapersByExamIdAndSubId(String examId, String subId, String studentId);
 
     @Query("select * from AssessmentPaperForPush where subjectId=:subId and studentId=:studentId")
     public List<AssessmentPaperForPush> getAssessmentPaperBySubId(String subId, String studentId);
+
+    @Query("select * from AssessmentPaperForPush where subjectId=:subId and studentId=:studentId and languageId=:langId")
+    public List<AssessmentPaperForPush> getAssessmentPaperBySubIdAndLangId(String subId, String studentId, String langId);
 
     @Query("update AssessmentPaperForPush set sentFlag=1 where sentFlag=0")
     public void setSentFlag();

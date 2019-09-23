@@ -5,10 +5,11 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class ScienceQuestionChoice {
+public class ScienceQuestionChoice implements Serializable {
 
     @NonNull
     @PrimaryKey

@@ -11,15 +11,16 @@ public class Assessment_Constants {
     public static final String GAME = "game";
     public static final String LANGUAGE = "language";
     public static final String SD_CARD_Content_STR = "sd_card_content_str";
+    public static final String ENGLISH = "English";
+    public static final String VOICES_DOWNLOAD_INTENT = "voices_download_intent";
     public static boolean SD_CARD_Content = false;
     public static String STORING_IN;
     public static String ext_path = "";
-    public static String ENGLISH = "English";
     public static String currentsupervisorID;
 
-    public static String ASSESSMENT_FOLDER_PATH = "/.Assessment/";
+    public static String ASSESSMENT_FOLDER_PATH = "/.Assessment";
     public static String GAME_PATH = "/.Assessment/English/Game/";
-    public static String STORE_ANSWER_MEDIA_PATH = "/.Assessment/Content/Answers";
+
     public static String ENGLISH_FOLDER_PATH = "/.Assessment/English/";
     public static String THUMBS_PATH = "/.Assessment/English/app_Thumbs/";
 
@@ -60,18 +61,23 @@ public class Assessment_Constants {
     public static final String STUDENT_LIST = "STUDENT_LIST";
     public static final String SESSIONID = "sessionid";
     public static String currentStudentID;
+    public static String currentStudentName;
     public static String currentSession;
     public static boolean supervisedAssessment = false;
     public static String assessmentSession = "";
     public static String currentSupervisorID = "";
 
     //new
-    public static  String SELECTED_LANGUAGE = "1";
-    public static  String SELECTED_SUBJECT = "";
-    public static  String SELECTED_SUBJECT_ID = "";
-    public static  String SELECTED_EXAM_ID = "";
-    public static  String SELECTED_TOPIC_ID = "";
-    public static  String ASSESSMENT_TYPE = "";
+    public static String SELECTED_LANGUAGE = "1";
+    public static String SELECTED_SUBJECT = "";
+    public static String SELECTED_SUBJECT_ID = "";
+    public static String SELECTED_EXAM_ID = "";
+    public static String ASSESSMENT_TYPE = "";
+    public static boolean VIDEOMONITORING = false;
+    public static String STORE_ANSWER_MEDIA_PATH = "/.Assessment/Content/Answers";
+    public static String STORE_DOWNLOADED_MEDIA_PATH = "/.Assessment/Content/Downloaded";
+    public static String STORE_VIDEO_MONITORING_PATH = "/.Assessment/Content/VideoMonitoring";
+    public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
 
     public static final String KOLIBRI_BLOCK = "kolibri_block";
     public static final String SERVER_BLOCK = "server_block";
@@ -88,6 +94,32 @@ public class Assessment_Constants {
 
     public static String loadOnlineImagePath = "http://pef1.prathamskills.org//";
     public static boolean isShowcaseDisplayed = false;
+
+    public static String ENGLISH_CODE = "en";
+    public static String HINDI_CODE = "hi";
+    public static String MARATHI_CODE = "mr";
+    public static String GUJARATI_CODE = "gu";
+    public static String KANNADA_CODE = "kn";
+    public static String ASSAMESE_CODE = "en";
+    public static String BENGALI_CODE = "bn";
+    public static String PUNJABI_CODE = "en";
+    public static String ODIA_CODE = "en";
+    public static String TAMIL_CODE = "ta";
+    public static String TELUGU_CODE = "te";
+    public static String URDU_CODE = "ur";
+
+    public static String ENGLISH_ID = "1";
+    public static String HINDI_ID = "2";
+    public static String MARATHI_ID = "3";
+    public static String GUJARATI_ID = "7";
+    public static String KANNADA_ID = "8";
+    public static String ASSAMESE_ID = "9";
+    public static String BENGALI_ID = "10";
+    public static String PUNJABI_ID = "11";
+    public static String ODIA_ID = "12";
+    public static String TAMIL_ID = "13";
+    public static String TELUGU_ID = "14";
+    public static String URDU_ID = "15";
 
 
     public static enum URL {

@@ -32,7 +32,8 @@
             <TextView
                 android:id="@+id/tv_science_question_title"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="0dp"        android:fontFamily="@font/quicksand_bold"
+
                 android:layout_margin="@dimen/_2sdp"
                 android:layout_weight="0.5"
                 android:gravity="center"
@@ -46,7 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="@dimen/_2sdp"
-                android:layout_weight="3"
+                android:layout_weight="3"        android:fontFamily="@font/quicksand_bold"
+
                 android:background="@drawable/ripple_rectangle"
 
                 android:gravity="center"

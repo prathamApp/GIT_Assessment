@@ -52,7 +52,7 @@
         android:elevation="@dimen/_12sdp"
         android:visibility="gone"
         android:layout_marginBottom="@dimen/_40sdp"
-        android:background="@drawable/ripple_rectangle" />
+        android:background="@drawable/main_card_bg" />
 
     <TextView
         android:id="@+id/child_name"

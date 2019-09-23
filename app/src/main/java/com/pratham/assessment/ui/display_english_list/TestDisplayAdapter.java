@@ -76,7 +76,7 @@ public class TestDisplayAdapter extends RecyclerView.Adapter<TestDisplayAdapter.
         }
         else if (gamesList.getIsDownloaded().equalsIgnoreCase("true") && !Assessment_Constants.SD_CARD_Content) {
             Glide.with(mContext)
-                    .load(AssessmentApplication.assessPath + Assessment_Constants.THUMBS_PATH+gamesList.getNodeImage())
+                    .load(AssessmentApplication.contentSDPath + Assessment_Constants.THUMBS_PATH+gamesList.getNodeImage())
                     .into(holder.thumbnail);
         } else if (gamesList.getIsDownloaded().equalsIgnoreCase("true") && Assessment_Constants.SD_CARD_Content) {
             Glide.with(mContext)

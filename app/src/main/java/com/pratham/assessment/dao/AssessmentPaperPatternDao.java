@@ -23,6 +23,9 @@ public interface AssessmentPaperPatternDao {
     @Query("select * from AssessmentPaperPattern")
     public List<AssessmentPaperPattern> getAllAssessmentPaperPatterns();
 
+    @Query("select * from AssessmentPaperPattern where subjectid=:subId")
+    public List<AssessmentPaperPattern> getAllAssessmentPaperPatternsBySubId(String subId);
+
     @Query("select * from AssessmentPaperPattern where examid=:examId")
     public AssessmentPaperPattern getAssessmentPaperPatternsByExamId(String examId);
 
@@ -33,7 +36,7 @@ public interface AssessmentPaperPatternDao {
     public String getExamNameById(String examid);
 
 
-  @Query("select examname from ASSESSMENTPAPERPATTERN where subjectname=:subName")
+    @Query("select examname from ASSESSMENTPAPERPATTERN where subjectname=:subName")
     public String[] getExamNameBySubjectName(String subName);
 
     @Query("select subjectname from ASSESSMENTPAPERPATTERN where examid=:examid")

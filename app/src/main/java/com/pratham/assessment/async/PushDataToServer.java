@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -72,6 +73,7 @@ public class PushDataToServer extends AsyncTask {
     int videoRecCnt = 0;
     List<DownloadMedia> downloadMediaList = new ArrayList<>();
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
+    private int pushCnt = 0;
 
     public PushDataToServer(Context context, boolean autoPush) {
 
@@ -227,15 +229,20 @@ public class PushDataToServer extends AsyncTask {
             e.printStackTrace();
         }
 //        JSONObject requestJsonObject = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
-        JSONObject requestJsonObjectScience = generateRequestString(scoreData,assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
+        JSONObject requestJsonObjectScience = generateRequestString(scoreData, assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
 
         //        if (checkEmptyness(requestString))
 
         if (!isConnectedToRasp) {
 //            pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
-            pushDataScienceToServer(context, requestJsonObjectScience, AssessmentApplication.uploadScienceUrl);
-            //todo uncomment createMediaFileToPush();
-            // createMediaFileToPush();
+
+            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                pushDataScienceToServer(context, requestJsonObjectScience, AssessmentApplication.uploadScienceUrl);
+                if (downloadMediaList.size() > 0)
+                    createMediaFileToPush();
+            } else {
+
+            }
         } else {
             pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
                     "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
@@ -247,11 +254,13 @@ public class PushDataToServer extends AsyncTask {
 
     private void createMediaFileToPush() {
         String filePath = downloadMediaList.get(mediaCnt).getPhotoUrl();
-        if (!filePath.equalsIgnoreCase("")) {
-            File file = new File(filePath);
-            pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, file, "answerVideo");
+        String type = downloadMediaList.get(mediaCnt).getMediaType();
+        if (filePath != null)
+            if (!filePath.equalsIgnoreCase("")) {
+                File file = new File(filePath);
+                pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, file, type);
 
-        }
+            }
     }
 
     private void pushMediaToServer(String url, File file, final String videoType) {
@@ -276,19 +285,28 @@ public class PushDataToServer extends AsyncTask {
                             mediaCnt++;
                             if (mediaCnt < downloadMediaList.size())
                                 createMediaFileToPush();
-                            else Toast.makeText(context, "Answer videos pushed successfully", Toast.LENGTH_SHORT).show();
+                            else {
+                                if (AssessmentApplication.isTablet)
+                                    Toast.makeText(context, "Media pushed successfully", Toast.LENGTH_SHORT).show();
+                                setMediaFlag();
+                            }
                         } else {
                             videoRecCnt++;
                             if (videoRecCnt < videoRecordingList.size())
                                 createMediaFileToPush();
-                            else Toast.makeText(context, "Video recordings pushed successfully", Toast.LENGTH_SHORT).show();
+                            else {
+                                setMediaFlag();
+                                if (AssessmentApplication.isTablet)
+                                    Toast.makeText(context, "Media pushed successfully", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
                     @Override
                     public void onError(ANError error) {
                         // handle error
-                        Toast.makeText(context, "video monitoring Media push failed", Toast.LENGTH_SHORT).show();
+                        if (AssessmentApplication.isTablet)
+                            Toast.makeText(context, "video monitoring Media push failed", Toast.LENGTH_SHORT).show();
                         PushDataToServer.this.mediaCnt++;
                         if (PushDataToServer.this.mediaCnt < downloadMediaList.size())
                             createMediaFileToPush();
@@ -296,9 +314,16 @@ public class PushDataToServer extends AsyncTask {
                 });
     }
 
+    private void setMediaFlag() {
+        AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag();
+    }
+
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
+        if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()){
+            Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean checkEmptyness(String requestString) {
@@ -365,6 +390,8 @@ public class PushDataToServer extends AsyncTask {
             sessionObj.put("logsData", logsData);
             sessionObj.put("assessmentData", assessmentData);
             sessionObj.put("supervisor", supervisorData);
+            if (!AssessmentApplication.isTablet)
+                sessionObj.put("studentData", studentData);
 
            /* requestString = "{ \"session\": " + sessionObj +
                     ", \"metadata\": " + metaDataObj +
@@ -513,7 +540,7 @@ public class PushDataToServer extends AsyncTask {
                 _obj.put("Label", _score.getLabel());
 //                _obj.put("isAttempted", _score.getIsAttempted());
 //                _obj.put("isCorrect", _score.getIsCorrect());
-//                _obj.put("userAnswer", _score.getUserAnswer());
+                _obj.put("userAnswer", _score.getUserAnswer());
 //                _obj.put("examId", _score.getExamId());
                 scoreData.put(_obj);
             }
@@ -528,7 +555,7 @@ public class PushDataToServer extends AsyncTask {
         JSONArray paperData = new JSONArray();
         JSONObject _obj_paper = null;
         JSONArray scoreData = new JSONArray();
-
+        pushCnt = paperList.size();
         JSONObject _obj_score;
         try {
             for (int p = 0; p < paperList.size(); p++) {
@@ -548,7 +575,8 @@ public class PushDataToServer extends AsyncTask {
                     _obj_paper.put("SessionID", _paper.getSessionID());
                     DownloadMedia video = new DownloadMedia();
                     video.setPaperId(_paper.getPaperId());
-                    video.setPhotoUrl(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + _paper.getPaperId() + ".mp4");
+//                    video.setPhotoUrl(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + _paper.getPaperId() + ".mp4");
+                    video.setPhotoUrl(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + _paper.getPaperId() + ".mp4");
                     videoRecordingList.add(video);
                     scoreData = new JSONArray();
                     for (int i = 0; i < scoreList.size(); i++) {
@@ -597,8 +625,15 @@ public class PushDataToServer extends AsyncTask {
                 _supervisorDataObj.put("supervisorId", supervisorDataTemp.getSupervisorId());
                 _supervisorDataObj.put("supervisorName", supervisorDataTemp.getSupervisorName());
                 _supervisorDataObj.put("supervisorPhoto", supervisorDataTemp.getSupervisorPhoto());
-
                 supervisorData.put(_supervisorDataObj);
+                DownloadMedia downloadMedia = new DownloadMedia();
+                downloadMedia.setPaperId(supervisorDataTemp.getSupervisorId());
+                downloadMedia.setQtId(supervisorDataTemp.getAssessmentSessionId());
+                downloadMedia.setqId(supervisorDataTemp.getSupervisorName());
+                String fileName = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/" + supervisorDataTemp.getSupervisorPhoto();
+                downloadMedia.setPhotoUrl(fileName);
+                downloadMedia.setMediaType("supervisorData");
+                downloadMediaList.add(downloadMedia);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -689,7 +724,7 @@ public class PushDataToServer extends AsyncTask {
         return groupsData;
     }
 
-    private void pushDataToServer(final Context context, JSONObject requestJsonObject, String url) {
+   /* private void pushDataToServer(final Context context, JSONObject requestJsonObject, String url) {
         try {
 //            JSONObject jsonArrayData = new JSONObject(data);
 
@@ -704,7 +739,7 @@ public class PushDataToServer extends AsyncTask {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
                             dataPushed = true;
                             if (!autoPush) {
-                               /* new AlertDialog.Builder(context)
+                               *//* new AlertDialog.Builder(context)
                                         .setMessage("Data pushed successfully")
                                         .setCancelable(false)
                                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -713,7 +748,7 @@ public class PushDataToServer extends AsyncTask {
                                                 dialog.dismiss();
                                                 ((MainActivity) context).onResponseGet();
                                             }
-                                        }).create().show();*/
+                                        }).create().show();*//*
                             }
 //                            setPushFlag();
                         }
@@ -722,7 +757,7 @@ public class PushDataToServer extends AsyncTask {
                         public void onError(ANError anError) {
                             Log.d("PUSH_STATUS", "Data push failed");
                             dataPushed = false;
-                           /* if (!autoPush) {
+                           *//* if (!autoPush) {
                                 new AlertDialog.Builder(context)
                                         .setMessage("Data push failed")
                                         .setCancelable(false)
@@ -733,19 +768,18 @@ public class PushDataToServer extends AsyncTask {
                                                 ((MainActivity) context).onResponseGet();
                                             }
                                         }).create().show();
-                            }*/
+                            }*//*
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+*/
 
     private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject, String url) {
         try {
 //            JSONObject jsonArrayData = new JSONObject(data);
-
             AndroidNetworking.post(url)
                     .addHeaders("Content-Type", "application/json")
                     .addJSONObjectBody(requestJsonObject)
@@ -758,23 +792,24 @@ public class PushDataToServer extends AsyncTask {
                             Drawable icon = context.getResources().getDrawable(R.drawable.ic_check);
                             if (!autoPush) {
                                 CreateFilesforVideoMonitoring();
-                                String msg = "Data pushed successfully";
+                                String msg = "Data pushed successfully. " + pushCnt + " paper(s) pushed.";
                               /*  if (!dataPushed) {
                                     icon = context.getResources().getDrawable(R.drawable.ic_warning);
                                     msg = "Science data pushed successfully. ECE data push failed";
                                 }*/
-
-                                new AlertDialog.Builder(context)
-                                        .setMessage(msg)
-                                        .setCancelable(false)
-                                        .setIcon(icon)
-                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                ((MainActivity) context).onResponseGet();
-                                            }
-                                        }).create().show();
+                                if (AssessmentApplication.isTablet) {
+                                    new AlertDialog.Builder(context)
+                                            .setMessage(msg)
+                                            .setCancelable(false)
+                                            .setIcon(icon)
+                                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    ((MainActivity) context).onResponseGet();
+                                                }
+                                            }).create().show();
+                                }
                             }
                             setPushFlag();
                         }
@@ -783,21 +818,22 @@ public class PushDataToServer extends AsyncTask {
                         public void onError(ANError anError) {
                             Log.d("PUSH_STATUS", "Science Data push failed");
                             if (!autoPush) {
-                                String msg = "Science Data push failed";
+                                String msg = "Data push failed";
                                 if (dataPushed) {
-                                    msg = "Other data pushed successfully.Science data push failed.";
+                                    msg = "Ece data pushed successfully.Science data push failed.";
                                 }
-
-                                new AlertDialog.Builder(context)
-                                        .setMessage(msg)
-                                        .setCancelable(false)
-                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                ((MainActivity) context).onResponseGet();
-                                            }
-                                        }).create().show();
+                                if (AssessmentApplication.isTablet) {
+                                    new AlertDialog.Builder(context)
+                                            .setMessage(msg)
+                                            .setCancelable(false)
+                                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    ((MainActivity) context).onResponseGet();
+                                                }
+                                            }).create().show();
+                                }
                             }
                         }
                     });
@@ -877,7 +913,7 @@ public class PushDataToServer extends AsyncTask {
         AppDatabase.getDatabaseInstance(context).getAttendanceDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getScoreDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentDao().setSentFlag();
-//        AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
+        AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().setSentFlag();
 //        AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();

@@ -1,10 +1,8 @@
 package com.pratham.assessment.ui.choose_assessment.science.adapters;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,17 +16,22 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.elconfidencial.bubbleshowcase.BubbleShowCaseBuilder;
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.DragDropListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.ArrangeSequenceViewHolder;
 import com.pratham.assessment.ui.choose_assessment.science.viewHolders.MatchThePairViewHolder;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequenceFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.MatchThePairFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +42,10 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
     private List<ScienceQuestionChoice> data;
     Context context;
     DragDropListener dragDropListener;
-    QuestionTypeListener questionTypeListener;
+//    QuestionTypeListener questionTypeListener;
     StartDragListener startDragListener;
+    AssessmentAnswerListener assessmentAnswerListener;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -57,23 +62,26 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
         }
     }
 
-    public DragDropAdapter(MatchThePairViewHolder matchThePairViewHolder, List<ScienceQuestionChoice> data, Context context, ScienceAdapter scienceAdapter) {
+    public DragDropAdapter(MatchThePairFragment fragment, List<ScienceQuestionChoice> data, Context context) {
         this.data = data;
         this.context = context;
-        questionTypeListener = scienceAdapter;
-        startDragListener = matchThePairViewHolder;
+//        questionTypeListener = scienceAdapter;
+        startDragListener = fragment;
+        assessmentAnswerListener=(ScienceAssessmentActivity)context;
     }
 
-    public DragDropAdapter(ArrangeSequenceViewHolder arrangeSequenceViewHolder, List<ScienceQuestionChoice> data, Context context, ScienceAdapter scienceAdapter) {
+    public DragDropAdapter(ArrangeSequenceFragment fragment, List<ScienceQuestionChoice> data, Context context) {
         this.data = data;
         this.context = context;
-        questionTypeListener = scienceAdapter;
-        startDragListener = arrangeSequenceViewHolder;
+//        questionTypeListener = scienceAdapter;
+        startDragListener = fragment;
+        assessmentAnswerListener=(ScienceAssessmentActivity)context;
+
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_simple_text_row, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_simple_text_row_old, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -84,9 +92,15 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
         draggedList.clear();
         ScienceQuestionChoice scienceQuestionChoice = data.get(position);
         if (!scienceQuestionChoice.getMatchingurl().equalsIgnoreCase("")) {
-            final String path = Assessment_Constants.loadOnlineImagePath + scienceQuestionChoice.getMatchingurl();
+            final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getMatchingurl();
+
+            String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+            final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+
             holder.iv_choice_image.setVisibility(View.VISIBLE);
             holder.mTitle.setVisibility(View.GONE);
+            holder.mTitle.setTextColor(Color.WHITE);
             Glide.with(context).asBitmap().
                     load(path).apply(new RequestOptions()
                     .fitCenter()
@@ -97,7 +111,7 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
             holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path);
+                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path,localPath);
                     zoomImageDialog.show();
                 }
             });
@@ -125,7 +139,8 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
             }
         });
 
-        if (!Assessment_Constants.isShowcaseDisplayed)
+        //todo add bubbleshowcase
+       /* if (!Assessment_Constants.isShowcaseDisplayed)
             if (position == 0) {
                 Assessment_Constants.isShowcaseDisplayed = true;
                 new BubbleShowCaseBuilder((Activity) context)
@@ -134,7 +149,7 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
                         .backgroundColor(ContextCompat.getColor(context, R.color.colorAccentDark))
                         .closeActionImage(ContextCompat.getDrawable(context, R.drawable.ic_close))
                         .targetView(holder.itemView).show();
-            }
+            }*/
 
     }
 
@@ -160,19 +175,25 @@ public class DragDropAdapter extends RecyclerView.Adapter<DragDropAdapter.MyView
         draggedList = data;
         Log.d("sss", draggedList.toString());
 //        dragDropListener.setList(draggedList, data.get(0).getQid());
-        questionTypeListener.setAnswer("", "", data.get(0).getQid(), draggedList);
+//        questionTypeListener.setAnswer("", "", data.get(0).getQid(), draggedList);
+        assessmentAnswerListener.setAnswerInActivity("", "", data.get(0).getQid(), draggedList);
 
     }
 
     @Override
     public void onRowSelected(MyViewHolder myViewHolder) {
-        myViewHolder.rowView.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
-
+//       myViewHolder.rowView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.ripple_rectangle));
+       /*  myViewHolder.mTitle.setTextColor(Assessment_Utility.selectedColor);
+*/
+        myViewHolder.rowView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.gradient_selector));
+        myViewHolder.mTitle.setTextColor(Assessment_Utility.selectedColor);
     }
 
     @Override
     public void onRowClear(MyViewHolder myViewHolder) {
-        myViewHolder.rowView.setBackgroundColor(Color.WHITE);
+//        myViewHolder.rowView.setBackgroundColor(Color.WHITE);
+       /* myViewHolder.rowView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.gradient_selector));
+        myViewHolder.mTitle.setTextColor(Assessment_Utility.selectedColor);*/
 
     }
 }

@@ -1,8 +1,11 @@
 package com.pratham.assessment.utilities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 
 import java.io.IOException;
 
@@ -10,6 +13,10 @@ public class AudioUtil {
 
     private static MediaRecorder mRecorder;
     private static MediaPlayer mPlayer;
+    public static AudioPlayerInterface audioPlayerInterface;
+
+    public AudioUtil() {
+    }
 
     public static void startRecording(String filePath) {
         try {
@@ -37,15 +44,17 @@ public class AudioUtil {
         mRecorder = null;
     }
 
-    public static void playRecording(String filePath, final Activity activity) {
+    public static void playRecording(String filePath, final AudioPlayerInterface activity) {
         try {
             if (mPlayer != null && mPlayer.isPlaying())
                 mPlayer.stop();
 
             mPlayer = new MediaPlayer();
+            audioPlayerInterface=activity;
             mPlayer.setDataSource(filePath);
             mPlayer.prepare();
             mPlayer.start();
+
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -65,6 +74,8 @@ public class AudioUtil {
     }
 
     public static void stopPlayingAudio() {
+        audioPlayerInterface.stopPlayer();
+
         try {
             if (mPlayer != null)
                 mPlayer.release();
@@ -73,4 +84,7 @@ public class AudioUtil {
         }
         mPlayer = null;
     }
+
+
+
 }

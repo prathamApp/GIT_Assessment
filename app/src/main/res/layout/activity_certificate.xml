@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/_2sdp"
-            android:background="@drawable/custom_spinner"/>
+            android:background="@drawable/custom_spinner" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -52,7 +52,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_below="@id/iv_certificate"
+                    android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
+
                     android:text="Name"
                     android:textAllCaps="true"
                     android:textSize="@dimen/_12sdp"
@@ -63,7 +65,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_below="@id/tv_level"
+                    android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
+
                     android:text="Name"
                     android:textAllCaps="true"
                     android:textSize="@dimen/_15sdp"
@@ -125,7 +129,9 @@
                         <TextView
                             android:id="@+id/tv_sup"
                             android:layout_width="match_parent"
+
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/quicksand_bold"
                             android:gravity="center"
                             android:text="Supervised By"
                             android:textColor="@color/colorBlack"
@@ -136,7 +142,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tv_sup"
+
                             android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/quicksand_bold"
                             android:gravity="center"
                             android:text=""
                             android:textColor="@color/colorBlack"

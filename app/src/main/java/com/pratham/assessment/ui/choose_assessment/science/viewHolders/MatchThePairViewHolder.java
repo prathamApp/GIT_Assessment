@@ -22,9 +22,11 @@ import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
@@ -49,6 +51,7 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
     ScienceQuestion scienceQuestion;
     Context context;
     QuestionTypeListener questionTypeListener;
+    AssessmentAnswerListener assessmentAnswerListener;
 
     ScienceAdapter scienceAdapter;
 
@@ -61,7 +64,7 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
         this.context = context;
         questionTypeListener = scienceAdapter;
         this.scienceAdapter = scienceAdapter;
-
+        assessmentAnswerListener = (ScienceAssessmentActivity) context;
     }
 
     public void setMatchPairQuestion(ScienceQuestion scienceQuestion1, int pos) {
@@ -71,7 +74,7 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().
-                    load(Assessment_Constants.loadOnlineImagePath + scienceQuestion.getPhotourl()).apply(new RequestOptions()
+                    load(/*Assessment_Constants.loadOnlineImagePath + */scienceQuestion.getPhotourl()).apply(new RequestOptions()
                     .fitCenter()
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(Target.SIZE_ORIGINAL))
@@ -109,7 +112,7 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
                 shuffledList = scienceQuestion.getMatchingNameList();
             }
 
-            DragDropAdapter dragDropAdapter = new DragDropAdapter(this, shuffledList, context, scienceAdapter);
+         /*   DragDropAdapter dragDropAdapter = new DragDropAdapter(this, shuffledList, context, scienceAdapter);
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
@@ -119,7 +122,7 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
             LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context.getApplicationContext());
             recyclerView2.setLayoutManager(linearLayoutManager1);
             recyclerView2.setAdapter(dragDropAdapter);
-            Log.d("wwwwwwwwwww", pairList.size() + "");
+            Log.d("wwwwwwwwwww", pairList.size() + "");*/
         }
     }
 

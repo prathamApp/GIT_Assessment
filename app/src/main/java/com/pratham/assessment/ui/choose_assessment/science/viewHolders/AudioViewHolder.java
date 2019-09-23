@@ -25,6 +25,7 @@ import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActi
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 
 import java.io.File;
@@ -77,7 +78,7 @@ public class AudioViewHolder extends RecyclerView.ViewHolder {
                             questionImage.setImageDrawable(bd);
                         }
                     });*/
-            String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
+            String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
             path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded" + "/" + fileName;
 
            /* Glide.with(context).asBitmap().
@@ -159,7 +160,7 @@ public class AudioViewHolder extends RecyclerView.ViewHolder {
             if (isPlaying) {
                 isPlaying = false;
                 iv_question_audio.setImageResource(R.drawable.ic_play_circle);
-                AudioUtil.playRecording(path, (Activity) context);
+//                AudioUtil.playRecording(path, (Activity) context);
 
 
             } else {
@@ -175,9 +176,4 @@ public class AudioViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private String getFileName(String qid, String photoUrl) {
-        String[] splittedPath = photoUrl.split("/");
-        String fileName = qid + "_" + splittedPath[splittedPath.length - 1];
-        return fileName;
-    }
 }

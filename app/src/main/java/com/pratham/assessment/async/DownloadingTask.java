@@ -95,7 +95,7 @@ public class DownloadingTask extends AsyncTask {
             dowloadImages();
             int lenghtOfFile = connection.getContentLength();
             if (lenghtOfFile < 0)
-                lenghtOfFile = ( Integer.parseInt(content.getLevel()) > 0) ? Integer.parseInt(content.getLevel()) : 1;
+                lenghtOfFile = (Integer.parseInt(content.getLevel()) > 0) ? Integer.parseInt(content.getLevel()) : 1;
             // input stream to read file - with 8k buffer
             input = connection.getInputStream();
             // Output stream to write file
@@ -144,7 +144,7 @@ public class DownloadingTask extends AsyncTask {
                 d.setNodeImage(img_name);
             }
             d.setContentLanguage(FastSave.getInstance().getString(Assessment_Constants.LANGUAGE, Assessment_Constants.ENGLISH));
-            d.isDownloaded= ""+true;
+            d.isDownloaded = "" + true;
             d.setOnSDCard(false);
         }
         BaseActivity.appDatabase.getContentTableDao().addContentList(temp);
@@ -178,7 +178,7 @@ public class DownloadingTask extends AsyncTask {
     }
 
     public static void downloadImage(String url, String filename) {
-        File dir = new File(AssessmentApplication.assessPath + Assessment_Constants.THUMBS_PATH); //Creating an internal dir;
+        File dir = new File(AssessmentApplication.contentSDPath + Assessment_Constants.THUMBS_PATH); //Creating an internal dir;
         if (!dir.exists()) dir.mkdirs();
         AndroidNetworking.download(url, dir.getAbsolutePath(), filename)
                 .setPriority(Priority.HIGH)

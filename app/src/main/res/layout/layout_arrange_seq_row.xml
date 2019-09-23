@@ -3,11 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/_3sdp"
-    android:background="@drawable/ripple_rectangle"
-    app:cardCornerRadius="@dimen/_8sdp"
-    app:cardElevation="@dimen/_3sdp"
-    app:cardMaxElevation="@dimen/_5sdp">
+    app:cardBackgroundColor="@color/green"
+    app:cardElevation="0dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -18,11 +15,19 @@
         <TextView
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
-            android:layout_margin="@dimen/_5sdp"/>
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="0.5"
+            android:text="why the sound is longitudinal?" />
 
         <ImageView
             android:id="@+id/iv_question_image"
             style="@style/CustomQuestionImageStyle" />
+
+        <com.pratham.assessment.custom.gif_viewer.GifView
+            android:id="@+id/iv_question_gif"
+            style="@style/CustomQuestionImageStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.5" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rl_arrange_seq"

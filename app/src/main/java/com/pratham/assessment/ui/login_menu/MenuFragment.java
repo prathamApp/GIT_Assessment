@@ -1,7 +1,10 @@
 package com.pratham.assessment.ui.login_menu;
 
+import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +13,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.SelectAgeGroupDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
@@ -187,5 +194,51 @@ public class MenuFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        if (!FastSave.getInstance().getBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, false))
+            show_STT_Dialog();
     }
+
+    private void show_STT_Dialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.lang_custom_dialog);
+/*        Bitmap map=COS_Utility.takeScreenShot(HomeActivity.this);
+        Bitmap fast=COS_Utility.fastblur(map, 20);
+        final Drawable draw=new BitmapDrawable(getResources(),fast);
+        dialog.getWindow().setBackgroundDrawable(draw);*/
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        dialog.show();
+
+        TextView dia_title = dialog.findViewById(R.id.dia_title);
+        Button skip = dialog.findViewById(R.id.dia_btn_green);
+        Button ok = dialog.findViewById(R.id.dia_btn_yellow);
+        dia_title.setText("Please download language packs offline for better performance");
+        ok.setText("OK");
+        skip.setText("SKIP");
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastSave.getInstance().saveBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, true);
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setComponent(new ComponentName("com.google.android.googlequicksearchbox",
+                        "com.google.android.voicesearch.greco3.languagepack.InstallActivity"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }
+
 }

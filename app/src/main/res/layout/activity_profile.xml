@@ -35,6 +35,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_2sdp"
+                android:fontFamily="@font/quicksand_bold"
+
                 android:gravity="center"
                 android:text="Profile Name"
                 android:textColor="@color/colorBlackTransparentDark"
@@ -65,6 +67,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:fontFamily="@font/quicksand_bold"
+
                     android:gravity="center"
                     android:hint="5/10"
                     android:textColor="@color/primaryText"
@@ -89,7 +93,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
+
                     android:text="Certificates"
                     android:textColor="@color/colorBlackTransparentDark"
                     android:textSize="@dimen/_12sdp"
@@ -117,9 +123,11 @@
                 android:id="@+id/tv_Leaderboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
-                android:gravity="center"
                 android:layout_gravity="center"
+                android:layout_margin="@dimen/_5sdp"
+                android:fontFamily="@font/quicksand_bold"
+
+                android:gravity="center"
                 android:text="Certificates"
                 android:textColor="@color/colorBlackTransparentDark"
                 android:textSize="@dimen/_15sdp"
@@ -129,8 +137,8 @@
                 android:id="@+id/progressView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -143,8 +151,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_8sdp"
-                    android:fontFamily="serif-monospace"
+                    android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
+
                     android:text="Loading ..."
                     android:textColor="#000000"
                     android:textSize="@dimen/_12sdp"
@@ -156,33 +165,33 @@
                 android:id="@+id/lv_Leaderboard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:layout_marginHorizontal="@dimen/_8sdp"/>
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_4sdp" />
 
         </LinearLayout>
     </LinearLayout>
 
     <!--Reading Challenge Score-->
     <!--<LinearLayout-->
-        <!--android:id="@+id/ll_MyRCS"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_margin="@dimen/_10sdp"-->
-        <!--android:background="@color/ratingFilled"-->
-        <!--android:gravity="center"-->
-        <!--android:orientation="horizontal">-->
+    <!--android:id="@+id/ll_MyRCS"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_margin="@dimen/_10sdp"-->
+    <!--android:background="@color/ratingFilled"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal">-->
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_MyRCS"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:padding="@dimen/_8sdp"-->
-            <!--android:textColor="#000000"-->
-            <!--android:textColorHint="#000000"-->
-            <!--android:textSize="@dimen/_12sdp" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv_MyRCS"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="@dimen/_8sdp"-->
+    <!--android:textColor="#000000"-->
+    <!--android:textColorHint="#000000"-->
+    <!--android:textSize="@dimen/_12sdp" />-->
     <!--</LinearLayout>-->
 
 </RelativeLayout>

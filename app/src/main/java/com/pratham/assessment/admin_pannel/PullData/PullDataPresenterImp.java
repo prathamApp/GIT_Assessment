@@ -753,6 +753,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
 //        if (isConnectedToRasp)
 //            pullDataView.shoConfermationDialog(crlList.size(), studentList.size(), groupList.size(), raspVillageList.size());
 //        else
+        if(crlList.size()!=0 && studentList.size()!=0 && groupList.size()!=0 && villageList.size()!=0)
         pullDataView.shoConfermationDialog(crlList.size(), studentList.size(), groupList.size(), villageList.size());
     }
 

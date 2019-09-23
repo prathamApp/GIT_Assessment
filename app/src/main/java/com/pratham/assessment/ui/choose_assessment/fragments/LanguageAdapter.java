@@ -1,6 +1,7 @@
 package com.pratham.assessment.ui.choose_assessment.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.card.MaterialCardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.ui.choose_assessment.ChoseAssessmentClicked;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.MyView
     public LanguageAdapter(Context context, List<AssessmentLanguages> assessmentLanguages) {
         this.context = context;
         this.assessmentLanguages = assessmentLanguages;
-        assessmentClicked= (ChoseAssessmentClicked) context;
+        assessmentClicked = (ChoseAssessmentClicked) context;
     }
 
     @NonNull
@@ -54,12 +57,20 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
         final AssessmentLanguages languages = assessmentLanguages.get(i);
 
+        if(Assessment_Constants.SELECTED_LANGUAGE.equals(languages.getLanguageid())) {
+            myViewHolder.game_card_view.setCardBackgroundColor(Assessment_Utility.getRandomColorGradient());
+            myViewHolder.title.setTextColor(Color.WHITE);
+        }else {
+            myViewHolder.game_card_view.setCardBackgroundColor(Color.WHITE);
+            myViewHolder.title.setTextColor(Color.BLACK);
+        }
         myViewHolder.title.setText(languages.getLanguagename());
+//        myViewHolder.game_card_view.setCardBackgroundColor(Assessment_Utility.getRandomColorGradient());
 
         myViewHolder.game_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assessmentClicked.languageClicked(i,languages);
+                assessmentClicked.languageClicked(i, languages);
 
             }
         });

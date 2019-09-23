@@ -25,11 +25,17 @@ public interface LanguageDao {
 //    @Query("SELECT * FROM Groups WHERE VillageID=:vID ORDER BY GroupName ASC")
 //    public List<Groups> GetGroups(int vID);
 
-   /* @Query("DELETE FROM ScienceQuestion WHERE qid=:qid")
-    public void deleteQuestionByQID(String qid);
-*/
+    /* @Query("DELETE FROM ScienceQuestion WHERE qid=:qid")
+     public void deleteQuestionByQID(String qid);
+ */
     @Query("SELECT languageid FROM AssessmentLanguages WHERE languagename=:lname")
-    public String getLangNameById(String lname);
+    public String getLangIdByName(String lname);
+
+    @Query("SELECT languagename FROM AssessmentLanguages WHERE languageid=:lId")
+    public String getLangNameById(String lId);
+
+    @Query("SELECT languagename FROM AssessmentLanguages WHERE languageid in(:lname)")
+    public List<String> getLangList(List<String> lname);
 
     /*@Query("SELECT * FROM ScienceQuestion WHERE qid=:qid")
     public ScienceQuestion getQuestionByQID(String qid);

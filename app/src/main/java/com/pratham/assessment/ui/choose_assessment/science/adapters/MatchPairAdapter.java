@@ -43,7 +43,7 @@ public class MatchPairAdapter extends RecyclerView.Adapter<MatchPairAdapter.MyVi
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_simple_text_row, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_simple_text_row_old, viewGroup, false);
         return new MyViewHolder(view);
     }
 
@@ -55,7 +55,7 @@ public class MatchPairAdapter extends RecyclerView.Adapter<MatchPairAdapter.MyVi
             myViewHolder.text.setVisibility(View.GONE);
 
             Glide.with(context).asBitmap().
-                    load(Assessment_Constants.loadOnlineImagePath + scienceQuestionChoice.getChoiceurl()).apply(new RequestOptions()
+                    load(/*Assessment_Constants.loadOnlineImagePath + */scienceQuestionChoice.getChoiceurl()).apply(new RequestOptions()
                     .fitCenter()
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(Target.SIZE_ORIGINAL))

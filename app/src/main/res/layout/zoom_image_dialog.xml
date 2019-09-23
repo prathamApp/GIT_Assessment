@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/colorWhiteLight"
+    android:background="#B4000000"
     android:orientation="vertical">
 
+    <!--<FrameLayout
+        android:id="@+id/frame_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/main_card_bg">-->
 
-    <ImageView
+    <com.pratham.assessment.custom.zoom_image.ZoomageView
         android:id="@+id/iv_zoom_img"
-        android:layout_width="@dimen/_300sdp"
-        android:layout_height="@dimen/_300sdp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:src="@drawable/ic_warning" />
+        android:src="@drawable/ic_warning"
+        app:zoomage_animateOnReset="true"
+        app:zoomage_autoCenter="true"
+        app:zoomage_doubleTapToZoom="true"
+        app:zoomage_translatable="true"
+        app:zoomage_zoomable="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <com.pratham.assessment.custom.gif_viewer.GifViewZoom
+            android:id="@+id/iv_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:gif="@drawable/tpgif"
+            android:layout_centerInParent="true"
+             />
+    </RelativeLayout>
+    <!--</FrameLayout>-->
 
     <VideoView
         android:id="@+id/vv_video"
         android:layout_width="@dimen/_310sdp"
         android:layout_height="@dimen/_300sdp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_ok_img"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_gravity="right"
-        android:layout_margin="5dp"
-        android:background="@drawable/ripple_effect"
-        android:padding="5dp"
-        android:text="Ok"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/_5sdp"
+        android:background="@drawable/ripple_round"
+        android:elevation="@dimen/_10sdp"
+        android:src="@drawable/ic_close_black_24dp"
         android:textSize="@dimen/_15sdp" />
 
-</LinearLayout>
+</RelativeLayout>
 
 

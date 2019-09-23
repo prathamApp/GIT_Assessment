@@ -12,7 +12,8 @@
         android:layout_height="@dimen/_40sdp"
         android:background="@color/colorPrimary"
         android:gravity="center"
-        android:paddingLeft="16dp"
+        android:paddingLeft="16dp"            android:fontFamily="@font/quicksand_bold"
+
         android:text="Assign Groups"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/_15sdp"

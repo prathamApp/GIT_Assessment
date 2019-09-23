@@ -1,0 +1,243 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/form_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.pratham.assessment.custom.customFont.SansTextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_weight="4"
+        android:background="@color/black"
+        android:gravity="center"
+        android:text="Create Profile"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18sdp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_title"
+
+        >
+
+        <RelativeLayout
+            android:id="@+id/addBtn_l"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_alignParentBottom="true">
+
+            <com.pratham.assessment.custom.customFont.SansButton
+                android:id="@+id/btn_add_new_student"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/correct_bg"
+                android:elevation="5dp"
+                android:padding="@dimen/_10sdp"
+                android:text="Save Profile"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15sdp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/addBtn_l"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_2sdp"
+            android:weightSum="6">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+
+                <EditText
+                    android:id="@+id/et_studentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginBottom="@dimen/_7sdp"
+                    android:background="@drawable/custom_edit_text"
+                    android:clickable="true"
+                    android:focusableInTouchMode="true"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:hint="Enter Name"
+                    android:paddingVertical="@dimen/_1sdp"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:singleLine="true"
+                    android:textColor="@color/colorBlack"
+                    android:textColorHint="@color/light_gray"
+                    android:textSize="@dimen/_18sdp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/et_studentName"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/main_card_bg"
+                    android:orientation="horizontal">
+
+                    <com.pratham.assessment.custom.customFont.SansTextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
+                        android:text="Age : "
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner_age"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:background="@drawable/custom_spinner"
+                        android:entries="@array/age"
+                        android:popupBackground="@drawable/main_card_bg" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/ll_age"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:background="@drawable/main_card_bg"
+                    android:gravity="center_vertical">
+
+                    <com.pratham.assessment.custom.customFont.SansTextView
+                        android:id="@+id/tv_gender"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Gender : "
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold" />
+
+                    <RadioGroup
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.pratham.assessment.custom.customFont.SansRadioBtn
+                            android:id="@+id/rb_male"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:text="Male"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <com.pratham.assessment.custom.customFont.SansRadioBtn
+                            android:id="@+id/rb_female"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:text="Female"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_lang"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/ll_gender"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/main_card_bg"
+                    android:orientation="horizontal">
+
+                    <com.pratham.assessment.custom.customFont.SansTextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2.5"
+                        android:gravity="center_vertical"
+                        android:text="Language : "
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner_app_lang"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:background="@drawable/custom_spinner"
+                        android:popupBackground="@drawable/main_card_bg" />
+
+
+                </LinearLayout>
+
+               <!-- <Spinner
+                    android:id="@+id/spinner_app_lang"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_below="@+id/ll_gender"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@drawable/gradient_spinner" />
+-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/ll_lang"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/main_card_bg"
+                    android:orientation="vertical">
+
+                    <com.pratham.assessment.custom.customFont.SansTextView
+                        android:id="@+id/tv_select_avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_alignParentTop="true"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="Select Avatar : "
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_Avatars"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/tv_select_avatar"
+                        android:clipToPadding="false"
+                        android:gravity="center"
+                        android:layoutAnimation="@anim/layout_fall_down"
+                        android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

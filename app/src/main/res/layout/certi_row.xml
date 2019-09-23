@@ -10,7 +10,8 @@
         android:id="@+id/assess_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center"            android:fontFamily="@font/quicksand_bold"
+
         android:paddingVertical="@dimen/_2sdp"
         android:layout_alignParentTop="true"
         android:text="Student Knows "

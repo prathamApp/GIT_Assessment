@@ -182,6 +182,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             startSession(checkedStds);
             presentActivity(v);
 //            Toast.makeText(getActivity(), "Success...", Toast.LENGTH_SHORT).show();
+            Assessment_Constants.ASSESSMENT_TYPE = "";
             startActivity(new Intent(getActivity(), ChooseAssessmentActivity.class));
             getActivity().finish();
         } else {
@@ -217,12 +218,12 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
 
                     Attendance attendance = new Attendance();
 //                    for (int i = 0; i < stud.size(); i++) {
-                        attendance.setSessionID("" + currentSession);
-                        attendance.setStudentID("" + stud.get(0).getStudentID());
-                        attendance.setDate(AssessmentApplication.getCurrentDateTime());
-                        attendance.setGroupID(groupID);
-                        attendance.setSentFlag(0);
-                        AppDatabase.getDatabaseInstance(getContext()).getAttendanceDao().insert(attendance);
+                    attendance.setSessionID("" + currentSession);
+                    attendance.setStudentID("" + stud.get(0).getStudentID());
+                    attendance.setDate(AssessmentApplication.getCurrentDateTime());
+                    attendance.setGroupID(groupID);
+                    attendance.setSentFlag(0);
+                    AppDatabase.getDatabaseInstance(getContext()).getAttendanceDao().insert(attendance);
 //                    }
                     Assessment_Constants.currentStudentID = stud.get(0).getStudentID();
                     BackupDatabase.backup(getContext());

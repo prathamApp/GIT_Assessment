@@ -1,27 +1,20 @@
 package com.pratham.assessment.ui.login.group_selection;
 
 import android.app.Dialog;
-import android.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pratham.assessment.BaseActivity;
-import com.pratham.assessment.ui.login_menu.MenuFragment;
-import com.pratham.assessment.utilities.Assessment_Constants;
-import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
-import com.pratham.assessment.custom.SelectAgeGroupDialog;
-import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup;
+import com.pratham.assessment.ui.login_menu.MenuFragment;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 public class SelectGroupActivity extends BaseActivity {
 
@@ -34,9 +27,9 @@ public class SelectGroupActivity extends BaseActivity {
 
             Assessment_Utility.showFragment(this, new MenuFragment(), R.id.frame_group,
                     null, MenuFragment.class.getSimpleName());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            Log.d("SelectGroupActivity@@@",e.getMessage());
+            Log.d("SelectGroupActivity@@@", e.getMessage());
         }
 
 //    showAgeGroupDialog();
@@ -87,8 +80,8 @@ public class SelectGroupActivity extends BaseActivity {
             showExitDialog();
         } else {
             if (fragments > 1) {
-               // FragmentManager.BackStackEntry first = getSupportFragmentManager().getBackStackEntryAt(0);
-                getSupportFragmentManager().popBackStack(0,0);
+                // FragmentManager.BackStackEntry first = getSupportFragmentManager().getBackStackEntryAt(0);
+                getSupportFragmentManager().popBackStack(0, 0);
             } else {
                 super.onBackPressed();
             }

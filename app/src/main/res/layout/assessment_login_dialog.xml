@@ -3,19 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ripple_rectangle"
+    android:background="@drawable/main_card_bg"
     android:layout_margin="@dimen/_10sdp"
     >
-
-    <CheckBox
-        android:id="@+id/chk_start_assessment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/ll_login_credential"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/_5sdp"
-        android:text="Start Assessment"
-        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/ll_login_credential"
@@ -32,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_15sdp"
             android:orientation="vertical"
-
             android:weightSum="4">
 
             <android.support.design.widget.TextInputLayout
@@ -94,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@drawable/ripple_effect"
-                android:text="Supervise"
+                android:text="Login"
                 android:layout_margin="@dimen/_3sdp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp" />
@@ -105,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:visibility="gone"
                 android:background="@drawable/ripple_effect"
                 android:text="Practice"
                 android:layout_margin="@dimen/_3sdp"

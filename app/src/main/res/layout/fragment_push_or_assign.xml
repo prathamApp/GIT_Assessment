@@ -4,16 +4,29 @@
     android:layout_height="match_parent"
     tools:context="com.pratham.assessment.admin_pannel.PushOrAssign.PushDataActivity">
 
+    <Button
+        android:id="@+id/btn_clear_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/_3sdp"
+        android:background="@drawable/ripple_effect"
+        android:padding="@dimen/_3sdp"
+        android:text="Clear data"
+        android:textSize="@dimen/_12sdp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:layout_margin="@dimen/_40sdp"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btn_assign"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_80sdp"
-            android:layout_margin="@dimen/_20sdp"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_30sdp"
             android:layout_weight="1"
             android:background="@drawable/correct_bg"
             android:text="Assign Groups"
@@ -21,22 +34,48 @@
 
         <Button
             android:id="@+id/btn_push"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_80sdp"
-            android:layout_margin="@dimen/_20sdp"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_30sdp"
             android:layout_weight="1"
             android:background="@drawable/correct_bg"
             android:text="Push Data"
             android:textSize="@dimen/_10sdp" />
 
-       <!-- <Button
-            android:id="@+id/btn_pull_exam_data"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_80sdp"
-            android:layout_margin="@dimen/_20sdp"
-            android:layout_weight="1"
-            android:background="@drawable/correct_bg"
-            android:text="Push Data"
-            android:textSize="@dimen/_10sdp" />-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+
+            <TextView
+                android:id="@+id/txt_video_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_10sdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Video monitoring is "
+                android:textSize="@dimen/_12sdp" />
+
+            <ToggleButton
+                android:id="@+id/video_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+        <!-- <Button
+             android:id="@+id/btn_pull_exam_data"
+             android:layout_width="0dp"
+             android:layout_height="@dimen/_80sdp"
+             android:layout_margin="@dimen/_20sdp"
+             android:layout_weight="1"
+             android:background="@drawable/correct_bg"
+             android:text="Push Data"
+             android:textSize="@dimen/_10sdp" />-->
     </LinearLayout>
+
+
 </FrameLayout>

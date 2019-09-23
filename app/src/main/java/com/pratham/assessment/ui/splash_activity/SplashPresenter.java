@@ -419,11 +419,11 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             if (!sharedPreferences.getBoolean(Assessment_Constants.KEY_ASSET_COPIED, false)) {
                 splashView.showProgressDialog();
                 File mydir = null;
-                mydir = new File(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH);
+                mydir = new File(AssessmentApplication.contentSDPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH);
                 if (!mydir.exists())
                     mydir.mkdirs();
 
-                String path = AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH;
+                String path = AssessmentApplication.contentSDPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH;
                 copyFile(context, path);
 
                 sharedPreferences.edit().putBoolean(Assessment_Constants.KEY_ASSET_COPIED, true).apply();
@@ -524,7 +524,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 out.write(buffer, 0, read);
                 read = in.read(buffer);
             }
-            unzipFile(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH + "assessData.zip", AssessmentApplication.assessPath + "/.Assessment");
+            unzipFile(AssessmentApplication.contentSDPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH + "assessData.zip", AssessmentApplication.contentSDPath + "/.Assessment");
         } catch (Exception e) {
             e.getMessage();
         }
@@ -558,7 +558,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 /*                if (Assessment_Constants.SD_CARD_Content)
                     folder_file = new File(Assessment_Constants.ext_path+ Assessment_Constants.ASSESSMENT_FOLDER_PATH);
                 else*/
-                    folder_file = new File(AssessmentApplication.assessPath+ Assessment_Constants.ASSESSMENT_FOLDER_PATH);
+                    folder_file = new File(AssessmentApplication.contentSDPath+ Assessment_Constants.ASSESSMENT_FOLDER_PATH);
 
                 if (folder_file.exists()) {
                     Log.d("-CT-", "doInBackground Assessment_Constants.ext_path: " + Assessment_Constants.ext_path);

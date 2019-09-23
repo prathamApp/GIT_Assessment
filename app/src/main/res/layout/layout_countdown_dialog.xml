@@ -11,9 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="@dimen/_5sdp"
-        android:textColor="@color/colorWhiteDark"
-        android:text="5"
-        android:textStyle="bold"
+        android:fontFamily="@font/quicksand_bold"
+
         android:gravity="center"
-        android:textSize="@dimen/_80sdp"/>
+        android:text="5"
+        android:textColor="@color/colorWhiteDark"
+        android:textSize="@dimen/_80sdp"
+        android:textStyle="bold" />
 </LinearLayout>

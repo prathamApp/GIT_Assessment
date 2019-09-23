@@ -45,5 +45,156 @@
         <attr name="c_isShowDesc" format="boolean" />
     </declare-styleable>
 
-</resources>
 
+    <declare-styleable name="StepView">
+        <attr name="sv_selectedCircleColor" format="color" />
+        <attr name="sv_selectedCircleRadius" format="dimension" />
+        <attr name="sv_selectedTextColor" format="color" />
+        <attr name="sv_selectedStepNumberColor" format="color" />
+        <attr name="sv_stepNumberTextSize" format="dimension" />
+        <attr name="sv_doneStepMarkColor" format="color" />
+        <attr name="sv_doneCircleColor" format="color" />
+        <attr name="sv_doneCircleRadius" format="dimension" />
+        <attr name="sv_doneTextColor" format="color" />
+        <attr name="sv_nextTextColor" format="color" />
+        <attr name="sv_nextStepLineColor" format="color" />
+        <attr name="sv_doneStepLineColor" format="color" />
+        <attr name="sv_stepPadding" format="dimension" />
+        <attr name="sv_textPadding" format="dimension" />
+        <attr name="sv_stepLineWidth" format="dimension" />
+        <attr name="sv_textSize" format="dimension" />
+        <attr name="sv_background" />
+        <attr name="sv_animationDuration" format="integer" />
+        <attr name="sv_stepViewStyle" format="reference" />
+        <attr name="sv_animationType" format="enum">
+            <enum name="Line" value="0" />
+            <enum name="Circle" value="1" />
+            <enum name="All" value="2" />
+            <enum name="None" value="3" />
+        </attr>
+        <attr name="sv_stepsNumber" format="integer" />
+        <attr name="sv_steps" format="reference" />
+        <attr name="sv_typeface" format="reference" />
+        <attr name="sv_nextStepCircleEnabled" format="boolean" />
+        <attr name="sv_nextStepCircleColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="VoiceRippleView">
+        <attr name="VoiceRippleView_rippleColor" format="color" />
+        <attr name="VoiceRippleView_rippleRadius" format="integer" />
+        <attr name="VoiceRippleView_iconSize" format="integer" />
+    </declare-styleable>
+
+
+    <declare-styleable name="CircleView">
+        <attr name="progressCurrentValue" format="float" />
+        <attr name="progressMaximumValue" format="float" />
+        <attr name="progressMinimumValue" format="float" />
+        <attr name="progressStepValue" format="float" />
+        <attr name="progressStepAsInteger" format="boolean" />
+        <attr name="progressWidth" format="dimension" />
+        <attr name="progressColor" format="color" />
+        <attr name="progressBarSquared" format="boolean" />
+
+        <attr name="hasIndicator" format="boolean" />
+        <attr name="indicatorColor" format="color" />
+        <attr name="indicatorRadius" format="integer" />
+
+        <attr name="arcWidth" format="dimension" />
+        <attr name="arcColor" format="color" />
+        <attr name="arcHasBorder" format="boolean" />
+        <attr name="arcBorderColor" format="color" />
+
+        <attr name="textEnabled" format="boolean" />
+        <attr name="textColor" format="color" />
+        <attr name="textDecimalPlaces" format="integer" />
+        <attr name="textFont" format="string" />
+
+        <attr name="suffixEnabled" format="boolean" />
+        <attr name="suffixValue" format="string" />
+
+        <attr name="clockwise" format="boolean" />
+        <attr name="enabled" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="DotsIndicator">
+        <attr name="dotsColor" />
+        <attr name="selectedDotColor" />
+        <attr name="dotsSize" />
+        <attr name="dotsWidthFactor" />
+        <attr name="dotsSpacing" />
+        <attr name="dotsCornerRadius" />
+        <attr name="progressMode" />
+    </declare-styleable>
+
+    <declare-styleable name="SpringDotsIndicator">
+        <attr name="dotsColor" />
+        <attr name="dotsSize" />
+        <attr name="dotsSpacing" />
+        <attr name="dotsCornerRadius" />
+        <attr name="dotsStrokeWidth" />
+        <attr name="dotsStrokeColor" />
+        <attr name="stiffness" />
+        <attr name="dampingRatio" />
+    </declare-styleable>
+
+    <declare-styleable name="WormDotsIndicator">
+        <attr name="dotsColor" />
+        <attr name="dotsSize" />
+        <attr name="dotsSpacing" />
+        <attr name="dotsCornerRadius" />
+        <attr name="dotsStrokeWidth" />
+        <attr name="dotsStrokeColor" />
+    </declare-styleable>
+
+    <declare-styleable name="ProSwipeButton">
+        <attr name="btn_text" format="string" />
+        <attr name="text_color" format="color" />
+        <attr name="bg_color" format="color" />
+        <attr name="arrow_color" format="color" />
+        <attr name="btn_radius" format="float" />
+        <attr name="text_size" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="SwipeableButton">
+        <attr name="isChecked" format="boolean" />
+        <attr name="isClickToSwipeEnable" format="boolean" />
+        <attr name="thresholdEnd" format="float" />
+        <attr name="thresholdStart" format="float" />
+        <attr name="textChecked" format="string|reference" />
+        <attr name="textUnchecked" format="string|reference" />
+        <attr name="textSize" format="float|dimension" />
+        <attr name="textColorChecked" format="integer|reference" />
+        <attr name="textColorUnChecked" format="integer|reference" />
+        <attr name="checkedIcon" format="reference" />
+        <attr name="uncheckedIcon" format="reference" />
+        <attr name="checkedToggleBackground" format="reference" />
+        <attr name="uncheckedToggleBackground" format="reference" />
+        <attr name="checkedBackground" format="reference" />
+        <attr name="uncheckedBackground" format="reference" />
+        <attr name="durationAnimation" format="float" />
+    </declare-styleable>
+
+
+    <declare-styleable name="ZoomageView">
+        <attr name="zoomage_zoomable" format="boolean" />
+        <attr name="zoomage_translatable" format="boolean" />
+        <attr name="zoomage_restrictBounds" format="boolean" />
+        <attr name="zoomage_animateOnReset" format="boolean" />
+        <attr name="zoomage_doubleTapToZoom" format="boolean" />
+        <attr name="zoomage_doubleTapToZoomScaleFactor" format="float" />
+        <attr name="zoomage_autoCenter" format="boolean" />
+        <attr name="zoomage_minScale" format="float" />
+        <attr name="zoomage_maxScale" format="float" />
+        <attr name="zoomage_autoResetMode" format="enum">
+            <enum name="UNDER" value="0" />
+            <enum name="OVER" value="1" />
+            <enum name="ALWAYS" value="2" />
+            <enum name="NEVER" value="3" />
+        </attr>
+    </declare-styleable>
+
+
+</resources>

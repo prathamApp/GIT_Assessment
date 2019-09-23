@@ -1,0 +1,124 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="@dimen/_240sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:layout_centerInParent="true"
+        android:background="@color/transparent">
+
+        <ImageView
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:elevation="5dp"
+            android:background="@drawable/ripple_round"
+            android:padding="5dp"
+            android:src="@drawable/b1" />
+
+        <ImageButton
+            android:id="@+id/dia_btn_cross"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:elevation="5dp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:background="@drawable/red_button"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_close_red" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:background="@drawable/main_card_bg"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/dia_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:gravity="center"
+                android:fontFamily="@font/quicksand_bold"
+                android:lines="3"
+                android:paddingHorizontal="@dimen/_7sdp"
+                android:text="Please download language packs offline for better performance"
+                android:textSize="@dimen/_15sdp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:gravity="center"
+            android:elevation="5dp">
+
+
+            <Button
+                android:id="@+id/dia_btn_yellow"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:layout_toLeftOf="@id/dia_btn_green"
+                android:background="@drawable/ripple_effect"
+                android:elevation="5dp"
+                android:text="yellow"
+                android:visibility="visible"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+
+            <Button
+                android:id="@+id/dia_btn_green"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:background="@drawable/ripple_effect"
+                android:elevation="5dp"
+                android:text="green"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+
+            <Button
+                android:id="@+id/dia_btn_red"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:layout_toRightOf="@id/dia_btn_green"
+                android:background="@drawable/ripple_effect"
+                android:elevation="5dp"
+                android:text="red"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/exit_ib"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_alignParentRight="true"
+            android:background="@color/transparent"
+            android:padding="@dimen/_3sdp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

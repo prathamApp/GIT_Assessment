@@ -37,6 +37,9 @@ public interface AssessmentPatternDetailsDao {
     @Query("select distinct topicid from AssessmentPatternDetails")
     public List<String> getDistinctTopicIds();
 
+    @Query("select topicname from AssessmentPatternDetails where examId=:examId")
+    public String getTopicNameByExamId(String examId);
+
 
   /*  @Query("select * from AssessmentPatternDetails where topicid=:topicId and examId=:examId")
     public List<AssessmentPatternDetails> getTopicIdByTopicIdExamId(String topicId, String examId);*/

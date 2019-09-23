@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
             Glide.with(mContext).setDefaultRequestOptions(requestOptions)
                     .load(assessList.getNodeServerImage())
                     .into(holder.thumbnail);*/
-
+        holder.game_card_view.setCardBackgroundColor(Assessment_Utility.getRandomColorGradient());
         holder.game_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,11 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/_3sdp"
-    android:background="@drawable/ripple_rectangle"
-    app:cardCornerRadius="@dimen/_8sdp"
-    app:cardElevation="@dimen/_3sdp"
-    app:cardMaxElevation="@dimen/_5sdp">
+    app:cardBackgroundColor="@android:color/transparent"
+
+    app:cardElevation="0dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -18,12 +16,18 @@
         <TextView
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
-            android:layout_margin="@dimen/_5sdp" />
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="0.5" />
 
         <ImageView
             android:id="@+id/iv_question_image"
             style="@style/CustomQuestionImageStyle" />
 
+        <com.pratham.assessment.custom.gif_viewer.GifView
+            android:id="@+id/iv_question_gif"
+            style="@style/CustomQuestionImageStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.5" />
 
         <LinearLayout
             android:id="@+id/ll_match_pair"
@@ -37,15 +41,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_3sdp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@color/colorAccent"
                 android:padding="@dimen/_2sdp" />
 
             <ImageView
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_swap_vertical"/>
+                android:src="@drawable/ic_swap_vertical" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rl_ans_options2"
@@ -53,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_3sdp"
                 android:layout_weight="1"
+                android:layout_gravity="center"
                 android:background="@drawable/ripple_rectangle"
                 android:padding="@dimen/_2sdp" />
         </LinearLayout>

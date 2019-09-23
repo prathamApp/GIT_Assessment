@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/et_answer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/_5sdp"
+    android:background="@drawable/custom_edit_text"
+    android:fontFamily="@font/quicksand_bold"
+    android:gravity="center"
+    android:hint="Enter Answer"
+    android:padding="@dimen/_8sdp"
+    android:textColor="@color/green"
+    android:textSize="@dimen/_20sdp" />
+

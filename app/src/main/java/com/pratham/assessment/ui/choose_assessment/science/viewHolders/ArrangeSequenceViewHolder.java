@@ -62,7 +62,7 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder  implemen
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().
-                    load(Assessment_Constants.loadOnlineImagePath + scienceQuestion.getPhotourl()).apply(new RequestOptions()
+                    load(/*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestion.getPhotourl()).apply(new RequestOptions()
                     .fitCenter()
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(Target.SIZE_ORIGINAL))
@@ -85,7 +85,7 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder  implemen
                 list1.add(pairList.get(p).getChoicename());
             }
 
-            DragDropAdapter dragDropAdapter = new DragDropAdapter(this, list1, context, scienceAdapter);
+           /* DragDropAdapter dragDropAdapter = new DragDropAdapter(this, list1, context, scienceAdapter);
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
@@ -93,7 +93,7 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder  implemen
             touchHelper.attachToRecyclerView(recyclerArrangeSeq);
             LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context.getApplicationContext());
             recyclerArrangeSeq.setLayoutManager(linearLayoutManager1);
-            recyclerArrangeSeq.setAdapter(dragDropAdapter);
+            recyclerArrangeSeq.setAdapter(dragDropAdapter);*/
 
         }
     }

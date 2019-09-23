@@ -1,74 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/rl_exam_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/swipe_btn">
+
+            <TextView
+                android:id="@+id/tv_exam_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/_5sdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Exam Name"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <TextView
+                android:id="@+id/tv_total_que"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_exam_name"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/_5sdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Total questions"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_marks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_total_que"
+                android:layout_margin="@dimen/_5sdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Marks"
+                android:textAlignment="center"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_marks"
+                android:layout_margin="@dimen/_5sdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Time"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+        </RelativeLayout>
+
+        <com.pratham.assessment.custom.swipeButton.ProSwipeButton
+            android:id="@+id/swipe_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/_8sdp"
+            android:gravity="center"
+            app:bg_color="@android:color/holo_blue_dark"
+            app:btn_text="Swipe to start assessment" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/rl_que"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/rl_nav"
+        android:background="@color/green"
+        android:visibility="gone"
         tools:context=".ui.choose_assessment.science.ScienceAssessmentActivity">
 
 
-        <LinearLayout
-            android:id="@+id/ll_timer"
+        <com.pratham.assessment.custom.dots_indicator.WormDotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_5sdp"
+            app:dotsColor="@color/white"
+            app:dotsCornerRadius="5dp"
+            app:dotsSize="10dp"
+            app:dotsSpacing="2dp"
+            app:dotsStrokeColor="@color/light_green"
+            app:dotsStrokeWidth="1dp" />
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/rl_nav"
+            android:orientation="vertical">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/fragment_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/_1sdp">
 
-            <TextView
-                android:id="@+id/current_cnt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+            <ImageView
+                android:id="@+id/iv_prev"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_alignParentLeft="true"
-                android:layout_margin="@dimen/_5sdp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:background="@drawable/ripple_round"
-                android:elevation="@dimen/_5sdp"
-                android:padding="@dimen/_5sdp"
-                android:text="0"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/_18sdp" />
+                android:src="@drawable/ic_left_arrow"
+                android:visibility="visible" />
+            <!--</FrameLayout>-->
+
 
             <ProgressBar
-                android:id="@+id/progressbar_timer"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/_3sdp"
-                android:layout_weight="2"
-                android:progress="0"
-                android:progressBackgroundTint="@color/colorWhiteDark" />
-
-            <Chronometer
-                android:id="@+id/timer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_margin="@dimen/_5sdp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_rectangle"
-                android:padding="@dimen/_10sdp"
-                android:textAlignment="center"
-                android:textSize="@dimen/_18sdp"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_centerInParent="true"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="100"
+                android:progressDrawable="@drawable/circle_progress_background"
                 android:visibility="gone" />
 
+            <ImageButton
+                android:id="@+id/btn_save_Assessment"
+                android:layout_width="@dimen/_55sdp"
+                android:layout_height="@dimen/_55sdp"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ripple_round"
+                android:elevation="@dimen/_5sdp"
+                android:padding="@dimen/_15sdp"
+                android:src="@drawable/ic_next"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+
             <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:id="@+id/frame_video_monitoring"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:background="@drawable/ripple_round"
+                android:visibility="gone">
 
                 <TextureView
                     android:id="@+id/texture_view"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_50sdp"
+                    android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
+                    android:elevation="@dimen/_2sdp"
                     android:visibility="visible" />
 
                 <TextView
@@ -77,96 +190,58 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="@dimen/_5sdp"
-                    android:text="00:00"
                     android:elevation="@dimen/_3sdp"
+                    android:text="00:00"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textSize="@dimen/_16sdp" />
             </FrameLayout>
-        </LinearLayout>
 
-        <!--  <android.support.v7.widget.CardView
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_below="@id/ll_timer"
-              app:cardCornerRadius="@dimen/_8sdp"
-              app:cardElevation="@dimen/_3sdp"
-              android:layout_margin="@dimen/_10sdp"
-              android:background="@drawable/ripple_rectangle"
-              app:cardMaxElevation="@dimen/_5sdp">-->
+            <ProgressBar
+                android:id="@+id/timer_progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_centerInParent="true"
+                android:indeterminate="false"
+                android:layoutDirection="rtl"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/circle_progress_foreground"
+                android:rotation="90"
+                android:visibility="gone" />
 
-        <com.pratham.assessment.discrete_view.DiscreteScrollView
-            android:id="@+id/question_discrete_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/rl_nav"
-            android:layout_below="@id/ll_timer"
-            android:layout_margin="@dimen/_3sdp"
-
-            android:layout_marginTop="30dp" />
-        <!--  </android.support.v7.widget.CardView>
-  -->
-        <RelativeLayout
-            android:id="@+id/rl_nav"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/_5sdp"
-            android:layout_marginTop="@dimen/_5sdp">
-
-            <!-- <FrameLayout
-                 android:layout_width="@dimen/_50sdp"
-                 android:layout_height="@dimen/_50sdp"
-                 >
- -->
-            <!--  <android.support.design.widget.FloatingActionButton
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent" />-->
-
-            <ImageView
-                android:id="@+id/iv_prev"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_7sdp"
-                android:layout_marginRight="-10dp"
-                android:layout_toLeftOf="@+id/btn_save_Assessment"
-                android:background="@drawable/ripple_round"
-                android:src="@drawable/ic_left_arrow" />
-            <!--</FrameLayout>-->
+            <com.pratham.assessment.custom.circular_progress_view.CircleView
+                android:id="@+id/circle_view"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:layout_centerInParent="true"
+                app:arcColor="@color/light_gray"
+                app:arcHasBorder="false"
+                app:arcWidth="@dimen/_5sdp"
+                app:clockwise="false"
+                app:enabled="false"
+                app:hasIndicator="true"
+                app:indicatorColor="@color/black"
+                app:indicatorRadius="5"
+                app:progressColor="@color/black"
+                app:progressCurrentValue="0"
+                app:progressStepValue="1"
+                app:progressWidth="@dimen/_5sdp"
+                app:textEnabled="false" />
 
             <Button
-                android:id="@+id/btn_save_Assessment"
-                android:layout_width="@dimen/_120sdp"
+                android:id="@+id/btn_submit"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_3sdp"
-                android:background="@drawable/ripple_effect_save_btn"
-                android:elevation="@dimen/_10sdp"
-                android:padding="@dimen/_11sdp"
-                android:text="Save"
-                android:textSize="@dimen/_20sdp"
-                android:textStyle="bold" />
-
-            <!--  <FrameLayout
-                  android:layout_width="@dimen/_50sdp"
-                  android:layout_height="@dimen/_50sdp"
-
-                  >
-  -->
-            <!--  <android.support.design.widget.FloatingActionButton
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent" />-->
-
-            <ImageView
-                android:id="@+id/iv_next"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginLeft="-10dp"
-                android:layout_marginTop="@dimen/_7sdp"
-                android:layout_toRightOf="@id/btn_save_Assessment"
-                android:background="@drawable/ripple_round"
-                android:src="@drawable/ic_right_arrow" />
-
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_7sdp"
+                android:background="@drawable/ripple_effect"
+                android:padding="@dimen/_5sdp"
+                android:text="Submit"
+                android:textSize="@dimen/_15sdp"
+                android:visibility="gone" />
 
             <!--</FrameLayout>-->
         </RelativeLayout>

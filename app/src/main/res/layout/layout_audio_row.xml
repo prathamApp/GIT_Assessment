@@ -3,11 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/_3sdp"
-    android:background="@drawable/ripple_rectangle"
-    app:cardCornerRadius="@dimen/_8sdp"
-    app:cardElevation="@dimen/_3sdp"
-    app:cardMaxElevation="@dimen/_5sdp">
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,31 +15,57 @@
         <TextView
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
-            android:layout_margin="@dimen/_5sdp" />
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="0.4" />
 
         <ImageView
             android:id="@+id/iv_question_image"
-            style="@style/CustomQuestionImageStyle"/>
+            style="@style/CustomQuestionImageStyle" />
 
-        <ImageView
-            android:id="@+id/iv_question_audio"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_play_circle" />
+        <com.pratham.assessment.custom.gif_viewer.GifView
+            android:id="@+id/iv_question_gif"
+            style="@style/CustomQuestionImageStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.5" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="@dimen/_140sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/main_card_bg"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/iv_question_audio"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_play_circle" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_record_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3">
+
+            <TextView
+                android:id="@+id/tv_rec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Record Audio"
+                android:textSize="@dimen/_15sdp" />
 
             <ImageView
                 android:id="@+id/iv_start_audio"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"
+                android:layout_below="@+id/tv_rec"
                 android:layout_centerHorizontal="true"
-                android:elevation="@dimen/_3sdp"
                 android:layout_margin="@dimen/_5sdp"
+                android:elevation="@dimen/_3sdp"
                 android:src="@drawable/ic_mic_24dp"
                 android:visibility="visible" />
 
@@ -51,8 +74,8 @@
                 android:id="@+id/ll_audio_controls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
                 android:layout_below="@+id/iv_start_audio"
+                android:layout_margin="@dimen/_5sdp"
                 android:visibility="gone">
 
                 <ImageView
@@ -68,6 +91,30 @@
                     android:layout_height="match_parent"
                     android:layout_weight="3" />
             </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_answer_audio"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_140sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/main_card_bg"
+            android:padding="@dimen/_10sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Your answer"
+                android:textSize="@dimen/_15sdp" />
+
+            <ImageView
+                android:id="@+id/iv_answer_audio"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_play_circle" />
         </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

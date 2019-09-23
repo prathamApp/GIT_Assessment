@@ -30,19 +30,22 @@ import static com.pratham.assessment.utilities.Assessment_Constants.PREFS_VERSIO
 
 public class AssessmentApplication extends Application {
 
+
+    public static final boolean isTablet = false;
+
+
     public static String cosPath = "", networkSSID = "PrathamHotSpot-" + Build.SERIAL;
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
     public static String uploadScienceUrl = "http://apiassessment.openiscool.org/api/pushassessment/AssessmentPushData";
     public static String uploadScienceFilesUrl = "http://apiassessment.openiscool.org/api/question/pushFiles";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
-    public static final boolean isTablet = true;
     public static WiseFy wiseF;
     public static boolean contentExistOnSD = false, LocationFlg = false;
     public static String contentSDPath = "";
     public static SharedPreferences sharedPreferences;
 
-//    public static HashMap<String, FileState> sendFileStates;
+    //    public static HashMap<String, FileState> sendFileStates;
 //    public static HashMap<String, FileState> recieveFileStates;
     public static String IMAG_PATH;
     public static String VOICE_PATH;
@@ -72,6 +75,22 @@ public class AssessmentApplication extends Application {
 
         sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
         assessPath = Assessment_Utility.getInternalPath(this);
+
+        if (assessPath != null) {
+            File mydir = null;
+            mydir = new File(assessPath + "/.Assessment");
+            if (!mydir.exists())
+                mydir.mkdirs();
+            mydir = new File(assessPath + "/.Assessment/Content");
+            if (!mydir.exists())
+                mydir.mkdirs();
+         /*   mydir = new File(assessPath + "/.Assessment/English/Game");
+            if (!mydir.exists())
+                mydir.mkdirs();*/
+        }
+        Log.d("COS.pradigiPath", "COS.pradigiPath: " + assessPath);
+
+
 //        makeDir();
 //        if (Assessment_Constants.SMART_PHONE)
 //            Assessment_Constants.ext_path = assessPath;
@@ -101,7 +120,7 @@ public class AssessmentApplication extends Application {
     }
 
     private void makeDir() {
-        String folder = assessPath+ "/.Assessment";
+        String folder = assessPath + "/.Assessment";
         File f = new File(folder);
         if (!f.exists()) f.mkdirs();
 

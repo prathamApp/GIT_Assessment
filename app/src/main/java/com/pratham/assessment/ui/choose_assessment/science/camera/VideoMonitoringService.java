@@ -12,6 +12,9 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.TextureView;
 
+import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.utilities.Assessment_Constants;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -98,7 +101,7 @@ public class VideoMonitoringService extends Service {
             List<Camera.Size> mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
             List<Camera.Size> mSupportedVideoSizes = parameters.getSupportedVideoSizes();
             Camera.Size optimalSize = CameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
-                    mSupportedPreviewSizes,300, 300);
+                    mSupportedPreviewSizes, 300, 300);
             // Use the same size for recording profile.
             CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
             profile.videoFrameWidth = optimalSize.width;
@@ -134,7 +137,9 @@ public class VideoMonitoringService extends Service {
             mMediaRecorder.setProfile(profile);
 
             // Step 4: Set output file
-            mOutputFile = new File(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + fileName);
+            File root = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH);
+            if (!root.exists()) root.mkdir();
+            mOutputFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH +"/"+ fileName);
 
 //            CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
             if (mOutputFile == null) {

@@ -47,11 +47,11 @@ public class ZipDownloader {
                                               Context context,
                                               ArrayList<ContentTable> levelContents) {
         File mydir = null;
-        mydir = new File(AssessmentApplication.assessPath+ "/.Assessment");
+        mydir = new File(AssessmentApplication.contentSDPath+ "/.Assessment");
         if (!mydir.exists()) mydir.mkdirs();
-        mydir = new File(AssessmentApplication.assessPath + "/.Assessment/English/");
+        mydir = new File(AssessmentApplication.contentSDPath + "/.Assessment/English/");
         if (!mydir.exists()) mydir.mkdirs();
-            mydir = new File(AssessmentApplication.assessPath + "/.Assessment/English/" + foldername);
+            mydir = new File(AssessmentApplication.contentSDPath + "/.Assessment/English/" + foldername);
         if (!mydir.exists()) mydir.mkdirs();
         if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
             if (foldername.equalsIgnoreCase(Assessment_Constants.GAME)) {

@@ -19,13 +19,16 @@ public interface AssessmentTestDao {
     public void insertAllTest(List<AssessmentTest> assessmentTest);
 
     @Query("DELETE FROM AssessmentTest")
-    public void deleteTest();
+    public void deleteTests();
 
     @Query("select * from AssessmentTest")
     public List<AssessmentTest> getAllAssessmentTests();
 
     @Query("select * from AssessmentTest where examid=:examId")
     public List<AssessmentTest> getTopicByExamId(String examId);
+
+    @Query("select * from AssessmentTest where subjectid=:subId")
+    public List<AssessmentTest> getTopicBySubId(String subId);
 
     @Query("select examname from AssessmentTest where examid=:examId")
     public String getExamNameById(String examId);

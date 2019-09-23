@@ -2,20 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_Subject"
-        android:checked="true"
         android:title="Subjects" />
-    <item
+   <item
         android:id="@+id/menu_certificate"
         android:title="Certificate" />
 
-    <item
-        android:id="@+id/menu_admin_panel"
-        android:title="Admin Panel" />
-    <item
-        android:id="@+id/menu_supervision_type"
-        android:title="Supervision type" />
-
- <item
+   <item
         android:id="@+id/menu_language"
         android:title="Language" />
 

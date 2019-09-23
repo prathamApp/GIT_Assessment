@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:maxHeight="@dimen/_150sdp"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:textSize="@dimen/_15sdp"
+    android:padding="@dimen/_5sdp"
+    android:fontFamily="@font/quicksand_bold"
+    android:checked="false"
+    android:background="@drawable/custom_radio_button" />
+

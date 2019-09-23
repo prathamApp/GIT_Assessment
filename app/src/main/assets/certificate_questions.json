@@ -1,0 +1,34 @@
+{
+  "QuestionList": [
+    {
+      "langId": "1",
+      "language": "ENGLISH",
+      "question1": "Are you familiar with ",
+      "question2": "Do you have knowledge about ",
+      "question3": "Do you understand ",
+      "end_question1": " course?",
+      "end_question2": " course?",
+      "end_question3": " course?"
+    },
+    {
+      "langId": "2",
+      "language": "HINDI",
+      "question1": "क्या आप ",
+      "question2": "क्या आपको ",
+      "question3": "क्या आपको ",
+      "end_question1": " कोर्स से परिचित (Familiar)  हैं?",
+      "end_question2": " कोर्स की जानकारी (Knowledge) है?",
+      "end_question3": " कोर्स की समझ (Understanding) है?"
+    },
+    {
+      "langId": "3",
+      "language": "MARATHI",
+      "question1": "तुम्हाला ",
+      "question2": "तुम्हाला ",
+      "question3": "तुम्हाला ",
+      "end_question1": " या कोर्सची ओळख (Familiar) आहे का",
+      "end_question2": " या कोर्सविषयी माहिती (Knowledge) आहे का?",
+      "end_question3": " या कोर्सविषयी समज (Understanding) आहे का?"
+    }
+  ]
+}

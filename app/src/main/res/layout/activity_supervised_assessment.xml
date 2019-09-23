@@ -38,19 +38,20 @@
             android:visibility="visible" />
 
 
-        <TextView
+        <EditText
             android:id="@+id/supervisor_name"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_below="@id/iv_image"
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_40sdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:hint="Enter supervisor name"
             android:singleLine="true"
-            android:textStyle="bold"
-            android:text="Supervisor"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/_25sdp" />
+            android:textSize="@dimen/_15sdp" />
 
         <ImageButton
             android:id="@+id/btn_camera"

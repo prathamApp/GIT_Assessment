@@ -36,8 +36,6 @@ public class AssessmentCertificatePresenterImpl implements AssessmentCertificate
     public void getStudent(String studentId) {
         String studentName = AppDatabase.getDatabaseInstance(context).getStudentDao().getFullName(studentId);
         view.setStudentName(studentName);
-
-
     }
 
     @Override
@@ -49,7 +47,7 @@ public class AssessmentCertificatePresenterImpl implements AssessmentCertificate
     @Override
     public void generateCertificate(String selectedSub) {
         String subId = AppDatabase.getDatabaseInstance(context).getSubjectDao().getIdByName(selectedSub);
-        List<AssessmentPaperForPush> paperList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubId(subId, Assessment_Constants.currentStudentID);
+        List<AssessmentPaperForPush> paperList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubId(subId, Assessment_Constants.currentStudentID );
         view.showPaperList(paperList);
         if (paperList.size() == 0) {
             view.showNothing();

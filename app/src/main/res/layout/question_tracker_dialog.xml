@@ -12,8 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:padding="5dp"
         android:background="@color/colorAccent"
+        android:fontFamily="@font/quicksand_bold"
+
+        android:padding="5dp"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="25dp"
         android:textStyle="bold" />
@@ -46,9 +48,11 @@
             android:id="@+id/tv_answered_color"
             android:layout_width="0dp"
             android:layout_height="@dimen/_30sdp"
+
             android:layout_margin="@dimen/_2sdp"
             android:layout_weight="1"
             android:background="@color/colorGreen"
+            android:fontFamily="@font/quicksand_bold"
             android:text=""
             android:textAlignment="center"
             android:textSize="@dimen/_15sdp" />
@@ -57,9 +61,11 @@
             android:id="@+id/tv_answered"
             android:layout_width="0dp"
             android:layout_height="@dimen/_30sdp"
+
             android:layout_gravity="center"
             android:layout_margin="@dimen/_2sdp"
             android:layout_weight="3"
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:text="Answered"
             android:textSize="@dimen/_12sdp"
@@ -70,9 +76,11 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center"
+
             android:layout_margin="@dimen/_2sdp"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:text=""
             android:textAlignment="center"
@@ -83,8 +91,10 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center"
+
             android:layout_margin="@dimen/_2sdp"
             android:layout_weight="3"
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:text="Not Answered"
             android:textSize="@dimen/_12sdp"
@@ -119,7 +129,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
+
             android:background="@drawable/ripple_effect"
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:padding="5dp"
             android:text="Cancel"
@@ -132,7 +144,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
+
             android:background="@drawable/ripple_effect"
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:padding="5dp"
             android:text="Save"

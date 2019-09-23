@@ -3,20 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/ripple_rectangle"
     android:layout_gravity="center_horizontal"
     >
 
     <TextView
         android:id="@+id/tv_text"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/_150sdp"
         android:text="text"
+        android:padding="@dimen/_5sdp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:drawableLeft="@color/colorAccentDark"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/white"
         android:textAlignment="center"
-        android:textSize="@dimen/_13sdp" />
+        android:textSize="@dimen/_15sdp" />
 
     <ImageView
         android:id="@+id/iv_choice_image"

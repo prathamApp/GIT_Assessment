@@ -19,7 +19,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
+
             android:textColor="@color/colorWhiteDark"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
@@ -41,8 +43,8 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_margin="@dimen/_20sdp"
+                android:layout_weight="1"
                 app:cardCornerRadius="@dimen/_15sdp"
                 app:cardElevation="@dimen/_3sdp">
 
@@ -74,7 +76,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:fontFamily="@font/quicksand_bold"
                             android:text="Age 3 to 6"
+
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/_30sdp" />
                     </RelativeLayout>
@@ -116,7 +120,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:fontFamily="@font/quicksand_bold"
                             android:text="Age 8 to 14"
+
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/_30sdp" />
                     </RelativeLayout>
@@ -157,8 +163,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_qr_code_white" />

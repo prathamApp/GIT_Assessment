@@ -6,6 +6,7 @@ public class ResultModalClass implements Serializable {
 
     String qId;
     String Question;
+    String QuestionImg;
     String correctAnswer;
     String userAnswer;
     String userAnswerId;
@@ -68,5 +69,13 @@ public class ResultModalClass implements Serializable {
 
     public void setCorrect(boolean correct) {
         isCorrect = correct;
+    }
+
+    public String getQuestionImg() {
+        return QuestionImg;
+    }
+
+    public void setQuestionImg(String questionImg) {
+        QuestionImg = questionImg;
     }
 }

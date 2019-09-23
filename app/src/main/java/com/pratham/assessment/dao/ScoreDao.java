@@ -47,19 +47,23 @@ public interface ScoreDao {
     @Query("select * from Score where sentFlag = 0 AND SessionID=:session_id")
     List<Score> getAllNewScores(String session_id);
 
+    @Query("select count(*) from Score where Level =:level AND paperId=:paperId")
+    int getLevelCnt(String level, String paperId);
+
+    @Query("select count(*) from Score where Level =:level AND isCorrect=:isCorrect AND paperId=:paperId")
+    int getLevelCorrectCnt(String level, String paperId,boolean isCorrect);
+
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void addScoreList(List<Score> contentList);
 
     @Query("update Score set sentFlag=1 where sentFlag=0")
     public void setSentFlag();
 
-    @Query("Select MAX(ScoredMarks) from Score where StudentID=:stdID AND Label='RC-sessionTotalScore '")
-    public int getRCHighScore(String stdID);
 
-    @Query("select * from Score where StudentID=:stdID AND Label='RC-sessionTotalScore '")
-    List<Score> getScoreByStdID(String stdID);
+    @Query("select * from Score where paperId=:paperId")
+    List<Score> getScoreByPaperId(String paperId);
 
-    @Query("select * from Score where Label='RC-sessionTotalScore '")
-    List<Score> getScoreOfRCsessionTotalScore();
 
 }

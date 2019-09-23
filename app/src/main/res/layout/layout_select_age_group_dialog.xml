@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:fontFamily="@font/quicksand_bold"
                 android:layout_toStartOf="@+id/iv_age_3_to_6"
                 android:layout_toLeftOf="@id/tv_age_3_to_6"
                 android:layout_weight="1"
@@ -76,7 +77,8 @@
                 android:id="@+id/tv_age_8_to_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_centerVertical="true"            android:fontFamily="@font/quicksand_bold"
+
                 android:layout_toRightOf="@id/iv_age_8_to_14"
                 android:layout_weight="1"
                 android:layout_marginLeft="-25dp"

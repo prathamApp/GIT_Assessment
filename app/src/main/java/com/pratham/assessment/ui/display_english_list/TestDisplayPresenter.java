@@ -277,7 +277,7 @@ public class TestDisplayPresenter implements TestDiaplayContract.TestDisplayPres
         JSONArray returnModalGames = null;
         try {
             Log.d("DW_COMPLETE", "In FetchJson ");
-            InputStream is = new FileInputStream((AssessmentApplication.assessPath + Assessment_Constants.GAME_PATH + jsonName));
+            InputStream is = new FileInputStream((AssessmentApplication.contentSDPath + Assessment_Constants.GAME_PATH + jsonName));
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

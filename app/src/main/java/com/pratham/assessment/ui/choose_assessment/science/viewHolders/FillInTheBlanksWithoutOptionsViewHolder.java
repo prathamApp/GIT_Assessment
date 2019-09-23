@@ -3,6 +3,8 @@ package com.pratham.assessment.ui.choose_assessment.science.viewHolders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,13 +12,13 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,12 +29,16 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.voice_ripple.Renderer;
+import com.pratham.assessment.custom.voice_ripple.TimerCircleRippleRenderer;
+import com.pratham.assessment.custom.voice_ripple.VoiceRippleView;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 
@@ -48,7 +54,7 @@ public class FillInTheBlanksWithoutOptionsViewHolder extends RecyclerView.ViewHo
     @BindView(R.id.et_answer)
     EditText etAnswer;
     @BindView(R.id.ib_mic)
-    ImageButton ib_mic;
+    VoiceRippleView ib_mic;
     ScienceQuestion scienceQuestion;
     QuestionTypeListener questionTypeListener;
     AssessmentAnswerListener assessmentAnswerListener;
@@ -59,25 +65,34 @@ public class FillInTheBlanksWithoutOptionsViewHolder extends RecyclerView.ViewHo
     Context context;
     private float perc = 0;
 
-
+    Renderer currentRenderer;
     public FillInTheBlanksWithoutOptionsViewHolder(@NonNull View itemView, Context context, ScienceAdapter scienceAdapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = context;
         questionTypeListener = scienceAdapter;
         assessmentAnswerListener = (ScienceAssessmentActivity) context;
+        ib_mic.setRecordDrawable(context.getResources().getDrawable(R.drawable.ic_mic_black_24dp),
+                context.getResources().getDrawable(R.drawable.ic_hearing_black_24dp));
+
+        currentRenderer = new TimerCircleRippleRenderer(getDefaultRipplePaint(), getDefaultRippleBackgroundPaint(), getButtonPaint(), getArcPaint(), 10000.0, 0.0);
+        if (currentRenderer instanceof TimerCircleRippleRenderer) {
+            ((TimerCircleRippleRenderer) currentRenderer).setStrokeWidth(20);
+        }
+        ib_mic.setRenderer(currentRenderer);
         resetSpeechRecognizer();
 
     }
 
     public void setFillInTheBlanksQuestion(ScienceQuestion scienceQuestion1, int pos) {
         this.scienceQuestion = scienceQuestion1;
+        etAnswer.setTextColor(Assessment_Utility.selectedColor);
         etAnswer.setText(scienceQuestion.getUserAnswer());
         question.setText(scienceQuestion.getQname());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().
-                    load(Assessment_Constants.loadOnlineImagePath + scienceQuestion.getPhotourl())
+                    load(/*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestion.getPhotourl())
                     .apply(new RequestOptions()
                             .fitCenter()
                             .format(DecodeFormat.PREFER_ARGB_8888)
@@ -95,20 +110,17 @@ public class FillInTheBlanksWithoutOptionsViewHolder extends RecyclerView.ViewHo
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                // TODO Auto-generated method stub
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
-                // TODO Auto-generated method stub
 //                questionTypeListener.setAnswer("", etAnswer.getText().toString(), scienceQuestion.getQid(), null);
                 assessmentAnswerListener.setAnswerInActivity("", etAnswer.getText().toString(), scienceQuestion.getQid(), null);
             }
@@ -118,19 +130,21 @@ public class FillInTheBlanksWithoutOptionsViewHolder extends RecyclerView.ViewHo
 
     @OnClick(R.id.ib_mic)
     public void onMicClicked() {
+        if (ib_mic.isRecording()) ib_mic.stopRecording();
+        else
+            ib_mic.startRecording();
         callSTT();
-
     }
 
     public void callSTT() {
         if (!voiceStart) {
             voiceStart = true;
             // btn_reading.setImageResource(R.drawable.ic_stop_black_24dp);
-            micPressed(1);
+//            micPressed(1);
             startSpeechInput();
         } else {
             voiceStart = false;
-            micPressed(0);
+//            micPressed(0);
             stopSpeechInput();
         }
     }
@@ -138,13 +152,15 @@ public class FillInTheBlanksWithoutOptionsViewHolder extends RecyclerView.ViewHo
 
     public void micPressed(int micPressed) {
         if (micPressed == 0) {
-            ib_mic.setImageResource(R.drawable.ic_mic_24dp);
+            ib_mic.setRecordDrawable(context.getResources().getDrawable(R.drawable.ic_mic_24dp), context.getResources().getDrawable(R.drawable.ic_mic_24dp));
             // disableWordsSentences(true);
 
         }// mic.setBackground(getResources().getDrawable(R.drawable.ripple_effect));
         else if (micPressed == 1) {
             //mic.setBackground(getResources().getDrawable(R.drawable.ripple_effect_selected));
-            ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);
+//            ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);
+            ib_mic.setRecordDrawable(context.getResources().getDrawable(R.drawable.ic_mic_24dp), context.getResources().getDrawable(R.drawable.ic_mic_24dp));
+
             //disableWordsSentences(false);
 
         }
@@ -212,12 +228,14 @@ public class FillInTheBlanksWithoutOptionsViewHolder extends RecyclerView.ViewHo
     @Override
     public void onError(int error) {
         voiceStart = false;
-        micPressed(0);
+//        micPressed(0);
+        ib_mic.stopRecording();
     }
 
     @Override
     public void onResults(Bundle results) {
-        micPressed(0);
+//        micPressed(0);
+        ib_mic.stopRecording();
         System.out.println("LogTag" + " onResults");
         ArrayList<String> matches = results
                 .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
@@ -286,5 +304,38 @@ public class FillInTheBlanksWithoutOptionsViewHolder extends RecyclerView.ViewHo
 
     }
 
+    private Paint getArcPaint() {
+        Paint paint = new Paint();
+        paint.setColor(ContextCompat.getColor(context, R.color.colorAccent));
+        paint.setStrokeWidth(20);
+        paint.setAntiAlias(true);
+        paint.setStrokeCap(Paint.Cap.SQUARE);
+        paint.setStyle(Paint.Style.STROKE);
+        return paint;
+    }
+    private Paint getDefaultRipplePaint() {
+        Paint ripplePaint = new Paint();
+        ripplePaint.setStyle(Paint.Style.FILL);
+        ripplePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        ripplePaint.setAntiAlias(true);
 
+        return ripplePaint;
+    }
+
+    private Paint getDefaultRippleBackgroundPaint() {
+        Paint rippleBackgroundPaint = new Paint();
+        rippleBackgroundPaint.setStyle(Paint.Style.FILL);
+        rippleBackgroundPaint.setColor((ContextCompat.getColor(context, R.color.colorPrimary) & 0x00FFFFFF) | 0x40000000);
+        rippleBackgroundPaint.setAntiAlias(true);
+
+        return rippleBackgroundPaint;
+    }
+
+    private Paint getButtonPaint() {
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        return paint;
+    }
 }

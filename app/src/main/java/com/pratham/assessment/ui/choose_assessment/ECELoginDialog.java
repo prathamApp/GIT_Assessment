@@ -27,15 +27,16 @@ public class ECELoginDialog extends Dialog {
     @BindView(R.id.btn_unsupervised)
     Button btn_unsupervised;
     Context context;
+
     public ECELoginDialog(Context context) {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.assessment_login_dialog);
-        this.context=context;
+        this.context = context;
         ButterKnife.bind(this);
-        userNameET.setText("pravinthorat");
-        passwordET.setText("pratham123");
-        /*userNameET.setText("");
-        passwordET.setText("");*/
+       /* userNameET.setText("pravinthorat");
+        passwordET.setText("pratham123");*/
+        userNameET.setText("");
+        passwordET.setText("");
     }
 
     /*   @OnClick(R.id.btn_supervised)
@@ -55,7 +56,7 @@ public class ECELoginDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
+        setCancelable(false);
     }
 
 

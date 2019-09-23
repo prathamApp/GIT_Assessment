@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.ui.choose_assessment.ChoseAssessmentClicked;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.MyViewHolder
     public TopicAdapter(Context context, List<AssessmentTest> assessmentTests) {
         this.context = context;
         this.assessmentTests = assessmentTests;
-        assessmentClicked= (ChoseAssessmentClicked) context;
+        assessmentClicked = (ChoseAssessmentClicked) context;
     }
 
     @NonNull
@@ -51,15 +52,16 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
         final AssessmentTest assessmentTest = assessmentTests.get(i);
 
         myViewHolder.title.setText(assessmentTest.getExamname());
-
+        myViewHolder.game_card_view.setCardBackgroundColor(Assessment_Utility.getRandomColorGradient());
         myViewHolder.game_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assessmentClicked.topicClicked(i,assessmentTest);
+                Assessment_Utility.setSelectedColor(myViewHolder.game_card_view.getCardBackgroundColor().getDefaultColor());
+                assessmentClicked.topicClicked(i, assessmentTest);
 
             }
         });

@@ -39,14 +39,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+
 public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.tv_question)
     TextView question;
     @BindView(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_image_play_icon)
-    ImageView iv_question_image_play_icon;
+
     @BindView(R.id.iv_answer_image_play_icon)
     ImageView iv_answer_image_play_icon;
     @BindView(R.id.btn_capture_video)
@@ -124,7 +125,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick({R.id.iv_answer_image_play_icon, R.id.vv_answer_play_video})
     public void onAnswerVideoClicked() {
-        String fileName =  scienceQuestion.getQid() + "_" +scienceQuestion.getPaperid() + ".mp4";
+        String fileName =scienceQuestion.getPaperid()+ "_" +scienceQuestion.getQid()+ ".mp4";
         String path = Environment.getExternalStorageDirectory().toString() + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
@@ -135,7 +136,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         zoomImageDialog.show();
     }
 
-    @OnClick({R.id.iv_question_image, R.id.iv_question_image_play_icon})
+    @OnClick({R.id.iv_question_image})
     public void onVideoClicked() {
         ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, scienceQuestion.getQtid());
         zoomImageDialog.show();
@@ -143,11 +144,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    private String getFileName(String qid, String photoUrl) {
-        String[] splittedPath = photoUrl.split("/");
-        String fileName = qid + "_" + splittedPath[splittedPath.length - 1];
-        return fileName;
-    }
 
 
 }

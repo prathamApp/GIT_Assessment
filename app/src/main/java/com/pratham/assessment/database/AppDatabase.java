@@ -1,17 +1,16 @@
 package com.pratham.assessment.database;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.pratham.assessment.dao.AssessmentDao;
 import com.pratham.assessment.dao.AssessmentPaperForPushDao;
 import com.pratham.assessment.dao.AssessmentPaperPatternDao;
 import com.pratham.assessment.dao.AssessmentPatternDetailsDao;
+import com.pratham.assessment.dao.AssessmentTestDao;
+import com.pratham.assessment.dao.AssessmentTopicDao;
 import com.pratham.assessment.dao.AttendanceDao;
 import com.pratham.assessment.dao.ContentTableDao;
 import com.pratham.assessment.dao.CrlDao;
@@ -25,9 +24,7 @@ import com.pratham.assessment.dao.ScoreDao;
 import com.pratham.assessment.dao.SessionDao;
 import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.dao.StudentDao;
-import com.pratham.assessment.dao.AssessmentTopicDao;
 import com.pratham.assessment.dao.SubjectDao;
-import com.pratham.assessment.dao.AssessmentTestDao;
 import com.pratham.assessment.dao.SupervisorDataDao;
 import com.pratham.assessment.dao.VillageDao;
 import com.pratham.assessment.domain.Assessment;
@@ -106,6 +103,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract AssessmentPatternDetailsDao getAssessmentPatternDetailsDao();
 
     public abstract SupervisorDataDao getSupervisorDataDao();
+
     public abstract DownloadMediaDao getDownloadMediaDao();
 
 

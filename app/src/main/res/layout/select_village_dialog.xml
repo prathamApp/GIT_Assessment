@@ -18,8 +18,10 @@
         <TextView
             android:id="@+id/txt_message"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/_40sdp"
             android:layout_weight="6"
+            android:fontFamily="@font/quicksand_bold"
+
             android:gravity="center_vertical"
             android:padding="5dp"
             android:text="topics"
@@ -58,14 +60,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
-            android:layout_weight="1" android:visibility="gone"/>
+            android:layout_weight="1"
+            android:visibility="gone" />
 
-       <!-- <Spinner
-            android:id="@+id/spinner_subject"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp"
-            android:layout_weight="1" />-->
+        <!-- <Spinner
+             android:id="@+id/spinner_subject"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_margin="@dimen/_10sdp"
+             android:layout_weight="1" />-->
 
     </LinearLayout>
 
@@ -97,7 +100,9 @@
                 android:id="@+id/flowLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnCount="4"
+                android:columnCount="3"
+                android:padding="@dimen/_5sdp"
+                android:layout_margin="@dimen/_3sdp"
                 grid:alignmentMode="alignBounds" />
 
         </HorizontalScrollView>
@@ -117,11 +122,12 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@drawable/ripple_effect"
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:padding="5dp"
             android:text="Clear changes"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/_12sdp" />
 
         <TextView
             android:id="@+id/txt_save"
@@ -130,11 +136,13 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@drawable/ripple_effect"
+
+            android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:padding="5dp"
             android:text="Ok"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/_12sdp" />
     </LinearLayout>
 </RelativeLayout>
 

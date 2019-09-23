@@ -1,6 +1,7 @@
 package com.pratham.assessment.ui.choose_assessment.result;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,13 +53,14 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         ScienceQuestionChoice scienceQuestionChoice = scienceQuestionChoices.get(i);
+        myViewHolder.text.setTextColor(Color.BLACK);
         if (type.equalsIgnoreCase("que")) {
             if (!scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
                 myViewHolder.image.setVisibility(View.VISIBLE);
                 myViewHolder.text.setVisibility(View.GONE);
 
                 Glide.with(context).asBitmap().
-                        load(Assessment_Constants.loadOnlineImagePath + scienceQuestionChoice.getChoiceurl()).apply(new RequestOptions()
+                        load( scienceQuestionChoice.getChoiceurl()).apply(new RequestOptions()
                         .fitCenter()
                         .format(DecodeFormat.PREFER_ARGB_8888)
                         .override(Target.SIZE_ORIGINAL))
@@ -71,7 +73,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                     myViewHolder.text.setVisibility(View.GONE);
 
                     Glide.with(context).asBitmap().
-                            load(Assessment_Constants.loadOnlineImagePath + scienceQuestionChoice.getMatchingurl()).apply(new RequestOptions()
+                            load(/*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getMatchingurl()).apply(new RequestOptions()
                             .fitCenter()
                             .format(DecodeFormat.PREFER_ARGB_8888)
                             .override(Target.SIZE_ORIGINAL))

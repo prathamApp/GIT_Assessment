@@ -1,6 +1,5 @@
 package com.pratham.assessment.ui.choose_assessment.science.certificate;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,7 +13,8 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.Score;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSubjectsFragment;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,9 +59,13 @@ public class AssessmentCertificateActivity extends BaseActivity implements Asses
         setContentView(R.layout.activity_assessment_certificate);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
-        presenter = new AssessmentCertificatePresenterImpl(this);
+
+        Assessment_Utility.showFragment(this, new CertificateSubjectsFragment(),
+                R.id.frame_certificate, null, CertificateSubjectsFragment.class.getSimpleName());
+
+     /*   presenter = new AssessmentCertificatePresenterImpl(this);
         presenter.getStudent(Assessment_Constants.currentStudentID);
-        presenter.getSubjectData();
+        presenter.getSubjectData();*/
 
 
 //        String subName = presenter.getSubjectName(examId);
@@ -204,5 +208,13 @@ public class AssessmentCertificateActivity extends BaseActivity implements Asses
 
     private void generateCertificateData() {
         presenter.generateCertificate(selectedSub);
+    }
+
+    @Override
+    public void onBackPressed() {
+        int fragments=getSupportFragmentManager().getBackStackEntryCount();
+        if(fragments>1){
+            super.onBackPressed();
+        }else finish();
     }
 }

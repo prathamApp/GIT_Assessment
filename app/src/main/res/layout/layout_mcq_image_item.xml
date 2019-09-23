@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_130sdp"
+    android:layout_height="@dimen/_100sdp"
+    android:layout_margin="@dimen/_3sdp"
+    android:background="@drawable/custom_radio_button"
+    android:checked="false"
+    android:maxHeight="@dimen/_150sdp"
+    android:maxWidth="@dimen/_100sdp"
+    android:padding="@dimen/_5sdp"
+    android:src="@drawable/ic_warning"
+    android:textColor="@color/white" />
+

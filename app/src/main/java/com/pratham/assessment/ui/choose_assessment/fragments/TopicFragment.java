@@ -23,6 +23,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.AssessmentTestModal;
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
@@ -38,6 +39,9 @@ public class TopicFragment extends Fragment {
     List<AssessmentTest> assessmentTests = new ArrayList<>();
     @BindView(R.id.rv_topics)
     RecyclerView rv_topics;
+
+    ProgressDialog progressDialog;
+
 
     public TopicFragment() {
         // Required empty public constructor
@@ -58,7 +62,7 @@ public class TopicFragment extends Fragment {
     }
 
     private void getExamData() {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading Exams");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -79,7 +83,8 @@ public class TopicFragment extends Fragment {
                                 assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
                             }
                         }
-                        if (!assessmentTests.isEmpty()) {
+                        if (assessmentTests.size()>0) {
+                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTests();
                             AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
                             progressDialog.dismiss();
 
@@ -88,7 +93,13 @@ public class TopicFragment extends Fragment {
                             setTopicsToCheckBox(assessmentTests);*/
                         } else {
                             progressDialog.dismiss();
+                          /*  ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+                            ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+                            getActivity().getSupportFragmentManager().popBackStack();
                             Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
+*/
+                            getOfflineTests();
+
 //                           btnOk.setEnabled(false);
                         }
                     }
@@ -96,6 +107,10 @@ public class TopicFragment extends Fragment {
                     @Override
                     public void onError(ANError anError) {
                         progressDialog.dismiss();
+                        ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+                        ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+                        getActivity().getSupportFragmentManager().popBackStack();
+
                         Toast.makeText(getActivity(), "" + anError, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -114,11 +129,28 @@ public class TopicFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-             /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             getExamData();
-        } else*/
-        assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getAllAssessmentTests();
-        setTopicsToRecyclerView();
+        } else {
+            getOfflineTests();
+        }
 
+    }
+
+    private void getOfflineTests() {
+        assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getTopicBySubId(Assessment_Constants.SELECTED_SUBJECT_ID);
+        if (assessmentTests.size() > 0)
+            setTopicsToRecyclerView();
+        else {
+           /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                getExamData();
+            } else*/
+            if (progressDialog != null)
+                progressDialog.dismiss();
+            ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+            ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+            getActivity().getSupportFragmentManager().popBackStack();
+            Toast.makeText(getActivity(), "Connect to internet to download exams", Toast.LENGTH_SHORT).show();
+        }
     }
 }

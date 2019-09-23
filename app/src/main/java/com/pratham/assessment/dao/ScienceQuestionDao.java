@@ -26,6 +26,9 @@ public interface ScienceQuestionDao {
     @Query("DELETE FROM ScienceQuestion WHERE qid=:qid")
     public void deleteQuestionByQID(String qid);
 
+    @Query("DELETE FROM ScienceQuestion WHERE examid=:examId")
+    public void deleteQuestionByExamId(String examId);
+
     @Query("SELECT qname FROM ScienceQuestion WHERE qid=:qID")
     public String getQuestionNameByQID(String qID);
 
@@ -40,6 +43,9 @@ public interface ScienceQuestionDao {
 
     @Query("SELECT * FROM ScienceQuestion WHERE topicid=:topicId and languageid=:langId and subjectid=:subId")
     public List<ScienceQuestion> getQuestionListByLangIdSubIdTopicId(String topicId, String langId, String subId);
+
+    @Query("DELETE FROM ScienceQuestion WHERE topicid=:topicId and languageid=:langId and subjectid=:subId")
+    public void deleteByLangIdSubIdTopicId(String topicId, String langId, String subId);
 
     @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel order by random() limit :noOfQues")
     public List<ScienceQuestion> getQuestionListByPattern1(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);

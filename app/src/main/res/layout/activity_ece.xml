@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_bg"
-    tools:context=".ui.choose_assessment.ECEActivity">
+    tools:context=".ui.choose_assessment.ece.ECEActivity">
     <LinearLayout
         android:id="@+id/ll_progress"
         android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
+import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Session;
@@ -31,7 +32,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
     Context context;
     ChooseAssessmentContract.ChooseAssessmentView assessView;
-    List<AssessmentSubjects> contentTableList=new ArrayList<>(), downloadedContentTableList;
+    List<AssessmentSubjects> contentTableList = new ArrayList<>(), downloadedContentTableList;
     ArrayList<String> nodeIds;
 
 
@@ -165,13 +166,17 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     }
 
     private void getListData() {
-        downloadedContentTableList = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
-        assessView.clearContentList();
-
-        if (downloadedContentTableList.size() <= 0) {
+        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             getSubjectData();
-        }else {
+            getLanguageData();
+        } else {
+            downloadedContentTableList = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
+            assessView.clearContentList();
+     /*   }
+        if (downloadedContentTableList.size() <= 0) {
+        }else {*/
             BackupDatabase.backup(context);
+            contentTableList.clear();
             contentTableList.addAll(downloadedContentTableList);
             assessView.addContentToViewList(contentTableList);
             assessView.notifyAdapter();
@@ -238,13 +243,16 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 assessmentSubjects.setSubjectname(response.getJSONObject(i).getString("subjectname"));
                                 contentTableList.add(assessmentSubjects);
                             }
-                            AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(contentTableList);
-                            progressDialog.dismiss();
-                            BackupDatabase.backup(context);
-                            contentTableList.addAll(downloadedContentTableList);
-                            assessView.addContentToViewList(contentTableList);
-                            assessView.notifyAdapter();
-                            //getTopicData();
+                            if (contentTableList.size() > 0) {
+                                AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteAllSubjects();
+                                AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(contentTableList);
+                                progressDialog.dismiss();
+                                BackupDatabase.backup(context);
+//                            contentTableList.addAll(downloadedContentTableList);
+                                assessView.addContentToViewList(contentTableList);
+                                assessView.notifyAdapter();
+                                //getTopicData();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -253,7 +261,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                     @Override
                     public void onError(ANError anError) {
                         Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
-                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
+//                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         progressDialog.dismiss();
                     }
                 });
@@ -341,6 +349,52 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
     @Override
     public void startActivity(String activityName) {
+    }
+
+
+    private void getLanguageData() {
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        AndroidNetworking.get(APIs.AssessmentLanguageAPI)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            progressDialog.dismiss();
+                            List<AssessmentLanguages> assessmentLanguagesList = new ArrayList<>();
+
+                            for (int i = 0; i < response.length(); i++) {
+                                AssessmentLanguages assessmentLanguages = new AssessmentLanguages();
+                                assessmentLanguages.setLanguageid(response.getJSONObject(i).getString("languageid"));
+                                assessmentLanguages.setLanguagename(response.getJSONObject(i).getString("languagename"));
+                                assessmentLanguagesList.add(assessmentLanguages);
+                            }
+                            if (assessmentLanguagesList.size() > 0)
+                                AppDatabase.getDatabaseInstance(context).getLanguageDao().insertAllLanguages(assessmentLanguagesList);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(context, "Error in loading..Check internet connection.", Toast.LENGTH_SHORT).show();
+//                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
+  /*                      ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+                        ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+                        ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();*/
+
+                        progressDialog.dismiss();
+//                        selectTopicDialog.show();
+                    }
+                });
+
     }
 
 }

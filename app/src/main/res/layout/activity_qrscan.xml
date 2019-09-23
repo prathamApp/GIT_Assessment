@@ -11,7 +11,8 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_weight="4"
         android:text="Scan QR"
-        android:gravity="center"
+        android:gravity="center"            android:fontFamily="@font/quicksand_bold"
+
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhiteDark"
         android:textSize="@dimen/_18sdp"
@@ -72,7 +73,8 @@
                         android:layout_height="@dimen/_60sdp"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:visibility="gone"
+                        android:visibility="gone"            android:fontFamily="@font/quicksand_bold"
+
                         android:layout_below="@id/wall_view"
                         android:layout_marginHorizontal="30dp"
                         android:textStyle="bold|italic"

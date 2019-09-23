@@ -16,9 +16,11 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.utilities.APIs;
 
 import org.json.JSONArray;
@@ -34,6 +36,7 @@ import butterknife.ButterKnife;
 public class LanguageFragment extends Fragment {
     List<AssessmentLanguages> assessmentLanguagesList;
 
+    ProgressDialog progressDialog;
 
     @BindView(R.id.rv_choose_lang)
     RecyclerView rvLanguage;
@@ -70,7 +73,7 @@ public class LanguageFragment extends Fragment {
 
 
     private void getLanguageData() {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -100,7 +103,11 @@ public class LanguageFragment extends Fragment {
                     @Override
                     public void onError(ANError anError) {
                         Toast.makeText(getActivity(), "Error in loading..Check internet connection.", Toast.LENGTH_SHORT).show();
-                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
+//                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
+                        ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+                        ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+                        ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();
 
                         progressDialog.dismiss();
 //                        selectTopicDialog.show();
@@ -113,10 +120,19 @@ public class LanguageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        assessmentLanguagesList = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getAllLangs();
-        if (assessmentLanguagesList.size() <= 0) {
+        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             getLanguageData();
-        } else setLanguageRecyclerView();
+        } else {
+            assessmentLanguagesList = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getAllLangs();
+            if (assessmentLanguagesList.size() <= 0) {
+                progressDialog.dismiss();
+                ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+                ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+                ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
 
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                Toast.makeText(getActivity(), "Connect to internet to download languages", Toast.LENGTH_SHORT).show();
+            } else setLanguageRecyclerView();
+        }
     }
 }
