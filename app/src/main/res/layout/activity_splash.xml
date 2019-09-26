@@ -10,9 +10,8 @@
         android:id="@+id/iv_logo"
         android:layout_width="@dimen/_200sdp"
         android:layout_height="@dimen/_150sdp"
-        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_80sdp"
         android:scaleType="fitCenter"
         android:src="@drawable/pratham_logo" />
 
@@ -20,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_logo"
-        android:layout_marginTop="@dimen/_50sdp"
+        android:layout_centerInParent="true"
         android:gravity="center"
         android:fontFamily=""
         android:textSize="@dimen/_30sdp"
@@ -36,6 +35,7 @@
         android:hapticFeedbackEnabled="true"
         android:soundEffectsEnabled="true"
         android:text="Start"
+        android:visibility="gone"
         android:textSize="@dimen/_12sdp" />
 
 

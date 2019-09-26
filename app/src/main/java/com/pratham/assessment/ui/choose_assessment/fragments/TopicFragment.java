@@ -66,7 +66,7 @@ public class TopicFragment extends Fragment {
         progressDialog.setMessage("Loading Exams");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentExamAPI + Assessment_Constants.SELECTED_SUBJECT_ID)
+        AndroidNetworking.get(APIs.AssessmentExamAPI + Assessment_Constants.SELECTED_SUBJECT_ID + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
@@ -81,10 +81,11 @@ public class TopicFragment extends Fragment {
                             for (int j = 0; j < assessmentTests.size(); j++) {
                                 assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
                                 assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
+                                assessmentTests.get(j).setLanguageId(Assessment_Constants.SELECTED_LANGUAGE);
                             }
                         }
-                        if (assessmentTests.size()>0) {
-                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTests();
+                        if (assessmentTests.size() > 0) {
+                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(Assessment_Constants.SELECTED_SUBJECT_ID, Assessment_Constants.SELECTED_LANGUAGE);
                             AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
                             progressDialog.dismiss();
 
@@ -98,9 +99,13 @@ public class TopicFragment extends Fragment {
                             getActivity().getSupportFragmentManager().popBackStack();
                             Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
 */
-                            getOfflineTests();
+//                            getOfflineTests();
 
 //                           btnOk.setEnabled(false);
+
+                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(Assessment_Constants.SELECTED_SUBJECT_ID, Assessment_Constants.SELECTED_LANGUAGE);
+                            Toast.makeText(getActivity(), "No exams", Toast.LENGTH_SHORT).show();
+
                         }
                     }
 
@@ -138,7 +143,7 @@ public class TopicFragment extends Fragment {
     }
 
     private void getOfflineTests() {
-        assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getTopicBySubId(Assessment_Constants.SELECTED_SUBJECT_ID);
+        assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getTopicBySubIdAndLangId(Assessment_Constants.SELECTED_SUBJECT_ID, Assessment_Constants.SELECTED_LANGUAGE);
         if (assessmentTests.size() > 0)
             setTopicsToRecyclerView();
         else {

@@ -9,7 +9,7 @@ public class AssessmentTest {
 
     private String examname;
 
-    private String lstexampaper;
+    private String languageId;
     @NonNull
     @PrimaryKey
     private String examid;
@@ -42,12 +42,12 @@ public class AssessmentTest {
         this.examname = examname;
     }
 
-    public String getLstexampaper() {
-        return lstexampaper;
+    public String getLanguageId() {
+        return languageId;
     }
 
-    public void setLstexampaper(String lstexampaper) {
-        this.lstexampaper = lstexampaper;
+    public void setLanguageId(String languageId) {
+        this.languageId = languageId;
     }
 
     public String getExamid() {

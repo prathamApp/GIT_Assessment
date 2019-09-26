@@ -408,6 +408,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         Assessment_Constants.SELECTED_LANGUAGE = languages.getLanguageid();
         FastSave.getInstance().saveString(LANGUAGE, languages.getLanguageid());
         setLanguageInNav();
+        clearContentList();
+        presenter.copyListData();
         drawerLayout.closeDrawer(GravityCompat.START);
         Toast.makeText(this, "Language " + languages.getLanguagename(), Toast.LENGTH_SHORT).show();
         getSupportFragmentManager().popBackStackImmediate();

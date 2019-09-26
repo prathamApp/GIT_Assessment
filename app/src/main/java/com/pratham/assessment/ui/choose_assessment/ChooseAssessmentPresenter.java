@@ -167,10 +167,10 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
     private void getListData() {
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            getSubjectData();
             getLanguageData();
+            getSubjectData();
         } else {
-            downloadedContentTableList = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
+            downloadedContentTableList = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
             assessView.clearContentList();
      /*   }
         if (downloadedContentTableList.size() <= 0) {
@@ -231,7 +231,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         contentTableList.clear();
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Loading subjects");
-        AndroidNetworking.get(APIs.AssessmentSubjectAPI)
+        AndroidNetworking.get(APIs.AssessmentSubjectAPI + Assessment_Constants.SELECTED_LANGUAGE)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
@@ -241,10 +241,11 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 AssessmentSubjects assessmentSubjects = new AssessmentSubjects();
                                 assessmentSubjects.setSubjectid(response.getJSONObject(i).getString("subjectid"));
                                 assessmentSubjects.setSubjectname(response.getJSONObject(i).getString("subjectname"));
+                                assessmentSubjects.setLanguageid(Assessment_Constants.SELECTED_LANGUAGE);
                                 contentTableList.add(assessmentSubjects);
                             }
                             if (contentTableList.size() > 0) {
-                                AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteAllSubjects();
+                                AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
                                 AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(contentTableList);
                                 progressDialog.dismiss();
                                 BackupDatabase.backup(context);
@@ -252,7 +253,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 assessView.addContentToViewList(contentTableList);
                                 assessView.notifyAdapter();
                                 //getTopicData();
-                            }
+                            } else
+                                Toast.makeText(context, "No subjects..", Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

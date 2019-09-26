@@ -24,7 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AssessmentCertificateActivity extends BaseActivity implements AssessmentCertificateContract.CertificateView {
+public class AssessmentCertificateActivity extends BaseActivity {
     @BindView(R.id.spinner_sub)
     Spinner spinnerSubject;
     @BindView(R.id.spinner_paper)
@@ -49,7 +49,7 @@ public class AssessmentCertificateActivity extends BaseActivity implements Asses
     @BindView(R.id.tv_total_cnt)
     TextView tv_total_cnt;
     List<AssessmentPaperPattern> paperPatterns;
-    AssessmentCertificateContract.CertificatePresenter presenter;
+//    AssessmentCertificateContract.CertificatePresenter presenter;
     String selectedSub, selectedTopic;
 
     @Override
@@ -76,47 +76,46 @@ public class AssessmentCertificateActivity extends BaseActivity implements Asses
 
     }
 
-    @Override
-    public void setStudentName(String studentName) {
-        tv_studentName.setText(studentName);
-    }
+    /* @Override
+     public void setStudentName(String studentName) {
+         tv_studentName.setText(studentName);
+     }
+    /* @Override
+     public void setSubjectSpinner(String[] sub) {
+         if (sub.length <= 0) {
+             sub = new String[1];
+             sub[0] = "No subjects";
+         }
+         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, sub);
+         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+         spinnerSubject.setAdapter(dataAdapter);
+         spinnerSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+             @Override
+             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                 selectedSub = spinnerSubject.getSelectedItem().toString();
+                 generateCertificateData();
 
-    @Override
-    public void setSubjectSpinner(String[] sub) {
-        if (sub.length <= 0) {
-            sub = new String[1];
-            sub[0] = "No subjects";
-        }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, sub);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSubject.setAdapter(dataAdapter);
-        spinnerSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedSub = spinnerSubject.getSelectedItem().toString();
-                generateCertificateData();
+                 //presenter.getTopicData(selectedSub);
+             }
 
-                //presenter.getTopicData(selectedSub);
-            }
+             @Override
+             public void onNothingSelected(AdapterView<?> parent) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+             }
+         });
+     }
 
-            }
-        });
-    }
-
-    @Override
-    public void setTopicSpinner(String[] topics) {
-       /* if (topics.length <= 0) {
+     @Override
+     public void setTopicSpinner(String[] topics) {
+        *//* if (topics.length <= 0) {
             topics = new String[1];
             topics[0] = "No topics";
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, topics);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTopic.setAdapter(dataAdapter);
-*/
-       /* spinnerTopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+*//*
+       *//* spinnerTopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedTopic = spinnerTopic.getSelectedItem().toString();
@@ -132,7 +131,7 @@ public class AssessmentCertificateActivity extends BaseActivity implements Asses
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });*/
+        });*//*
 
     }
 
@@ -189,7 +188,7 @@ public class AssessmentCertificateActivity extends BaseActivity implements Asses
         });
 
     }
-
+*/
     private void calculateTime(String paperStartTime, String paperEndTime) {
         try {
             Date date1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(paperStartTime);
@@ -206,10 +205,10 @@ public class AssessmentCertificateActivity extends BaseActivity implements Asses
         }
     }
 
-    private void generateCertificateData() {
+    /*private void generateCertificateData() {
         presenter.generateCertificate(selectedSub);
     }
-
+*/
     @Override
     public void onBackPressed() {
         int fragments=getSupportFragmentManager().getBackStackEntryCount();

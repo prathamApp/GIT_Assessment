@@ -270,7 +270,7 @@ public class DownloadTopicsDialog extends Dialog {
         progressDialog.setMessage("Loading Exams");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentExamAPI + subId)
+        AndroidNetworking.get(APIs.AssessmentExamAPI + subId+ "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override

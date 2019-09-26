@@ -18,9 +18,14 @@ public interface SubjectDao {
     @Query("DELETE FROM AssessmentSubjects")
     public void deleteAllSubjects();
 
+    @Query("DELETE FROM AssessmentSubjects where languageid=:langId")
+    public void deleteSubjectsByLangId(String langId);
+
     @Query("SELECT * FROM AssessmentSubjects ")
     public List<AssessmentSubjects> getAllSubjects();
 
+    @Query("SELECT * FROM AssessmentSubjects where languageid=:langId")
+    public List<AssessmentSubjects> getAllSubjectsByLangId(String langId);
 //    @Query("SELECT * FROM Groups WHERE VillageID=:vID ORDER BY GroupName ASC")
 //    public List<Groups> GetGroups(int vID);
 

@@ -288,7 +288,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         res.updateConfiguration(conf, dm);
     }
 
-    private void showSelectTopicDialog() {
+    /*private void showSelectTopicDialog() {
         exams = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAllAssessmentPaperPatterns();
         subjects = AppDatabase.getDatabaseInstance(this).getSubjectDao().getAllSubjects();
 //        languages = AppDatabase.getDatabaseInstance(this).getLanguageDao().getAllLangs();
@@ -296,7 +296,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
 
         if (exams.size() > 0) {
-        /*    selectTopicDialog.show();
+        *//*    selectTopicDialog.show();
             selectTopicDialog.updateTopics.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -306,14 +306,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                     showDownloadTopicDialog();
 
                 }
-            });*/
+            });*//*
         } else {
 
 //            getLanguageData();
 //            showDownloadTopicDialog();
 
         }
-    }
+    }*/
 
 /*    private void getLanguageData() {
         progressDialog.setMessage("Loading language");
@@ -1120,8 +1120,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
     @OnClick(R.id.btn_submit)
     public void onSubmitClick() {
-        if (mCountDownTimer != null)
-            mCountDownTimer.cancel();
+       /* if (mCountDownTimer != null)
+            mCountDownTimer.cancel();*/
         scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.GetCurrentDateTime());
         BottomQuestionFragment bottomQuestionFragment = new BottomQuestionFragment();
         bottomQuestionFragment.show(getSupportFragmentManager(), BottomQuestionFragment.class.getSimpleName());
@@ -1678,7 +1678,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         if (queCnt < scienceQuestionList.size() - 1)
             nextClick();
         else {
-            mCountDownTimer.cancel();
+//            mCountDownTimer.cancel();
             scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.GetCurrentDateTime());
             BottomQuestionFragment bottomQuestionFragment = new BottomQuestionFragment();
             bottomQuestionFragment.show(getSupportFragmentManager(), BottomQuestionFragment.class.getSimpleName());
@@ -1702,9 +1702,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     @Override
     public void onSaveAssessmentClick() {
         stopService(new Intent(this, BkgdVideoRecordingService.class));
-
+        if (mCountDownTimer != null)
+            mCountDownTimer.cancel();
         examEndTime = Assessment_Utility.GetCurrentDateTime();
         calculateMarks();
+        skippedCnt = correctAnsCnt = wrongAnsCnt = 0;
         calculateCorrectWrongCount();
         AssessmentPaperForPush paper = new AssessmentPaperForPush();
         paper.setPaperStartTime(examStartTime);

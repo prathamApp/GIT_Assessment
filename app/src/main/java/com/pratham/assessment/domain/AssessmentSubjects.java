@@ -9,9 +9,11 @@ import android.support.annotation.NonNull;
 @Entity
 public class AssessmentSubjects implements Comparable, Parcelable {
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String subjectid;
     private String subjectname;
+    private String languageid;
 
     public String getSubjectname() {
         return subjectname;
@@ -27,6 +29,15 @@ public class AssessmentSubjects implements Comparable, Parcelable {
 
     public void setSubjectid(String subjectid) {
         this.subjectid = subjectid;
+    }
+
+    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public AssessmentSubjects() {
@@ -61,6 +72,15 @@ public class AssessmentSubjects implements Comparable, Parcelable {
 
     public AssessmentSubjects(Parcel in) {
         subjectid = in.readString();
+        languageid = in.readString();
         subjectname = in.readString();
+    }
+
+    public String getLanguageid() {
+        return languageid;
+    }
+
+    public void setLanguageid(String languageid) {
+        this.languageid = languageid;
     }
 }

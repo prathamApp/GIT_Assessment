@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,13 +159,13 @@ public class McqFillInTheBlanksFragment extends Fragment {
             questionImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(),scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
                 }
             });
             questionGif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(),scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
                 }
             });
            /* } else {
@@ -271,17 +272,22 @@ public class McqFillInTheBlanksFragment extends Fragment {
                     final View view;
                     final RelativeLayout rl_mcq;
                     View viewRoot;
+                    final ImageView tick;
+
 
                     if (imgPath[len].equalsIgnoreCase("gif")) {
                         viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_gif_item, gridMcq, false);
                         view = viewRoot.findViewById(R.id.mcq_gif);
                         rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
+                        tick = viewRoot.findViewById(R.id.iv_tick);
                         /*  setImage(view, imageUrl, localPath);
                         gridMcq.addView(view);*/
                     } else {
                         viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_card_image_item, gridMcq, false);
                         view = viewRoot.findViewById(R.id.mcq_img);
-                        rl_mcq = viewRoot.findViewById(R.id.rl_mcq);                        /*setImage(view, imageUrl, localPath);
+                        rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
+                        tick = viewRoot.findViewById(R.id.iv_tick);
+/*setImage(view, imageUrl, localPath);
                         gridMcq.addView(view);*/
 //                        if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
 //                            view.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
@@ -298,15 +304,16 @@ public class McqFillInTheBlanksFragment extends Fragment {
                         public void onClick(View v) {
                             for (int g = 0; g < gridMcq.getChildCount(); g++) {
                                 gridMcq.getChildAt(g).setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
+                                ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
                             }
                             rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
-
+                            tick.setVisibility(View.VISIBLE);
                             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(finalR).getChoiceurl());
                             String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 
 //                            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                            showZoomDialog(getActivity(),options.get(finalR).getChoiceurl(), localPath);
+                            showZoomDialog(getActivity(), options.get(finalR).getChoiceurl(), localPath);
                             /*} else {
                                  showZoomDialog(localPath);
                             }*/
@@ -319,8 +326,11 @@ public class McqFillInTheBlanksFragment extends Fragment {
 
                     if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
                         rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
+                        tick.setVisibility(View.VISIBLE);
+
                     } else {
                         rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
+                        tick.setVisibility(View.GONE);
 
                     }
                     setImage(view, imageUrl, localPath);
@@ -335,6 +345,7 @@ public class McqFillInTheBlanksFragment extends Fragment {
                         final View view;
                         final RelativeLayout rl_mcq;
                         View viewRoot;
+                        final ImageView tick;
 
                         String path = options.get(r).getChoiceurl();
 
@@ -349,12 +360,16 @@ public class McqFillInTheBlanksFragment extends Fragment {
                             viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_gif_item, gridMcq, false);
                             view = viewRoot.findViewById(R.id.mcq_gif);
                             rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
+                            tick = viewRoot.findViewById(R.id.iv_tick);
+
                         /*  setImage(view, imageUrl, localPath);
                         gridMcq.addView(view);*/
                         } else {
                             viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_card_image_item, gridMcq, false);
                             view = viewRoot.findViewById(R.id.mcq_img);
-                            rl_mcq = viewRoot.findViewById(R.id.rl_mcq);                        /*setImage(view, imageUrl, localPath);
+                            rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
+                            tick = viewRoot.findViewById(R.id.iv_tick);
+/*setImage(view, imageUrl, localPath);
                         gridMcq.addView(view);*/
 //                        if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
 //                            view.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
@@ -381,9 +396,11 @@ public class McqFillInTheBlanksFragment extends Fragment {
 
                         if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
                             rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
+                            tick.setVisibility(View.VISIBLE);
+
                         } else {
                             rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
-
+                            tick.setVisibility(View.GONE);
                         }
 
                         view.setOnClickListener(new View.OnClickListener() {
@@ -392,10 +409,11 @@ public class McqFillInTheBlanksFragment extends Fragment {
                                 setOnclickOnItem(v, options.get(finalR1));
                                 String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(finalR1).getChoiceurl());
                                 String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+                                tick.setVisibility(View.VISIBLE);
 
                                 rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
 //                                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                                showZoomDialog(getActivity(),options.get(finalR1).getChoiceurl(), localPath);
+                                showZoomDialog(getActivity(), options.get(finalR1).getChoiceurl(), localPath);
 
                                /* } else {
                                     showZoomDialog(localPath);
@@ -457,7 +475,6 @@ public class McqFillInTheBlanksFragment extends Fragment {
             }
         });
     }
-
 
 
     private void setOnclickOnItem(View v, ScienceQuestionChoice scienceQuestionChoice) {

@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SubjectPresenter implements SubjectContract.SubjectPresenter {
-        Context context;
+    Context context;
     SubjectContract.SubjectView subjectView;
 
     public SubjectPresenter(Context context, SubjectContract.SubjectView view) {
@@ -26,13 +26,13 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
     @Override
     public void getSubjectsFromDB(String selectedLang) {
-        String langId=AppDatabase.getDatabaseInstance(context).getLanguageDao().getLangIdByName(selectedLang.toUpperCase());
+        String langId = AppDatabase.getDatabaseInstance(context).getLanguageDao().getLangIdByName(selectedLang.toUpperCase());
         List<AssessmentSubjects> subjects = new ArrayList<>();
         List<AssessmentSubjects> AllSubjects;
         List<AssessmentSubjectsExpandable> assessmentSubjectsExpandables = new ArrayList<>();
 
 //        subjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
-        AllSubjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
+        AllSubjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(langId);
         List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId);
         for (int j = 0; j < AllSubjects.size(); j++) {
             for (int i = 0; i < attemptedSubjectIds.size(); i++) {
@@ -42,7 +42,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         }
 
         for (AssessmentSubjects assessmentSubjects : subjects) {
-            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), Assessment_Constants.currentStudentID,langId);
+            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), Assessment_Constants.currentStudentID, langId);
             Collections.sort(assessmentPaperForPush, new Comparator<AssessmentPaperForPush>() {
                 @Override
                 public int compare(AssessmentPaperForPush o1, AssessmentPaperForPush o2) {
