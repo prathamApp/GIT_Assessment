@@ -569,8 +569,8 @@ public class PushDataToServer extends AsyncTask {
                     _obj_paper.put("paperId", _paper.getPaperId());
                     _obj_paper.put("paperStartTime", _paper.getPaperStartTime());
                     _obj_paper.put("paperEndTime", _paper.getPaperEndTime());
-                    _obj_paper.put("outOfMarks", _paper.getOutOfMarks());
-                    _obj_paper.put("totalMarks", _paper.getTotalMarks());
+                    _obj_paper.put("totalMarks", _paper.getOutOfMarks());
+                    _obj_paper.put("scoredMarks", _paper.getTotalMarks());
                     _obj_paper.put("studentId", _paper.getStudentId());
                     _obj_paper.put("SessionID", _paper.getSessionID());
                     DownloadMedia video = new DownloadMedia();
