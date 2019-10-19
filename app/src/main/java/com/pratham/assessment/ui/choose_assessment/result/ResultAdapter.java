@@ -1,13 +1,8 @@
 package com.pratham.assessment.ui.choose_assessment.result;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,11 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
@@ -33,13 +24,12 @@ import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomIm
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pratham.assessment.AssessmentApplication.wiseF;
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.ARRANGE_SEQUENCE;
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.FILL_IN_THE_BLANK;
+import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.IMAGE_ANSWER;
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.KEYWORDS_QUESTION;
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.MATCHING_PAIR;
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.MULTIPLE_CHOICE;
@@ -188,12 +178,16 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                 String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
                 String img = getImage(result.getUserAnswerId());
+                if (img.equalsIgnoreCase("")) {
+                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, result.getUserAnswer(), result.getUserAnswer());
+                    zoomImageDialog.show();
+                } else {
+                    String fileName = getFileName(result.getqId(), img);
+                    String localPath = dirPath + "/" + fileName;
 
-                String fileName = getFileName(result.getqId(), img);
-                String localPath = dirPath + "/" + fileName;
-
-                ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, img, localPath);
-                zoomImageDialog.show();
+                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, img, localPath);
+                    zoomImageDialog.show();
+                }
             }
         });
 
@@ -302,6 +296,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                                 myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                                 myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
                             } else {
+                                myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                                 myViewHolder.correctAnswer.setVisibility(View.GONE);
                                 myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
                             }
@@ -333,10 +328,12 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                             if (!scienceQuestionChoice.get(j).getChoiceurl().equalsIgnoreCase(""))
                                 myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
                             if (!scienceQuestionChoice.get(j).getChoicename().equalsIgnoreCase(""))
-                                myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                                myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
 
-                            if (!result.getUserAnswer().equalsIgnoreCase(""))
-                                myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                            if (!result.getUserAnswer().equalsIgnoreCase("")) {
+                                myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                                myViewHolder.tv_you_answered_label.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
@@ -357,17 +354,60 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 }*/
                 break;
             case KEYWORDS_QUESTION:
+                myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
+                myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+//                if (result.isCorrect()) {
+                myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                myViewHolder.tv_you_answered_label.setVisibility(View.VISIBLE);
+               /* } else {
+                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                }*/
+                break;
             case FILL_IN_THE_BLANK:
                 myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                 myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                 if (result.isCorrect()) {
-                    myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
-                    myViewHolder.userAnswer.setVisibility(View.GONE);
+                    if (!result.getCorrectAnswer().equalsIgnoreCase("")) {
+                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.userAnswer.setVisibility(View.GONE);
+                    } else {
+                        myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                        myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    }
                 } else {
-                    myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
-                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                    if (!result.getCorrectAnswer().equalsIgnoreCase("")) {
+
+                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                        myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    }
                 }
                 break;
+            case IMAGE_ANSWER:
+                if (result.isAttempted()) {
+                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+//                    myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.userAnswer.setVisibility(View.GONE);
+//                    myViewHolder.correctAnswer.setVisibility(View.GONE);
+                    myViewHolder.tv_you_answered_label.setVisibility(View.GONE);
+
+                } else {
+//                    myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_you_answered_label.setVisibility(View.GONE);
+//                    myViewHolder.correctAnswer.setVisibility(View.GONE);
+                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                }
+                break;
+
         }
 
     }
@@ -375,7 +415,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     private String getImage(String userAnswerId) {
         String img = AppDatabase.getDatabaseInstance(context)
                 .getScienceQuestionChoicesDao().getImageByQcID(userAnswerId);
-        return img;
+        if (img != null)
+            return img;
+        else return "";
     }
 
     private void showButtons(MyViewHolder myViewHolder, boolean attempted) {
@@ -388,7 +430,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             myViewHolder.btnUserAnswer.setVisibility(View.GONE);
             myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
             myViewHolder.correctAnswer.setVisibility(View.GONE);
-            myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+            myViewHolder.userAnswer.setVisibility(View.GONE);
         }
 
     }

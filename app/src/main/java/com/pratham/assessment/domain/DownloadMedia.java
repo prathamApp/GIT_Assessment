@@ -16,7 +16,6 @@ public class DownloadMedia {
     public String qtId;
     public String paperId;
     public String photoUrl;
-    @Ignore
     public String mediaType;
     public boolean downloadSuccessful;
     public int sentFlag;

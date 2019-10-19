@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -281,7 +279,7 @@ public class PushDataToServer extends AsyncTask {
                     @Override
                     public void onResponse(JSONObject response) {
                         // do anything with response
-                        if (videoType.equalsIgnoreCase("answerVideo")) {
+                        if (videoType.equalsIgnoreCase("answerVideo") || videoType.equalsIgnoreCase("answerImage")) {
                             mediaCnt++;
                             if (mediaCnt < downloadMediaList.size())
                                 createMediaFileToPush();
@@ -321,7 +319,7 @@ public class PushDataToServer extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()){
+        if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
         }
     }

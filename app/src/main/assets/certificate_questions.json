@@ -29,6 +29,26 @@
       "end_question1": " या कोर्सची ओळख (Familiar) आहे का",
       "end_question2": " या कोर्सविषयी माहिती (Knowledge) आहे का?",
       "end_question3": " या कोर्सविषयी समज (Understanding) आहे का?"
+    },
+    {
+      "langId": "7",
+      "language": "GUJARATI",
+      "question1": "શું તમે ",
+      "question2": "શું તમને ",
+      "question3": "શું તમને ",
+      "end_question1": " કોર્સથી પરિચિત (Familiar) છો?",
+      "end_question2": " કોર્સની માહિતી (Knowledge) છે?",
+      "end_question3": " કોર્સની સમજ (Understanding) છે?"
+    },
+    {
+      "langId": "14",
+      "language": "TELUGU",
+      "question1": "మీకు ",
+      "question2": "మీకు ",
+      "question3": "మీకు ",
+      "end_question1": " కోర్సును గురించి (Familiar)  తెలుసా?",
+      "end_question2": " కోర్సు యొక్క పరిజ్ఞానం (Knowledge)  ఉందా?",
+      "end_question3": " కోర్సును గురించి అవగాహన (Understanding) ఉందా?"
     }
   ]
 }

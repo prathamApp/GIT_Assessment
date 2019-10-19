@@ -182,7 +182,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             startSession(checkedStds);
             presentActivity(v);
 //            Toast.makeText(getActivity(), "Success...", Toast.LENGTH_SHORT).show();
-            Assessment_Constants.ASSESSMENT_TYPE = "";
+//            Assessment_Constants.ASSESSMENT_TYPE = "";
             startActivity(new Intent(getActivity(), ChooseAssessmentActivity.class));
             getActivity().finish();
         } else {

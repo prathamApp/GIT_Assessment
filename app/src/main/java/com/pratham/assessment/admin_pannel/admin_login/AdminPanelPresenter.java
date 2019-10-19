@@ -29,12 +29,12 @@ public class AdminPanelPresenter implements AdminPanelContract.AdminPanelPresent
         } else {
             // assign push logic
             Crl loggedCrl = AppDatabase.getDatabaseInstance(context).getCrlDao().checkUserValidation(userName, password);
-            String crlId = loggedCrl.getCRLId();
             if (loggedCrl != null) {
                 adminPanelView.onLoginSuccess();
                 /*Status status = new Status();
                 status.setStatusKey("CRLID");
                 status.setValue(crlId);*/
+                String crlId = loggedCrl.getCRLId();
                 AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("CRLID", crlId);
             } else {
                 //userNAme and password may be wrong

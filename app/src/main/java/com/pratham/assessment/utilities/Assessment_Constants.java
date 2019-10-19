@@ -72,7 +72,7 @@ public class Assessment_Constants {
     public static String SELECTED_SUBJECT = "";
     public static String SELECTED_SUBJECT_ID = "";
     public static String SELECTED_EXAM_ID = "";
-    public static String ASSESSMENT_TYPE = "";
+    public static String ASSESSMENT_TYPE = "practice";
     public static boolean VIDEOMONITORING = false;
     public static String STORE_ANSWER_MEDIA_PATH = "/.Assessment/Content/Answers";
     public static String STORE_DOWNLOADED_MEDIA_PATH = "/.Assessment/Content/Downloaded";

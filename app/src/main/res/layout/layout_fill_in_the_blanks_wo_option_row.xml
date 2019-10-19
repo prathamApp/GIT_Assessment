@@ -16,11 +16,13 @@
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_5sdp"
+            android:scrollbars="vertical"
             android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/iv_question_image"
-            style="@style/CustomQuestionImageStyle" />
+            style="@style/CustomQuestionImageStyle"
+            android:layout_weight="0.5"/>
 
         <com.pratham.assessment.custom.gif_viewer.GifView
             android:id="@+id/iv_question_gif"

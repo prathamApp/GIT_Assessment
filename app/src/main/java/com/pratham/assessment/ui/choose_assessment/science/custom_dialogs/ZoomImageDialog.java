@@ -2,6 +2,8 @@ package com.pratham.assessment.ui.choose_assessment.science.custom_dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -9,10 +11,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
@@ -20,6 +24,7 @@ import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.custom.gif_viewer.GifViewZoom;
 import com.pratham.assessment.custom.zoom_image.ZoomageView;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
@@ -115,12 +120,29 @@ public class ZoomImageDialog extends Dialog {
                         }
                     }
                 } else {
+
+                    /*File imgFile = new File(path);
+
+                    if(imgFile.exists()){
+
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+
+                        zoomImg.setImageBitmap(myBitmap);
+
+                    }*/
+
+                    zoomImg.setVisibility(View.VISIBLE);
+//                    Glide.get(context).clearDiskCache();
+
                     Glide.with(context)
                             .load(path)
+//                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .apply(new RequestOptions()
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
                                     .placeholder(Drawable.createFromPath(localPath)))
                             .into(zoomImg);
-                    zoomImg.setVisibility(View.VISIBLE);
                     gifView.setVisibility(View.GONE);
 
                 }

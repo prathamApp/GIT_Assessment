@@ -1158,7 +1158,17 @@ public class Assessment_Utility {
      * @return
      */
     public static String getRealPathFromURI(Uri contentURI, Context mContext) {
-        String result;
+        String thePath = "no-path-found";
+        String[] filePathColumn = {MediaStore.Images.Media.DISPLAY_NAME};
+        Cursor cursor = mContext.getContentResolver().query(contentURI, filePathColumn, null, null, null);
+        if(cursor.moveToFirst()){
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            thePath = cursor.getString(columnIndex);
+        }
+        cursor.close();
+        return  thePath;
+
+        /*       String result;
         Cursor cursor = mContext.getContentResolver().query(contentURI, null,
                 null, null, null);
         if (cursor == null) { // Source is Dropbox or other similar local file
@@ -1171,7 +1181,7 @@ public class Assessment_Utility {
             result = cursor.getString(idx);
             cursor.close();
         }
-        return result;
+        return result;*/
     }
 
     /**

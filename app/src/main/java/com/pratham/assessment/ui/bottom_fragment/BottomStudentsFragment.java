@@ -783,7 +783,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
                 dismissProgressDialog();
-                Assessment_Constants.ASSESSMENT_TYPE = "";
+//                Assessment_Constants.ASSESSMENT_TYPE = "";
                 startActivity(new Intent(getActivity(), ChooseAssessmentActivity.class));
                 getActivity().finish();
 

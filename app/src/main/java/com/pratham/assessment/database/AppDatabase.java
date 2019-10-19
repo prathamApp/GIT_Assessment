@@ -1,9 +1,12 @@
 package com.pratham.assessment.database;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.pratham.assessment.dao.AssessmentDao;
 import com.pratham.assessment.dao.AssessmentPaperForPushDao;
@@ -56,7 +59,7 @@ import com.pratham.assessment.domain.Village;
         ContentTable.class, AssessmentToipcsModal.class, ScienceQuestion.class,
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
-        AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class, DownloadMedia.class}, version = 1)
+        AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class, DownloadMedia.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -120,17 +123,17 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getDatabaseInstance(Context context) {
         if (appDatabase == null)
-            appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")/*.addMigrations(MIGRATION_1_2)*/.allowMainThreadQueries().build();
+            appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database").addMigrations(MIGRATION_1_2).allowMainThreadQueries().build();
         return appDatabase;
     }
 
 
-    /* static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
 
 
        @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE  AssessmentPaperForPush  ( languageId  TEXT,  subjectId  TEXT, " +
+         /*   database.execSQL("CREATE TABLE  AssessmentPaperForPush  ( languageId  TEXT,  subjectId  TEXT, " +
                     " examId  TEXT,  paperId  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,  paperStartTime  TEXT," +
                     "  paperEndTime  TEXT,  outOfMarks  TEXT,  totalMarks  TEXT,  studentId  TEXT, " +
                     " CorrectCnt  INTEGER NOT NULL,  wrongCnt  INTEGER NOT NULL,  SkipCnt  INTEGER NOT NULL, " +
@@ -141,13 +144,13 @@ public abstract class AppDatabase extends RoomDatabase {
                     "  sentFlag  INTEGER NOT NULL)");
 
             database.execSQL("drop table ScienceAssesmentAnswer");
-
-            database.execSQL("ALTER TABLE Score add COLUMN isAttempted boolean");
-            database.execSQL("ALTER TABLE Score add COLUMN isCorrect boolean");
-            database.execSQL("ALTER TABLE Score add COLUMN userAnswer text");
-            database.execSQL("ALTER TABLE Score add COLUMN examId text");
+*/
+            database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion1 text");
+            database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion2 text");
+            database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion3 text");
+//            database.execSQL("ALTER TABLE Score add COLUMN certificateQuestion1");
         }
-    };*/
+    };
 
 
 }

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.pratham.assessment.domain.ScienceQuestion;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,9 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                     break;
                 case "11":
                     fragmentList.add(FillInTheBlanksWithoutOptionFragment.newInstance(i, scienceQuestion));
+                    break;
+                case "12":
+                    fragmentList.add(ImageAnswerFragment.newInstance(i, scienceQuestion));
                     break;
                 default:
                     break;

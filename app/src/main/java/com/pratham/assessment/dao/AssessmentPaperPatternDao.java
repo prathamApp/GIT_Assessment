@@ -26,6 +26,9 @@ public interface AssessmentPaperPatternDao {
     @Query("select * from AssessmentPaperPattern where subjectid=:subId")
     public List<AssessmentPaperPattern> getAllAssessmentPaperPatternsBySubId(String subId);
 
+    @Query("select * from AssessmentPaperPattern where subjectid=:subId and examid=:examid")
+    public AssessmentPaperPattern getAllAssessmentPaperPatternsBySubIdAndExamId(String subId,String examid);
+
     @Query("select * from AssessmentPaperPattern where examid=:examId")
     public AssessmentPaperPattern getAssessmentPaperPatternsByExamId(String examId);
 

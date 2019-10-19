@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,18 +114,20 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        question.setMovementMethod(new ScrollingMovementMethod());
         setFillInTheBlanksQuestion();
     }
 
     private void reInitCurrentItems() {
         etAnswer = viewpagerAdapter.getCurrentFragment().getView().findViewById(R.id.et_answer);
+        ib_mic = viewpagerAdapter.getCurrentFragment().getView().findViewById(R.id.ib_mic);
+
 //        ib_mic = viewpagerAdapter.getCurrentFragment().getView().findViewById(R.id.ib_mic);
     }
 
     public void setFillInTheBlanksQuestion() {
         int id = etAnswer.getId();
         int id1 = question.getId();
-
         Log.d("etAnswer;;;", id + "");
         Log.d("question;;;", id1 + "" + scienceQuestion.getQname());
         if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
@@ -214,9 +217,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
 
             @Override
             public void afterTextChanged(Editable s) {
-
-//                questionTypeListener.setAnswer("", etAnswer.getText().toString(), scienceQuestion.getQid(), null);
-                assessmentAnswerListener.setAnswerInActivity("", etAnswer.getText().toString(), scienceQuestion.getQid(), null);
+//                Log.d("@@@"+scienceQuestion.getQid(), s+"");
+                assessmentAnswerListener.setAnswerInActivity("", s.toString(), scienceQuestion.getQid(), null);
             }
         });
 
@@ -346,11 +348,17 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         }
         reInitCurrentItems();
 
-        etAnswer.append(" ");
-        etAnswer.append(sttResult);
+        etAnswer.append(" " + sttResult);
+        voiceStart = false;
+        micPressed(0);
+
+    }
+
+
+    @Override
+    public void Stt_onError() {
         voiceStart = false;
         micPressed(0);
     }
-
 
 }

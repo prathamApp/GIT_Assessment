@@ -116,7 +116,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.btn_capture_video)
     public void captureVideo() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        assessmentAnswerListener.setVideoResult(intent, VIDEO_CAPTURE, scienceQuestion);
+//        assessmentAnswerListener.setVideoResult(intent, VIDEO_CAPTURE, scienceQuestion);
        /* if (VideoCaptured) {
             rl_answer_video.setVisibility(View.VISIBLE);
         } else rl_answer_video.setVisibility(View.GONE);

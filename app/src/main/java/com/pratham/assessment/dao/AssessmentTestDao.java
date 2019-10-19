@@ -6,7 +6,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.pratham.assessment.domain.AssessmentTest;
-import com.pratham.assessment.domain.AssessmentTestModal;
 
 import java.util.List;
 

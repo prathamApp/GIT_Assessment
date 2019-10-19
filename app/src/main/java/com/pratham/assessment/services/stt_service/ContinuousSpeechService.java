@@ -142,7 +142,7 @@ public class ContinuousSpeechService implements RecognitionListener {
             else if (error == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS)
                 message = "insufficient permissions";
             Log.d("error ", message);
-
+            stt_result.Stt_onError();
         }
     }
 

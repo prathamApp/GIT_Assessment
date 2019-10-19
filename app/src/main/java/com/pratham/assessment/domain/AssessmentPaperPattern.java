@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -17,6 +19,14 @@ public class AssessmentPaperPattern implements Serializable {
     private String examname;
 
     private String examduration;
+
+    @SerializedName("question1")
+    private String certificateQuestion1;
+    @SerializedName("question2")
+    private String certificateQuestion2;
+    @SerializedName("question3")
+    private String certificateQuestion3;
+
 
     private String outofmarks;
     @NonNull
@@ -81,6 +91,29 @@ public class AssessmentPaperPattern implements Serializable {
         this.subjectid = subjectid;
     }
 
+    public String getCertificateQuestion1() {
+        return certificateQuestion1;
+    }
+
+    public void setCertificateQuestion1(String certificateQuestion1) {
+        this.certificateQuestion1 = certificateQuestion1;
+    }
+
+    public String getCertificateQuestion2() {
+        return certificateQuestion2;
+    }
+
+    public void setCertificateQuestion2(String certificateQuestion2) {
+        this.certificateQuestion2 = certificateQuestion2;
+    }
+
+    public String getCertificateQuestion3() {
+        return certificateQuestion3;
+    }
+
+    public void setCertificateQuestion3(String certificateQuestion3) {
+        this.certificateQuestion3 = certificateQuestion3;
+    }
 }
 
 
