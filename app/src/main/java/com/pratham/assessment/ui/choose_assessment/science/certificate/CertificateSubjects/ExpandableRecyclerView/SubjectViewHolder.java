@@ -4,27 +4,34 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
 
 
 class SubjectViewHolder extends ParentViewHolder {
-    private TextView subjectTextview;
+    private TextView subjectTextView;
     private static final float INITIAL_POSITION = 0.0f;
     private static final float ROTATED_POSITION = 180f;
 
     private final ImageView mArrowExpandImageView;
+    private final LinearLayout ll_sub_row;
 
-    public SubjectViewHolder(@NonNull View itemView) {
+    SubjectViewHolder(@NonNull View itemView) {
         super(itemView);
-        subjectTextview = itemView.findViewById(R.id.tv_sub);
+        subjectTextView = itemView.findViewById(R.id.tv_sub);
         mArrowExpandImageView = itemView.findViewById(R.id.iv_arrow_expand);
+        ll_sub_row = itemView.findViewById(R.id.ll_sub_row);
     }
 
 
     public void bind(AssessmentSubjectsExpandable assessmentSubjects) {
-        subjectTextview.setText(assessmentSubjects.getSubjectname());
+        if (assessmentSubjects.getChildItemList().size() > 0)
+            subjectTextView.setText(assessmentSubjects.getSubjectname());
+        else {
+            ll_sub_row.setVisibility(View.GONE);
+        }
     }
 
     @Override

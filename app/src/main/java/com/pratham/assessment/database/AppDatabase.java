@@ -7,7 +7,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.SpannableStringBuilder;
 
+//import com.commonsware.cwac.saferoom.SafeHelperFactory;
 import com.pratham.assessment.dao.AssessmentDao;
 import com.pratham.assessment.dao.AssessmentPaperForPushDao;
 import com.pratham.assessment.dao.AssessmentPaperPatternDao;
@@ -62,6 +64,7 @@ import com.pratham.assessment.domain.Village;
         AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class, DownloadMedia.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
+//    private static final String PASSPHRASE = "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.";
 
     public static final String DB_NAME = "assessment_database";
 
@@ -122,16 +125,24 @@ public abstract class AppDatabase extends RoomDatabase {
     }*/
 
     public static AppDatabase getDatabaseInstance(Context context) {
-        if (appDatabase == null)
-            appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database").addMigrations(MIGRATION_1_2).allowMainThreadQueries().build();
+
+        try {
+            if (appDatabase == null) {
+//                SafeHelperFactory factory = SafeHelperFactory.fromUser(new SpannableStringBuilder(PASSPHRASE));
+                appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database").addMigrations(MIGRATION_1_2).allowMainThreadQueries().build();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return appDatabase;
     }
 
 
-     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
 
 
-       @Override
+        @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
          /*   database.execSQL("CREATE TABLE  AssessmentPaperForPush  ( languageId  TEXT,  subjectId  TEXT, " +
                     " examId  TEXT,  paperId  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,  paperStartTime  TEXT," +

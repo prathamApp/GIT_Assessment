@@ -20,7 +20,6 @@ public class SubjectAdapter extends ExpandableRecyclerAdapter<SubjectViewHolder,
 
     private Context mContext;
     private LayoutInflater mInflator;
-    private String selectedLang;
 
     public SubjectAdapter(Context context, List<? extends ParentListItem> parentItemList) {
         super(parentItemList);
@@ -60,7 +59,7 @@ public class SubjectAdapter extends ExpandableRecyclerAdapter<SubjectViewHolder,
         private TextView timeStamp;
         private ImageView imageView;
 
-        public ExamViewHolder(View itemView) {
+        ExamViewHolder(View itemView) {
             super(itemView);
             examName = itemView.findViewById(R.id.tv_exam);
             timeStamp = itemView.findViewById(R.id.tv_timestamp);

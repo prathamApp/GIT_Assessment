@@ -8,8 +8,8 @@ android {
         applicationId "com.pratham.assessment"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.06"
+        versionCode 8
+        versionName "1.07"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -85,6 +85,9 @@ dependencies {
     implementation 'com.github.lzyzsd:circleprogress:1.2.1'
     implementation 'com.github.CardinalNow:Android-CircleProgressIndicator:v0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //db encryption
+//    implementation "com.commonsware.cwac:saferoom:1.2.1"
 
 /*//gif viewer
     implementation 'com.github.Cutta:GifView:1.4'*/

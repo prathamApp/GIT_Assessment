@@ -53,11 +53,14 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                     else return 0;
                 }
             });
-            Collections.reverse(assessmentPaperForPush);
-            assessmentSubjectsExpandables.add(new AssessmentSubjectsExpandable(assessmentSubjects.getSubjectid(), assessmentSubjects.getSubjectname(), assessmentPaperForPush));
+            if (assessmentPaperForPush.size() > 0) {
+                Collections.reverse(assessmentPaperForPush);
+                assessmentSubjectsExpandables.add(new AssessmentSubjectsExpandable(assessmentSubjects.getSubjectid(), assessmentSubjects.getSubjectname(), assessmentPaperForPush));
+            }else {
+                assessmentSubjectsExpandables.add(new AssessmentSubjectsExpandable("", "", assessmentPaperForPush));
+
+            }
         }
-
-
         subjectView.setSubjects(assessmentSubjectsExpandables);
     }
 }

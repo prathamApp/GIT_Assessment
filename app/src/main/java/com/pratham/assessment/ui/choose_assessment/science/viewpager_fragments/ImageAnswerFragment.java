@@ -365,9 +365,7 @@ public class ImageAnswerFragment extends Fragment {
                     assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
                 else
                     assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
-
-
-            } else if (resultCode == -1 && requestCode == CAPTURE_IMAGE) {
+        } else if (resultCode == -1 && requestCode == CAPTURE_IMAGE) {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
 //                if (currentFragment instanceof ImageAnswerFragment)
 //                    ((ImageAnswerFragment) currentFragment).setImage(photo);
