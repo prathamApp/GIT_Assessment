@@ -31,7 +31,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
@@ -205,7 +204,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
             }
         });
 
-        ArrayAdapter<String> classAdapter = new ArrayAdapter(getActivity(), R.layout.custom_spinner, getResources().getStringArray(R.array.student_class));
+//        ArrayAdapter<String> classAdapter = new ArrayAdapter(getActivity(), R.layout.custom_spinner, getResources().getStringArray(R.array.student_class));
         //spinner_class.setAdapter(classAdapter);
         addAvatarsInList();
         avatarAdapter = new AvatarAdapter(getActivity(), this, avatarList);
@@ -394,7 +393,11 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         if (assessmentLanguagesList.size() <= 0) {
             if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
                 Toast.makeText(getActivity(), "Connect to internet to download languages", Toast.LENGTH_SHORT).show();
-            else getLanguageData();
+            else {
+                getLanguageData();
+                Toast.makeText(getActivity(), "Select language", Toast.LENGTH_SHORT).show();
+
+            }
         } else if (et_studentName.getText().toString().equalsIgnoreCase("") ||
                 /*spinner_class.getSelectedItem().toString().equalsIgnoreCase("select class") ||*/
                 spinner_age.getSelectedItem().toString().equalsIgnoreCase("select age") ||
@@ -415,7 +418,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
             else
                 student.setAvatarName("g3");
 */
-            student.setDeviceId(AppDatabase.getDatabaseInstance(getContext()).getStatusDao().getValue("DeviceId"));
+            student.setDeviceId(Assessment_Utility.getDeviceId(getActivity()));
             AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(student);
             BackupDatabase.backup(getActivity());
             Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();

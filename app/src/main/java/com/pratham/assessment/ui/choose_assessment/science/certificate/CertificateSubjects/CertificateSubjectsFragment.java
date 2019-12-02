@@ -15,11 +15,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.ExpandableRecyclerAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.SubjectAdapter;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
     @BindView(R.id.spinner_certificate_lang)
     Spinner spinner_lang;
     String selectedLang = "english";
-    SubjectPresenter presenter;
+    SubjectContract.SubjectPresenter presenter;
 
     public CertificateSubjectsFragment() {
     }
@@ -57,7 +59,17 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
         ButterKnife.bind(this, view);
         presenter = new SubjectPresenter(getActivity(), this);
 
-        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLang();
+        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+            presenter.pullCertificates();
+        } else {
+            setSubjectToSpinner();
+        }
+
+    }
+
+    @Override
+    public void setSubjectToSpinner() {
+        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLang(Assessment_Constants.currentStudentID);
         List<String> languages = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getLangList(languageIds);
         if (languages.size() > 0 && languageIds.size() > 0) {
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.custom_spinner, languages);

@@ -33,7 +33,7 @@ public class ECELoginDialog extends Dialog {
         setContentView(R.layout.assessment_login_dialog);
         this.context = context;
         ButterKnife.bind(this);
-       /* userNameET.setText("pravinthorat");
+        /*userNameET.setText("pravinthorat");
         passwordET.setText("pratham123");*/
         userNameET.setText("");
         passwordET.setText("");

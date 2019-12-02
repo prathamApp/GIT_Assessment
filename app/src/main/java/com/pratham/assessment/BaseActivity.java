@@ -1,7 +1,6 @@
 package com.pratham.assessment;
 
 import android.annotation.SuppressLint;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,15 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
-
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
 import com.pratham.assessment.utilities.Assessment_Utility;
-
-import net.alhazmy13.catcho.library.Catcho;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -253,9 +249,14 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                appDatabase = Room.databaseBuilder(BaseActivity.this,
+                Log.d("$$$","BaseActivity-ActivityOnPause");
+
+                appDatabase = AppDatabase.getDatabaseInstance(BaseActivity.this);
+                Log.d("$$$","BaseActivity2-ActivityOnPause");
+
+                /*appDatabase = Room.databaseBuilder(BaseActivity.this,
                         AppDatabase.class, AppDatabase.DB_NAME)
-                        .build();
+                        .build();*/
                 String AppStartDateTime = appDatabase.getStatusDao().getValue("AppStartDateTime");
                 if (AppStartDateTime == null)
                     pauseTime = AssessmentApplication.getCurrentDateTime(false, "");

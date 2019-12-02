@@ -31,8 +31,7 @@ import static com.pratham.assessment.utilities.Assessment_Constants.PREFS_VERSIO
 public class AssessmentApplication extends Application {
 
 
-    public static final boolean isTablet = false;
-
+    public static final boolean isTablet = true;
 
     public static String cosPath = "", networkSSID = "PrathamHotSpot-" + Build.SERIAL;
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";

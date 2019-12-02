@@ -186,11 +186,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         }
     }
 
-    ProgressLayout progressLayout;
-    ProgressBar roundProgress;
-    TextView dialog_file_name;
-    ImageView iv_file_trans;
-    Dialog progress;
+
+    ProgressDialog progress;
 
   /*  @OnClick(R.id.btn_download_all_data)
     public void onBtnDownload() {
@@ -540,7 +537,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             AppDatabase.appDatabase.getStatusDao().insert(status);
 
         } else {
-            CharSequence c = "";
+            CharSequence c;
             ActivityManager am = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
             List l = am.getRunningAppProcesses();
             Iterator i = l.iterator();
@@ -695,16 +692,18 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         EventBus.getDefault().unregister(this);
     }
 
+
     @Subscribe
     public void messageReceived(String msg) {
         if (msg.equalsIgnoreCase("reload"))
             showStudents();
     }
-
+/*
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
+*/
 
     public ProgressDialog progressDialog;
 
@@ -740,6 +739,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
+
                     String currentSession = "" + UUID.randomUUID().toString();
                     AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue("CurrentSession", "" + currentSession);
 
@@ -791,6 +791,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             }
         }.execute();
     }
+
+
 
     /* private void getStudentData(final String requestType, String url, String studentID) {
          try {
@@ -907,7 +909,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         showStudents();
     }
 
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+    /*public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;
         private int spacing;
@@ -941,6 +943,6 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             }
         }
     }
-
+*/
 
 }

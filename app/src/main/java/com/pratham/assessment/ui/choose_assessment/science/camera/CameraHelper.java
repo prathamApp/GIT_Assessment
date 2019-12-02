@@ -181,7 +181,7 @@ public class CameraHelper {
                     "IMG_" + timeStamp + ".jpg");
         } else if (type == MEDIA_TYPE_VIDEO) {
 //            mediaFile = new File(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + "myVideo.mp4");
-            mediaFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "myVideo.mp4");
+            mediaFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + "myVideo.mp4");
         } else {
             return null;
         }

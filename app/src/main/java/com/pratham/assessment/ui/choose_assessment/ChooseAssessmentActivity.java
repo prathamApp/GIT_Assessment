@@ -346,6 +346,15 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                String curSession = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getStatusDao().getValue("CurrentSession");
+                String toDateTemp = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().getToDate(curSession);
+
+                Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
+
+                if (toDateTemp != null) {
+                    if (toDateTemp.equalsIgnoreCase("na"))
+                        AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.GetCurrentDateTime());
+                }
                 finishAffinity();
 
             }

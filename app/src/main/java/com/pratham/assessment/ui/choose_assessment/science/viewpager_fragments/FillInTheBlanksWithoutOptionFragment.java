@@ -265,8 +265,10 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     @Override
     public void onPause() {
         super.onPause();
-        if (speechService != null)
+        if (speechService != null) {
             speechService.stopSpeechInput();
+            speechService.resetSpeechRecognizer();
+        }
         micPressed(0);
         voiceStart = false;
         if (speech != null) {

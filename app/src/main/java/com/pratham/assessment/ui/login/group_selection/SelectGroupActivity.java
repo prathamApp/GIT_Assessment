@@ -13,7 +13,10 @@ import android.widget.TextView;
 
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
+import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.login_menu.MenuFragment;
+import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 public class SelectGroupActivity extends BaseActivity {
@@ -108,6 +111,15 @@ public class SelectGroupActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                String curSession = AppDatabase.getDatabaseInstance(SelectGroupActivity.this).getStatusDao().getValue("CurrentSession");
+                String toDateTemp = AppDatabase.getDatabaseInstance(SelectGroupActivity.this).getSessionDao().getToDate(curSession);
+
+                Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
+
+                if (toDateTemp != null) {
+                    if (toDateTemp.equalsIgnoreCase("na"))
+                        AppDatabase.getDatabaseInstance(SelectGroupActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.GetCurrentDateTime());
+                }
                 finishAffinity();
 
             }

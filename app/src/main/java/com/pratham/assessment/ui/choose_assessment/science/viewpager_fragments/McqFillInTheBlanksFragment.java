@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.custom.mary_pop_up.MaryPopup;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
@@ -47,14 +49,18 @@ public class McqFillInTheBlanksFragment extends Fragment {
     TextView question;
     @BindView(R.id.iv_question_image)
     ImageView questionImage;
+    @BindView(R.id.iv_view_question_img)
+    ImageView iv_view_question_img;
+    @BindView(R.id.rl_question_img)
+    RelativeLayout rl_question_img;
     @BindView(R.id.iv_question_gif)
     GifView questionGif;
     @BindView(R.id.rg_mcq)
     RadioGroup radioGroupMcq;
     @BindView(R.id.grid_mcq)
     GridLayout gridMcq;
-    AssessmentAnswerListener assessmentAnswerListener;
-    List<ScienceQuestionChoice> options;
+    private AssessmentAnswerListener assessmentAnswerListener;
+    private List<ScienceQuestionChoice> options;
 
 
     private static final String POS = "pos";
@@ -102,11 +108,13 @@ public class McqFillInTheBlanksFragment extends Fragment {
         setMcqsQuestion();
     }
 
-    public void setMcqsQuestion() {
+    private void setMcqsQuestion() {
         options = new ArrayList<>();
         question.setText(scienceQuestion.getQname());
+        question.setMovementMethod(new ScrollingMovementMethod());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
+            rl_question_img.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
 
             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
@@ -152,18 +160,27 @@ public class McqFillInTheBlanksFragment extends Fragment {
                         .into(questionImage);
             }
 
-            questionImage.setOnClickListener(new View.OnClickListener() {
+            iv_view_question_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                  /*  MaryPopup marypopup = MaryPopup.with(getActivity())
+                            .cancellable(true)
+                            .blackOverlayColor(Color.parseColor("#DD444444"))
+                            .backgroundColor(Color.parseColor("#EFF4F5"))
+                            .center(true)
+                            .content(R.layout.popup_layout)
+                            .from(questionImage);
+                    marypopup.show();*/
+
+                }
+            });
+          /*  questionGif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
                 }
-            });
-            questionGif.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
-                }
-            });
+            });*/
            /* } else {
                 String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
                 final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -175,7 +192,10 @@ public class McqFillInTheBlanksFragment extends Fragment {
                     }
                 });
             }*/
-        } else questionImage.setVisibility(View.GONE);
+        } else {
+            questionImage.setVisibility(View.GONE);
+            rl_question_img.setVisibility(View.GONE);
+        }
 
         options.clear();
         options = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
@@ -202,17 +222,46 @@ public class McqFillInTheBlanksFragment extends Fragment {
                 String ansId = scienceQuestion.getUserAnswerId();
 
                 if (textCnt == options.size()) {
+                    radioGroupMcq.setVisibility(View.GONE);
+                    gridMcq.setVisibility(View.VISIBLE);
                     if (options.get(r).getChoiceurl().equalsIgnoreCase("")) {
-                        radioGroupMcq.setVisibility(View.VISIBLE);
-                        gridMcq.setVisibility(View.GONE);
 
-                        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_radio_item, radioGroupMcq, false);
-                        final RadioButton radioButton = (RadioButton) view;
-                        radioButton.setButtonTintList(Assessment_Utility.colorStateList);
-                        radioButton.setId(r);
-                        radioButton.setElevation(3);
+                        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_single_text_item, gridMcq, false);
+                        final TextView textView = (TextView) view;
+//                        textView.setElevation(3);
+                        textView.setMovementMethod(new ScrollingMovementMethod());
+                        textView.setText(options.get(r).getChoicename());
+                        gridMcq.addView(textView);
+                        if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
+                            textView.setTextColor(Assessment_Utility.selectedColor);
+                            textView.setBackground(getActivity().getResources().getDrawable(R.drawable.gradient_selector));
+                        } else {
+                            textView.setTextColor(Color.WHITE);
+                            textView.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
 
-                       /* if (!options.get(r).getChoiceurl().equalsIgnoreCase("")) {
+                        }
+                        final int finalR2 = r;
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setOnclickOnItem(v, options.get(finalR2));
+
+                                textView.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
+                                textView.setTextColor(Assessment_Utility.selectedColor);
+                            }
+                        });
+
+                    }
+/*                        radioGroupMcq.setVisibility(View.GONE);
+                        gridMcq.setVisibility(View.VISIBLE);
+                        gridMcq.setColumnCount(2);
+                        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_single_text_item, radioGroupMcq, false);
+                        final TextView textView = (TextView) view;
+                        textView.setTextColor(Assessment_Utility.colorStateList);
+                        textView.setId(r);
+                        textView.setElevation(3);
+
+                       *//* if (!options.get(r).getChoiceurl().equalsIgnoreCase("")) {
                             final String path = options.get(r).getChoiceurl();
                             radioButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -230,23 +279,25 @@ public class McqFillInTheBlanksFragment extends Fragment {
                                 radioButton.setChecked(false);
                                 radioButton.setTextColor(Color.WHITE);
                             }
-                        } else {*/
-                        radioButton.setText(options.get(r).getChoicename());
+                        } else {*//*
+                        textView.setText(options.get(r).getChoicename());
                         if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
-                            radioButton.setChecked(true);
-                            radioButton.setTextColor(Assessment_Utility.selectedColor);
+//                            textView.setChecked(true);
+                            textView.setTextColor(Assessment_Utility.selectedColor);
                         } else {
-                            radioButton.setChecked(false);
-                            radioButton.setTextColor(Color.WHITE);
+//                            textView.setChecked(false);
+                            textView.setTextColor(Color.WHITE);
                         }
-                        radioGroupMcq.addView(radioButton);
+//                        radioGroupMcq.addView(textView);
+                        gridMcq.addView(textView);
+
                         if (ans.equals(options.get(r).getChoicename())) {
-                            radioButton.setChecked(true);
+//                            textView.setChecked(true);
                         } else {
-                            radioButton.setChecked(false);
+//                            textView.setChecked(false);
                         }
 //                        }
-                    }
+                    }*/
                 } else if (imgCnt == options.size()) {
                     radioGroupMcq.setVisibility(View.GONE);
                     gridMcq.setVisibility(View.VISIBLE);
@@ -449,6 +500,7 @@ public class McqFillInTheBlanksFragment extends Fragment {
                         final View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_single_text_item, gridMcq, false);
                         final TextView textView = (TextView) view;
                         textView.setElevation(3);
+                        textView.setMovementMethod(new ScrollingMovementMethod());
                         textView.setText(options.get(r).getChoicename());
                         gridMcq.addView(textView);
                         if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {

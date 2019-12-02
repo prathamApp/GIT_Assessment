@@ -28,7 +28,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-import static com.pratham.assessment.ui.display_english_list.TestDisplayActivity.gameWebViewList;
 
 
 public class WebViewActivity extends BaseActivity implements WebViewInterface {
@@ -61,12 +60,12 @@ public class WebViewActivity extends BaseActivity implements WebViewInterface {
         tts = new TextToSpeechCustom(this, 0.6f);
         gameCounter = 0;
 
-        if (mode.equalsIgnoreCase("assessment")) {
+ /*       if (mode.equalsIgnoreCase("assessment")) {
             createWebView(gameWebViewList.get(gameCounter).getResourcePath());
             arraySize = gameWebViewList.size();
             webResId = gameWebViewList.get(gameCounter).getResourceId();
         } else
-            createWebView(gamePath);
+            createWebView(gamePath);*/
 
         certificateModelClassList = new ArrayList<>();
 

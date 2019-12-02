@@ -48,7 +48,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView question, userAnswer, correctAnswer, btnUserAnswer, btnCorrectAnswer, tv_you_answered_label;
+        TextView question, userAnswer, correctAnswer,correctAnsLabel, btnUserAnswer, btnCorrectAnswer, tv_you_answered_label;
         CardView cardView;
         ImageView questionImg;
         ImageView iv_correct_wrong_indicator;
@@ -61,6 +61,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             questionImg = itemView.findViewById(R.id.question_img);
             userAnswer = itemView.findViewById(R.id.tv_you_answered);
             correctAnswer = itemView.findViewById(R.id.tv_correct_answer);
+            correctAnsLabel = itemView.findViewById(R.id.tv_correct_answer_label);
             btnUserAnswer = itemView.findViewById(R.id.btn_you_answered);
             btnCorrectAnswer = itemView.findViewById(R.id.btn_correct_Ans);
             cardView = itemView.findViewById(R.id.result_card_view);
@@ -337,9 +338,15 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         }
                     }
                 }
-                if (!myViewHolder.correctAnswer.getText().equals(""))
+                if (!myViewHolder.correctAnswer.getText().equals("")) {
                     myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
-                else myViewHolder.correctAnswer.setVisibility(View.GONE);
+                    myViewHolder.correctAnsLabel.setVisibility(View.VISIBLE);
+
+                } else {
+                    myViewHolder.correctAnswer.setVisibility(View.GONE);
+                    myViewHolder.correctAnsLabel.setVisibility(View.GONE);
+
+                }
 
 
              /*   if (!result.isAttempted()) {

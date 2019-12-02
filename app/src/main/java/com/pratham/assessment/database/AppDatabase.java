@@ -7,15 +7,13 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.SpannableStringBuilder;
+import android.util.Log;
 
-//import com.commonsware.cwac.saferoom.SafeHelperFactory;
 import com.pratham.assessment.dao.AssessmentDao;
 import com.pratham.assessment.dao.AssessmentPaperForPushDao;
 import com.pratham.assessment.dao.AssessmentPaperPatternDao;
 import com.pratham.assessment.dao.AssessmentPatternDetailsDao;
 import com.pratham.assessment.dao.AssessmentTestDao;
-import com.pratham.assessment.dao.AssessmentTopicDao;
 import com.pratham.assessment.dao.AttendanceDao;
 import com.pratham.assessment.dao.ContentTableDao;
 import com.pratham.assessment.dao.CrlDao;
@@ -61,10 +59,10 @@ import com.pratham.assessment.domain.Village;
         ContentTable.class, AssessmentToipcsModal.class, ScienceQuestion.class,
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
-        AssessmentPaperPattern.class, AssessmentPatternDetails.class, SupervisorData.class, DownloadMedia.class}, version = 2)
+        AssessmentPaperPattern.class, AssessmentPatternDetails.class,
+        SupervisorData.class, DownloadMedia.class}, version = 3/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
-//    private static final String PASSPHRASE = "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.";
 
     public static final String DB_NAME = "assessment_database";
 
@@ -90,7 +88,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract StatusDao getStatusDao();
 
-    public abstract AssessmentTopicDao getAssessmentTopicDao();
+//    public abstract AssessmentTopicDao getAssessmentTopicDao();
 
     public abstract ScienceQuestionDao getScienceQuestionDao();
 
@@ -125,11 +123,12 @@ public abstract class AppDatabase extends RoomDatabase {
     }*/
 
     public static AppDatabase getDatabaseInstance(Context context) {
-
+        Log.d("$$$", "getDatabaseInstance");
         try {
             if (appDatabase == null) {
-//                SafeHelperFactory factory = SafeHelperFactory.fromUser(new SpannableStringBuilder(PASSPHRASE));
-                appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database").addMigrations(MIGRATION_1_2).allowMainThreadQueries().build();
+                appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                        .allowMainThreadQueries().build();
 
             }
         } catch (Exception e) {
@@ -144,22 +143,34 @@ public abstract class AppDatabase extends RoomDatabase {
 
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-         /*   database.execSQL("CREATE TABLE  AssessmentPaperForPush  ( languageId  TEXT,  subjectId  TEXT, " +
-                    " examId  TEXT,  paperId  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,  paperStartTime  TEXT," +
-                    "  paperEndTime  TEXT,  outOfMarks  TEXT,  totalMarks  TEXT,  studentId  TEXT, " +
-                    " CorrectCnt  INTEGER NOT NULL,  wrongCnt  INTEGER NOT NULL,  SkipCnt  INTEGER NOT NULL, " +
-                    " sentFlag  INTEGER NOT NULL,  SessionID  TEXT)");
 
-            database.execSQL("CREATE TABLE  SupervisorData  ( sId  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    "  supervisorId  TEXT,  assessmentSessionId  TEXT,  supervisorName  TEXT,  supervisorPhoto  TEXT," +
-                    "  sentFlag  INTEGER NOT NULL)");
+            Log.d("$$$", "MIGRATION_1_2");
 
-            database.execSQL("drop table ScienceAssesmentAnswer");
-*/
             database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion1 text");
             database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion2 text");
             database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion3 text");
+            Log.d("$$$", "MIGRATION_1_2After");
 //            database.execSQL("ALTER TABLE Score add COLUMN certificateQuestion1");
+        }
+    };
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_2_3");
+            try {
+
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question1Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question2Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question3Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN FullName text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN Gender text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN Age INTEGER not null DEFAULT 0");
+                Log.d("$$$", "MIGRATION_2_3After");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     };
 

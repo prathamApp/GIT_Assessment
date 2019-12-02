@@ -78,6 +78,13 @@ public class Assessment_Constants {
     public static String STORE_DOWNLOADED_MEDIA_PATH = "/.Assessment/Content/Downloaded";
     public static String STORE_VIDEO_MONITORING_PATH = "/.Assessment/Content/VideoMonitoring";
     public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
+    public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING= "videoMonitoring";
+    public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
+    public static String DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO = "answerAudio";
+    public static String DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE = "answerImage";
+
+
+
 
     public static final String KOLIBRI_BLOCK = "kolibri_block";
     public static final String SERVER_BLOCK = "server_block";

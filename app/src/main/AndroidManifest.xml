@@ -70,17 +70,11 @@
             android:name=".ui.login.group_selection.SelectGroupActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.display_english_list.TestDisplayActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.certificate.CertificateActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.content_player.WebViewActivity"
             android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".ui.profile.ProfileActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.qr_scan.QRScanActivity"
             android:screenOrientation="portrait" />

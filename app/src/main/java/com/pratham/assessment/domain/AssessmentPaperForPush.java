@@ -27,7 +27,13 @@ public class AssessmentPaperForPush implements Serializable {
     int CorrectCnt;
     int wrongCnt;
     int SkipCnt;
+    String question1Rating;
+    String question2Rating;
+    String question3Rating;
 
+    private String FullName;
+    private String Gender;
+    private int Age;
 
     private int sentFlag;
 
@@ -109,7 +115,7 @@ public class AssessmentPaperForPush implements Serializable {
     }
 
     public String getOutOfMarks() {
-        return outOfMarks;
+        return outOfMarks == null ? "" : outOfMarks;
     }
 
     public void setOutOfMarks(String outOfMarks) {
@@ -117,7 +123,8 @@ public class AssessmentPaperForPush implements Serializable {
     }
 
     public String getTotalMarks() {
-        return totalMarks;
+        return totalMarks == null ? "" : totalMarks;
+
     }
 
     public void setTotalMarks(String totalMarks) {
@@ -170,5 +177,54 @@ public class AssessmentPaperForPush implements Serializable {
 
     public void setExamName(String examName) {
         this.examName = examName;
+    }
+
+    public String getQuestion1Rating() {
+        return question1Rating;
+    }
+
+    public void setQuestion1Rating(String question1Rating) {
+        this.question1Rating = question1Rating;
+    }
+
+    public String getQuestion2Rating() {
+        return question2Rating;
+    }
+
+    public void setQuestion2Rating(String question2Rating) {
+        this.question2Rating = question2Rating;
+    }
+
+    public String getQuestion3Rating() {
+        return question3Rating;
+    }
+
+    public void setQuestion3Rating(String question3Rating) {
+        this.question3Rating = question3Rating;
+    }
+
+
+    public String getFullName() {
+        return FullName;
+    }
+
+    public void setFullName(String fullName) {
+        FullName = fullName;
+    }
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        Gender = gender;
+    }
+
+    public int getAge() {
+        return Age;
+    }
+
+    public void setAge(int age) {
+        Age = age;
     }
 }

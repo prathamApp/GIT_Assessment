@@ -127,6 +127,8 @@ public class ResultActivity extends BaseActivity implements ResultContract.Resul
 
     @Override
     public void onBackPressed() {
+       int fragmentCnt= getSupportFragmentManager().getBackStackEntryCount();
+       if(fragmentCnt>1)
             finish();
     }
 }

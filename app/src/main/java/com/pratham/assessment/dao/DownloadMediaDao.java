@@ -6,7 +6,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.DownloadMedia;
 
 import java.util.List;
@@ -36,6 +35,9 @@ public interface DownloadMediaDao {
 
     @Query("select * from DownloadMedia where qId=:qid and paperId=:paperId and sentFlag=0")
     List<DownloadMedia> getMediaByQidAndPaperId(String qid, String paperId);
+
+    @Query("select * from DownloadMedia where mediaType=:type and paperId=:paperId and sentFlag=0")
+    DownloadMedia getMediaByTypeAndPaperId(String type, String paperId);
 
     @Query("DELETE FROM DownloadMedia")
     void deleteAllMedia();

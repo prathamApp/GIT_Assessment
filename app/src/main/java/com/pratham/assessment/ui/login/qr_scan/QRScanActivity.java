@@ -33,6 +33,7 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONObject;
 
@@ -57,7 +58,7 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
     @BindView(R.id.btn_reset_btn)
     Button btn_reset_btn;
 
-    private AppDatabase appDatabase;
+//    private AppDatabase appDatabase;
     // QRScanContract.QRScanPresenter presenter;
     int totalStudents = 0;
     String stdFirstName, stdId;
@@ -339,16 +340,17 @@ public class QRScanActivity extends BaseActivity implements QRScanContract.QRSca
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
-
-                    appDatabase = Room.databaseBuilder(QRScanActivity.this,
+//appDatabase=AppDatabase.getDatabaseInstance()
+                   /* appDatabase = Room.databaseBuilder(QRScanActivity.this,
                             AppDatabase.class, AppDatabase.DB_NAME)
-                            .build();
+                            .build();*/
 
                     Student student = new Student();
 
                     student.setStudentID("" + stdId);
                     student.setFullName("" + stdFirstName);
                     student.setNewFlag(1);
+                    student.setDeviceId(Assessment_Utility.getDeviceId(QRScanActivity.this));
                     String studentName = appDatabase.getStudentDao().checkStudent("" + stdId);
 
                     if (studentName == null) {

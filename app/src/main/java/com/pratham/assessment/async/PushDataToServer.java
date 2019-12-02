@@ -35,6 +35,7 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +45,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
 
 /******* This async task is used for data push******/
 public class PushDataToServer extends AsyncTask {
@@ -101,7 +106,7 @@ public class PushDataToServer extends AsyncTask {
         assessmentScoreData = fillAssessmentScoreData(assessmentScoreList);
         List<Attendance> attendanceList = AppDatabase.getDatabaseInstance(context).getAttendanceDao().getAllPushAttendanceEntries();
         attendanceData = fillAttendanceData(attendanceList);
-        List<Student> studentList = AppDatabase.getDatabaseInstance(context).getStudentDao().getAllStudents();
+        List<Student> studentList = AppDatabase.getDatabaseInstance(context).getStudentDao().getAllNewStudents();
         studentData = fillStudentData(studentList);
         List<Crl> crlList = AppDatabase.getDatabaseInstance(context).getCrlDao().getAllCrls();
         crlData = fillCrlData(crlList);
@@ -279,21 +284,21 @@ public class PushDataToServer extends AsyncTask {
                     @Override
                     public void onResponse(JSONObject response) {
                         // do anything with response
-                        if (videoType.equalsIgnoreCase("answerVideo") || videoType.equalsIgnoreCase("answerImage")) {
+                        if (videoType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO) || videoType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE)) {
                             mediaCnt++;
                             if (mediaCnt < downloadMediaList.size())
                                 createMediaFileToPush();
                             else {
                                 if (AssessmentApplication.isTablet)
                                     Toast.makeText(context, "Media pushed successfully", Toast.LENGTH_SHORT).show();
-                                setMediaFlag();
+                                setMediaPushFlag();
                             }
                         } else {
                             videoRecCnt++;
                             if (videoRecCnt < videoRecordingList.size())
                                 createMediaFileToPush();
                             else {
-                                setMediaFlag();
+                                setMediaPushFlag();
                                 if (AssessmentApplication.isTablet)
                                     Toast.makeText(context, "Media pushed successfully", Toast.LENGTH_SHORT).show();
                             }
@@ -305,16 +310,20 @@ public class PushDataToServer extends AsyncTask {
                         // handle error
                         if (AssessmentApplication.isTablet)
                             Toast.makeText(context, "video monitoring Media push failed", Toast.LENGTH_SHORT).show();
-                        PushDataToServer.this.mediaCnt++;
-                        if (PushDataToServer.this.mediaCnt < downloadMediaList.size())
-                            createMediaFileToPush();
+                        if (videoType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO) || videoType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE)) {
+                            mediaCnt++;
+                            if (mediaCnt < downloadMediaList.size())
+                                createMediaFileToPush();
+
+                        } else {
+                            videoRecCnt++;
+                            if (videoRecCnt < videoRecordingList.size())
+                                createMediaFileToPush();
+                        }
                     }
                 });
     }
 
-    private void setMediaFlag() {
-        AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag();
-    }
 
     @Override
     protected void onPostExecute(Object o) {
@@ -329,17 +338,13 @@ public class PushDataToServer extends AsyncTask {
             JSONObject jsonObject = new JSONObject(requestString);
             JSONObject jsonObjectSession = jsonObject.getJSONObject("session");
 
-            if (jsonObjectSession.getJSONArray("scoreData").length() > 0 ||
+            return jsonObjectSession.getJSONArray("scoreData").length() > 0 ||
                     jsonObjectSession.getJSONArray("attendanceData").length() > 0 ||
                     jsonObjectSession.getJSONArray("sessionsData").length() > 0 ||
                     jsonObjectSession.getJSONArray("learntWordsData").length() > 0 ||
                     jsonObjectSession.getJSONArray("logsData").length() > 0 ||
                     jsonObjectSession.getJSONArray("assessmentData").length() > 0 ||
-                    jsonObjectSession.getJSONArray("supervisor").length() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+                    jsonObjectSession.getJSONArray("supervisor").length() > 0;
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
@@ -488,7 +493,7 @@ public class PushDataToServer extends AsyncTask {
                 _studentObj.put("Age", studentList.get(i).getAge());
                 _studentObj.put("villageName", studentList.get(i).getVillageName());
                 _studentObj.put("newFlag", studentList.get(i).getNewFlag());
-                _studentObj.put("DeviceId", studentList.get(i).getDeviceId());
+                _studentObj.put("DeviceId", Assessment_Utility.getDeviceId(context));
                 studentData.put(_studentObj);
             }
         } catch (Exception e) {
@@ -527,7 +532,7 @@ public class PushDataToServer extends AsyncTask {
 //                _obj.put("ScoreId", _score.getScoreId());
                 _obj.put("SessionID", _score.getSessionID());
                 _obj.put("StudentID", _score.getStudentID());
-                _obj.put("DeviceID", _score.getDeviceID());
+                _obj.put("DeviceID", Assessment_Utility.getDeviceId(context));
                 _obj.put("ResourceID", _score.getResourceID());
                 _obj.put("QuestionId", _score.getQuestionId());
                 _obj.put("ScoredMarks", _score.getScoredMarks());
@@ -571,11 +576,16 @@ public class PushDataToServer extends AsyncTask {
                     _obj_paper.put("scoredMarks", _paper.getTotalMarks());
                     _obj_paper.put("studentId", _paper.getStudentId());
                     _obj_paper.put("SessionID", _paper.getSessionID());
-                    DownloadMedia video = new DownloadMedia();
-                    video.setPaperId(_paper.getPaperId());
+                    _obj_paper.put("question1Rating", _paper.getQuestion1Rating());
+                    _obj_paper.put("question2Rating", _paper.getQuestion2Rating());
+                    _obj_paper.put("question3Rating", _paper.getQuestion3Rating());
+                    DownloadMedia video = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeAndPaperId(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, _paper.getPaperId());
+                    /*  DownloadMedia video = new DownloadMedia();
+                    video.setPaperId(_paper.getPaperId());*/
 //                    video.setPhotoUrl(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + _paper.getPaperId() + ".mp4");
-                    video.setPhotoUrl(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + _paper.getPaperId() + ".mp4");
-                    videoRecordingList.add(video);
+//                    video.setPhotoUrl(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + _paper.getPaperId() + ".mp4");
+                    if (video != null)
+                        videoRecordingList.add(video);
                     scoreData = new JSONArray();
                     for (int i = 0; i < scoreList.size(); i++) {
                         _obj_score = new JSONObject();
@@ -583,7 +593,7 @@ public class PushDataToServer extends AsyncTask {
 //                _obj.put("ScoreId", _score.getScoreId());
                         _obj_score.put("SessionID", _score.getSessionID());
                         _obj_score.put("StudentID", _score.getStudentID());
-                        _obj_score.put("DeviceID", _score.getDeviceID());
+                        _obj_score.put("DeviceID", Assessment_Utility.getDeviceId(context));
                         _obj_score.put("ResourceID", _score.getResourceID());
                         _obj_score.put("QuestionId", _score.getQuestionId());
                         _obj_score.put("ScoredMarks", _score.getScoredMarks());
@@ -673,7 +683,7 @@ public class PushDataToServer extends AsyncTask {
             for (int i = 0; i < assessmentList.size(); i++) {
                 _assessmentobj = new JSONObject();
                 Assessment _Assessment = assessmentList.get(i);
-                _assessmentobj.put("DeviceIDa", _Assessment.getDeviceIDa());
+                _assessmentobj.put("DeviceIDa", Assessment_Utility.getDeviceId(context));
                 _assessmentobj.put("EndDateTimea", _Assessment.getEndDateTime());
                 _assessmentobj.put("Labela", _Assessment.getLabel());
                 _assessmentobj.put("Levela", _Assessment.getLevela());
@@ -789,7 +799,7 @@ public class PushDataToServer extends AsyncTask {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
                             Drawable icon = context.getResources().getDrawable(R.drawable.ic_check);
                             if (!autoPush) {
-                                CreateFilesforVideoMonitoring();
+                                CreateFilesForVideoMonitoring();
                                 String msg = "Data pushed successfully. " + pushCnt + " paper(s) pushed.";
                               /*  if (!dataPushed) {
                                     icon = context.getResources().getDrawable(R.drawable.ic_warning);
@@ -840,7 +850,7 @@ public class PushDataToServer extends AsyncTask {
         }
     }
 
-    private void CreateFilesforVideoMonitoring() {
+    private void CreateFilesForVideoMonitoring() {
         if (videoRecordingList.size() > 0) {
             String filePath = videoRecordingList.get(videoRecCnt).getPhotoUrl();
             if (!filePath.equalsIgnoreCase("")) {
@@ -905,6 +915,11 @@ public class PushDataToServer extends AsyncTask {
     }
 
 
+    private void setMediaPushFlag() {
+        AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag();
+    }
+
+
     private void setPushFlag() {
         AppDatabase.getDatabaseInstance(context).getLogsDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getSessionDao().setSentFlag();
@@ -912,7 +927,8 @@ public class PushDataToServer extends AsyncTask {
         AppDatabase.getDatabaseInstance(context).getScoreDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
-        AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
+        if (!AssessmentApplication.isTablet)
+            AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().setSentFlag();
 //        AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();
 

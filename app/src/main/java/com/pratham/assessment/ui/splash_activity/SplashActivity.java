@@ -3,9 +3,6 @@ package com.pratham.assessment.ui.splash_activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,25 +24,37 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.database.BackupDatabase;
+import com.pratham.assessment.domain.AssessmentPaperForPush;
+import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
+import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.SplashSupportActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,10 +74,12 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         RelativeLayout temppp;*/
     static String fpath, appname;
     public static MediaPlayer bgMusic;
-    public static AppDatabase appDatabase;
+    //    public static AppDatabase appDatabase;
     public ProgressDialog progressDialog;
 
-    static Context context;
+    List<AssessmentPaperForPush> newStudentCertificates;
+
+    Context context;
     Dialog dialog;
     SplashContract.SplashPresenter splashPresenter;
     public static boolean firstPause = true, fragmentBottomOpenFlg = false, fragmentBottomPauseFlg = false, fragmentAddStudentPauseFlg = false, fragmentAddStudentOpenFlg = false;
@@ -232,6 +242,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         createDataBase();
         if (!AssessmentApplication.isTablet) {
 //            splashPresenter.pushData();
+            //todo uncomment PushDataToServer below
             new PushDataToServer(this, false).execute();
 
         }
@@ -371,6 +382,15 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             @Override
             public void onClick(View v) {
                 finishAffinity();
+                String curSession = AppDatabase.getDatabaseInstance(SplashActivity.this).getStatusDao().getValue("CurrentSession");
+                String toDateTemp = AppDatabase.getDatabaseInstance(SplashActivity.this).getSessionDao().getToDate(curSession);
+
+                Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
+
+                if (toDateTemp != null) {
+                    if (toDateTemp.equalsIgnoreCase("na"))
+                        AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.GetCurrentDateTime());
+                }
                 dialog.dismiss();
             }
         });
@@ -391,11 +411,19 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     }
 
     public void createDataBase() {
+        Log.d("$$$", "createDataBase");
+
         try {
             boolean dbExist = checkDataBase();
             if (!dbExist) {
                 try {
-                    appDatabase = Room.databaseBuilder(this,
+                    Log.d("$$$", "createDataBasebefore");
+
+                    appDatabase = AppDatabase.getDatabaseInstance(this);
+
+                    Log.d("$$$", "createDataBaseAfter");
+
+                          /*  Room.databaseBuilder(this,
                             AppDatabase.class, AppDatabase.DB_NAME)
                             .allowMainThreadQueries()
                             .addCallback(new RoomDatabase.Callback() {
@@ -404,7 +432,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                     super.onCreate(db);
                                 }
                             })
-                            .build();
+                            .build();*/
                     if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/assessment_database").exists()) {
                         try {
                             splashPresenter.copyDataBase();
@@ -419,10 +447,11 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     e.printStackTrace();
                 }
             } else {
-                appDatabase = Room.databaseBuilder(this,
+                appDatabase = AppDatabase.getDatabaseInstance(this);
+               /* appDatabase = Room.databaseBuilder(this,
                         AppDatabase.class, AppDatabase.DB_NAME)
                         .allowMainThreadQueries()
-                        .build();
+                        .build();*/
                 showButton();
 //                getSdCardPath();
             }
@@ -436,6 +465,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         try {
             checkDB = SQLiteDatabase.openDatabase(getDatabasePath(AppDatabase.DB_NAME).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         if (checkDB != null) {
             checkDB.close();
@@ -452,7 +482,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
         context.startService(new Intent(context, AppExitService.class));
         dismissProgressDialog();
-
 
 
         if (!AssessmentApplication.isTablet) {
@@ -479,10 +508,119 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     }
 
     public void showBottomFragment() {
-        fragmentBottomOpenFlg = true;
-        firstPause = false;
+        try {
+
+            fragmentBottomOpenFlg = true;
+            firstPause = false;
+            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                if (!AssessmentApplication.isTablet) {
+                    pullOldStudentsCertificates();
+                }
+            } else {
+                Toast.makeText(context, "Connect to internet to download students of this device..", Toast.LENGTH_LONG).show();
+                BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
+                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void pullOldStudentsCertificates() {
+        String url = APIs.pullCertificateByDeviceIdAPI + Assessment_Utility.getDeviceId(this);
+        progressDialog = new ProgressDialog(context);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Loading Students..");
+        AndroidNetworking.get(url)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            newStudentCertificates = new ArrayList<>();
+                            for (int i = 0; i < response.length(); i++) {
+
+                                AssessmentPaperForPush paper = new AssessmentPaperForPush();
+                                paper.setPaperStartTime(response.getJSONObject(i).getString("paperstarttime"));
+                                paper.setPaperEndTime(response.getJSONObject(i).getString("paperendtime"));
+                                paper.setLanguageId(response.getJSONObject(i).getString("languageid"));
+                                paper.setExamId(response.getJSONObject(i).getString("examid"));
+                                paper.setSubjectId(response.getJSONObject(i).getString("subjectid"));
+                                paper.setPaperId(response.getJSONObject(i).getString("paperId"));
+                                paper.setOutOfMarks(response.getJSONObject(i).getString("TotalMarks"));
+                                paper.setTotalMarks(response.getJSONObject(i).getString("ScoredMarks"));
+                                paper.setCorrectCnt(response.getJSONObject(i).getInt("correctCount"));
+                                paper.setWrongCnt(response.getJSONObject(i).getInt("wrongCount"));
+                                paper.setStudentId(response.getJSONObject(i).getString("StudentID"));
+                                paper.setExamName(response.getJSONObject(i).getString("examname"));
+                                paper.setExamTime(response.getJSONObject(i).getString("examduration"));
+                                paper.setQuestion1Rating(response.getJSONObject(i).getString("question1Rating"));
+                                paper.setQuestion2Rating(response.getJSONObject(i).getString("question2Rating"));
+                                paper.setQuestion3Rating(response.getJSONObject(i).getString("question3Rating"));
+                                paper.setFullName(response.getJSONObject(i).getString("FullName"));
+                                paper.setGender(response.getJSONObject(i).getString("Gender"));
+                                paper.setAge(response.getJSONObject(i).getInt("Age"));
+                                newStudentCertificates.add(paper);
+                            }
+                            if (newStudentCertificates.size() > 0) {
+                                savePaperToDB();
+
+                            } else {
+                                Toast.makeText(context, "No students to pull..", Toast.LENGTH_SHORT).show();
+//                                subjectView.setSubjectToSpinner();
+                                BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
+                                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+                                progressDialog.dismiss();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
+                            bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+//                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
+    private void savePaperToDB() {
+//        List<Student> AllStudents = AppDatabase.getDatabaseInstance(this).getStudentDao().getAllStudents();
+//        if (AllStudents.size() > 0) {
+        for (int i = 0; i < newStudentCertificates.size(); i++) {
+            Student student = AppDatabase.getDatabaseInstance(this).getStudentDao().getStudent(newStudentCertificates.get(i).getStudentId());
+            if (student == null)
+                addPulledStudentToDb(newStudentCertificates.get(i));
+//            }
+        }
+        BackupDatabase.backup(context);
         BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
         bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+
+        progressDialog.dismiss();
+    }
+
+    private void addPulledStudentToDb(AssessmentPaperForPush assessmentPaperForPush) {
+        Student student = new Student();
+        student.setStudentID(assessmentPaperForPush.getStudentId());
+        student.setFullName(assessmentPaperForPush.getFullName());
+        student.setAge(assessmentPaperForPush.getAge());
+        student.setGender(assessmentPaperForPush.getGender());
+        student.setAvatarName(Assessment_Utility.getRandomAvatarNames(context));
+        student.setGroupId("PS");
+        student.setDeviceId(Assessment_Utility.getDeviceId(this));
+        AppDatabase.getDatabaseInstance(context).getStudentDao().insert(student);
+
+
     }
 
     @Override

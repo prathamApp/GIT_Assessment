@@ -13,9 +13,11 @@ import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
+import static com.pratham.assessment.BaseActivity.appDatabase;
+
 public class AppExitService extends Service {
 
-    private AppDatabase appDatabase;
+//    private AppDatabase appDatabase;
 
     @Nullable
     @Override
@@ -33,9 +35,9 @@ public class AppExitService extends Service {
                 protected Object doInBackground(Object[] objects) {
                     try {
 
-                        appDatabase = Room.databaseBuilder(AppExitService.this,
+                        /*appDatabase = Room.databaseBuilder(AppExitService.this,
                                 AppDatabase.class, AppDatabase.DB_NAME)
-                                .build();
+                                .build();*/
 
                         String EndTime=""+AssessmentApplication.getCurrentDateTime();
 

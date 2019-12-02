@@ -6,7 +6,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.ScienceQuestion;
 
 import java.util.List;
 
@@ -14,6 +13,9 @@ import java.util.List;
 public interface SubjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAllSubjects(List<AssessmentSubjects> subjects);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertSubject(AssessmentSubjects subject);
 
     @Query("DELETE FROM AssessmentSubjects")
     public void deleteAllSubjects();
@@ -31,6 +33,9 @@ public interface SubjectDao {
 
     @Query("select subjectid FROM AssessmentSubjects WHERE subjectname=:subName")
     public String getIdByName(String subName);
+
+    @Query("select * FROM AssessmentSubjects WHERE subjectid=:subId")
+    public AssessmentSubjects getSubjectById(String subId);
 
   /*  @Query("SELECT qname FROM ScienceQuestion WHERE qid=:qID")
     public String getQuestionNameByQID(String qID);

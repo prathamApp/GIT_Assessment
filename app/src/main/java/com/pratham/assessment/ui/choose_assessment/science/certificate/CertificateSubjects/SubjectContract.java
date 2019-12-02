@@ -9,10 +9,13 @@ public interface SubjectContract {
     public interface SubjectPresenter {
 
         public void getSubjectsFromDB(String selectedLang);
+
+        void pullCertificates();
     }
 
     public interface SubjectView {
        void setSubjects(List<AssessmentSubjectsExpandable> subjects);
+       void setSubjectToSpinner();
     }
 
 }

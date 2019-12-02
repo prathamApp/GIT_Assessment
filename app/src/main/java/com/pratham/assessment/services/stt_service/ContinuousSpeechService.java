@@ -128,7 +128,7 @@ public class ContinuousSpeechService implements RecognitionListener {
     public void onError(int error) {
         if (voiceStart) {
             resetSpeechRecognizer();
-            speech.startListening(recognizerIntent);
+//            speech.startListening(recognizerIntent);
 
             String message = "";
             if (error == SpeechRecognizer.ERROR_NETWORK_TIMEOUT) message = "network timeout";

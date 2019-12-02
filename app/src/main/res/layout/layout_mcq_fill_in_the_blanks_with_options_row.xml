@@ -10,30 +10,61 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_2sdp"
+        android:layout_gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0.7"
-            android:text="What will be the change in quality be the change in quality?" />
+            android:layout_weight="0.4"
+            android:gravity="center"
+            android:text="What will be the change in quality be will be the change in quality be the change in quality?" />
 
-        <ImageView
-            android:id="@+id/iv_question_image"
-            style="@style/CustomQuestionImageStyle"
-            android:layout_weight="0.5" />
+        <RelativeLayout
+            android:id="@+id/rl_question_img"
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.4"
+            >
 
-        <com.pratham.assessment.custom.gif_viewer.GifView
-            android:id="@+id/iv_question_gif"
-            style="@style/CustomQuestionImageStyle"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.5" />
+
+            <ImageView
+                android:id="@+id/iv_question_image"
+                style="@style/CustomQuestionImageStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:padding="@dimen/_10sdp" />
+
+            <com.pratham.assessment.custom.gif_viewer.GifView
+                android:id="@+id/iv_question_gif"
+                style="@style/CustomQuestionImageStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:padding="@dimen/_10sdp"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_view_question_img"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:background="@drawable/ripple_rectangle"
+                android:elevation="@dimen/_2sdp"
+                android:padding="0dp"
+                android:src="@drawable/ic_eye"
+                android:visibility="visible" />
+        </RelativeLayout>
+
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="@dimen/_5sdp"
             android:layout_weight="1">
 
             <RelativeLayout
@@ -53,9 +84,8 @@
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:alignmentMode="alignMargins"
-
                     android:columnCount="2" />
             </RelativeLayout>
         </ScrollView>

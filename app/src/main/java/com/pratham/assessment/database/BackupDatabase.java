@@ -26,9 +26,10 @@ public class BackupDatabase {
                     src.close();
                     dst.close();
                 }
-            } else {
+            } /*else {
                 //EventBus.getDefault().post(PermissionUtils.WRITE_PERMISSION);
-            }
+            }*/
+            DeleteSensitiveTablesFromBackupDB.deleteTables();
         } catch (Exception e) {
             e.printStackTrace();
         }

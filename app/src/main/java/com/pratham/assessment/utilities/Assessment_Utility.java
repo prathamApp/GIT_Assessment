@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.IntRange;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
@@ -61,8 +62,8 @@ import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
-import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.ui.login.MainActivity;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -239,6 +240,10 @@ public class Assessment_Utility {
         }
     }
 
+    public static String getDeviceId(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
     private static String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
@@ -354,7 +359,7 @@ public class Assessment_Utility {
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
                     .commit();
-        }else if (mActivity instanceof ResultActivity) {
+        } else if (mActivity instanceof ResultActivity) {
             ((ResultActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
@@ -498,7 +503,8 @@ public class Assessment_Utility {
         String word = avatars[new Random().nextInt(avatars.length)];
         return word;*/
     }
- public static String getRandomAvatarNames(Context context) {
+
+    public static String getRandomAvatarNames(Context context) {
         String[] drawables = {"b1.png", "b2.png", "b3.png",
                 "g1.png", "g2.png", "g3.png"};
         String a = drawables[new Random().nextInt(drawables.length)];
@@ -1161,12 +1167,12 @@ public class Assessment_Utility {
         String thePath = "no-path-found";
         String[] filePathColumn = {MediaStore.Images.Media.DISPLAY_NAME};
         Cursor cursor = mContext.getContentResolver().query(contentURI, filePathColumn, null, null, null);
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             thePath = cursor.getString(columnIndex);
         }
         cursor.close();
-        return  thePath;
+        return thePath;
 
         /*       String result;
         Cursor cursor = mContext.getContentResolver().query(contentURI, null,
@@ -1812,7 +1818,8 @@ public class Assessment_Utility {
             return null;
         }
     }
-    public static void showZoomDialog(Context context,String path, String localPath) {
+
+    public static void showZoomDialog(Context context, String path, String localPath) {
         ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
         zoomImageDialog.show();
     }

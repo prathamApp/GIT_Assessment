@@ -27,7 +27,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -56,7 +55,6 @@ import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentPatternDetails;
-import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.domain.DownloadMedia;
 import com.pratham.assessment.domain.ResultModalClass;
@@ -78,6 +76,7 @@ import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
+import com.robinhood.ticker.TickerView;
 
 import org.json.JSONArray;
 
@@ -89,7 +88,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -97,6 +95,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 
 public class ScienceAssessmentActivity extends BaseActivity implements DiscreteScrollView.OnItemChangedListener, TopicSelectListener, AssessmentAnswerListener, QuestionTrackerListener {
@@ -123,10 +125,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     public RelativeLayout rl_exam_info;
     @BindView(R.id.rl_que)
     public RelativeLayout rl_que;
-    List<AssessmentPaperPattern> exams = new ArrayList<>();
     List<String> examIDList = new ArrayList<>();
     List<String> topicIdList = new ArrayList<>();
-    List<AssessmentSubjects> subjects = new ArrayList<>();
     List<DownloadMedia> downloadMediaList;
     Intent serviceIntent;
     Fragment currentFragment;
@@ -152,7 +152,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     @BindView(R.id.tv_timer)
     TextView tv_timer;
     @BindView(R.id.btn_save_Assessment)
-    ImageButton btn_save_Assessment;
+    ImageView btn_save_Assessment;
     @BindView(R.id.btn_submit)
     Button btn_submit;
     @BindView(R.id.swipe_btn)
@@ -163,6 +163,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     TextureView texture_view;
     @BindView(R.id.iv_prev)
     ImageView iv_prev;
+    @BindView(R.id.txt_prev)
+    TextView txt_prev;
+    @BindView(R.id.txt_next)
+    TextView txt_next;
     @BindView(R.id.tv_exam_name)
     TextView tv_exam_name;
     @BindView(R.id.tv_marks)
@@ -173,6 +177,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     TextView tv_total_que;
     @BindView(R.id.frame_video_monitoring)
     FrameLayout frame_video_monitoring;
+
+    @BindView(R.id.tickerView)
+    TickerView tickerView;
+    @BindView(R.id.txt_question_cnt)
+    TextView txt_question_cnt;
+    boolean isEndTimeSet = false;
+
     int i = 0;
     int tick = 0;
     int totalMarks = 0, outOfMarks = 0;
@@ -198,6 +209,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         ButterKnife.bind(this);
         assessmentSession = "" + UUID.randomUUID().toString();
 //        Assessment_Constants.assessmentSession=assessmentSession;
+
+
         rl_que.setBackgroundColor(Assessment_Utility.selectedColor);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         supervisorId = getIntent().getStringExtra("crlId");
@@ -209,6 +222,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         if (Assessment_Constants.VIDEOMONITORING) {
             frame_video_monitoring.setVisibility(View.VISIBLE);
             btn_save_Assessment.setVisibility(View.GONE);
+            txt_next.setVisibility(View.GONE);
             serviceIntent = new Intent(getApplicationContext(), VideoMonitoringService.class);
         }
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -976,6 +990,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         scienceQuestionList.get(0).setStartTime(Assessment_Utility.GetCurrentDateTime());
 
         iv_prev.setVisibility(View.GONE);
+        txt_prev.setVisibility(View.GONE);
+        txt_question_cnt.setText("Question : " + "1" + "/" + scienceQuestionList.size());
 
         fragment_view_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -998,22 +1014,30 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 Assessment_Utility.HideInputKeypad(ScienceAssessmentActivity.this);
                 if (position == 0) {
                     iv_prev.setVisibility(View.GONE);
-                } else iv_prev.setVisibility(View.VISIBLE);
+                    txt_prev.setVisibility(View.GONE);
+                } else {
+                    iv_prev.setVisibility(View.VISIBLE);
+                    txt_prev.setVisibility(View.VISIBLE);
+                }
 
 //                if (!Assessment_Constants.VIDEOMONITORING) {
                 if (position == scienceQuestionList.size() - 1) {
                     showDoneAnimation();
                 } else {
                     if (!Assessment_Constants.VIDEOMONITORING) {
-                        btn_save_Assessment.setBackground(getResources().getDrawable(R.drawable.ripple_round));
-                        btn_save_Assessment.setImageDrawable(getResources().getDrawable(R.drawable.ic_next));
+//                        btn_save_Assessment.setBackground(getResources().getDrawable(R.drawable.ripple_round));
+                        btn_save_Assessment.setImageDrawable(getResources().getDrawable(R.drawable.ic_right_arrow));
                         btn_save_Assessment.setVisibility(View.VISIBLE);
+                        txt_next.setVisibility(View.VISIBLE);
                     } else {
                         btn_save_Assessment.setVisibility(View.GONE);
+                        txt_next.setVisibility(View.GONE);
                     }
 //                    }
                 }
                 queCnt = position;
+                txt_question_cnt.setText("Question : " + (position + 1) + "/" + scienceQuestionList.size());
+
                 if (currentFragment != null) {
                     currentFragment.onPause();
                 }
@@ -1075,24 +1099,33 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         animation = AnimationUtils.loadAnimation(this, R.anim.pop_out);
         btn_save_Assessment.startAnimation(animation);
         btn_save_Assessment.setVisibility(View.GONE);
+        txt_next.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                btn_save_Assessment.setBackgroundResource(android.R.color.transparent);
+//                btn_save_Assessment.setBackgroundResource(android.R.color.transparent);
                 if (scienceQuestionList.size() == (queCnt + 1)) {
-                    btn_save_Assessment.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_circle_36dp));
-                } else {
+                    btn_save_Assessment.setVisibility(View.GONE);
+//                    btn_save_Assessment.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_circle_36dp));
+                }/* else {
                     btn_save_Assessment.setBackground(getResources().getDrawable(R.drawable.ripple_round));
-                }
-                Animation animation = AnimationUtils.loadAnimation(ScienceAssessmentActivity.this, R.anim.pop_in);
+                }*/
+                Animation animation = AnimationUtils.loadAnimation(ScienceAssessmentActivity.this, R.anim.zoom_in);
                 if (!Assessment_Constants.VIDEOMONITORING) {
-                    btn_save_Assessment.setVisibility(View.VISIBLE);
+//                    btn_save_Assessment.setVisibility(View.VISIBLE);
                     btn_save_Assessment.startAnimation(animation);
-                    if (scienceQuestionList.size() == (queCnt + 1))
-                        btn_submit.setVisibility(View.GONE);
-                } else {
-                    if (scienceQuestionList.size() == (queCnt + 1))
+                    if (scienceQuestionList.size() == (queCnt + 1)) {
                         btn_submit.setVisibility(View.VISIBLE);
+                        btn_submit.startAnimation(animation);
+                        txt_next.setVisibility(View.GONE);
+                        dots_indicator.setVisibility(View.GONE);
+                    }
+                } else {
+                    if (scienceQuestionList.size() == (queCnt + 1)) {
+                        btn_submit.setVisibility(View.VISIBLE);
+                        dots_indicator.setVisibility(View.GONE);
+
+                    }
                 }
                 showSubmit = true;
             }
@@ -1143,9 +1176,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
         final long period = 1000;
         final int n = (int) (ExamTime * 60000 / period);
+        tickerView.setCharacterLists("" + ExamTime);
         final Timer examTimer = new Timer();
         circle_view.setMaximumValue(n);
-        examTimer.schedule(new TimerTask() {
+/*        examTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 //this repeats every 100 ms
@@ -1153,73 +1187,57 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                             /*   selectTopicDialog.timer.setText(String.valueOf(i)+"%");
-                                selectTopicDialog.timer.setText("" + time);
-                                selectTopicDialog*/
                             circle_view.setProgressValue(tick);
-                            Log.d("progress", "" + tick);
                         }
                     });
-//                        progressBar.setProgress(i);
                     tick++;
                 } else {
                     //closing the timer
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                                selectTopicDialog.dismiss();
-//                            new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                        selectTopicDialog.dismiss();
                             timesUp = true;
                             if (isActivityRunning) {
                                 try {
                                     AssessmentTimeUpDialog timeUpDialog = new AssessmentTimeUpDialog(ScienceAssessmentActivity.this);
                                     timeUpDialog.show();
-//                                            progressBarTimer.setProgress(0);
+                                    if (mCountDownTimer != null)
+                                        mCountDownTimer.cancel();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
-//                                }
-//                            }, 800);
                         }
                     });
                     examTimer.cancel();
                     examTimer.purge();
                 }
             }
-        }, 0, period);
+        }, 0, period);*/
 
 
         mCountDownTimer = new CountDownTimer(timer, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
-                tv_timer.setText(String.format("%02d:%02d",
+                tickerView.setText(String.format("%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))
                 ));
 
-                int timeRemaining = (int) ((millisUntilFinished * 100) / timer);
-//                Log.v("Log_tag", "Tick of Progress" + millisUntilFinished + ";;; " + timeRemaining);
-              /*  if (timeRemaining < 5)
-                    progressBarTimer.setProgressTintList(ColorStateList.valueOf(Color.RED));
-                else if (timeRemaining < 15)
-                    progressBarTimer.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorProgress15)));
-                else if (timeRemaining < 25)
-                    progressBarTimer.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorProgress25)));
-                else if (timeRemaining < 50)
-                    progressBarTimer.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorProgress50)));
-
-                progressBarTimer.setProgress(timeRemaining);*/
-
+                tv_timer.setText(String.format("%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))
+                ));
             }
 
             @Override
             public void onFinish() {
+                timesUp = true;
+                isEndTimeSet = true;
+                examEndTime = Assessment_Utility.GetCurrentDateTime();
                 if (isActivityRunning) {
                     try {
                         AssessmentTimeUpDialog timeUpDialog = new AssessmentTimeUpDialog(ScienceAssessmentActivity.this);
@@ -1660,7 +1678,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 downloadMedia.setPhotoUrl(filePath);
                 downloadMedia.setqId(scienceQuestionList.get(queCnt).getQid());
                 downloadMedia.setQtId(scienceQuestionList.get(queCnt).getQtid());
-                downloadMedia.setMediaType("answerVideo");
+                downloadMedia.setMediaType(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
                 downloadMedia.setPaperId(assessmentSession);
                 AppDatabase.getDatabaseInstance(this).getDownloadMediaDao().insert(downloadMedia);
 
@@ -1675,7 +1693,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 downloadMediaAudio.setPhotoUrl(answer);
                 downloadMediaAudio.setqId(scienceQuestionList.get(queCnt).getQid());
                 downloadMediaAudio.setQtId(scienceQuestionList.get(queCnt).getQtid());
-                downloadMediaAudio.setMediaType("answerAudio");
+                downloadMediaAudio.setMediaType(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
                 downloadMediaAudio.setPaperId(assessmentSession);
                 AppDatabase.getDatabaseInstance(this).getDownloadMediaDao().insert(downloadMediaAudio);
                 break;
@@ -1708,7 +1726,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                     imageMedia.setPhotoUrl(answer);
                     imageMedia.setqId(scienceQuestionList.get(queCnt).getQid());
                     imageMedia.setQtId(scienceQuestionList.get(queCnt).getQtid());
-                    imageMedia.setMediaType("answerImage");
+                    imageMedia.setMediaType(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
                     imageMedia.setPaperId(assessmentSession);
                     AppDatabase.getDatabaseInstance(this).getDownloadMediaDao().insert(imageMedia);
                 }
@@ -1745,9 +1763,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     @Override
     public void onSaveAssessmentClick() {
         stopService(new Intent(this, BkgdVideoRecordingService.class));
-        if (mCountDownTimer != null)
+        if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
-        examEndTime = Assessment_Utility.GetCurrentDateTime();
+        }
+        if (!timesUp) {
+            isEndTimeSet = true;
+            examEndTime = Assessment_Utility.GetCurrentDateTime();
+        }
         calculateMarks();
         skippedCnt = correctAnsCnt = wrongAnsCnt = 0;
         calculateCorrectWrongCount();
@@ -1909,9 +1931,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     protected void onResume() {
         super.onResume();
         if (timesUp) {
+            if (!isEndTimeSet)
+                examEndTime = Assessment_Utility.GetCurrentDateTime();
             if (isActivityRunning) {
                 AssessmentTimeUpDialog timeUpDialog = new AssessmentTimeUpDialog(this);
                 timeUpDialog.show();
+                if (mCountDownTimer != null)
+                    mCountDownTimer.cancel();
             }
         }
 //todo
@@ -1984,8 +2010,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         if (serviceIntent != null)
             startService(serviceIntent);
         String fileName = assessmentSession + ".mp4";
+        String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + fileName;
         if (VideoMonitoringService.prepareVideoRecorder(texture_view, fileName)) {
             VideoMonitoringService.startCapture();
+            DownloadMedia video = new DownloadMedia();
+            video.setMediaType(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+            video.setPhotoUrl(videoPath);
+            video.setPaperId(assessmentSession);
+            AppDatabase.getDatabaseInstance(this).getDownloadMediaDao().insert(video);
+
         } else {
             Assessment_Constants.VIDEOMONITORING = false;
             texture_view.setVisibility(View.GONE);

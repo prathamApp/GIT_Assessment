@@ -73,7 +73,6 @@ public class LanguageFragment extends Fragment {
 
 
     private void getLanguageData() {
-        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -120,6 +119,8 @@ public class LanguageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        progressDialog = new ProgressDialog(getActivity());
+
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             getLanguageData();
         } else {
@@ -130,7 +131,7 @@ public class LanguageFragment extends Fragment {
                 ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
                 ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
 
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
+//                getActivity().getSupportFragmentManager().popBackStackImmediate();
                 Toast.makeText(getActivity(), "Connect to internet to download languages", Toast.LENGTH_SHORT).show();
             } else setLanguageRecyclerView();
         }
