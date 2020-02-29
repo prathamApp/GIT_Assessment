@@ -16,7 +16,10 @@
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0.4" />
+            android:layout_weight="0.4"
+            app:autoSizeMaxTextSize="@dimen/_20sdp"
+            app:autoSizeMinTextSize="@dimen/_15sdp"
+            app:autoSizeTextType="uniform" />
 
         <ImageView
             android:id="@+id/iv_question_image"
@@ -56,6 +59,7 @@
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="Record Audio"
+                android:textColor="@color/white"
                 android:textSize="@dimen/_15sdp" />
 
             <ImageView

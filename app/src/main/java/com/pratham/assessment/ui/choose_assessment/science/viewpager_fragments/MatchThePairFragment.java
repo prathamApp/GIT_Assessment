@@ -2,16 +2,12 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,10 +19,14 @@ import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
-import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairDragDropAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -34,23 +34,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
-
+@EFragment(R.layout.layout_match_the_pair_row)
 public class MatchThePairFragment extends Fragment implements StartDragListener {
-    @BindView(R.id.tv_question)
+    @ViewById(R.id.tv_question)
     TextView question;
-    @BindView(R.id.iv_question_image)
+    @ViewById(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_gif)
+    @ViewById(R.id.iv_question_gif)
     GifView questionGif;
-    @BindView(R.id.rl_ans_options1)
+    @ViewById(R.id.rl_ans_options1)
     RecyclerView recyclerView1;
-    @BindView(R.id.rl_ans_options2)
+    @ViewById(R.id.rl_ans_options2)
     RecyclerView recyclerView2;
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
@@ -59,12 +57,22 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     private ScienceQuestion scienceQuestion;
     ItemTouchHelper touchHelper;
 
+    @AfterViews
+    public void init() {
+        if (getArguments() != null) {
+            pos = getArguments().getInt(POS, 0);
+            scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
+        }
+        setMatchPairQuestion();
+    }
+
+
     public MatchThePairFragment() {
         // Required empty public constructor
     }
 
     public static MatchThePairFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        MatchThePairFragment matchThePairFragment = new MatchThePairFragment();
+        MatchThePairFragment_ matchThePairFragment = new MatchThePairFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -72,7 +80,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
         return matchThePairFragment;
     }
 
-    @Override
+/*    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -93,10 +101,10 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         setMatchPairQuestion();
-    }
+    }*/
 
     public void setMatchPairQuestion() {
-
+        setOdiaFont(getActivity(), question);
         question.setText(scienceQuestion.getQname());
         final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -164,9 +172,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
 
         List<ScienceQuestionChoice> AnswerList = new ArrayList<>();
 
-        if (!scienceQuestion.getUserAnswer().
-
-                equalsIgnoreCase("")) {
+        if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
             String[] ansIds = scienceQuestion.getUserAnswer().split(",");
             for (int i = 0; i < ansIds.length; i++) {
                 if (ansIds[i].equalsIgnoreCase(scienceQuestion.getMatchingNameList().get(i).getQcid()))
@@ -207,16 +213,16 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
 
             }
 
-            DragDropAdapter dragDropAdapter = new DragDropAdapter(this, shuffledList, getActivity());
+            MatchPairDragDropAdapter matchPairDragDropAdapter = new MatchPairDragDropAdapter(this, shuffledList, getActivity());
             ItemTouchHelper.Callback callback =
-                    new ItemMoveCallback(dragDropAdapter);
+                    new ItemMoveCallback(matchPairDragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
             touchHelper.attachToRecyclerView(null);
             touchHelper.attachToRecyclerView(recyclerView2);
 
             LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext());
             recyclerView2.setLayoutManager(linearLayoutManager1);
-            recyclerView2.setAdapter(dragDropAdapter);
+            recyclerView2.setAdapter(matchPairDragDropAdapter);
             Log.d("wwwwwwwwwww", pairList.size() + "");
         }
 
@@ -226,6 +232,5 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     @Override
     public void requestDrag(RecyclerView.ViewHolder viewHolder) {
         touchHelper.startDrag(viewHolder);
-
     }
 }

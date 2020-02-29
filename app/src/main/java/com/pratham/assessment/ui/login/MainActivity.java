@@ -6,21 +6,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.pratham.assessment.BaseActivity;
+import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment_;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment;
 import com.pratham.assessment.interfaces.DataPushListener;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+
+@EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements DataPushListener {
 
-    @Override
+    @AfterViews
+    public void init(){
+        Assessment_Utility.showFragment(this, new AdminPanelFragment_(), R.id.frame_attendance,
+                null, AdminPanelFragment.class.getSimpleName());
+
+    }
+
+   /* @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Assessment_Utility.showFragment(this, new AdminPanelFragment(), R.id.frame_attendance,
                 null, AdminPanelFragment.class.getSimpleName());
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -39,7 +52,7 @@ public class MainActivity extends BaseActivity implements DataPushListener {
             getSupportFragmentManager().popBackStack();
         } else {
 //            startActivity(new Intent(this, MenuActivity.class));
-            startActivity(new Intent(this, SelectGroupActivity.class));
+            startActivity(new Intent(this, SelectGroupActivity_.class));
             finish();
         }
     }
@@ -50,7 +63,7 @@ public class MainActivity extends BaseActivity implements DataPushListener {
         for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
-        Assessment_Utility.showFragment(this, new AdminPanelFragment(), R.id.frame_attendance,
+        Assessment_Utility.showFragment(this, new AdminPanelFragment_(), R.id.frame_attendance,
                 null, AdminPanelFragment.class.getSimpleName());
 
     }

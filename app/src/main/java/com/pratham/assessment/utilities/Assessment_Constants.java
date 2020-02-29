@@ -34,6 +34,12 @@ public class Assessment_Constants {
     public static final String INTERNET_DOWNLOAD_RESOURCE_API = "http://prodigi.openiscool.org/api/pos/DownloadResource?resid=";
 
 
+    public static final String OTG_INSERTED = "OTG_INSERTED";
+    public static final String BACKUP_DB_COPIED = "BACKUP_DB_COPIED";
+    public static final String BACKUP_DB_NOT_COPIED = "backup_db_not_copied";
+    public static int TransferredImages = 0;
+
+
     public static final String PRATHAM_KOLIBRI_HOTSPOT = "prathamkolibri";
     public static String FACILITY_ID = "facility_id";
     public static final String USAGEDATA = "USAGEDATA";
@@ -78,13 +84,10 @@ public class Assessment_Constants {
     public static String STORE_DOWNLOADED_MEDIA_PATH = "/.Assessment/Content/Downloaded";
     public static String STORE_VIDEO_MONITORING_PATH = "/.Assessment/Content/VideoMonitoring";
     public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
-    public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING= "videoMonitoring";
+    public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO = "answerAudio";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE = "answerImage";
-
-
-
 
     public static final String KOLIBRI_BLOCK = "kolibri_block";
     public static final String SERVER_BLOCK = "server_block";
@@ -127,6 +130,23 @@ public class Assessment_Constants {
     public static String TAMIL_ID = "13";
     public static String TELUGU_ID = "14";
     public static String URDU_ID = "15";
+
+
+    //Assessment question types
+    public static final String MULTIPLE_CHOICE = "1";
+    public static final String MULTIPLE_SELECT = "2";
+    public static final String TRUE_FALSE = "3";
+    public static final String MATCHING_PAIR = "4";
+    public static final String FILL_IN_THE_BLANK_WITH_OPTION = "5";
+    public static final String FILL_IN_THE_BLANK = "6";
+    public static final String ARRANGE_SEQUENCE = "7";
+    public static final String VIDEO = "8";
+    public static final String AUDIO = "9";
+    public static final String KEYWORDS_QUESTION = "11";
+    public static final String IMAGE_ANSWER = "12";
+
+
+    public static final boolean isPracticeModeOn = true;
 
 
     public static enum URL {

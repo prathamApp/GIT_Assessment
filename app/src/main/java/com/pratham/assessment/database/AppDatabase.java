@@ -60,7 +60,7 @@ import com.pratham.assessment.domain.Village;
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
-        SupervisorData.class, DownloadMedia.class}, version = 3/*,exportSchema = false*/)
+        SupervisorData.class, DownloadMedia.class}, version = 4/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -127,7 +127,7 @@ public abstract class AppDatabase extends RoomDatabase {
         try {
             if (appDatabase == null) {
                 appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
-                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4)
                         .allowMainThreadQueries().build();
 
             }
@@ -167,6 +167,25 @@ public abstract class AppDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN Gender text");
                 database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN Age INTEGER not null DEFAULT 0");
                 Log.d("$$$", "MIGRATION_2_3After");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_3_4");
+            try {
+
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question4Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question5Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion4 text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion5 text");
+                Log.d("$$$", "MIGRATION_3_3After");
             } catch (Exception e) {
                 e.printStackTrace();
             }

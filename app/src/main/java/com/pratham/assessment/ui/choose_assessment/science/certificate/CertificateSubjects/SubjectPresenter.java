@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
@@ -18,6 +19,7 @@ import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -26,7 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
+@EBean
 public class SubjectPresenter implements SubjectContract.SubjectPresenter {
     Context context;
     SubjectContract.SubjectView subjectView;
@@ -37,9 +39,8 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
     List<AssessmentLanguages> assessmentLanguagesList;
 
 
-    public SubjectPresenter(Context context, SubjectContract.SubjectView view) {
+    public SubjectPresenter(Context context) {
         this.context = context;
-        subjectView = view;
     }
 
     @Override
@@ -51,7 +52,9 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
 //        subjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
         AllSubjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(langId);
-        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, Assessment_Constants.currentStudentID);
+        String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+//        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, Assessment_Constants.currentStudentID);
+        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, currentStudentID);
         for (int j = 0; j < AllSubjects.size(); j++) {
             for (int i = 0; i < attemptedSubjectIds.size(); i++) {
                 if (attemptedSubjectIds.get(i).equalsIgnoreCase(AllSubjects.get(j).getSubjectid()))
@@ -60,7 +63,8 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         }
 
         for (AssessmentSubjects assessmentSubjects : subjects) {
-            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), Assessment_Constants.currentStudentID, langId);
+//            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), Assessment_Constants.currentStudentID, langId);
+            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), currentStudentID, langId);
             Collections.sort(assessmentPaperForPush, new Comparator<AssessmentPaperForPush>() {
                 @Override
                 public int compare(AssessmentPaperForPush o1, AssessmentPaperForPush o2) {
@@ -84,7 +88,10 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
     @Override
     public void pullCertificates() {
-        String url = APIs.pullCertificateByStudIdAPI + Assessment_Constants.currentStudentID;
+//        String url = APIs.pullCertificateByStudIdAPI + Assessment_Constants.currentStudentID;
+        String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+
+        String url = APIs.pullCertificateByStudIdAPI + currentStudentID;
         progressDialog = new ProgressDialog(context);
         progressDialog.show();
         progressDialog.setCancelable(false);
@@ -149,6 +156,12 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                         progressDialog.dismiss();
                     }
                 });
+    }
+
+    @Override
+    public void setView(SubjectContract.SubjectView subjectView) {
+        this.subjectView = subjectView;
+
     }
 
     private void savePaperToDB() {

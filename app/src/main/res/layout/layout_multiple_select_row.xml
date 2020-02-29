@@ -16,7 +16,10 @@
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"
+            app:autoSizeMaxTextSize="@dimen/_20sdp"
+            app:autoSizeMinTextSize="@dimen/_15sdp"
+            app:autoSizeTextType="uniform"/>
 
         <ImageView
             android:id="@+id/iv_question_image"

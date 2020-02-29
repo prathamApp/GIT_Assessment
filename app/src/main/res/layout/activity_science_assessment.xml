@@ -253,6 +253,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/ll_que_cnt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_nav">
@@ -274,11 +275,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/parent_dots_indicator"
-            android:layout_below="@id/rl_nav"
+            android:layout_below="@id/ll_que_cnt"
 
             android:orientation="vertical">
 
-            <android.support.v4.view.ViewPager
+            <com.pratham.assessment.custom.NonSwipeableViewPager
                 android:id="@+id/fragment_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

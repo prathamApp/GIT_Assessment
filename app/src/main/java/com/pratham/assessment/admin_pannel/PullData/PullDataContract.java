@@ -58,7 +58,10 @@ public interface PullDataContract {
         public void onSaveClick();
 
         void checkConnectivity();
+
         void loadPrgramsSpinner();
+
+        void setView(PullDataContract.PullDataView pullDataView);
 
     }
 }

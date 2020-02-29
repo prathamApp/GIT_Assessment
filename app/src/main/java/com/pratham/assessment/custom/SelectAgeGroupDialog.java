@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup;
+import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup_;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -54,7 +55,7 @@ public class SelectAgeGroupDialog extends Dialog {
         this.dismiss();
         Bundle bundle = new Bundle();
         bundle.putBoolean(Assessment_Constants.GROUP_AGE_BELOW_7, true);
-        Assessment_Utility.showFragment(activity, new FragmentSelectGroup(), R.id.frame_group,
+        Assessment_Utility.showFragment(activity, new FragmentSelectGroup_(), R.id.frame_group,
                 bundle, FragmentSelectGroup.class.getSimpleName());
     }
 
@@ -63,7 +64,7 @@ public class SelectAgeGroupDialog extends Dialog {
         this.dismiss();
         Bundle bundle = new Bundle();
         bundle.putBoolean(Assessment_Constants.GROUP_AGE_ABOVE_7, true);
-        Assessment_Utility.showFragment(activity, new FragmentSelectGroup(), R.id.frame_group,
+        Assessment_Utility.showFragment(activity, new FragmentSelectGroup_(), R.id.frame_group,
                 bundle, FragmentSelectGroup.class.getSimpleName());
     }
 

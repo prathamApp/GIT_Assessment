@@ -23,14 +23,11 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
-import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,7 +109,7 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
                 shuffledList = scienceQuestion.getMatchingNameList();
             }
 
-         /*   DragDropAdapter dragDropAdapter = new DragDropAdapter(this, shuffledList, context, scienceAdapter);
+         /*   MatchPairDragDropAdapter dragDropAdapter = new MatchPairDragDropAdapter(this, shuffledList, context, scienceAdapter);
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);

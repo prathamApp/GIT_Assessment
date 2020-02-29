@@ -2,12 +2,8 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -24,26 +20,29 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.Assessment
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 
+@EFragment(R.layout.layout_true_false_row)
 public class TrueFalseFragment extends Fragment {
-    @BindView(R.id.tv_question)
+    @ViewById(R.id.tv_question)
     TextView question;
-    @BindView(R.id.rg_true_false)
+    @ViewById(R.id.rg_true_false)
     RadioGroup rg_true_false;
-    @BindView(R.id.iv_question_image)
+    @ViewById(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_gif)
+    @ViewById(R.id.iv_question_gif)
     GifView questionGif;
-    @BindView(R.id.rb_true)
+    @ViewById(R.id.rb_true)
     Button radioButtonTrue;
-    @BindView(R.id.rb_false)
+    @ViewById(R.id.rb_false)
     Button radioButtonFalse;
     AssessmentAnswerListener assessmentAnswerListener;
 
@@ -57,8 +56,20 @@ public class TrueFalseFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @AfterViews
+    public void init(){
+        if (getArguments() != null) {
+            pos = getArguments().getInt(POS, 0);
+            scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
+            assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+
+        }
+        setTrueFalseQuestion();
+
+    }
+
     public static TrueFalseFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        TrueFalseFragment trueFalseFragment = new TrueFalseFragment();
+        TrueFalseFragment_ trueFalseFragment = new TrueFalseFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -66,6 +77,7 @@ public class TrueFalseFragment extends Fragment {
         return trueFalseFragment;
     }
 
+/*
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,10 +102,11 @@ public class TrueFalseFragment extends Fragment {
         ButterKnife.bind(this, view);
         setTrueFalseQuestion();
     }
+*/
 
     public void setTrueFalseQuestion() {
 
-
+        setOdiaFont(getActivity(), question);
         question.setText(scienceQuestion.getQname());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);

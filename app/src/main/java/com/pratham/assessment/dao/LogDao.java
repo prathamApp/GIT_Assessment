@@ -15,6 +15,9 @@ public interface LogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertLog(Modal_Log log);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertAllLogs(List<Modal_Log> log);
+
     @Query("DELETE FROM Logs")
     public void deleteLogs();
 

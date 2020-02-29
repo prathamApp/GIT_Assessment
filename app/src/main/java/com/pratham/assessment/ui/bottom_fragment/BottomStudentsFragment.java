@@ -2,45 +2,33 @@ package com.pratham.assessment.ui.bottom_fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Rect;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.custom.progress_layout.ProgressLayout;
 import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -54,11 +42,15 @@ import com.pratham.assessment.interfaces.SplashInterface;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.services.LocationService;
 import com.pratham.assessment.ui.bottom_fragment.add_student.AddStudentFragment;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -69,19 +61,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 import static android.content.Context.ACTIVITY_SERVICE;
 
+/*import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;*/
 
+@EFragment(R.layout.student_list_fragment)
 public class BottomStudentsFragment extends BottomSheetDialogFragment implements StudentClickListener, SplashInterface {
 
 
-    @BindView(R.id.students_recyclerView)
+    @ViewById(R.id.students_recyclerView)
     RecyclerView rl_students;
-    @BindView(R.id.add_student)
+    @ViewById(R.id.add_student)
     Button add_student;
    /* @BindView(R.id.btn_download_all_data)
     Button btn_download_all_data;*/
@@ -91,7 +83,31 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
     StudentsAdapter adapter;
     Gson gson;
 
-    @Nullable
+    @AfterViews
+    public void init() {
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        addAvatarsInList();
+        studentList = new ArrayList<>();
+        gson = new Gson();
+        adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        rl_students.setLayoutManager(mLayoutManager);
+        rl_students.setAdapter(adapter);
+
+//        btn_download_all_data.setVisibility(View.GONE);
+
+      /*  if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork())
+            if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
+                btn_download_all_data.setVisibility(View.VISIBLE);
+            }*/
+        showStudents();
+    }
+
+
+  /*  @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.student_list_fragment, container, false);
@@ -117,12 +133,12 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 //        btn_download_all_data.setVisibility(View.GONE);
 
-      /*  if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork())
+      *//*  if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork())
             if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
                 btn_download_all_data.setVisibility(View.VISIBLE);
-            }*/
+            }*//*
         showStudents();
-    }
+    }*/
 
     private void setStudentsToRecycler() {
         adapter.notifyDataSetChanged();
@@ -388,7 +404,10 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
             status = new Status();
             status.setStatusKey("apkType");
-            status.setValue("");
+            if (AssessmentApplication.isTablet)
+                status.setValue("Tablet");
+            else status.setValue("Smart phone");
+
             appDatabase.getStatusDao().insert(status);
 
             status = new Status();
@@ -492,6 +511,47 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             status.setValue(Assessment_Utility.getDeviceSerialID());
             appDatabase.getStatusDao().insert(status);
 
+
+            status = new Status();
+            status.setStatusKey("OsVersionName");
+            status.setValue(Assessment_Utility.getOSVersion());
+            appDatabase.getStatusDao().insert(status);
+
+            status = new Status();
+            status.setStatusKey("OsVersionNum");
+            status.setValue(Assessment_Utility.getOSVersionNo() + "");
+            appDatabase.getStatusDao().insert(status);
+
+            status = new Status();
+            status.setStatusKey("AvailableStorage");
+            status.setValue(Assessment_Utility.getAvailableStorage());
+            appDatabase.getStatusDao().insert(status);
+
+            status = new Status();
+            status.setStatusKey("ScreenResolution");
+            status.setValue(Assessment_Utility.getScreenResolution((AppCompatActivity) getActivity()));
+            appDatabase.getStatusDao().insert(status);
+
+            status = new Status();
+            status.setStatusKey("Manufacturer");
+            status.setValue(Assessment_Utility.getManufacturer());
+            appDatabase.getStatusDao().insert(status);
+
+            status = new Status();
+            status.setStatusKey("Model");
+            status.setValue(Assessment_Utility.getModel());
+            appDatabase.getStatusDao().insert(status);
+
+            status = new Status();
+            status.setStatusKey("ApiLevel");
+            status.setValue(Assessment_Utility.getApiLevel() + "");
+            appDatabase.getStatusDao().insert(status);
+
+            status = new Status();
+            status.setStatusKey("InternalStorageSize");
+            status.setValue(Assessment_Utility.getInternalStorageSize() + "");
+            appDatabase.getStatusDao().insert(status);
+
             WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo wInfo = wifiManager.getConnectionInfo();
             String macAddress = wInfo.getMacAddress();
@@ -507,7 +567,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 //            getSdCardPath();
             requestLocation();
 
-            FastSave.getInstance().saveBoolean(Assessment_Constants.INITIAL_ENTRIES, true);
+            //todo uncomment
+//            FastSave.getInstance().saveBoolean(Assessment_Constants.INITIAL_ENTRIES, true);
 
 
         } catch (Exception e) {
@@ -659,7 +720,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         }
     }
 
-    @OnClick(R.id.add_student)
+    @Click(R.id.add_student)
     public void addStudent() {
         SplashActivity.fragmentAddStudentOpenFlg = true;
         AddStudentFragment addStudentFragment = AddStudentFragment.newInstance(this);
@@ -751,9 +812,15 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                     attendance.setSentFlag(0);
 
                     Assessment_Constants.currentStudentID = studentId;
+                    FastSave.getInstance().saveString("currentStudentID", studentId);
+
                     Assessment_Constants.currentStudentName = studentName;
+                    FastSave.getInstance().saveString("currentStudentName", studentName);
+
                     AppDatabase.getDatabaseInstance(getActivity()).getAttendanceDao().insert(attendance);
                     Assessment_Constants.currentSession = currentSession;
+                    FastSave.getInstance().saveString("currentSession", currentSession);
+
 
                     Session startSesion = new Session();
                     startSesion.setSessionID("" + currentSession);
@@ -784,14 +851,13 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                 super.onPostExecute(o);
                 dismissProgressDialog();
 //                Assessment_Constants.ASSESSMENT_TYPE = "";
-                startActivity(new Intent(getActivity(), ChooseAssessmentActivity.class));
+                startActivity(new Intent(getActivity(), ChooseAssessmentActivity_.class));
                 getActivity().finish();
 
 //                startActivity(new Intent(getActivity(), ChooseLevelActivity.class));
             }
         }.execute();
     }
-
 
 
     /* private void getStudentData(final String requestType, String url, String studentID) {

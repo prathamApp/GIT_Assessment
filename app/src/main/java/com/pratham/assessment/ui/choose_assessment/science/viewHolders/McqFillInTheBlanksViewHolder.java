@@ -3,7 +3,6 @@ package com.pratham.assessment.ui.choose_assessment.science.viewHolders;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -28,10 +27,8 @@ import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
@@ -63,7 +60,7 @@ public class McqFillInTheBlanksViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
         this.context = context;
         questionTypeListener = scienceAdapter;
-        assessmentAnswerListener=(ScienceAssessmentActivity)context;
+        assessmentAnswerListener = (ScienceAssessmentActivity) context;
     }
 
     public void setMcqsQuestion(ScienceQuestion scienceQuestion1, int pos) {

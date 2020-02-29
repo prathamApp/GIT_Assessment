@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -23,11 +22,8 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.ui.choose_assessment.science.adapters.DragDropAdapter;
-import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +81,7 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder  implemen
                 list1.add(pairList.get(p).getChoicename());
             }
 
-           /* DragDropAdapter dragDropAdapter = new DragDropAdapter(this, list1, context, scienceAdapter);
+           /* MatchPairDragDropAdapter dragDropAdapter = new MatchPairDragDropAdapter(this, list1, context, scienceAdapter);
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);

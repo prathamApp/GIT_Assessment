@@ -5,16 +5,12 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,28 +29,31 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.Assessment
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.viewpagerAdapter;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
+@EFragment(R.layout.layout_fill_in_the_blanks_wo_option_row)
 public class FillInTheBlanksWithoutOptionFragment extends Fragment implements STT_Result {
 
-    @BindView(R.id.tv_question)
+    @ViewById(R.id.tv_question)
     TextView question;
-    @BindView(R.id.iv_question_image)
+    @ViewById(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_gif)
+    @ViewById(R.id.iv_question_gif)
     GifView questionGif;
-    @BindView(R.id.et_answer)
+    @ViewById(R.id.et_answer)
     EditText etAnswer;
-    @BindView(R.id.ib_mic)
+    @ViewById(R.id.ib_mic)
     ImageButton ib_mic;
 
     ContinuousSpeechService speechService;
@@ -78,9 +77,22 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         // Required empty public constructor
     }
 
+    @AfterViews
+    public void init() {
+        if (getArguments() != null) {
+            pos = getArguments().getInt(POS, 0);
+            scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
+            assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+            context = getActivity();
+            speechService = new ContinuousSpeechService(context, this);
+            speechService.resetSpeechRecognizer();
+        }
+        question.setMovementMethod(new ScrollingMovementMethod());
+        setFillInTheBlanksQuestion();
+    }
 
     public static FillInTheBlanksWithoutOptionFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        FillInTheBlanksWithoutOptionFragment fragment = new FillInTheBlanksWithoutOptionFragment();
+        FillInTheBlanksWithoutOptionFragment_ fragment = new FillInTheBlanksWithoutOptionFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -89,7 +101,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         return fragment;
     }
 
-    @Override
+   /* @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -116,7 +128,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         ButterKnife.bind(this, view);
         question.setMovementMethod(new ScrollingMovementMethod());
         setFillInTheBlanksQuestion();
-    }
+    }*/
 
     private void reInitCurrentItems() {
         etAnswer = viewpagerAdapter.getCurrentFragment().getView().findViewById(R.id.et_answer);
@@ -138,6 +150,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         etAnswer.setTextColor(Assessment_Utility.selectedColor);
         etAnswer.setText(scienceQuestion.getUserAnswer());
         question.setText(scienceQuestion.getQname());
+        setOdiaFont(getActivity(), question);
+
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -225,7 +239,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     }
 
 
-    @OnClick(R.id.ib_mic)
+    @Click(R.id.ib_mic)
     public void onMicClicked() {
         callSTT();
     }
@@ -244,10 +258,13 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
 
 
     public void micPressed(int micPressed) {
-        if (micPressed == 0) {
-            ib_mic.setImageResource(R.drawable.ic_mic_24dp);
-        } else if (micPressed == 1) {
-            ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);
+        if (ib_mic != null) {
+            if (micPressed == 0) {
+                if (ib_mic != null)
+                    ib_mic.setImageResource(R.drawable.ic_mic_24dp);
+            } else if (micPressed == 1) {
+                ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);
+            }
         }
     }
 

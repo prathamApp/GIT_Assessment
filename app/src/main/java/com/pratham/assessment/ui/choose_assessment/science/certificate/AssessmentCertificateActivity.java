@@ -14,6 +14,7 @@ import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSubjectsFragment;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSubjectsFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.text.ParseException;
@@ -23,7 +24,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 public class AssessmentCertificateActivity extends BaseActivity {
     @BindView(R.id.spinner_sub)
     Spinner spinnerSubject;
@@ -60,8 +60,8 @@ public class AssessmentCertificateActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
 
-        Assessment_Utility.showFragment(this, new CertificateSubjectsFragment(),
-                R.id.frame_certificate, null, CertificateSubjectsFragment.class.getSimpleName());
+        Assessment_Utility.showFragment(this, new CertificateSubjectsFragment_(),
+                R.id.frame_certificate, null, CertificateSubjectsFragment_.class.getSimpleName());
 
      /*   presenter = new AssessmentCertificatePresenterImpl(this);
         presenter.getStudent(Assessment_Constants.currentStudentID);

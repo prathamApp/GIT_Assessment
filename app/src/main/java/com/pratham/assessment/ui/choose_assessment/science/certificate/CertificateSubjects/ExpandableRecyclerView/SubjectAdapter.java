@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
@@ -74,7 +75,7 @@ public class SubjectAdapter extends ExpandableRecyclerAdapter<SubjectViewHolder,
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
-                    Assessment_Utility.showFragment((Activity) mContext, new CertificateFragment(), R.id.frame_certificate, bundle, CertificateFragment.class.getSimpleName());
+                    Assessment_Utility.showFragment((Activity) mContext, new CertificateFragment_(), R.id.frame_certificate, bundle, CertificateFragment.class.getSimpleName());
                 }
             });
         }

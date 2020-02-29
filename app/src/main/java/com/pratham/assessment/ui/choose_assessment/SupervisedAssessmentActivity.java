@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,33 +18,34 @@ import android.widget.TextView;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.ece.ECEActivity;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.ece.ECEActivity_;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.utilities.Assessment_Constants;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-import static com.pratham.assessment.utilities.Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH;
-import static com.pratham.assessment.utilities.Assessment_Constants.assessmentSession;
-
+@EActivity(R.layout.activity_supervised_assessment)
 public class SupervisedAssessmentActivity extends BaseActivity {
-    @BindView(R.id.submitBtn)
+    @ViewById(R.id.submitBtn)
     Button submitBtn;
-    @BindView(R.id.btn_camera)
+    @ViewById(R.id.btn_camera)
     ImageButton btn_camera;
-    @BindView(R.id.supervisor_name)
+    @ViewById(R.id.supervisor_name)
     TextView supervisor_name;
-    @BindView(R.id.iv_image)
+    @ViewById(R.id.iv_image)
     ImageView iv_image;
 
     String imageName = "";
@@ -55,11 +54,8 @@ public class SupervisedAssessmentActivity extends BaseActivity {
     //    String subId = "";
     private static final int CAMERA_REQUEST = 1888;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supervised_assessment);
-        ButterKnife.bind(this);
+    @AfterViews
+    public void init() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        supervisorId = getIntent().getStringExtra("crlId");
         supervisorId = "" + AssessmentApplication.getUniqueID();
@@ -73,7 +69,25 @@ public class SupervisedAssessmentActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.btn_camera)
+  /*  @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_supervised_assessment);
+        ButterKnife.bind(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        supervisorId = getIntent().getStringExtra("crlId");
+        supervisorId = "" + AssessmentApplication.getUniqueID();
+
+//        subId = getIntent().getStringExtra("subId");
+        if (Assessment_Constants.SELECTED_SUBJECT.equals("ece")) {
+            goToAssessment();
+        } else {
+           *//* Crl crl = AppDatabase.getDatabaseInstance(this).getCrlDao().getCrl(supervisorId);
+            supervisor_name.setText(crl.getFirstName() + " " + crl.getLastName());*//*
+        }
+    }*/
+
+    @Click(R.id.btn_camera)
     public void openCamera() {
         imageName = supervisorId + ".jpg";
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -97,7 +111,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.submitBtn)
+    @Click(R.id.submitBtn)
     public void submitSupervisorData() {
         String sName = "" + supervisor_name.getText();
         if (isPhotoSaved) {
@@ -123,22 +137,28 @@ public class SupervisedAssessmentActivity extends BaseActivity {
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
-                    assessmentSession = "" + AssessmentApplication.getUniqueID();
+//                    String uID = "" + AssessmentApplication.getUniqueID();
+//                    FastSave.getInstance().saveString("assessmentSession", uID);
+
+//                    assessmentSession = "" + uID;
                     SupervisorData supervisorData = new SupervisorData();
                     supervisorData.setSupervisorId(supervisorID);
                     supervisorData.setSupervisorName(sName);
-                    supervisorData.setAssessmentSessionId(assessmentSession);
+                    String currentSession = FastSave.getInstance().getString("currentSession", "");
+
+//                    supervisorData.setAssessmentSessionId(assessmentSession);
+                    supervisorData.setAssessmentSessionId(currentSession);
                     supervisorData.setSupervisorPhoto(supervisorPhoto);
 
                     AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getSupervisorDataDao().insert(supervisorData);
                     BackupDatabase.backup(SupervisedAssessmentActivity.this);
 
-                    AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().updateValue("AssessmentSession", "" + assessmentSession);
+                    AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().updateValue("currentSession", "" + currentSession);
 //                    Assessment_Constants.assessmentFlag = true;
 
-                    String AppStartDateTime = AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().getValue("AppStartDateTime");
+                /*    String AppStartDateTime = AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().getValue("AppStartDateTime");
                     Session startSesion = new Session();
-                    startSesion.setSessionID("" + assessmentSession);
+                    startSesion.setSessionID("" + currentSession);
                     String timerTime = AssessmentApplication.getCurrentDateTime(false, AppStartDateTime);
                     Log.d("doInBackground", "--------------------------------------------doInBackground : " + timerTime);
                     startSesion.setFromDate(timerTime);
@@ -146,7 +166,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
                     startSesion.setSentFlag(0);
 //                    Assessment_Constants.currentsupervisorID = "" + supervisorID;
                     AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getSessionDao().insert(startSesion);
-
+*/
 //                    getStudents();
                     goToAssessment();
                     return null;
@@ -161,11 +181,14 @@ public class SupervisedAssessmentActivity extends BaseActivity {
 
     private void goToAssessment() {
         if (Assessment_Constants.SELECTED_SUBJECT.equalsIgnoreCase("ece")) {
-            String assessmentSession = "" + UUID.randomUUID().toString();
-            Assessment_Constants.assessmentSession = "test-" + assessmentSession;
+            String unique_assessmentSession = "" + UUID.randomUUID().toString();
+            Assessment_Constants.assessmentSession = "test-" + unique_assessmentSession;
+            FastSave.getInstance().saveString("assessmentSession", unique_assessmentSession);
+
             try {
                 Session startSesion = new Session();
-                startSesion.setSessionID("" + Assessment_Constants.assessmentSession);
+//                startSesion.setSessionID("" + Assessment_Constants.assessmentSession);
+                startSesion.setSessionID("" + unique_assessmentSession);
                 String timerTime = AssessmentApplication.getCurrentDateTime(false, AssessmentApplication.getCurrentDateTime());
                 startSesion.setFromDate(timerTime);
                 startSesion.setToDate("NA");
@@ -175,7 +198,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
                 e.printStackTrace();
             }
 //            presenter.startAssessSession();
-            Intent intent = new Intent(SupervisedAssessmentActivity.this, ECEActivity.class);
+            Intent intent = new Intent(SupervisedAssessmentActivity.this, ECEActivity_.class);
             intent.putExtra("resId", "9962");
             intent.putExtra("crlId", supervisorId);
             startActivity(intent);
@@ -188,7 +211,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
             startActivity(intent);
             finish();
         }*/ else {
-            Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);
+            Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity_.class);
             startActivity(intent);
             finish();
             /*Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);
@@ -209,7 +232,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
 */
             File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH);
             if (!direct.exists()) direct.mkdir();
-             direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH);
+            direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH);
             if (!direct.exists()) direct.mkdir();
 
             File file = new File(direct, fileName);

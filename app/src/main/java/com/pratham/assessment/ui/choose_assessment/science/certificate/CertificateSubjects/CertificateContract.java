@@ -6,9 +6,11 @@ public interface CertificateContract {
 
 //        void getScoreData(String paperId);
 
-        float getRating(String level,String paperId);
+        float getRating(String level, String paperId);
 
 //        void getPaper(String examId,String subjectid);
+
+        void setView(CertificateContract.CertificateView certificateView);
     }
 
     interface CertificateView {

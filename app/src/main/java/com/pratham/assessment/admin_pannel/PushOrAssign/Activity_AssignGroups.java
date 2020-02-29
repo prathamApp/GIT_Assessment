@@ -25,35 +25,39 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Village;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity_;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
+
+@EActivity(R.layout.activity_assign_groups)
 public class Activity_AssignGroups extends BaseActivity {
 
-    @BindView(R.id.spinner_SelectState)
+    @ViewById(R.id.spinner_SelectState)
     Spinner spinner_SelectState;
-    @BindView(R.id.spinner_SelectBlock)
+    @ViewById(R.id.spinner_SelectBlock)
     Spinner spinner_SelectBlock;
-    @BindView(R.id.spinner_selectVillage)
+    @ViewById(R.id.spinner_selectVillage)
     Spinner spinner_selectVillage;
 
-    @BindView(R.id.assignGroup1)
+    @ViewById(R.id.assignGroup1)
     LinearLayout assignGroup1;
-    @BindView(R.id.assignGroup2)
+    @ViewById(R.id.assignGroup2)
     LinearLayout assignGroup2;
-    @BindView(R.id.LinearLayoutGroups)
+    @ViewById(R.id.LinearLayoutGroups)
     LinearLayout LinearLayoutGroups;
 
-    @BindView(R.id.allocateGroups)
+    @ViewById(R.id.allocateGroups)
     Button allocateGroups;
 
     Boolean isAssigned = false;
@@ -65,14 +69,20 @@ public class Activity_AssignGroups extends BaseActivity {
     private ProgressDialog progress;
 
 
-    @Override
+    @AfterViews
+    public void init(){
+        initializeStatesSpinner();
+
+    }
+
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assign_groups);
         ButterKnife.bind(this);
 
         initializeStatesSpinner();
-    }
+    }*/
 
     @Override
     protected void onResume() {
@@ -292,7 +302,7 @@ public class Activity_AssignGroups extends BaseActivity {
     }
 
     // Assign Groups
-    @OnClick(R.id.allocateGroups)
+    @Click(R.id.allocateGroups)
     public void assignButtonClick() {
         try {
             group1 = group2 = group3 = group4 = group5 = "0";
@@ -374,7 +384,7 @@ public class Activity_AssignGroups extends BaseActivity {
                                     for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                                         fm.popBackStack();
                                     }*/
-                                    startActivity(new Intent(Activity_AssignGroups.this, SelectGroupActivity.class));
+                                    startActivity(new Intent(Activity_AssignGroups.this, SelectGroupActivity_.class));
                                     finish();
                                     onBackPressed();
                                 }

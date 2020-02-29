@@ -2,12 +2,11 @@ package com.pratham.assessment.ui.choose_assessment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,9 +28,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
@@ -43,57 +39,58 @@ import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment;
+import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
-import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
-import com.pratham.assessment.ui.splash_activity.SplashActivity;
-import com.pratham.assessment.utilities.APIs;
+import com.pratham.assessment.ui.splash_activity.SplashActivity_;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
+@EActivity(R.layout.activity_choose_assessment)
 public class ChooseAssessmentActivity extends BaseActivity implements
         ChoseAssessmentClicked, ChooseAssessmentContract.ChooseAssessmentView {
-
+    @Bean(ChooseAssessmentPresenter.class)
     ChooseAssessmentContract.ChooseAssessmentPresenter presenter;
 
-    @BindView(R.id.rl_Profile)
+    @ViewById(R.id.rl_Profile)
     RelativeLayout rl_Profile;
-    @BindView(R.id.btn_Profile)
+    @ViewById(R.id.btn_Profile)
     ImageButton btn_Profile;
-    @BindView(R.id.spinner_choose_lang)
+    @ViewById(R.id.spinner_choose_lang)
     Spinner spinner_choose_lang;
-    @BindView(R.id.drawer_layout)
+    @ViewById(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @BindView(R.id.navigation)
+    @ViewById(R.id.navigation)
     NavigationView navigation;
-    @BindView(R.id.rl_choose_sub)
+    @ViewById(R.id.rl_choose_sub)
     public RelativeLayout rlSubject;
-    @BindView(R.id.nav_frame_layout)
+    @ViewById(R.id.nav_frame_layout)
     public FrameLayout frameLayout;
-    @BindView(R.id.tv_choose_assessment)
+    @ViewById(R.id.tv_choose_assessment)
     TextView tv_choose_assessment;
-    @BindView(R.id.menu_icon)
+    @ViewById(R.id.menu_icon)
     ImageButton menu_icon;
 
-    @BindView(R.id.toggle_btn)
+    @ViewById(R.id.toggle_btn)
     public SwipeableButton toggle_btn;
 
     private RecyclerView recyclerView;
@@ -102,13 +99,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     ECELoginDialog eceLoginDialog;
     Crl loggedCrl;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_assessment);
-        ButterKnife.bind(this);
-        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
+    @AfterViews
+    public void init() {
+        String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+//        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
+        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(currentStudentID);
         View view = navigation.getHeaderView(0);
         TextView name = view.findViewById(R.id.userName);
         name.setText(studentName);
@@ -136,7 +131,108 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         eceLoginDialog = new ECELoginDialog(this);
 
 
-        presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this, this);
+//        presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this);
+        contentTableList = new ArrayList<>();
+
+
+        recyclerView = findViewById(R.id.choose_subject_recycler);
+        chooseAssessAdapter = new ChooseAssessmentAdapter(this, contentTableList, this);
+//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, this), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(chooseAssessAdapter);
+
+        presenter.copyListData();
+
+
+        navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_Subject:
+                        menu_icon.setImageDrawable(getDrawable(R.drawable.ic_menu));
+                        rlSubject.setVisibility(View.VISIBLE);
+                        frameLayout.setVisibility(View.GONE);
+                        tv_choose_assessment.setText("Choose subject");
+                        toggle_btn.setVisibility(View.VISIBLE);
+                        clearContentList();
+                        presenter.copyListData();
+
+                        break;
+
+                    case R.id.menu_certificate:
+                        startActivity(new Intent(ChooseAssessmentActivity.this, AssessmentCertificateActivity.class));
+                        break;
+
+                    case R.id.menu_language:
+                        toggle_btn.setVisibility(View.GONE);
+
+                        if (toggle_btn.getVisibility() != View.VISIBLE)
+                            menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
+                        else
+                            menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
+
+                        rlSubject.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.VISIBLE);
+                        Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new LanguageFragment_(), R.id.nav_frame_layout,
+                                null, LanguageFragment_.class.getSimpleName());
+                        break;
+                    case R.id.menu_download_offline_language:
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.setComponent(new ComponentName("com.google.android.googlequicksearchbox",
+                                "com.google.android.voicesearch.greco3.languagepack.InstallActivity"));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        break;
+
+                }
+                drawerLayout.closeDrawer(GravityCompat.START);
+
+                return false;
+            }
+        });
+
+
+    }
+
+  /*  @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_choose_assessment);
+        ButterKnife.bind(this);
+        String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+//        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
+        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(currentStudentID);
+        View view = navigation.getHeaderView(0);
+        TextView name = view.findViewById(R.id.userName);
+        name.setText(studentName);
+
+        Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
+
+
+        toggle_btn.setOnSwipedOnListener(new Function0<Unit>() {
+            @Override
+            public Unit invoke() {
+                Assessment_Constants.ASSESSMENT_TYPE = "supervised";
+//                showSupervisionDialog();
+                return null;
+            }
+        });
+
+        toggle_btn.setOnSwipedOffListener(new Function0<Unit>() {
+            @Override
+            public Unit invoke() {
+                Assessment_Constants.ASSESSMENT_TYPE = "practice";
+                return null;
+            }
+        });
+
+        eceLoginDialog = new ECELoginDialog(this);
+
+
+        presenter = new ChooseAssessmentPresenter(ChooseAssessmentActivity.this);
         contentTableList = new ArrayList<>();
 
 
@@ -184,6 +280,14 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new LanguageFragment(), R.id.nav_frame_layout,
                                 null, LanguageFragment.class.getSimpleName());
                         break;
+                    case R.id.menu_download_offline_language:
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.setComponent(new ComponentName("com.google.android.googlequicksearchbox",
+                                "com.google.android.voicesearch.greco3.languagepack.InstallActivity"));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        break;
+
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
 
@@ -192,7 +296,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         });
 
 
-    }
+    }*/
 
 
     private void showSupervisionDialog() {
@@ -210,7 +314,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 getLoggedInCrl(userName, password);
                 if (loggedCrl != null) {
                     String loggedCrlId = loggedCrl.getCRLId();*/
-        Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity.class);
+        Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity_.class);
         intent.putExtra("crlId", "");
 //                    intent.putExtra("subId", sub);
         startActivity(intent);
@@ -224,8 +328,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     }
 
-    @OnClick(R.id.menu_icon)
-
+    @Click(R.id.menu_icon)
     public void openMenu() {
         if (toggle_btn.getVisibility() != View.VISIBLE)
             menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
@@ -298,7 +401,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
          }*/
     }
 
-    @OnClick({R.id.btn_Profile, R.id.rl_Profile})
+    @Click({R.id.btn_Profile, R.id.rl_Profile})
     public void gotoProfileActivity() {
 //        ButtonClickSound.start();
 
@@ -364,7 +467,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(ChooseAssessmentActivity.this, SplashActivity.class));
+                startActivity(new Intent(ChooseAssessmentActivity.this, SplashActivity_.class));
             }
         });
         restart_btn.setOnClickListener(new View.OnClickListener() {
@@ -379,6 +482,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     public void subjectClicked(final int position, final AssessmentSubjects sub) {
         Assessment_Constants.SELECTED_SUBJECT = sub.getSubjectname();
         Assessment_Constants.SELECTED_SUBJECT_ID = sub.getSubjectid();
+        FastSave.getInstance().saveString("SELECTED_SUBJECT_ID", sub.getSubjectid());
         loggedCrl = null;
         String crlId = "";
         tv_choose_assessment.setText("Choose topic");
@@ -395,7 +499,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 frameLayout.setVisibility(View.GONE);
                 Toast.makeText(this, "Switch on supervision mode", Toast.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity.class);
+                Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity_.class);
                 intent.putExtra("crlId", "");
 //                    intent.putExtra("subId", sub);
                 startActivity(intent);
@@ -405,7 +509,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 startActivity(intent);*/
             }
         } else {
-            Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new TopicFragment(), R.id.nav_frame_layout,
+            Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new TopicFragment_(), R.id.nav_frame_layout,
                     null, TopicFragment.class.getSimpleName());
         }
 
@@ -443,7 +547,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised"))
             showSupervisionDialog();
         else {
-            Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity.class);
+            Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity_.class);
             startActivity(intent);
         }
     }

@@ -4,48 +4,45 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-
 import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
-import com.pratham.assessment.utilities.Assessment_Constants;
-import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Touch;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTouch;
-
+@EFragment(R.layout.fragment_child_attendance)
 public class FragmentChildAttendance extends Fragment implements ContractChildAttendance.attendanceView {
 
-    @BindView(R.id.rv_child)
+    @ViewById(R.id.rv_child)
     RecyclerView rv_child;
-    @BindView(R.id.btn_attendance_next)
+    @ViewById(R.id.btn_attendance_next)
     Button btn_attendance_next;
     /* @BindView(R.id.add_child)
      RelativeLayout add_child;
@@ -58,22 +55,9 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
     private int revealY;
     private String groupID = "";
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_child_attendance, container, false);
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+    @AfterViews
+    public void init() {
         students = getArguments().getParcelableArrayList(Assessment_Constants.STUDENT_LIST);
         avatars = new ArrayList<>();
         if (AssessmentApplication.isTablet) {
@@ -92,6 +76,42 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         setChilds(students);
     }
 
+
+  /*  @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_child_attendance, container, false);
+        return rootView;
+    }*/
+
+
+    /* @Override
+     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+         super.onViewCreated(view, savedInstanceState);
+         ButterKnife.bind(this, view);
+         students = getArguments().getParcelableArrayList(Assessment_Constants.STUDENT_LIST);
+         avatars = new ArrayList<>();
+         if (AssessmentApplication.isTablet) {
+             btn_attendance_next.setVisibility(View.VISIBLE);
+             //         add_child.setVisibility(View.GONE);
+             groupID = getArguments().getString(Assessment_Constants.GROUPID);
+             for (Student stu : students)
+                 avatars.add(Assessment_Utility.getRandomAvatar(getActivity()));
+         } else {
+             btn_attendance_next.setVisibility(View.GONE);
+             //          add_child.setVisibility(View.VISIBLE);
+             groupID = "SmartPhone";
+             *//*for (Student stu : students)
+                avatars.add(stu.getAvatarName());*//*
+        }
+        setChilds(students);
+    }
+*/
     @Override
     public void onResume() {
         super.onResume();
@@ -154,7 +174,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         presentActivity(v);
     }
 
-    @OnTouch(R.id.btn_attendance_next)
+    @Touch(R.id.btn_attendance_next)
     public boolean setNextAvatar(View view, MotionEvent event) {
         revealX = (int) event.getRawX();
         revealY = (int) event.getY();
@@ -168,7 +188,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         return getActivity().onTouchEvent(event);
     }*/
 
-    @OnClick(R.id.btn_attendance_next)
+    @Click(R.id.btn_attendance_next)
     public void setNext(View v) {
         ArrayList<Student> checkedStds = new ArrayList<>();
         for (int i = 0; i < students.size(); i++) {
@@ -183,7 +203,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             presentActivity(v);
 //            Toast.makeText(getActivity(), "Success...", Toast.LENGTH_SHORT).show();
 //            Assessment_Constants.ASSESSMENT_TYPE = "";
-            startActivity(new Intent(getActivity(), ChooseAssessmentActivity.class));
+            startActivity(new Intent(getActivity(), ChooseAssessmentActivity_.class));
             getActivity().finish();
         } else {
             Toast.makeText(getContext(), "Please Select Students !", Toast.LENGTH_SHORT).show();
@@ -202,6 +222,8 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
                     StatusDao statusDao = AppDatabase.getDatabaseInstance(getContext()).getStatusDao();
                     currentSession = "" + UUID.randomUUID().toString();
                     Assessment_Constants.currentSession = currentSession;
+                    FastSave.getInstance().saveString("currentSession", currentSession);
+
                     statusDao.updateValue("CurrentSession", "" + currentSession);
 
                     String AppStartDateTime = AppDatabase.getDatabaseInstance(getContext()).getStatusDao().getValue("AppStartDateTime");
@@ -226,6 +248,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
                     AppDatabase.getDatabaseInstance(getContext()).getAttendanceDao().insert(attendance);
 //                    }
                     Assessment_Constants.currentStudentID = stud.get(0).getStudentID();
+                    FastSave.getInstance().saveString("currentStudentID", stud.get(0).getStudentID());
                     BackupDatabase.backup(getContext());
                     return null;
                 } catch (Exception e) {
@@ -242,7 +265,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         ArrayList<Attendance> attendances = new ArrayList<>();
         for (Student stu : stud) {
             Attendance attendance = new Attendance();
-            //           attendance.setSessionID( FastSave.getInstance().getString(Assessment_Constants.SESSIONID, ""));
+            attendance.setSessionID(FastSave.getInstance().getString("currentSession", ""));
             attendance.setStudentID(stu.getStudentID());
             attendance.setDate(AssessmentApplication.getCurrentDateTime());
             attendance.GroupID = groupID;
@@ -251,11 +274,13 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             attendances.add(attendance);
 
             Assessment_Constants.currentStudentID = groupID;
+            FastSave.getInstance().saveString("currentStudentID", groupID);
+
         }
         //BaseActivity.attendanceDao.insertAttendance(attendances);
         AppDatabase.getDatabaseInstance(getActivity()).getAttendanceDao().insertAll(attendances);
         Session s = new Session();
-        //      s.setSessionID(FastSave.getInstance().getString(Assessment_Constants.SESSIONID, ""));
+        s.setSessionID(FastSave.getInstance().getString("currentSession", ""));
         s.setFromDate(AssessmentApplication.getCurrentDateTime());
         s.setToDate("NA");
         AppDatabase.getDatabaseInstance(getActivity()).getSessionDao().insert(s);

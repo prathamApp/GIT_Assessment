@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.AssessmentTestModal;
@@ -27,19 +28,24 @@ import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+/*import butterknife.BindView;
+import butterknife.ButterKnife;*/
 
+@EFragment(R.layout.fragment_topic)
 public class TopicFragment extends Fragment {
     List<AssessmentTestModal> assessmentTestModals;
     List<AssessmentTest> assessmentTests = new ArrayList<>();
-    @BindView(R.id.rv_topics)
+    @ViewById(R.id.rv_topics)
     RecyclerView rv_topics;
-
+    String subjectId;
     ProgressDialog progressDialog;
 
 
@@ -47,11 +53,20 @@ public class TopicFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @AfterViews
+    public void init() {
+        subjectId = FastSave.getInstance().getString("SELECTED_SUBJECT_ID", "1");
+        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+            getExamData();
+        } else {
+            getOfflineTests();
+        }
+    }
 
-    @Override
+   /* @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        subjectId = FastSave.getInstance().getString("SELECTED_SUBJECT_ID", "1");
     }
 
     @Override
@@ -59,14 +74,14 @@ public class TopicFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_topic, container, false);
-    }
+    }*/
 
     private void getExamData() {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading Exams");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentExamAPI + Assessment_Constants.SELECTED_SUBJECT_ID + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE)
+        AndroidNetworking.get(APIs.AssessmentExamAPI + subjectId + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
@@ -85,7 +100,7 @@ public class TopicFragment extends Fragment {
                             }
                         }
                         if (assessmentTests.size() > 0) {
-                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(Assessment_Constants.SELECTED_SUBJECT_ID, Assessment_Constants.SELECTED_LANGUAGE);
+                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
                             AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
                             progressDialog.dismiss();
 
@@ -103,7 +118,7 @@ public class TopicFragment extends Fragment {
 
 //                           btnOk.setEnabled(false);
 
-                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(Assessment_Constants.SELECTED_SUBJECT_ID, Assessment_Constants.SELECTED_LANGUAGE);
+                            AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
                             Toast.makeText(getActivity(), "No exams", Toast.LENGTH_SHORT).show();
 
                         }
@@ -130,7 +145,7 @@ public class TopicFragment extends Fragment {
         topicAdapter.notifyDataSetChanged();
     }
 
-    @Override
+  /*  @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
@@ -140,10 +155,10 @@ public class TopicFragment extends Fragment {
             getOfflineTests();
         }
 
-    }
+    }*/
 
     private void getOfflineTests() {
-        assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getTopicBySubIdAndLangId(Assessment_Constants.SELECTED_SUBJECT_ID, Assessment_Constants.SELECTED_LANGUAGE);
+        assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getTopicBySubIdAndLangId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
         if (assessmentTests.size() > 0)
             setTopicsToRecyclerView();
         else {

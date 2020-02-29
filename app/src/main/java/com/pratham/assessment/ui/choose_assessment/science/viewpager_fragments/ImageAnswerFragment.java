@@ -9,12 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,26 +30,29 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.RealPathUtil;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
+@EFragment(R.layout.layout_image_answer_row)
 public class ImageAnswerFragment extends Fragment {
 
-    @BindView(R.id.tv_question)
+    @ViewById(R.id.tv_question)
     TextView question;
-    @BindView(R.id.iv_question_image)
+    @ViewById(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_gif)
+    @ViewById(R.id.iv_question_gif)
     GifView questionGif;
-    @BindView(R.id.captured_img)
+    @ViewById(R.id.captured_img)
     ImageView captured_img;
 
     ChooseImageDialog chooseImageDialog;
@@ -76,8 +75,22 @@ public class ImageAnswerFragment extends Fragment {
     }
 
 
+    @AfterViews
+    public void init() {
+        if (getArguments() != null) {
+            pos = getArguments().getInt(POS, 0);
+            scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
+            assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+            context = getActivity();
+            scienceAssessmentActivity = (ScienceAssessmentActivity) getActivity();
+        }
+        setImageQuestion();
+
+    }
+
+
     public static ImageAnswerFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        ImageAnswerFragment fragment = new ImageAnswerFragment();
+        ImageAnswerFragment_ fragment = new ImageAnswerFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -85,7 +98,7 @@ public class ImageAnswerFragment extends Fragment {
         return fragment;
     }
 
-    @Override
+    /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -112,7 +125,7 @@ public class ImageAnswerFragment extends Fragment {
         ButterKnife.bind(this, view);
         setImageQuestion();
     }
-
+*/
 
     public void setImageQuestion() {
         /*etAnswer.setTextColor(Assessment_Utility.selectedColor);
@@ -131,6 +144,7 @@ public class ImageAnswerFragment extends Fragment {
                     .into(captured_img);
             captured_img.setVisibility(View.VISIBLE);
         }
+        setOdiaFont(getActivity(), question);
 
         question.setText(scienceQuestion.getQname());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
@@ -233,7 +247,7 @@ public class ImageAnswerFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.btn_capture_img)
+    @Click(R.id.btn_capture_img)
     public void onCaptureClick() {
 //        assessmentAnswerListener.setImageCaptureResult(scienceQuestion);
         setImageCaptureResult();
@@ -353,19 +367,20 @@ public class ImageAnswerFragment extends Fragment {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedImage);
 //                createDirectoryAndSaveFile(bitmap, imageFileName);
                 String path;
-                if (android.os.Build.VERSION.SDK_INT >= 19) {
+            /*    if (android.os.Build.VERSION.SDK_INT >= 19) {
                     path = RealPathUtil.getRealPathFromURI_API19(context, selectedImage);
                 } else if (android.os.Build.VERSION.SDK_INT > 10) {
                     path = RealPathUtil.getRealPathFromURI_API11to18(context, selectedImage);
                 } else path = RealPathUtil.getRealPathFromURI_BelowAPI11(context, selectedImage);
-
+*/
+                path = RealPathUtil.getUriRealPathAboveKitkat(context, selectedImage);
                 scienceQuestion.setUserAnswer(path);
 
                 if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
                     assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
                 else
                     assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
-        } else if (resultCode == -1 && requestCode == CAPTURE_IMAGE) {
+            } else if (resultCode == -1 && requestCode == CAPTURE_IMAGE) {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
 //                if (currentFragment instanceof ImageAnswerFragment)
 //                    ((ImageAnswerFragment) currentFragment).setImage(photo);

@@ -1,7 +1,5 @@
 package com.pratham.assessment.utilities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
@@ -50,7 +48,7 @@ public class AudioUtil {
                 mPlayer.stop();
 
             mPlayer = new MediaPlayer();
-            audioPlayerInterface=activity;
+            audioPlayerInterface = activity;
             mPlayer.setDataSource(filePath);
             mPlayer.prepare();
             mPlayer.start();
@@ -84,7 +82,6 @@ public class AudioUtil {
         }
         mPlayer = null;
     }
-
 
 
 }

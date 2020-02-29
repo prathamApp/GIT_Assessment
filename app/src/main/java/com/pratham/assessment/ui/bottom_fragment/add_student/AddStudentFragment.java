@@ -199,8 +199,10 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                if (getActivity() != null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
         });
 
@@ -272,8 +274,10 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
     }
 
     private void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (getActivity() != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void addAvatarsInList() {
@@ -527,7 +531,8 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            progressDialog.dismiss();
+                            if (getActivity() != null && progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
 
                             for (int i = 0; i < response.length(); i++) {
                                 AssessmentLanguages assessmentLanguages = new AssessmentLanguages();
@@ -535,7 +540,8 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                                 assessmentLanguages.setLanguagename(response.getJSONObject(i).getString("languagename"));
                                 assessmentLanguagesList.add(assessmentLanguages);
                             }
-                            AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().insertAllLanguages(assessmentLanguagesList);
+                            if (getActivity() != null)
+                                AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().insertAllLanguages(assessmentLanguagesList);
                             setLanguagesToSpinner();
 
 

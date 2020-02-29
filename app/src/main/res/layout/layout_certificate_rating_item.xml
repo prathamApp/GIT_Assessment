@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_rectangle"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="Do you know skeletal system?"
+            android:textAlignment="center"
+            android:textSize="@dimen/_12sdp" />
+
+        <RatingBar
+            android:id="@+id/rb_ratingStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.1"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressTint="@color/colorAccent"
+            android:stepSize="1"
+            android:theme="@style/Widget.AppCompat.RatingBar"
+            android:visibility="visible" />
+    </LinearLayout>

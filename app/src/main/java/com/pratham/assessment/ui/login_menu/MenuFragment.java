@@ -2,17 +2,11 @@ package com.pratham.assessment.ui.login_menu;
 
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,32 +16,33 @@ import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.custom.SelectAgeGroupDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Student;
-import com.pratham.assessment.ui.login.MainActivity;
-import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
+import com.pratham.assessment.ui.login.MainActivity_;
 import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup;
-import com.pratham.assessment.ui.login.qr_scan.QRScanActivity;
+import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup_;
+import com.pratham.assessment.ui.login.qr_scan.QRScanActivity_;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-
+@EFragment(R.layout.fragment_menu)
 public class MenuFragment extends Fragment {
     /*  @BindView(R.id.btn_qr)
       ImageButton btn_qr;
       @BindView(R.id.btn_grp)
       ImageButton btn_grp;*/
-    @BindView(R.id.btn_admin)
+    @ViewById(R.id.btn_admin)
     ImageButton btn_admin;
-    @BindView(R.id.rl_admin)
+    @ViewById(R.id.rl_admin)
     RelativeLayout rl_admin;
 
     public MenuFragment() {
@@ -55,21 +50,21 @@ public class MenuFragment extends Fragment {
     }
 
 
-    @Override
+  /*  @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    }
+    }*/
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
-        return view;
-    }
-
-    @OnClick({R.id.ib_age3to6, R.id.rl_age3to6})
+    /* @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+         // Inflate the layout for this fragment
+         View view = inflater.inflate(R.layout.fragment_menu, container, false);
+         return view;
+     }
+ */
+    @Click({R.id.ib_age3to6, R.id.rl_age3to6})
     public void gotoAge3to6() {
 
         checkGroupAssigned(Assessment_Constants.GROUP_AGE_BELOW_7);
@@ -80,7 +75,7 @@ public class MenuFragment extends Fragment {
 
     }
 
-    @OnClick({R.id.ib_age8to14, R.id.rl_age8to14})
+    @Click({R.id.ib_age8to14, R.id.rl_age8to14})
     public void gotoAge8to14() {
      /*   if (Assessment_Constants.GROUPID1.equalsIgnoreCase("") && Assessment_Constants.GROUPID2.equalsIgnoreCase("") && Assessment_Constants.GROUPID3.equalsIgnoreCase("") && Assessment_Constants.GROUPID4.equalsIgnoreCase("") && Assessment_Constants.GROUPID2.equalsIgnoreCase("")) {
             Toast.makeText(getActivity(), "No groups assigned", Toast.LENGTH_SHORT).show();
@@ -170,33 +165,40 @@ public class MenuFragment extends Fragment {
         if (groups.size() > 0) {
             Bundle bundle = new Bundle();
             bundle.putBoolean(ageGroupConstant, true);
-            Assessment_Utility.showFragment(getActivity(), new FragmentSelectGroup(), R.id.frame_group,
+            Assessment_Utility.showFragment(getActivity(), new FragmentSelectGroup_(), R.id.frame_group,
                     bundle, FragmentSelectGroup.class.getSimpleName());
         } else {
             Toast.makeText(getActivity(), "No groups assigned..", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @OnClick({R.id.btn_admin, R.id.rl_admin})
+    @Click({R.id.btn_admin, R.id.rl_admin})
     public void goto_btn_admin() {
 //        ButtonClickSound.start();
-        startActivity(new Intent(getActivity(), MainActivity.class));
+        startActivity(new Intent(getActivity(), MainActivity_.class));
     }
 
-    @OnClick({R.id.btn_qr, R.id.rl_qr})
+    @Click({R.id.btn_qr, R.id.rl_qr})
     public void goto_btn_qr() {
 //        ButtonClickSound.start();
-        startActivity(new Intent(getActivity(), QRScanActivity.class));
+        startActivity(new Intent(getActivity(), QRScanActivity_.class));
     }
 
-    @Override
+
+    @AfterViews
+    public void init() {
+        if (!FastSave.getInstance().getBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, false))
+            show_STT_Dialog();
+    }
+
+  /*  @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
         if (!FastSave.getInstance().getBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, false))
             show_STT_Dialog();
-    }
+    }*/
 
     private void show_STT_Dialog() {
         final Dialog dialog = new Dialog(getActivity());
@@ -235,6 +237,7 @@ public class MenuFragment extends Fragment {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FastSave.getInstance().saveBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, true);
                 dialog.dismiss();
             }
         });

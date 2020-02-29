@@ -12,137 +12,140 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_10sdp">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_cer"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_65sdp"
-                android:layout_margin="@dimen/_10sdp"
-                android:src="@drawable/certifcate_eng" />
-
-            <LinearLayout
-                android:id="@+id/ll_avatar_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_cer"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/_10sdp"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:visibility="visible">
 
                 <ImageView
-                    android:id="@+id/iv_student"
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_50sdp"
-                    android:background="@drawable/ripple_round"
-                    android:src="@drawable/b1"
-                    android:visibility="gone" />
+                    android:id="@+id/iv_cer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_65sdp"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:src="@drawable/certifcate_eng" />
 
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_avatar_name"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:layout_below="@+id/iv_cer"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/_10sdp"
                     android:gravity="center"
-                    android:text="Profile Name"
-                    android:textColor="@color/colorBlackTransparentDark"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
+                    <ImageView
+                        android:id="@+id/iv_student"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:background="@drawable/ripple_round"
+                        android:src="@drawable/b1"
+                        android:visibility="gone" />
 
-            <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/ll_marks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_avatar_name"
-                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:fontFamily="@font/quicksand_bold"
+                        android:gravity="center"
+                        android:text="Profile Name"
+                        android:textColor="@color/colorBlackTransparentDark"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_80sdp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    >
+                    android:id="@+id/ll_marks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_avatar_name"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quicksand_bold"
-                        android:gravity="center"
-                        android:text="Marks"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_80sdp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_student_marks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quicksand_bold"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="0"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_40sdp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/quicksand_bold"
+                            android:gravity="center"
+                            android:text="Marks"
+                            android:textSize="@dimen/_12sdp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_student_marks"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/quicksand_bold"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="0"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_40sdp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_80sdp"
+                        android:layout_weight="0.7"
+                        android:src="@drawable/ic_divide" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_80sdp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/quicksand_bold"
+                            android:gravity="center"
+                            android:text="Total marks"
+                            android:textSize="@dimen/_12sdp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_total_marks"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/quicksand_bold"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="0"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_40sdp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_80sdp"
-                    android:layout_weight="0.7"
-                    android:src="@drawable/ic_divide"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_80sdp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quicksand_bold"
-                        android:gravity="center"
-                        android:text="Total marks"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_total_marks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quicksand_bold"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="0"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_40sdp"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_marks">
-
+                <!--  <ScrollView
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@+id/ll_marks">
+  -->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_marks">
 
                     <LinearLayout
                         android:id="@+id/ll_cnt_labels"
@@ -358,12 +361,20 @@
                         </LinearLayout>
                     </LinearLayout>
 
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_rating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_time"
+                        android:layout_margin="@dimen/_3sdp"/>
+
                     <LinearLayout
                         android:id="@+id/ll_qiestions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/ll_time"
                         android:layout_margin="@dimen/_3sdp"
+                        android:visibility="gone"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -462,55 +473,120 @@
                                 android:visibility="visible" />
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/q4_label"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/ripple_rectangle"
+                                android:fontFamily="@font/quicksand_bold"
+                                android:text="Do you know skeletal system?"
+                                android:textAlignment="center"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <RatingBar
+                                android:id="@+id/q4_ratingStars"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1.1"
+                                android:isIndicator="true"
+                                android:numStars="5"
+                                android:progressTint="@color/colorAccent"
+                                android:stepSize="1"
+                                android:theme="@style/Widget.AppCompat.RatingBar"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/q5_label"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/ripple_rectangle"
+                                android:fontFamily="@font/quicksand_bold"
+                                android:text="Do you know skeletal system?"
+                                android:textAlignment="center"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <RatingBar
+                                android:id="@+id/q5_ratingStars"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1.1"
+                                android:isIndicator="true"
+                                android:numStars="5"
+                                android:progressTint="@color/colorAccent"
+                                android:stepSize="1"
+                                android:theme="@style/Widget.AppCompat.RatingBar"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
-                   <!-- <RelativeLayout
-                        android:layout_width="@dimen/_120sdp"
-                        android:layout_height="@dimen/_120sdp"
-                        android:layout_below="@+id/ll_qiestions"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="@dimen/_5sdp"
-                        android:background="@drawable/round_mark"
-                        android:padding="@dimen/_10sdp">
+                    <!-- <RelativeLayout
+                         android:layout_width="@dimen/_120sdp"
+                         android:layout_height="@dimen/_120sdp"
+                         android:layout_below="@+id/ll_qiestions"
+                         android:layout_alignParentBottom="true"
+                         android:layout_centerHorizontal="true"
+                         android:layout_margin="@dimen/_5sdp"
+                         android:background="@drawable/round_mark"
+                         android:padding="@dimen/_10sdp">
 
-                        <TextView
-                            android:id="@+id/tv_student_marks"
-                            android:layout_width="@dimen/_40sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:fontFamily="@font/caveat_bold"
-                            android:text="7"
-                            android:textAlignment="center"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_35sdp"
-                            android:textStyle="bold" />
+                         <TextView
+                             android:id="@+id/tv_student_marks"
+                             android:layout_width="@dimen/_40sdp"
+                             android:layout_height="wrap_content"
+                             android:layout_centerHorizontal="true"
+                             android:fontFamily="@font/caveat_bold"
+                             android:text="7"
+                             android:textAlignment="center"
+                             android:textColor="@color/black"
+                             android:textSize="@dimen/_35sdp"
+                             android:textStyle="bold" />
 
-                        <View
-                            android:id="@+id/view"
-                            android:layout_width="@dimen/_40sdp"
-                            android:layout_height="@dimen/_2sdp"
-                            android:layout_below="@+id/tv_student_marks"
-                            android:layout_centerInParent="true"
-                            android:layout_centerHorizontal="true"
-                            android:background="@color/black"
-                            android:text="7" />
+                         <View
+                             android:id="@+id/view"
+                             android:layout_width="@dimen/_40sdp"
+                             android:layout_height="@dimen/_2sdp"
+                             android:layout_below="@+id/tv_student_marks"
+                             android:layout_centerInParent="true"
+                             android:layout_centerHorizontal="true"
+                             android:background="@color/black"
+                             android:text="7" />
 
-                        <TextView
-                            android:id="@+id/tv_total_marks"
-                            android:layout_width="@dimen/_45sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/view"
-                            android:layout_centerHorizontal="true"
-                            android:fontFamily="@font/caveat_bold"
-                            android:text="10"
-                            android:textAlignment="center"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_35sdp"
-                            android:textStyle="bold" />
-                    </RelativeLayout>-->
+                         <TextView
+                             android:id="@+id/tv_total_marks"
+                             android:layout_width="@dimen/_45sdp"
+                             android:layout_height="wrap_content"
+                             android:layout_below="@+id/view"
+                             android:layout_centerHorizontal="true"
+                             android:fontFamily="@font/caveat_bold"
+                             android:text="10"
+                             android:textAlignment="center"
+                             android:textColor="@color/black"
+                             android:textSize="@dimen/_35sdp"
+                             android:textStyle="bold" />
+                     </RelativeLayout>-->
                 </RelativeLayout>
-            </ScrollView>
-        </RelativeLayout>
+                <!--                </ScrollView>-->
+            </RelativeLayout>
+        </ScrollView>
     </android.support.v7.widget.CardView>
 </FrameLayout>

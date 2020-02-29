@@ -27,11 +27,9 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
+import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTypeListener;
-import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
-import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
@@ -60,7 +58,7 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
         this.context = context;
         questionTypeListener = scienceAdapter;
-        assessmentAnswerListener=(ScienceAssessmentActivity)context;
+        assessmentAnswerListener = (ScienceAssessmentActivity) context;
 
     }
 
@@ -122,10 +120,10 @@ public class MultipleSelectViewHolder extends RecyclerView.ViewHolder {
             if (scienceQuestion.getIsAttempted()) {
                 if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
                     checkBox.setChecked(true);
-                checkBox.setTextColor(Assessment_Utility.selectedColor);
+                    checkBox.setTextColor(Assessment_Utility.selectedColor);
                 } else {
                     checkBox.setChecked(false);
-                checkBox.setTextColor(context.getResources().getColor(R.color.white));
+                    checkBox.setTextColor(context.getResources().getColor(R.color.white));
 
                 }
             }

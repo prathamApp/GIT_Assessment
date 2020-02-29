@@ -35,19 +35,33 @@
 
         <!-- </LinearLayout>
  -->
-        <ImageView
-            android:id="@+id/question_img"
+        <LinearLayout
+            android:id="@+id/ll_que_img_or_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tv_result_question"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
             android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/_5sdp" />
+            android:gravity="center"
+            android:layout_margin="@dimen/_5sdp">
+
+            <ImageView
+                android:id="@+id/question_img"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                />
+
+            <VideoView
+                android:id="@+id/question_video"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_answers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/question_img"
+            android:layout_below="@+id/ll_que_img_or_video"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -84,11 +98,40 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:background="@drawable/ripple_rectangle_result"
-                    android:gravity="center"
                     android:elevation="@dimen/_2sdp"
+                    android:gravity="center"
                     android:text="View Answer"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/media_you_answered"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@drawable/ripple_rectangle_result"
+                    android:elevation="@dimen/_2sdp"
+                    android:gravity="center"
+                    android:text="View Answer"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone" />
+
+
+               <!--  <VideoView
+                    android:id="@+id/video_you_answered"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:elevation="@dimen/_2sdp"
+                    android:gravity="center"
+                    android:text="View Answer"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone" />-->
+
+
+
 
             </LinearLayout>
 
@@ -125,8 +168,21 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:background="@drawable/ripple_rectangle_result"
-                    android:gravity="center"
                     android:elevation="@dimen/_2sdp"
+                    android:gravity="center"
+                    android:text="View Answer"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/media_correct_Ans"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@drawable/ripple_rectangle_result"
+                    android:elevation="@dimen/_2sdp"
+                    android:gravity="center"
                     android:text="View Answer"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />

@@ -3,14 +3,10 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
@@ -22,34 +18,37 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.custom.sparkbutton.SparkButton;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
+import static android.graphics.Color.GREEN;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
-
+@EFragment(R.layout.layout_multiple_select_row)
 public class MultipleSelectFragment extends Fragment {
 
-    @BindView(R.id.tv_question)
+    @ViewById(R.id.tv_question)
     TextView question;
-    @BindView(R.id.iv_question_image)
+    @ViewById(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_gif)
+    @ViewById(R.id.iv_question_gif)
     GifView questionGif;
-    @BindView(R.id.gl_multiselect)
+    @ViewById(R.id.gl_multiselect)
     GridLayout gridLayout;
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
@@ -58,12 +57,13 @@ public class MultipleSelectFragment extends Fragment {
     private ScienceQuestion scienceQuestion;
     AssessmentAnswerListener assessmentAnswerListener;
 
+
     public MultipleSelectFragment() {
         // Required empty public constructor
     }
 
     public static MultipleSelectFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        MultipleSelectFragment multipleSelectFragment = new MultipleSelectFragment();
+        MultipleSelectFragment_ multipleSelectFragment = new MultipleSelectFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -71,7 +71,19 @@ public class MultipleSelectFragment extends Fragment {
         return multipleSelectFragment;
     }
 
-    @Override
+    @AfterViews
+    public void init() {
+        if (getArguments() != null) {
+            pos = getArguments().getInt(POS, 0);
+            scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
+            assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+        }
+        setMultipleSelectQuestion();
+
+    }
+
+
+/*    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -93,9 +105,10 @@ public class MultipleSelectFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         setMultipleSelectQuestion();
-    }
+    }*/
 
     public void setMultipleSelectQuestion() {
+        setOdiaFont(getActivity(), question);
 
         question.setText(scienceQuestion.getQname());
         final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
@@ -168,9 +181,12 @@ public class MultipleSelectFragment extends Fragment {
         gridLayout.removeAllViews();
         for (int j = 0; j < choices.size(); j++) {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_multiple_select_item, gridLayout, false);
+//            final SparkButton sparkButton = (SparkButton) view;
+//            final CheckBox checkBox = (CheckBox) sparkButton.getChildAt(3);
             final CheckBox checkBox = (CheckBox) view;
             checkBox.setButtonTintList(Assessment_Utility.colorStateList);
             checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
+            setOdiaFont(getActivity(), checkBox);
             if (!choices.get(j).getChoicename().equalsIgnoreCase(""))
                 checkBox.setText(choices.get(j).getChoicename());
             else if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
@@ -185,8 +201,8 @@ public class MultipleSelectFragment extends Fragment {
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(getActivity(), path, localPathChoice);
-                        zoomImageDialog.show();
+                        Assessment_Utility.showZoomDialog(getActivity(), path, localPathChoice);
+
                     }
                 });
               /*  Glide.with(getActivity()).asBitmap().
@@ -205,15 +221,32 @@ public class MultipleSelectFragment extends Fragment {
 
             }
             checkBox.setTag(choices.get(j).getQcid());
-            if (scienceQuestion.getIsAttempted()) {
-                if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
-                    checkBox.setChecked(true);
-                    checkBox.setTextColor(Assessment_Utility.selectedColor);
-                } else {
-                    checkBox.setChecked(false);
-                    checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
+           /* if (Assessment_Constants.isPracticeModeOn) {
+                if (scienceQuestion.getIsAttempted()) {
+                    if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
+                        checkBox.setChecked(true);
+                        checkBox.setTextColor(Assessment_Utility.selectedColor);
+                    } else {
+                        checkBox.setChecked(false);
+                        checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
 
+                    }
+                    if (choices.get(j).getCorrect().equalsIgnoreCase("TRUE")) {
+                        sparkButton.setActiveImage(R.drawable.correct_bg);
+//                        checkBox.setBackgroundColor(GREEN);
+                    }
                 }
+            } else {*/
+                if (scienceQuestion.getIsAttempted()) {
+                    if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
+                        checkBox.setChecked(true);
+                        checkBox.setTextColor(Assessment_Utility.selectedColor);
+                    } else {
+                        checkBox.setChecked(false);
+                        checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
+
+                    }
+//                }
             }
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -239,9 +272,9 @@ public class MultipleSelectFragment extends Fragment {
                     for (int i = 0; i < gridLayout.getRowCount(); i++) {
                         if (((CheckBox) gridLayout.getChildAt(i)).isChecked()) {
                             ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Assessment_Utility.selectedColor);
-                        } else
+                        } else {
                             ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Color.WHITE);
-
+                        }
                     }
 
 
@@ -254,6 +287,8 @@ public class MultipleSelectFragment extends Fragment {
             paramGrid.width = GridLayout.LayoutParams.WRAP_CONTENT;
             paramGrid.setGravity(Gravity.FILL_HORIZONTAL);
             paramGrid.setMargins(10, 10, 10, 10);
+            /*sparkButton.setLayoutParams(paramGrid);
+            gridLayout.addView(sparkButton);*/
             checkBox.setLayoutParams(paramGrid);
             gridLayout.addView(checkBox);
         }
@@ -290,8 +325,5 @@ public class MultipleSelectFragment extends Fragment {
 
     }
 
-    private int getDp(int value) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, getActivity().getResources().getDisplayMetrics());
-    }
 
 }

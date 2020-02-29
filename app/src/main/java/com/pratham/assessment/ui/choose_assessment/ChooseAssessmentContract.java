@@ -24,7 +24,7 @@ public interface ChooseAssessmentContract {
 
         void endSession();
 
-        void startAssessSession();
+//        void startAssessSession();
     }
 
 }

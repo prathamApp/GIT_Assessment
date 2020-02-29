@@ -44,15 +44,14 @@ public interface ScoreDao {
     @Query("DELETE FROM Score")
     void deleteAllScores();
 
-    @Query("select * from Score where sentFlag = 0 AND SessionID=:session_id")
-    List<Score> getAllNewScores(String session_id);
+    @Query("select * from Score where sentFlag = 0 AND paperId=:paperId AND SessionID=:sessionId")
+    List<Score> getAllNewScores(String paperId, String sessionId);
 
     @Query("select count(*) from Score where Level =:level AND paperId=:paperId")
     int getLevelCnt(String level, String paperId);
 
     @Query("select count(*) from Score where Level =:level AND isCorrect=:isCorrect AND paperId=:paperId")
-    int getLevelCorrectCnt(String level, String paperId,boolean isCorrect);
-
+    int getLevelCorrectCnt(String level, String paperId, boolean isCorrect);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -65,5 +64,11 @@ public interface ScoreDao {
     @Query("select * from Score where paperId=:paperId")
     List<Score> getScoreByPaperId(String paperId);
 
+    @Query("select * from Score where sentFlag = 0 AND SessionID=:sessionID")
+    List<Score> getAllNewScoresBySession(String sessionID);
+
+
+    @Query("Select count(distinct REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(substr(startdatetime,1,instr(startdatetime,' ')),'01','1'),'02','2'),'03','3'),'04','4'),'05','5'),'06','6'),'07','7'),'08','8'),'09','9')) as dates from Score sc where length(startdatetime)>5")
+    int getTotalActiveDeviceDays();
 
 }

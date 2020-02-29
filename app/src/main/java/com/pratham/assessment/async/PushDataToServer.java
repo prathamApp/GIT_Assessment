@@ -1,6 +1,7 @@
 package com.pratham.assessment.async;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
@@ -12,9 +13,7 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
-import com.androidnetworking.interfaces.UploadProgressListener;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
@@ -37,21 +36,40 @@ import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.UiThread;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import static android.support.constraint.Constraints.TAG;
+import static com.pratham.assessment.AssessmentApplication.isTablet;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 
 /******* This async task is used for data push******/
-public class PushDataToServer extends AsyncTask {
+
+@EBean
+public class PushDataToServer {
 
     Context context;
     boolean autoPush;
@@ -77,8 +95,15 @@ public class PushDataToServer extends AsyncTask {
     List<DownloadMedia> downloadMediaList = new ArrayList<>();
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
     private int pushCnt = 0;
+    ProgressDialog progressDialog;
+    JSONObject requestJsonObjectScience;
+    AlertDialog.Builder alertDialog;
 
-    public PushDataToServer(Context context, boolean autoPush) {
+    public PushDataToServer(Context context) {
+        this.context = context;
+    }
+
+    public void setValue(Context context, boolean autoPush) {
 
         this.context = context;
         this.autoPush = autoPush;
@@ -93,13 +118,21 @@ public class PushDataToServer extends AsyncTask {
         studentData = new JSONArray();
         assessmentData = new JSONArray();
         assessmentScienceData = new JSONArray();
+        progressDialog = new ProgressDialog(context);
+    }
+
+    @UiThread
+    protected void onPreExecute() {
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Pushing data..");
+        if (isTablet)
+            progressDialog.show();
 
     }
 
-
-    @Override
-    protected Object doInBackground(Object[] objects) {
-
+    @Background
+    public void doInBackground() {
+        onPreExecute();
         List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores("ece_assessment");
         scoreData = fillScoreData(scoreList);
         List<AssessmentPaperForPush> assessmentScoreList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAllAssessmentPapersForPush();
@@ -187,6 +220,8 @@ public class PushDataToServer extends AsyncTask {
             metadataJson.put(COS_Constants.SCORE_COUNT, (metadata.size() > 0) ? metadata.size() : 0);
             rootJson.put(COS_Constants.METADATA, metadataJson);
 */
+//        JSONObject requestJsonObject = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
+            requestJsonObjectScience = generateRequestString(scoreData, assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
 
 
             if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
@@ -204,16 +239,20 @@ public class PushDataToServer extends AsyncTask {
                                 .getAsString(new StringRequestListener() {
                                     @Override
                                     public void onResponse(String response) {
+                                        isConnectedToRasp = true;
                                         Gson gson = new Gson();
                                         Modal_RaspFacility facility = gson.fromJson(response, Modal_RaspFacility.class);
                                         FastSave.getInstance().saveString(Assessment_Constants.FACILITY_ID, facility.getFacilityId());
-                                        isConnectedToRasp = true;
+                                        pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
+                                                "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
+
                                     }
 
                                     @Override
                                     public void onError(ANError anError) {
 //                            apiResult.notifyError(requestType/*, null*/);
                                         isConnectedToRasp = false;
+
                                         Log.d("Error::", anError.getErrorDetail());
                                         Log.d("Error::", anError.getMessage());
                                         Log.d("Error::", anError.getResponse().toString());
@@ -231,52 +270,230 @@ public class PushDataToServer extends AsyncTask {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        JSONObject requestJsonObject = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
-        JSONObject requestJsonObjectScience = generateRequestString(scoreData, assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
 
         //        if (checkEmptyness(requestString))
 
-        if (!isConnectedToRasp) {
+        if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
+            if (!AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
+
 //            pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
 
-            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+//                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 pushDataScienceToServer(context, requestJsonObjectScience, AssessmentApplication.uploadScienceUrl);
-                if (downloadMediaList.size() > 0)
-                    createMediaFileToPush();
-            } else {
+            /*    createMediaFileToPush();
+                CreateFilesForVideoMonitoring();*/
 
-            }
+             /*   } else {
+
+                }*/
+            }/* else {
+                pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
+                        "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
+            }*/
         } else {
-            pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
-                    "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
+            if (progressDialog != null)
+                progressDialog.dismiss();
         }
 
-
-        return null;
     }
 
+    //    @Background
     private void createMediaFileToPush() {
-        String filePath = downloadMediaList.get(mediaCnt).getPhotoUrl();
-        String type = downloadMediaList.get(mediaCnt).getMediaType();
-        if (filePath != null)
-            if (!filePath.equalsIgnoreCase("")) {
-                File file = new File(filePath);
-                pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, file, type);
+        new AsyncTask<Void, Void, Void>() {
 
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE));
+                downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO));
+                downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO));
+             /*   for (int i = 0; i < temp.size(); i++) {
+                    if (!downloadMediaList.contains(temp.get(i)))
+                        downloadMediaList.add(temp.get(i));
+                }
+                List<DownloadMedia> temp1 = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
+                for (int i = 0; i < temp1.size(); i++) {
+                    if (!downloadMediaList.contains(temp1.get(i)))
+                        downloadMediaList.add(temp1.get(i));
+                }*/
+
+                if (downloadMediaList.size() > 0)
+                    pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
+                return null;
             }
+        }.execute();
+//        String filePath = downloadMediaList.get(mediaCnt).getPhotoUrl();
+//        String type = downloadMediaList.get(mediaCnt).getMediaType();
+//        if (filePath != null)
+//            if (!filePath.equalsIgnoreCase("")) {
+       /* if (downloadMediaList.size() > 0)
+            pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
+*/
+            /*} else {
+                mediaCnt++;
+                if (mediaCnt < downloadMediaList.size())
+                    createMediaFileToPush();
+            }*/
     }
 
-    private void pushMediaToServer(String url, File file, final String videoType) {
-        AndroidNetworking.upload(url)
-                .addMultipartFile(videoType, file)
+    //    @Background
+    private void CreateFilesForVideoMonitoring() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                videoRecordingList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING));
+                if (videoRecordingList.size() > 0) {
+           /* String filePath = videoRecordingList.get(videoRecCnt).getPhotoUrl();
+            if (!filePath.equalsIgnoreCase("")) {
+                try {
+                    File file = new File(filePath);
+                    if (file.exists())*/
+                    pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+               /* } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }*/
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private void pushMediaToServer(String url, String type) {
+//        if (!type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
+        try {
+
+            final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+            final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
+            final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/mp4");
+            final MediaType MEDIA_TYPE_MP3 = MediaType.parse("audio/mp3");
+
+            MultipartBody.Builder builderNew = new MultipartBody.Builder().setType(MultipartBody.FORM);
+
+            if (!type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
+
+                for (int i = 0; i < downloadMediaList.size(); i++) {
+                    String fileName = downloadMediaList.get(i).getqId() + "_" + downloadMediaList.get(i).getPaperId();
+                    String extension = getFileExtension(downloadMediaList.get(i).getPhotoUrl());
+                    String fileWithExt = fileName + "." + extension;
+                    File f = new File(downloadMediaList.get(i).getPhotoUrl());
+                    if (f.exists()) {
+                        MediaType mediaType = MEDIA_TYPE_PNG;
+                        if (extension.equalsIgnoreCase("png"))
+                            mediaType = MEDIA_TYPE_PNG;
+                        else if (extension.equalsIgnoreCase("jpg"))
+                            mediaType = MEDIA_TYPE_JPG;
+                        else if (extension.equalsIgnoreCase("mp4"))
+                            mediaType = MEDIA_TYPE_MP4;
+                        else if (extension.equalsIgnoreCase("mp3"))
+                            mediaType = MEDIA_TYPE_MP3;
+                        builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(mediaType, f));
+                    }
+                }
+            } else {
+                for (int i = 0; i < videoRecordingList.size(); i++) {
+                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId();
+                    String extension = getFileExtension(videoRecordingList.get(i).getPhotoUrl());
+                    String fileWithExt = fileName + "." + extension;
+                    File f = new File(videoRecordingList.get(i).getPhotoUrl());
+                    if (f.exists()) {
+                        builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(MEDIA_TYPE_MP4, f));
+                    }
+                }
+            }
+            MultipartBody requestBody = builderNew.build();
+            final Request request = new Request.Builder()
+                    .url(url)
+                    .post(requestBody)
+                    .build();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.connectTimeout(5, TimeUnit.MINUTES);
+            builder.readTimeout(5, TimeUnit.MINUTES);
+            builder.writeTimeout(5, TimeUnit.MINUTES);
+            OkHttpClient client = builder.build();
+            Response response = client.newCall(request).execute();
+            Log.d("response", type + response.body().string());
+            if (response.isSuccessful())
+                setMediaPushFlag(type);
+            else Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
+
+
+//            return new JSONObject(response.body().string());
+
+        } catch (UnknownHostException | UnsupportedEncodingException e) {
+            Log.e(TAG, "Error: " + e.getLocalizedMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Other Error: " + e.getLocalizedMessage());
+        }
+ /*       } else {
+            try {
+                final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/mp4");
+
+                MultipartBody.Builder builderNew = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                for (int i = 0; i < videoRecordingList.size(); i++) {
+                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId();
+                    String extension = getExtension(videoRecordingList.get(i).getPhotoUrl());
+                    String fileWithExt = fileName + "." + extension;
+                    File f = new File(videoRecordingList.get(i).getPhotoUrl());
+                    if (f.exists()) {
+                        builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(MEDIA_TYPE_MP4, f));
+                    }
+                }
+                MultipartBody requestBody = builderNew.build();
+                final Request request = new Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+
+                OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                builder.connectTimeout(5, TimeUnit.MINUTES);
+                builder.readTimeout(5, TimeUnit.MINUTES);
+                builder.writeTimeout(5, TimeUnit.MINUTES);
+                OkHttpClient client = builder.build();
+                Response response = client.newCall(request).execute();
+                Log.d("response", "uploadVideo:" + response.body().string());
+                if (response.isSuccessful())
+                    setMediaPushFlag(type);
+                else Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
+
+            } catch (UnknownHostException | UnsupportedEncodingException e) {
+                Log.e(TAG, "Error: " + e.getLocalizedMessage());
+            } catch (Exception e) {
+                Log.e(TAG, "Other Error: " + e.getLocalizedMessage());
+            }
+
+
+        }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       /* AndroidNetworking.upload(url)
+                .addMultipartFile(fileName, file)
 //                .addMultipartParameter("key", "value")
 //                .setTag("uploadTest")
-//                .setPriority(Priority.HIGH)
+                .setPriority(Priority.HIGH)
                 .build()
                 .setUploadProgressListener(new UploadProgressListener() {
                     @Override
                     public void onProgress(long bytesUploaded, long totalBytes) {
                         // do anything with progress
+                        Log.d("onProgress", bytesUploaded + "/" + totalBytes);
 
                     }
                 })
@@ -308,29 +525,62 @@ public class PushDataToServer extends AsyncTask {
                     @Override
                     public void onError(ANError error) {
                         // handle error
-                        if (AssessmentApplication.isTablet)
-                            Toast.makeText(context, "video monitoring Media push failed", Toast.LENGTH_SHORT).show();
+
                         if (videoType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO) || videoType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE)) {
                             mediaCnt++;
                             if (mediaCnt < downloadMediaList.size())
                                 createMediaFileToPush();
+                            else progressDialog.dismiss();
 
                         } else {
+                            if (AssessmentApplication.isTablet) {
+                                Toast.makeText(context, "video monitoring Media push failed", Toast.LENGTH_SHORT).show();
+                            }
                             videoRecCnt++;
                             if (videoRecCnt < videoRecordingList.size())
                                 createMediaFileToPush();
+                            else progressDialog.dismiss();
                         }
                     }
-                });
+                });*/
     }
 
 
-    @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-        if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
+    @UiThread
+    protected void onPostExecute() {
+        // super.onPostExecute(o);
+        try {
+
+            if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                if (isTablet)
+                    Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
+            }
+            if (isTablet) {
+                String msg = "";
+                if (dataPushed) {
+                    msg = "Data pushed Successfully.";
+                } else {
+                    msg = "Data push failed.";
+                }
+                alertDialog = new AlertDialog.Builder(context)
+                        .setMessage(msg)
+                        .setCancelable(false)
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                ((MainActivity) context).onResponseGet();
+
+                            }
+                        });
+                alertDialog.create().show();
+            }
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     private boolean checkEmptyness(String requestString) {
@@ -383,6 +633,18 @@ public class PushDataToServer extends AsyncTask {
             metaDataObj.put("Latitude", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Latitude"));
             metaDataObj.put("Longitude", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Longitude"));
 
+            //new Entries
+            metaDataObj.put("OsVersionName", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("OsVersionName"));
+            metaDataObj.put("OsVersionNum", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("OsVersionNum"));
+            metaDataObj.put("AvailableStorage", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("AvailableStorage"));
+            metaDataObj.put("ScreenResolution", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("ScreenResolution"));
+            metaDataObj.put("Manufacturer", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Manufacturer"));
+            metaDataObj.put("Model", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Model"));
+            metaDataObj.put("ApiLevel", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("ApiLevel"));
+            metaDataObj.put("InternalStorageSize", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("InternalStorageSize"));
+
+
+
             sessionObj.put("scoreData", assessmentScoreData);
             sessionObj.put("eceScoreData", eceScoreData);
 /*            if (!COS_Constants.SD_CARD_Content)
@@ -393,7 +655,7 @@ public class PushDataToServer extends AsyncTask {
             sessionObj.put("logsData", logsData);
             sessionObj.put("assessmentData", assessmentData);
             sessionObj.put("supervisor", supervisorData);
-            if (!AssessmentApplication.isTablet)
+            if (!isTablet)
                 sessionObj.put("studentData", studentData);
 
            /* requestString = "{ \"session\": " + sessionObj +
@@ -564,7 +826,7 @@ public class PushDataToServer extends AsyncTask {
             for (int p = 0; p < paperList.size(); p++) {
                 _obj_paper = new JSONObject();
                 AssessmentPaperForPush _paper = paperList.get(p);
-                List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllNewScores(paperList.get(p).getSessionID());
+                List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllNewScores(paperList.get(p).getPaperId(), paperList.get(p).getSessionID());
                 if (scoreList.size() > 0) {
                     _obj_paper.put("languageId", _paper.getLanguageId());
                     _obj_paper.put("subjectId", _paper.getSubjectId());
@@ -579,13 +841,14 @@ public class PushDataToServer extends AsyncTask {
                     _obj_paper.put("question1Rating", _paper.getQuestion1Rating());
                     _obj_paper.put("question2Rating", _paper.getQuestion2Rating());
                     _obj_paper.put("question3Rating", _paper.getQuestion3Rating());
-                    DownloadMedia video = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeAndPaperId(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, _paper.getPaperId());
+//                    DownloadMedia video = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeAndPaperId(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, _paper.getPaperId());
+
                     /*  DownloadMedia video = new DownloadMedia();
                     video.setPaperId(_paper.getPaperId());*/
 //                    video.setPhotoUrl(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + _paper.getPaperId() + ".mp4");
 //                    video.setPhotoUrl(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + _paper.getPaperId() + ".mp4");
-                    if (video != null)
-                        videoRecordingList.add(video);
+               /*     if (video != null)
+                        videoRecordingList.add(video);*/
                     scoreData = new JSONArray();
                     for (int i = 0; i < scoreList.size(); i++) {
                         _obj_score = new JSONObject();
@@ -606,7 +869,7 @@ public class PushDataToServer extends AsyncTask {
                         _obj_score.put("isCorrect", _score.getIsCorrect());
                         _obj_score.put("userAnswer", _score.getUserAnswer());
                         _obj_score.put("paperId", _score.getPaperId());
-                        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByQidAndPaperId(_score.getQuestionId() + "", _score.getPaperId()));
+//                        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByQidAndPaperId(_score.getQuestionId() + "", _score.getPaperId()));
 //                    _obj_score.put("examId", _score.getExamId());
                         scoreData.put(_obj_score);
                     }
@@ -798,15 +1061,19 @@ public class PushDataToServer extends AsyncTask {
                         public void onResponse(String response) {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
                             Drawable icon = context.getResources().getDrawable(R.drawable.ic_check);
+                            createMediaFileToPush();
+                            CreateFilesForVideoMonitoring();
+                            //todo push on main thread
+                            dataPushed = true;
+
                             if (!autoPush) {
-                                CreateFilesForVideoMonitoring();
                                 String msg = "Data pushed successfully. " + pushCnt + " paper(s) pushed.";
                               /*  if (!dataPushed) {
                                     icon = context.getResources().getDrawable(R.drawable.ic_warning);
                                     msg = "Science data pushed successfully. ECE data push failed";
                                 }*/
-                                if (AssessmentApplication.isTablet) {
-                                    new AlertDialog.Builder(context)
+                                if (isTablet) {
+                                   /* alertDialog = new AlertDialog.Builder(context)
                                             .setMessage(msg)
                                             .setCancelable(false)
                                             .setIcon(icon)
@@ -816,22 +1083,26 @@ public class PushDataToServer extends AsyncTask {
                                                     dialog.dismiss();
                                                     ((MainActivity) context).onResponseGet();
                                                 }
-                                            }).create().show();
+                                            });
+                                    alertDialog.create().show();*/
                                 }
+                                onPostExecute();
                             }
+
                             setPushFlag();
                         }
 
                         @Override
                         public void onError(ANError anError) {
                             Log.d("PUSH_STATUS", "Science Data push failed");
+                            dataPushed = false;
                             if (!autoPush) {
                                 String msg = "Data push failed";
                                 if (dataPushed) {
                                     msg = "Ece data pushed successfully.Science data push failed.";
                                 }
-                                if (AssessmentApplication.isTablet) {
-                                    new AlertDialog.Builder(context)
+                                if (isTablet) {
+                                   /* alertDialog = new AlertDialog.Builder(context)
                                             .setMessage(msg)
                                             .setCancelable(false)
                                             .setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -840,7 +1111,8 @@ public class PushDataToServer extends AsyncTask {
                                                     dialog.dismiss();
                                                     ((MainActivity) context).onResponseGet();
                                                 }
-                                            }).create().show();
+                                            });
+                                    alertDialog.create().show();*/
                                 }
                             }
                         }
@@ -850,20 +1122,6 @@ public class PushDataToServer extends AsyncTask {
         }
     }
 
-    private void CreateFilesForVideoMonitoring() {
-        if (videoRecordingList.size() > 0) {
-            String filePath = videoRecordingList.get(videoRecCnt).getPhotoUrl();
-            if (!filePath.equalsIgnoreCase("")) {
-                try {
-                    File file = new File(filePath);
-                    if (file.exists())
-                        pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, file, "videoMonitoring");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     private String getAuthHeader() {
         String encoded = Base64.encodeToString(("pratham" + ":" + "pratham").getBytes(), Base64.NO_WRAP);
@@ -885,17 +1143,20 @@ public class PushDataToServer extends AsyncTask {
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
+                        dataPushed = true;
+
                         if (!autoPush) {
-                            dataPushed = true;
                         }
+                        onPostExecute();
                         setPushFlag();
                         BackupDatabase.backup(AssessmentApplication.getInstance());
                     }
 
                     @Override
                     public void onError(ANError anError) {
+                        dataPushed = false;
                         if (!autoPush) {
-                            new AlertDialog.Builder(context)
+                           /* alertDialog = new AlertDialog.Builder(context)
                                     .setMessage("Data push failed")
                                     .setCancelable(false)
                                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -905,8 +1166,10 @@ public class PushDataToServer extends AsyncTask {
                                             ((MainActivity) context).onResponseGet();
 
                                         }
-                                    }).create().show();
+                                    });
+                            alertDialog.create().show();*/
                         }
+                        onPostExecute();
                         Log.d("Error::", anError.getErrorDetail());
                         Log.d("Error::", anError.getMessage());
                         Log.d("Error::", anError.getResponse().toString());
@@ -914,9 +1177,26 @@ public class PushDataToServer extends AsyncTask {
                 });
     }
 
+    /*@UiThread
+    private void showDialog() {
+        alertDialog = new AlertDialog.Builder(context)
+                .setMessage("Data pushed Successfully")
+                .setCancelable(false)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        ((MainActivity) context).onResponseGet();
 
-    private void setMediaPushFlag() {
-        AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag();
+                    }
+                });
+        alertDialog.create().show();
+    }*/
+
+
+    private void setMediaPushFlag(String type) {
+        AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(type);
+        BackupDatabase.backup(context);
     }
 
 
@@ -927,10 +1207,11 @@ public class PushDataToServer extends AsyncTask {
         AppDatabase.getDatabaseInstance(context).getScoreDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
-        if (!AssessmentApplication.isTablet)
+        if (!isTablet)
             AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().setSentFlag();
 //        AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();
+        BackupDatabase.backup(context);
 
     }
 }

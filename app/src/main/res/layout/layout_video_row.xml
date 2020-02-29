@@ -15,16 +15,20 @@
         <TextView
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
-            android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0.1" />
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight="0.1"
+            app:autoSizeMaxTextSize="@dimen/_20sdp"
+            app:autoSizeMinTextSize="@dimen/_15sdp"
+            app:autoSizeTextType="uniform" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/_5sdp"
+            android:layout_margin="@dimen/_3sdp"
+            android:layout_weight="0.4"
             android:background="@drawable/main_card_bg"
-            android:padding="@dimen/_5sdp">
+            android:padding="@dimen/_3sdp">
 
             <ImageView
                 android:id="@+id/iv_question_image"
@@ -71,7 +75,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.1">
+            android:layout_weight="0.3">
 
             <Button
                 android:id="@+id/btn_capture_video"
@@ -116,9 +120,10 @@
         <RelativeLayout
             android:id="@+id/rl_answer_video"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="0.4"
             android:background="@drawable/main_card_bg"
             android:padding="@dimen/_5sdp">
 

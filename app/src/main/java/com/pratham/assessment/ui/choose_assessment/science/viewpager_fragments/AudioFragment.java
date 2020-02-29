@@ -2,13 +2,8 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,33 +20,36 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlaye
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.AudioUtil;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
-import static com.pratham.assessment.utilities.AudioUtil.audioPlayerInterface;
 
-
+@EFragment(R.layout.layout_audio_row)
 public class AudioFragment extends Fragment implements AudioPlayerInterface {
-    @BindView(R.id.tv_question)
+    @ViewById(R.id.tv_question)
     TextView question;
-    @BindView(R.id.iv_question_image)
+    @ViewById(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_gif)
+    @ViewById(R.id.iv_question_gif)
     GifView questionGif;
-    @BindView(R.id.iv_question_audio)
+    @ViewById(R.id.iv_question_audio)
     ImageView iv_question_audio;
-    @BindView(R.id.iv_start_audio)
+    @ViewById(R.id.iv_start_audio)
     ImageView iv_start_audio;
-    @BindView(R.id.rl_answer_audio)
+    @ViewById(R.id.rl_answer_audio)
     RelativeLayout rl_answer_audio;
-    @BindView(R.id.iv_answer_audio)
+    @ViewById(R.id.iv_answer_audio)
     ImageView iv_answer_audio;
     boolean isPlaying;
     boolean isAnsPlaying;
@@ -74,7 +72,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
 
     public static AudioFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        AudioFragment audioFragment = new AudioFragment();
+        AudioFragment_ audioFragment = new AudioFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -82,18 +80,33 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         return audioFragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @AfterViews
+    public void init() {
         if (getArguments() != null) {
             pos = getArguments().getInt(POS, 0);
             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
 
         }
+        setAudioQuestion();
+
     }
 
-    @Override
+
+    /* @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         if (getArguments() != null) {
+             pos = getArguments().getInt(POS, 0);
+             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
+             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+
+         }
+         setAudioQuestion();
+
+     }
+ */
+  /*  @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -107,8 +120,10 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         setAudioQuestion();
 
     }
-
+*/
     public void setAudioQuestion() {
+        setOdiaFont(getActivity(), question);
+
         if (scienceQuestion.getQname().equalsIgnoreCase(""))
             question.setText("Play the audio");
         else
@@ -163,13 +178,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             questionImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(),scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
                 }
             });
             questionGif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(),scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
                 }
             });
 
@@ -213,7 +228,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     }
 
 
-    @OnClick(R.id.iv_question_audio)
+    @Click(R.id.iv_question_audio)
     public void playQuestionAudio() {
 //        String fileName =scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid()  + ".mp3";
         try {
@@ -237,7 +252,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         }
     }
 
-    @OnClick(R.id.iv_start_audio)
+    @Click(R.id.iv_start_audio)
     public void startAudio() {
         try {
             String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + ".mp3";
@@ -268,7 +283,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     }
 
 
-    @OnClick(R.id.iv_answer_audio)
+    @Click(R.id.iv_answer_audio)
     public void onAnswerPlayClick() {
         try {
             String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + ".mp3";
@@ -305,6 +320,22 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     public void onPause() {
         super.onPause();
 //        if(audioPlayerInterface!=null)
+        String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + ".mp3";
+
+//            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
+        String path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
+
+        if (isAudioRecording) {
+            isAudioRecording = false;
+            iv_start_audio.setImageResource(R.drawable.ic_mic_24dp);
+            AudioUtil.stopRecording();
+            scienceQuestion.setUserAnswer(path);
+            rl_answer_audio.setVisibility(View.VISIBLE);
+            assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
+
+
+        }
+
         if (isPlaying || isAnsPlaying)
             AudioUtil.stopPlayingAudio();
         stopPlayer();

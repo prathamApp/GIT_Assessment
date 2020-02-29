@@ -4,45 +4,50 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
-import com.pratham.assessment.async.PushDataToServerold;
 import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
+/*import butterknife.BindView;
+import butterknife.OnClick;*/
 
+@EFragment(R.layout.fragment_push_or_assign)
 public class PushOrAssignFragment extends Fragment {
-    @BindView(R.id.btn_assign)
+    @ViewById(R.id.btn_assign)
     Button assign;
-    @BindView(R.id.btn_push)
+    @ViewById(R.id.btn_push)
     Button push;
-    @BindView(R.id.txt_video_toggle)
+    @ViewById(R.id.txt_video_toggle)
     TextView txt_video_toggle;
-    @BindView(R.id.video_toggle)
+    @ViewById(R.id.video_toggle)
     ToggleButton video_toggle;
+    @Bean(PushDataToServer.class)
+    PushDataToServer pushDataToServer;
 
     public PushOrAssignFragment() {
         // Required empty public constructor
     }
 
 
-    @Override
+    @AfterViews
+    public void init() {
+
+    }
+
+
+/*    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -59,25 +64,26 @@ public class PushOrAssignFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-    }
+    }*/
 
-    @OnClick(R.id.btn_assign)
+    @Click(R.id.btn_assign)
     public void onAssignClick() {
-        Intent intent = new Intent(getActivity(), Activity_AssignGroups.class);
+        Intent intent = new Intent(getActivity(), Activity_AssignGroups_.class);
         startActivityForResult(intent, 1);
         getActivity().startActivity(intent);
     }
 
-    @OnClick(R.id.btn_push)
+    @Click(R.id.btn_push)
     public void onPushClick() {
         /*Intent intent = new Intent(getActivity(), PushDataActivity.class);
         startActivityForResult(intent, 1);
         getActivity().startActivity(intent);*/
-        new PushDataToServer(getActivity(), false).execute();
+        pushDataToServer.setValue(getActivity(), false);
+        pushDataToServer.doInBackground();
 
     }
 
-    @OnClick(R.id.btn_clear_data)
+    @Click(R.id.btn_clear_data)
     public void onClear() {
         AlertDialog clearDataDialog = new AlertDialog.Builder(getActivity())
                 //set message, title, and icon
@@ -110,7 +116,7 @@ public class PushOrAssignFragment extends Fragment {
         appDatabase.getCrlDao().deleteAll();
     }
 
-    @OnClick(R.id.video_toggle)
+    @Click(R.id.video_toggle)
     public void onVideoToggle() {
         if (video_toggle.isChecked()) {
 //            txt_video_toggle.setText("Video monitoring is on");

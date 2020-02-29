@@ -9,8 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/_2sdp"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/_2sdp"
         android:orientation="vertical">
 
         <TextView
@@ -19,15 +19,17 @@
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="0.4"
             android:gravity="center"
-            android:text="What will be the change in quality be will be the change in quality be the change in quality?" />
+            android:text="What will be the change in quality be will be the change in quality be the change in quality?"
+            app:autoSizeMaxTextSize="@dimen/_20sdp"
+            app:autoSizeMinTextSize="@dimen/_15sdp"
+            app:autoSizeTextType="uniform" />
 
         <RelativeLayout
             android:id="@+id/rl_question_img"
             android:layout_width="@dimen/_110sdp"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_weight="0.4"
-            >
+            android:layout_weight="0.4">
 
 
             <ImageView
@@ -80,11 +82,12 @@
 
                 <GridLayout
                     android:id="@+id/grid_mcq"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginStart="@dimen/_15sdp"
                     android:alignmentMode="alignMargins"
                     android:columnCount="2" />
             </RelativeLayout>

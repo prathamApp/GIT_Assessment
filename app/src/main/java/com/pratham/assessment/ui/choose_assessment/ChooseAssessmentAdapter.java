@@ -15,11 +15,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
+
+import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 
 public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessmentAdapter.MyViewHolder> {
 
@@ -27,6 +29,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
     private int lastPos = -1;
     private List<AssessmentSubjects> assessmentViewList;
     ChoseAssessmentClicked assessmentClicked;
+    String selectedLang = "1";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
@@ -59,6 +62,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         //final ContentView gamesList = gamesViewList.get(position);
+        selectedLang = FastSave.getInstance().getString(LANGUAGE, "1");
         final AssessmentSubjects assessList = assessmentViewList.get(position);
 
         Animation animation = null;
@@ -101,7 +105,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
             @Override
             public void onClick(View v) {
 //                    if (assessList.getNodeType() != null) {
-                if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase("Select Language"))
+                if (selectedLang.equalsIgnoreCase("Select Language"))
                     Toast.makeText(mContext, "Select Language", Toast.LENGTH_SHORT).show();
                 else
                     assessmentClicked.subjectClicked(position, assessList);

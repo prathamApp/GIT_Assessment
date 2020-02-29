@@ -5,37 +5,50 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.PullData.PullDataFragment;
+import com.pratham.assessment.admin_pannel.PullData.PullDataFragment_;
 import com.pratham.assessment.admin_pannel.PushOrAssign.PushOrAssignFragment;
+import com.pratham.assessment.admin_pannel.PushOrAssign.PushOrAssignFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
-import butterknife.BindView;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
+/*import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 /**
  * Created by PEF on 19/11/2018.
  */
-
+@EFragment(R.layout.admin_panel_login)
 public class AdminPanelFragment extends Fragment implements AdminPanelContract.AdminPanelView {
     AdminPanelContract.AdminPanelPresenter adminPanelPresenter;
-    @BindView(R.id.userName)
+    @ViewById(R.id.userName)
     android.support.design.widget.TextInputEditText userNameET;
 
-    @BindView(R.id.password)
+    @ViewById(R.id.password)
     android.support.design.widget.TextInputEditText passwordET;
+
+    @AfterViews
+    public void init() {
+        Assessment_Utility.HideInputKeypad(getActivity());
+       /* userNameET.setText("pravinthorat");
+        passwordET.setText("pratham123");*/
+        /*  userNameET.setText("admin");
+        passwordET.setText("admin");*/
+       /* userNameET.setText("mh_reena");
+        passwordET.setText("pratham");*/
+        userNameET.setText("");
+        passwordET.setText("");
+        adminPanelPresenter = new AdminPanelPresenter(getActivity(), this);
+    }
 
 
     @Override
@@ -43,34 +56,36 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
         super.onAttach(context);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.admin_panel_login, container, false);
-    }
+    /*  @Nullable
+      @Override
+      public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+          return inflater.inflate(R.layout.admin_panel_login, container, false);
+      }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-        Assessment_Utility.HideInputKeypad(getActivity());
-       /* userNameET.setText("pravinthorat");
-        passwordET.setText("pratham123");*/
-        /*  userNameET.setText("admin");
-        passwordET.setText("admin");*/
-        userNameET.setText("");
-        passwordET.setText("");
+      @Override
+      public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+          super.onViewCreated(view, savedInstanceState);
+          ButterKnife.bind(this, view);
+          Assessment_Utility.HideInputKeypad(getActivity());
+         *//* userNameET.setText("pravinthorat");
+        passwordET.setText("pratham123");*//*
+     *//*  userNameET.setText("admin");
+        passwordET.setText("admin");*//*
+        userNameET.setText("mh_reena");
+        passwordET.setText("pratham");
+      *//*  userNameET.setText("");
+        passwordET.setText("");*//*
         adminPanelPresenter = new AdminPanelPresenter(getActivity(), this);
     }
-
-    @OnClick(R.id.btn_login)
+*/
+    @Click(R.id.btn_login)
     public void loginCheck() {
         adminPanelPresenter.checkLogin(getUserName(), getPassword());
         userNameET.getText().clear();
         passwordET.getText().clear();
     }
 
-    @OnClick(R.id.btn_clearData)
+    @Click(R.id.btn_clearData)
     public void clearData() {
         /*AlertDialog clearDataDialog = new AlertDialog.Builder(getActivity())
                 //set message, title, and icon
@@ -113,7 +128,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
 
     @Override
     public void openPullDataFragment() {
-        Assessment_Utility.showFragment(getActivity(), new PullDataFragment(), R.id.frame_attendance,
+        Assessment_Utility.showFragment(getActivity(), new PullDataFragment_(), R.id.frame_attendance,
                 null, PullDataFragment.class.getSimpleName());
     }
 
@@ -136,7 +151,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     @Override
     public void onLoginSuccess() {
         /* if (!startAssessment)*/
-        Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,
+        Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment_(), R.id.frame_attendance,
                 null, PushOrAssignFragment.class.getSimpleName());
         // else startActivity(new Intent(getActivity(), MenuActivity.class));
             /*Assessment_Utility.showFragment(getActivity(), new PushOrAssignFragment(), R.id.frame_attendance,

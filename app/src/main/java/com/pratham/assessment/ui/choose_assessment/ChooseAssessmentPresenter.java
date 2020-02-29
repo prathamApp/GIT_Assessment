@@ -9,16 +9,15 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.ContentTable;
-import com.pratham.assessment.domain.Session;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
+import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -27,7 +26,7 @@ import java.util.List;
 
 import static com.pratham.assessment.BaseActivity.appDatabase;
 
-
+@EBean
 public class ChooseAssessmentPresenter implements ChooseAssessmentContract.ChooseAssessmentPresenter {
 
     Context context;
@@ -36,11 +35,10 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     ArrayList<String> nodeIds;
 
 
-    public ChooseAssessmentPresenter(Context context, ChooseAssessmentContract.ChooseAssessmentView assessView) {
+    public ChooseAssessmentPresenter(Context context) {
         this.context = context;
-        this.assessView = assessView;
+        this.assessView = (ChooseAssessmentContract.ChooseAssessmentView) context;
         nodeIds = new ArrayList<>();
-        nodeIds.add("1299");
     }
 
 
@@ -143,7 +141,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         }.execute();*/
     }
 
-    @Override
+  /*  @Override
     public void startAssessSession() {
 
         new AsyncTask<Object, Void, Object>() {
@@ -151,7 +149,10 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
             protected Object doInBackground(Object[] objects) {
                 try {
                     Session startSesion = new Session();
-                    startSesion.setSessionID("" + Assessment_Constants.assessmentSession);
+                    String assessmentSession = FastSave.getInstance().getString("assessmentSession", "");
+
+//                    startSesion.setSessionID("" + Assessment_Constants.assessmentSession);
+                    startSesion.setSessionID("" + assessmentSession);
                     String timerTime = AssessmentApplication.getCurrentDateTime(false, AssessmentApplication.getCurrentDateTime());
                     startSesion.setFromDate(timerTime);
                     startSesion.setToDate("NA");
@@ -163,7 +164,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 return null;
             }
         }.execute();
-    }
+    }*/
 
     private void getListData() {
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -332,10 +333,13 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 @Override
                 protected Object doInBackground(Object[] objects) {
                     try {
+                        String currentSession = FastSave.getInstance().getString("currentSession", "");
 
-                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
+//                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
+                        String toDateTemp = appDatabase.getSessionDao().getToDate(currentSession);
                         if (toDateTemp.equalsIgnoreCase("na")) {
-                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.currentSession, AssessmentApplication.getCurrentDateTime());
+//                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.currentSession, AssessmentApplication.getCurrentDateTime());
+                            appDatabase.getSessionDao().UpdateToDate(currentSession, AssessmentApplication.getCurrentDateTime());
                         }
                         BackupDatabase.backup(context);
                     } catch (Exception e) {

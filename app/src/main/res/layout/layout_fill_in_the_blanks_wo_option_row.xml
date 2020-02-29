@@ -16,7 +16,10 @@
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.5"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="@dimen/_20sdp"
+            app:autoSizeMinTextSize="@dimen/_12sdp"
             android:scrollbars="vertical" />
 
         <ImageView
@@ -43,10 +46,13 @@
                 android:background="@drawable/custom_edit_text"
                 android:fontFamily="@font/quicksand_bold"
                 android:gravity="center"
-                android:maxHeight="@dimen/_180sdp"
+                android:maxHeight="@dimen/_140sdp"
                 android:hint="Enter Answer"
                 android:padding="@dimen/_15sdp"
                 android:textColor="@color/green"
+                app:autoSizeMaxTextSize="@dimen/_20sdp"
+                app:autoSizeMinTextSize="@dimen/_15sdp"
+                app:autoSizeTextType="uniform"
                 android:textSize="@dimen/_20sdp" />
 
             <ImageButton

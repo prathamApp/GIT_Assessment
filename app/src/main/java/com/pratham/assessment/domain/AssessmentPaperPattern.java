@@ -26,6 +26,10 @@ public class AssessmentPaperPattern implements Serializable {
     private String certificateQuestion2;
     @SerializedName("question3")
     private String certificateQuestion3;
+    @SerializedName("question4")
+    private String certificateQuestion4;
+    @SerializedName("question5")
+    private String certificateQuestion5;
 
 
     private String outofmarks;
@@ -113,6 +117,21 @@ public class AssessmentPaperPattern implements Serializable {
 
     public void setCertificateQuestion3(String certificateQuestion3) {
         this.certificateQuestion3 = certificateQuestion3;
+    }
+    public String getCertificateQuestion4() {
+        return certificateQuestion4;
+    }
+
+    public void setCertificateQuestion4(String certificateQuestion4) {
+        this.certificateQuestion4 = certificateQuestion4;
+    }
+
+    public String getCertificateQuestion5() {
+        return certificateQuestion5;
+    }
+
+    public void setCertificateQuestion5(String certificateQuestion5) {
+        this.certificateQuestion5 = certificateQuestion5;
     }
 }
 

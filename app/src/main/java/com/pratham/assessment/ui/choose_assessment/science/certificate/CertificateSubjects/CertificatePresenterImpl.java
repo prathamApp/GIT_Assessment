@@ -2,22 +2,25 @@ package com.pratham.assessment.ui.choose_assessment.science.certificate.Certific
 
 import android.content.Context;
 
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.utilities.Assessment_Constants;
 
+import org.androidannotations.annotations.EBean;
+
+@EBean
 public class CertificatePresenterImpl implements CertificateContract.CertificatePresenter {
     Context context;
     CertificateContract.CertificateView certificateView;
 
-    public CertificatePresenterImpl(Context context, CertificateContract.CertificateView certificateView) {
+    public CertificatePresenterImpl(Context context) {
         this.context = context;
-        this.certificateView = certificateView;
     }
 
     @Override
     public void getStudentName() {
-
-        String studentName = AppDatabase.getDatabaseInstance(context).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
+        String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+//        String studentName = AppDatabase.getDatabaseInstance(context).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
+        String studentName = AppDatabase.getDatabaseInstance(context).getStudentDao().getFullName(currentStudentID);
         certificateView.setStudentName(studentName);
     }
 
@@ -36,6 +39,12 @@ public class CertificatePresenterImpl implements CertificateContract.Certificate
         int q1CorrectCnt = AppDatabase.getDatabaseInstance(context).getScoreDao().getLevelCorrectCnt(level, paperId, true);
         float q1Rating = CalculateRating(q1Total, q1CorrectCnt);
         return q1Rating;
+    }
+
+    @Override
+    public void setView(CertificateContract.CertificateView certificateView) {
+        this.certificateView = certificateView;
+
     }
 
     private float CalculateRating(int q1Total, int q1CorrectCnt) {

@@ -39,6 +39,9 @@ public interface SplashContract {
         boolean getSdCardPath();
 
         void populateSDCardMenu();
+
+        void updateNewEntriesInStatusTable();
+
     }
 
 }

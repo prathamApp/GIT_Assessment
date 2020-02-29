@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -11,23 +13,45 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.pratham.assessment.async.CopyDbToOTG;
+import com.pratham.assessment.custom.custom_dialogs.CustomLodingDialog;
+import com.pratham.assessment.custom.font.FontChanger;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
+import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
+import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
+
+import net.alhazmy13.catcho.library.Catcho;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+
+import static com.pratham.assessment.utilities.Assessment_Constants.TransferredImages;
 
 
 /**
@@ -52,6 +76,18 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private static AudioManager audioManager;
     public static MediaPlayer ButtonClickSound;
     public static boolean muteFlg = false;
+    private static final int SHOW_OTG_TRANSFER_DIALOG = 9;
+    private static final int SDCARD_LOCATION_CHOOSER = 10;
+    private static final int SHOW_OTG_SELECT_DIALOG = 11;
+    private static final int HIDE_OTG_TRANSFER_DIALOG_SUCCESS = 12;
+    private static final int HIDE_OTG_TRANSFER_DIALOG_FAILED = 13;
+    CustomLodingDialog pushDialog;
+    CustomLodingDialog sd_builder;
+    LottieAnimationView push_lottie;
+    TextView txt_push_dialog_msg;
+    TextView txt_push_error;
+    RelativeLayout rl_btn;
+    Button ok_btn, eject_btn;
 
 
     @Override
@@ -73,15 +109,23 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 //                .build();
 
         muteFlg = false;
-
-        //new MediaPlayer instance
-       /*  Catcho.Builder(this)
+        Catcho.Builder(this)
                 .activity(CatchoTransparentActivity.class)
-                .recipients("ankita.lakhamade27@gmail.com")
-                .build();*/
-    }
+//                .recipients("ankita.lakhamade27@gmail.com")
+                .build();
 
+        Log.d("@path@@", AssessmentApplication.assessPath);
+//        overrideDefaultTypefaces();
+    }
+/*    private void overrideDefaultTypefaces() {
+        FontChanger.overrideDefaultFont(this, "DEFAULT", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "MONOSPACE", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "SERIF", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "SANS_SERIF", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "quicksand_bold", "fonts/lohit_oriya.ttf");
+    }*/
     public static void setMute(int m) {
+
 
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
             if (m == 1 && !muteFlg) {
@@ -249,10 +293,10 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                Log.d("$$$","BaseActivity-ActivityOnPause");
+                Log.d("$$$", "BaseActivity-ActivityOnPause");
 
                 appDatabase = AppDatabase.getDatabaseInstance(BaseActivity.this);
-                Log.d("$$$","BaseActivity2-ActivityOnPause");
+                Log.d("$$$", "BaseActivity2-ActivityOnPause");
 
                 /*appDatabase = Room.databaseBuilder(BaseActivity.this,
                         AppDatabase.class, AppDatabase.DB_NAME)
@@ -305,6 +349,121 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         }.start();
     }
 
+
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
+        @SuppressLint({"MissingPermission", "SetTextI18n"})
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case SHOW_OTG_TRANSFER_DIALOG:
+                    showSDBuilderDialog();
+                    break;
+                case SHOW_OTG_SELECT_DIALOG:
+                    ShowOTGPushDialog();
+                    rl_btn.setVisibility(View.GONE);
+                    break;
+                case HIDE_OTG_TRANSFER_DIALOG_SUCCESS:
+                    push_lottie.setAnimation("success.json");
+                    push_lottie.playAnimation();
+                    int days = appDatabase.getScoreDao().getTotalActiveDeviceDays();
+                    txt_push_dialog_msg.setText("Data of " + days + " days and\n" + TransferredImages + " Images\nCopied Successfully!!");
+                    rl_btn.setVisibility(View.VISIBLE);
+                    break;
+                case HIDE_OTG_TRANSFER_DIALOG_FAILED:
+                    push_lottie.setAnimation("error_cross.json");
+                    push_lottie.playAnimation();
+                    txt_push_dialog_msg.setText("Data Copying Failed!! Please re-insert the OTG");
+                    txt_push_dialog_msg.setTextColor(getResources().getColor(R.color.colorRed));
+                    txt_push_error.setVisibility(View.GONE);
+                    rl_btn.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
+
+    private void ShowOTGPushDialog() {
+        pushDialog = new CustomLodingDialog(this);
+        pushDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        pushDialog.setContentView(R.layout.app_send_success_dialog);
+        Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pushDialog.setCancelable(false);
+        pushDialog.setCanceledOnTouchOutside(false);
+        pushDialog.show();
+
+        push_lottie = pushDialog.findViewById(R.id.push_lottie);
+        txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
+        txt_push_error = pushDialog.findViewById(R.id.txt_push_error);
+        txt_push_error = pushDialog.findViewById(R.id.txt_push_error);
+        rl_btn = pushDialog.findViewById(R.id.rl_btn);
+        ok_btn = pushDialog.findViewById(R.id.ok_btn);
+        eject_btn = pushDialog.findViewById(R.id.eject_btn);
+
+        ok_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pushDialog.dismiss();
+            }
+        });
+        eject_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ejectOTG();
+                pushDialog.dismiss();
+            }
+        });
+
+
+    }
+
+    private void ejectOTG() {
+        Intent i = new Intent(android.provider.Settings.ACTION_MEMORY_CARD_SETTINGS);
+        startActivity(i);
+    }
+
+    private void showSDBuilderDialog() {
+        final CustomLodingDialog dialog = new CustomLodingDialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_alert_sd_card);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        Button txt_choose_sd_card = dialog.findViewById(R.id.txt_choose_sd_card);
+        txt_choose_sd_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        startActivityForResult(intent, SDCARD_LOCATION_CHOOSER);
+                    }
+                }, 200);
+                dialog.dismiss();
+
+            }
+        });
+
+    }
+
+
+    @Subscribe
+    public void updateFlagsWhenPushed(EventMessage message) {
+        if (message != null) {
+            if (message.getMessage().equalsIgnoreCase(Assessment_Constants.OTG_INSERTED)) {
+                mHandler.sendEmptyMessage(SHOW_OTG_TRANSFER_DIALOG);
+            } else if (message.getMessage().equalsIgnoreCase(Assessment_Constants.BACKUP_DB_COPIED)) {
+                mHandler.sendEmptyMessage(HIDE_OTG_TRANSFER_DIALOG_SUCCESS);
+            } else if (message.getMessage().equalsIgnoreCase(Assessment_Constants.BACKUP_DB_NOT_COPIED)) {
+                mHandler.sendEmptyMessage(HIDE_OTG_TRANSFER_DIALOG_FAILED);
+            }
+        }
+    }
+
+
     public void ActivityResumed() {
         if (setTimer) {
             setTimer = false;
@@ -333,5 +492,38 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     @Override
     public void onCompletion(MediaPlayer mp) {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SDCARD_LOCATION_CHOOSER) {
+            if (data != null && data.getData() != null) {
+                Uri treeUri = data.getData();
+                final int takeFlags = data.getFlags()
+                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                AssessmentApplication.getInstance().getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
+                mHandler.sendEmptyMessage(SHOW_OTG_SELECT_DIALOG);
+                try {
+
+                    new CopyDbToOTG().execute(treeUri);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

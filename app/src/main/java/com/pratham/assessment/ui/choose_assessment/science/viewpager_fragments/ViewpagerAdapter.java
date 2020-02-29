@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.pratham.assessment.domain.ScienceQuestion;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;

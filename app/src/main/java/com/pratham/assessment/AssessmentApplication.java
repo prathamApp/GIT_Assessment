@@ -13,6 +13,8 @@ import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
 import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.custom.font.FontChanger;
+import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.io.File;
@@ -87,7 +89,9 @@ public class AssessmentApplication extends Application {
             if (!mydir.exists())
                 mydir.mkdirs();*/
         }
-        Log.d("COS.pradigiPath", "COS.pradigiPath: " + assessPath);
+        Log.d("COS.pradigiPath", "COS.pradigiPath: " + Assessment_Constants.STORING_IN + "++" + assessPath);
+
+//        new UCEHandler.Builder(this).addCommaSeparatedEmailAddresses("ankita.lakhamade27@gmail.com").setTrackActivitiesEnabled(true).build();
 
 
 //        makeDir();
@@ -116,6 +120,17 @@ public class AssessmentApplication extends Application {
 //                .build();
 //        AndroidNetworking.initialize(getApplicationContext(), okHttpClient);
 
+
+        // overrideDefaultTypefaces();
+
+    }
+
+    private void overrideDefaultTypefaces() {
+        FontChanger.overrideDefaultFont(this, "DEFAULT", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "MONOSPACE", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "SERIF", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "SANS_SERIF", "fonts/lohit_oriya.ttf");
+        FontChanger.overrideDefaultFont(this, "quicksand_bold", "fonts/lohit_oriya.ttf");
     }
 
     private void makeDir() {

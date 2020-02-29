@@ -176,7 +176,7 @@ public class SelectTopicDialog extends Dialog {
         String selectedTopic = spinner_topic.getSelectedItem().toString();
 //        String selectedSub = spinner_subject.getSelectedItem().toString();
 //        String selectedLang = spinner_lang.getSelectedItem().toString();
-        topicSelectListener.getSelectedTopic(selectedTopic, Assessment_Constants.SELECTED_LANGUAGE, this);
+//        topicSelectListener.getSelectedTopic(selectedTopic, Assessment_Constants.SELECTED_LANGUAGE, this);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.pratham.assessment.ui.login.group_selection;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -14,12 +13,29 @@ import android.widget.TextView;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.login_menu.MenuFragment;
-import com.pratham.assessment.ui.splash_activity.SplashActivity;
+import com.pratham.assessment.ui.login_menu.MenuFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+
+@EActivity(R.layout.activity_select_group)
 public class SelectGroupActivity extends BaseActivity {
+    @AfterViews
+    public void init() {
+        try {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            Assessment_Utility.showFragment(this, new MenuFragment_(), R.id.frame_group,
+                    null, MenuFragment.class.getSimpleName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("SelectGroupActivity@@@", e.getMessage());
+        }
+
+    }
+/*
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -38,6 +54,7 @@ public class SelectGroupActivity extends BaseActivity {
 //    showAgeGroupDialog();
 
     }
+*/
 
     /* private void showAgeGroupDialog() {
          final SelectAgeGroupDialog selectAgeGroupDialog = new SelectAgeGroupDialog(this);
@@ -134,7 +151,7 @@ public class SelectGroupActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
     }
 }

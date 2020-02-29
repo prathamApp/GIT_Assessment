@@ -8,11 +8,27 @@ android {
         applicationId "com.pratham.assessment"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.08"
+        versionCode 14
+        versionName "1.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/NOTICE' // will not include NOTICE file
+        exclude 'META-INF/LICENSE' // will not include LICENSE file
+// as noted by @Vishnuvathsan you may also need to include
+// variations on the file name. It depends on your dependencies.
+// Some other common variations on notice and license file names
+        exclude 'META-INF/notice'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license'
+        exclude 'META-INF/license.txt'
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -76,7 +92,9 @@ dependencies {
     implementation 'io.nlopez.smartlocation:library:3.3.3'
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 
-    implementation "org.androidannotations:androidannotations-api:4.5.2"
+//annotations
+    annotationProcessor "org.androidannotations:androidannotations:4.6.0"
+    implementation "org.androidannotations:androidannotations-api:4.6.0"
 
     //showcase
     implementation 'com.elconfidencial.bubbleshowcase:bubbleshowcase:1.0.1'
@@ -86,6 +104,10 @@ dependencies {
     implementation 'com.github.CardinalNow:Android-CircleProgressIndicator:v0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+
+    //lottie
+    implementation 'com.airbnb.android:lottie:2.7.0'
+
     //ticker
     implementation 'com.robinhood.ticker:ticker:2.0.2'
 
@@ -94,6 +116,8 @@ dependencies {
 
 /*//gif viewer
     implementation 'com.github.Cutta:GifView:1.4'*/
+//error handler
+//    implementation 'com.github.RohitSurwase.UCE-Handler:uce_handler:1.4'
 
 }
 repositories {

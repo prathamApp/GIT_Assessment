@@ -3,13 +3,17 @@
     <item
         android:id="@+id/menu_Subject"
         android:title="Subjects" />
-   <item
+    <item
         android:id="@+id/menu_certificate"
         android:title="Certificate" />
 
-   <item
+    <item
         android:id="@+id/menu_language"
         android:title="Language" />
+
+    <item
+        android:id="@+id/menu_download_offline_language"
+        android:title="Download offline languages" />
 
 
 </menu>

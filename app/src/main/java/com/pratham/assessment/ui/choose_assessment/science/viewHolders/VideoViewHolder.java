@@ -1,14 +1,10 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewHolders;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -16,24 +12,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ScienceAdapter;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -125,25 +113,26 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick({R.id.iv_answer_image_play_icon, R.id.vv_answer_play_video})
     public void onAnswerVideoClicked() {
-        String fileName =scienceQuestion.getPaperid()+ "_" +scienceQuestion.getQid()+ ".mp4";
+        String fileName = scienceQuestion.getPaperid() + "_" + scienceQuestion.getQid() + ".mp4";
         String path = Environment.getExternalStorageDirectory().toString() + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
         Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MICRO_KIND);
         iv_answer_image_play_icon.setImageBitmap(thumb);
 
-        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, scienceQuestion.getQtid());
-        zoomImageDialog.show();
+        /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, scienceQuestion.getQtid());
+        zoomImageDialog.show();*/
+        Assessment_Utility.showZoomDialog(context, path, scienceQuestion.getQtid());
+
     }
 
     @OnClick({R.id.iv_question_image})
     public void onVideoClicked() {
-        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, scienceQuestion.getQtid());
-        zoomImageDialog.show();
+       /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, scienceQuestion.getQtid());
+        zoomImageDialog.show();*/
+        Assessment_Utility.showZoomDialog(context, path, scienceQuestion.getQtid());
 
     }
-
-
 
 
 }

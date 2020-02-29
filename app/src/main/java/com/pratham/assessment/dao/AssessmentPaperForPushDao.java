@@ -51,8 +51,8 @@ public interface AssessmentPaperForPushDao {
     public void setSentFlag();
 
     @Query("update AssessmentPaperForPush set question1Rating=:question1Rating,question2Rating=:question2Rating," +
-            "question3Rating=:question3Rating where paperId=:paperId")
-    public void setAllRatings(String question1Rating, String question2Rating, String question3Rating, String paperId);
+            "question3Rating=:question3Rating,question4Rating=:question4Rating ,question5Rating=:question5Rating where paperId=:paperId")
+    public void setAllRatings(String question1Rating, String question2Rating, String question3Rating,String question4Rating,String question5Rating, String paperId);
 
     @Query("update AssessmentPaperForPush set languageId=:languageId , subjectId=:subjectId ," +
             " examId=:examId ,examName=:examName ,totalMarks=:totalMarks ,outOfMarks=:scoredMarks ," +

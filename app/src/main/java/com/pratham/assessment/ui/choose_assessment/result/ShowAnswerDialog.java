@@ -5,16 +5,12 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
-import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
@@ -73,7 +69,7 @@ public class ShowAnswerDialog extends Dialog {
         for (int i = 0; i < userAns.size(); i++) {
             ans.append(userAns.get(i).getChoicename() + ",");
         }
-
+        Assessment_Utility.setOdiaFont(context, multipleSelectAns);
         multipleSelectAns.setText(ans);
 
     }

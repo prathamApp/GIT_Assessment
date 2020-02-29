@@ -14,6 +14,9 @@ public interface SupervisorDataDao {
     @Insert
     long insert(SupervisorData supervisorData);
 
+    @Insert
+    void insertAll(List<SupervisorData> supervisorData);
+
     @Query("DELETE FROM SupervisorData")
     public void deleteAllSupervisorData();
 

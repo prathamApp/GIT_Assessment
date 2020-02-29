@@ -4,64 +4,85 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment;
+import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment_;
 import com.pratham.assessment.domain.ModalProgram;
 import com.pratham.assessment.utilities.Assessment_Utility;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
+/*import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 /**
  * Created by PEF on 19/11/2018.
  */
 
-
+@EFragment(R.layout.pull_data_fragment)
 public class PullDataFragment extends Fragment implements PullDataContract.PullDataView, VillageSelectListener {
-    @BindView(R.id.rg_programs)
+    @ViewById(R.id.rg_programs)
     RadioGroup radioGroupPrograms;
 
-    @BindView(R.id.programSpinner)
+    @ViewById(R.id.programSpinner)
     Spinner programSpinner;
 
 
-    @BindView(R.id.stateSpinner)
+    @ViewById(R.id.stateSpinner)
     Spinner stateSpinner;
 
-    @BindView(R.id.blockSpinner)
+    @ViewById(R.id.blockSpinner)
     Spinner blockSpinner;
 
-    @BindView(R.id.save_button)
+    @ViewById(R.id.save_button)
     Button save_button;
 
 
     String selectedProgram;
-
+    @Bean(PullDataPresenterImp.class)
     PullDataContract.PullDataPresenter pullDataPresenter;
     ProgressDialog progressDialog;
     List<ModalProgram> prgrmList = new ArrayList<>();
 
-    @Nullable
+
+    @AfterViews
+    public void init() {
+        Assessment_Utility.HideInputKeypad(getActivity());
+//        pullDataPresenter = new PullDataPresenterImp(getActivity(), this);
+//        pullDataPresenter.loadSpinner();
+        pullDataPresenter.setView(this);
+        pullDataPresenter.checkConnectivity();
+        pullDataPresenter.loadPrgramsSpinner();
+
+        radioGroupPrograms.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                pullDataPresenter.clearLists();
+            }
+        });
+        //pullDataPresenter.checkConnectivity();
+    }
+
+
+ /*   @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.pull_data_fragment, container, false);
@@ -83,7 +104,7 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
             }
         });
         //pullDataPresenter.checkConnectivity();
-    }
+    }*/
 
 
     @Override
@@ -244,7 +265,7 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
     public void openLoginActivity() {
         getActivity().getSupportFragmentManager().beginTransaction().
                 remove(getActivity().getSupportFragmentManager().findFragmentById(R.id.frame_attendance)).commit();
-        Assessment_Utility.showFragment(getActivity(), new AdminPanelFragment(), R.id.frame_attendance,
+        Assessment_Utility.showFragment(getActivity(), new AdminPanelFragment_(), R.id.frame_attendance,
                 null, AdminPanelFragment.class.getSimpleName());
         // getActivity().getSupportFragmentManager().popBackStack();
     }
@@ -255,13 +276,12 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
     }
 
 
-
     @Override
     public void getSelectedItems(ArrayList<String> villageIDList) {
         pullDataPresenter.downloadStudentAndGroup(villageIDList);
     }
 
-    @OnClick(R.id.save_button)
+    @Click(R.id.save_button)
     public void saveData() {
         pullDataPresenter.onSaveClick();
     }

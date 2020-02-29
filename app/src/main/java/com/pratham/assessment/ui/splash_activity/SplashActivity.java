@@ -13,9 +13,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,14 +40,18 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
-import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment;
-import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
+import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment_;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity_;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.SplashSupportActivity;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,17 +60,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 
-
+@EActivity(R.layout.activity_splash)
 public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying {
 
-    @BindView(R.id.btn_start)
+    @ViewById(R.id.btn_start)
     Button btn_start_game;
-    @BindView(R.id.iv_logo)
+    @ViewById(R.id.iv_logo)
     ImageView iv_logo;
     /*    @BindView(R.id.iv_logo_pradigi)
         ImageView iv_logo_pradigi;
@@ -76,15 +77,32 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public static MediaPlayer bgMusic;
     //    public static AppDatabase appDatabase;
     public ProgressDialog progressDialog;
-
+    boolean isActivityRunning = false;
     List<AssessmentPaperForPush> newStudentCertificates;
 
     Context context;
-    Dialog dialog;
+    Dialog dialog, STTDialog;
+    @Bean(SplashPresenter.class)
     SplashContract.SplashPresenter splashPresenter;
+    @Bean(PushDataToServer.class)
+    PushDataToServer pushDataToServer;
     public static boolean firstPause = true, fragmentBottomOpenFlg = false, fragmentBottomPauseFlg = false, fragmentAddStudentPauseFlg = false, fragmentAddStudentOpenFlg = false;
 
-    @Override
+    @AfterViews
+    public void init() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        dialog = new ProgressDialog(this);
+        fpath = "";
+        appname = "";
+//        splashPresenter = new SplashPresenter(this, this);
+        context = SplashActivity.this;
+        btn_start_game.setVisibility(View.GONE);
+//        iv_logo_pradigi.setVisibility(View.GONE);
+        initiateApp();
+    }
+
+  /*  @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
@@ -99,7 +117,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         btn_start_game.setVisibility(View.GONE);
 //        iv_logo_pradigi.setVisibility(View.GONE);
         initiateApp();
-    }
+    }*/
 
     public void initiateApp() {
 
@@ -203,6 +221,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+
                 Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();
                 if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false)) {
                     if (!Assessment_Constants.SD_CARD_Content)
@@ -243,8 +263,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         if (!AssessmentApplication.isTablet) {
 //            splashPresenter.pushData();
             //todo uncomment PushDataToServer below
-            new PushDataToServer(this, false).execute();
-
+            //new PushDataToServer(this, false).execute();
+            pushDataToServer.setValue(this, false);
+            pushDataToServer.doInBackground();
         }
     }
 
@@ -317,7 +338,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
     @Override
     public void dismissProgressDialog() {
-        if (progressDialog != null)
+        if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
             progressDialog.dismiss();
     }
 
@@ -374,7 +395,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                showBottomFragment();
+//                showBottomFragment();
+                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
             }
         });
 
@@ -433,9 +456,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 }
                             })
                             .build();*/
-                    if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/assessment_database").exists()) {
+                    if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
                         try {
                             splashPresenter.copyDataBase();
+                            splashPresenter.updateNewEntriesInStatusTable();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -447,6 +471,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     e.printStackTrace();
                 }
             } else {
+                splashPresenter.updateNewEntriesInStatusTable();
                 appDatabase = AppDatabase.getDatabaseInstance(this);
                /* appDatabase = Room.databaseBuilder(this,
                         AppDatabase.class, AppDatabase.DB_NAME)
@@ -490,7 +515,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             else
                 showBottomFragment();
         } else {
-            startActivity(new Intent(context, SelectGroupActivity.class));
+            startActivity(new Intent(context, SelectGroupActivity_.class));
         }
 
 
@@ -514,12 +539,18 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             firstPause = false;
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 if (!AssessmentApplication.isTablet) {
-                    pullOldStudentsCertificates();
+                    if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false))
+                        pullOldStudentsCertificates();
+                    else {
+                        BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                        bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                    }
                 }
             } else {
-                Toast.makeText(context, "Connect to internet to download students of this device..", Toast.LENGTH_LONG).show();
-                BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
-                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+                if (isActivityRunning)
+                    Toast.makeText(context, "Connect to internet to download students of this device..", Toast.LENGTH_LONG).show();
+                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -542,7 +573,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                         try {
                             newStudentCertificates = new ArrayList<>();
                             for (int i = 0; i < response.length(); i++) {
-
                                 AssessmentPaperForPush paper = new AssessmentPaperForPush();
                                 paper.setPaperStartTime(response.getJSONObject(i).getString("paperstarttime"));
                                 paper.setPaperEndTime(response.getJSONObject(i).getString("paperendtime"));
@@ -560,6 +590,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 paper.setQuestion1Rating(response.getJSONObject(i).getString("question1Rating"));
                                 paper.setQuestion2Rating(response.getJSONObject(i).getString("question2Rating"));
                                 paper.setQuestion3Rating(response.getJSONObject(i).getString("question3Rating"));
+                                paper.setQuestion4Rating(response.getJSONObject(i).getString("question4Rating"));
+                                paper.setQuestion5Rating(response.getJSONObject(i).getString("question5Rating"));
                                 paper.setFullName(response.getJSONObject(i).getString("FullName"));
                                 paper.setGender(response.getJSONObject(i).getString("Gender"));
                                 paper.setAge(response.getJSONObject(i).getInt("Age"));
@@ -571,15 +603,17 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                             } else {
                                 Toast.makeText(context, "No students to pull..", Toast.LENGTH_SHORT).show();
 //                                subjectView.setSubjectToSpinner();
-                                BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
-                                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
-                                progressDialog.dismiss();
+                                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                                if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
+                                    progressDialog.dismiss();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            progressDialog.dismiss();
-                            BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
-                            bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+                            if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
+                            BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                            bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
 
                         }
                     }
@@ -588,25 +622,38 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     public void onError(ANError anError) {
                         Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
-                        progressDialog.dismiss();
+                        if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
+                            progressDialog.dismiss();
                     }
                 });
     }
 
     private void savePaperToDB() {
+        try {
 //        List<Student> AllStudents = AppDatabase.getDatabaseInstance(this).getStudentDao().getAllStudents();
 //        if (AllStudents.size() > 0) {
-        for (int i = 0; i < newStudentCertificates.size(); i++) {
-            Student student = AppDatabase.getDatabaseInstance(this).getStudentDao().getStudent(newStudentCertificates.get(i).getStudentId());
-            if (student == null)
-                addPulledStudentToDb(newStudentCertificates.get(i));
+            if (newStudentCertificates.size() > 0) {
+                for (int i = 0; i < newStudentCertificates.size(); i++) {
+                    Student student = AppDatabase.getDatabaseInstance(this).getStudentDao().getStudent(newStudentCertificates.get(i).getStudentId());
+                    if (student == null)
+                        addPulledStudentToDb(newStudentCertificates.get(i));
 //            }
+                }
+            }
+            BackupDatabase.backup(context);
+//            if (isActivityRunning) {
+            BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(bottomStudentsFragment, null);
+            ft.commitAllowingStateLoss();
+//                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
+//            }
+            if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
+            FastSave.getInstance().saveBoolean("STUDENTS_DOWNLOADED", true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        BackupDatabase.backup(context);
-        BottomStudentsFragment bottomStudentsFragment = new BottomStudentsFragment();
-        bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment.class.getSimpleName());
-
-        progressDialog.dismiss();
     }
 
     private void addPulledStudentToDb(AssessmentPaperForPush assessmentPaperForPush) {
@@ -651,7 +698,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             }
         } catch (Exception e) {
         }*/
+//        EventBus.getDefault().register(this);
         EventBus.getDefault().post("reload");
+
+//        showBottomFragment();
     }
 
     @Override
@@ -666,24 +716,36 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public void failedCopyingExisting() {
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        isActivityRunning = false;
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
 
     private void show_STT_Dialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.lang_custom_dialog);
+        STTDialog = new Dialog(this);
+        STTDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        STTDialog.setContentView(R.layout.lang_custom_dialog);
 /*        Bitmap map=COS_Utility.takeScreenShot(HomeActivity.this);
         Bitmap fast=COS_Utility.fastblur(map, 20);
         final Drawable draw=new BitmapDrawable(getResources(),fast);
         dialog.getWindow().setBackgroundDrawable(draw);*/
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
+        STTDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        STTDialog.setCancelable(false);
+        STTDialog.setCanceledOnTouchOutside(false);
 
-        dialog.show();
+        STTDialog.show();
 
-        TextView dia_title = dialog.findViewById(R.id.dia_title);
-        Button skip = dialog.findViewById(R.id.dia_btn_green);
-        Button ok = dialog.findViewById(R.id.dia_btn_yellow);
+        TextView dia_title = STTDialog.findViewById(R.id.dia_title);
+        Button skip = STTDialog.findViewById(R.id.dia_btn_green);
+        Button ok = STTDialog.findViewById(R.id.dia_btn_yellow);
         dia_title.setText("Please download language packs offline for better performance");
         ok.setText("OK");
         skip.setText("SKIP");
@@ -698,15 +760,16 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                         "com.google.android.voicesearch.greco3.languagepack.InstallActivity"));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                dialog.dismiss();
+                STTDialog.dismiss();
             }
         });
 
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FastSave.getInstance().saveBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, true);
                 showBottomFragment();
-                dialog.dismiss();
+                STTDialog.dismiss();
             }
         });
 

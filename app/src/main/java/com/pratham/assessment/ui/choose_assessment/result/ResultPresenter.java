@@ -5,6 +5,9 @@ import android.content.Context;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 
+import org.androidannotations.annotations.EBean;
+
+@EBean
 public class ResultPresenter implements ResultContract.ResultPresenter {
 
     AssessmentPaperForPush paper;

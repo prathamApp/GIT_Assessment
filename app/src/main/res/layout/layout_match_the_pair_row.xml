@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardBackgroundColor="@android:color/transparent"
-
     app:cardElevation="0dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +16,10 @@
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.4"
+            app:autoSizeMaxTextSize="@dimen/_20sdp"
+            app:autoSizeMinTextSize="@dimen/_15sdp"
+            app:autoSizeTextType="uniform" />
 
         <ImageView
             android:id="@+id/iv_question_image"
@@ -40,8 +42,8 @@
                 android:id="@+id/rl_ans_options1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_3sdp"
                 android:layout_gravity="center"
+                android:layout_margin="@dimen/_3sdp"
                 android:layout_weight="1"
                 android:padding="@dimen/_2sdp" />
 
@@ -55,9 +57,9 @@
                 android:id="@+id/rl_ans_options2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_margin="@dimen/_3sdp"
                 android:layout_weight="1"
-                android:layout_gravity="center"
                 android:background="@drawable/ripple_rectangle"
                 android:padding="@dimen/_2sdp" />
         </LinearLayout>

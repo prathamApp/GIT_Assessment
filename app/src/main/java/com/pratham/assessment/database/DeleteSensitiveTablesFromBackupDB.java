@@ -15,12 +15,12 @@ class DeleteSensitiveTablesFromBackupDB {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/assessment_database", null, SQLiteDatabase.OPEN_READWRITE);
+                    SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READWRITE);
                     if (db != null) {
 
                         db.execSQL("drop table if exists ScienceQuestion");
                         db.execSQL("drop table if exists ScienceQuestionChoice");
-                        db.execSQL("drop table if exists DownloadMedia");
+//                        db.execSQL("drop table if exists DownloadMedia");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

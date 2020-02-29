@@ -195,6 +195,21 @@
             <enum name="NEVER" value="3" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="ShadowContainer">
+        <attr name="sc_shadowColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="sparkbutton">
+        <attr name="sparkbutton_iconSize" format="dimension|reference" />
+        <attr name="sparkbutton_activeImage" format="reference" />
+        <attr name="sparkbutton_inActiveImage" format="reference" />
+        <attr name="sparkbutton_primaryColor" format="reference" />
+        <attr name="sparkbutton_secondaryColor" format="reference" />
+        <attr name="sparkbutton_pressOnTouch" format="boolean" />
+        <attr name="sparkbutton_animationSpeed" format="float" />
+        <attr name="sparkbutton_activeImageTint" format="reference" />
+        <attr name="sparkbutton_inActiveImageTint" format="reference" />
+    </declare-styleable>
 
 
 </resources>

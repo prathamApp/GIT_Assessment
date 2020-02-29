@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -20,26 +22,36 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.utilities.AudioUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.ARRANGE_SEQUENCE;
-import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.FILL_IN_THE_BLANK;
-import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.IMAGE_ANSWER;
-import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.KEYWORDS_QUESTION;
-import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.MATCHING_PAIR;
-import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.MULTIPLE_CHOICE;
-import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.MULTIPLE_SELECT;
+import static com.pratham.assessment.utilities.Assessment_Constants.ARRANGE_SEQUENCE;
+import static com.pratham.assessment.utilities.Assessment_Constants.AUDIO;
+import static com.pratham.assessment.utilities.Assessment_Constants.FILL_IN_THE_BLANK;
+import static com.pratham.assessment.utilities.Assessment_Constants.FILL_IN_THE_BLANK_WITH_OPTION;
+import static com.pratham.assessment.utilities.Assessment_Constants.IMAGE_ANSWER;
+import static com.pratham.assessment.utilities.Assessment_Constants.KEYWORDS_QUESTION;
+import static com.pratham.assessment.utilities.Assessment_Constants.MATCHING_PAIR;
+import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_CHOICE;
+import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_SELECT;
+import static com.pratham.assessment.utilities.Assessment_Constants.TRUE_FALSE;
+import static com.pratham.assessment.utilities.Assessment_Constants.VIDEO;
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
-public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHolder> {
+public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHolder> implements AudioPlayerInterface {
     Context context;
     List<ResultModalClass> resultList;
     ResultListener resultListener;
+    boolean isAudioPlaying = false, isQuestionAudioPlaying = false;
+    View prevView, currentView;
 
     public ResultAdapter(Context context, List<ResultModalClass> resultList, ResultFragment resultFragment) {
         this.context = context;
@@ -47,12 +59,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         resultListener = resultFragment;
     }
 
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView question, userAnswer, correctAnswer,correctAnsLabel, btnUserAnswer, btnCorrectAnswer, tv_you_answered_label;
+        TextView question, userAnswer, correctAnswer, correctAnsLabel, btnUserAnswer, btnCorrectAnswer, tv_you_answered_label;
         CardView cardView;
         ImageView questionImg;
-        ImageView iv_correct_wrong_indicator;
-        LinearLayout ll_correct_ans, ll_user_ans;
+        ImageView iv_correct_wrong_indicator, image_you_answered, image_correct_ans;
+        LinearLayout ll_correct_ans, ll_user_ans, ll_ans;
+        VideoView questionVideo;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +82,11 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             ll_correct_ans = itemView.findViewById(R.id.ll_correct_ans);
             ll_user_ans = itemView.findViewById(R.id.ll_user_ans);
             iv_correct_wrong_indicator = itemView.findViewById(R.id.iv_correct_wrong_indicator);
+            image_correct_ans = itemView.findViewById(R.id.media_correct_Ans);
+            image_you_answered = itemView.findViewById(R.id.media_you_answered);
+            questionVideo = itemView.findViewById(R.id.question_video);
+//            answerVideo = itemView.findViewById(R.id.video_you_answered);
+            ll_ans = itemView.findViewById(R.id.ll_answers);
         }
     }
 
@@ -82,6 +101,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, int i) {
 //        myViewHolder.setIsRecyclable(false);
 
+        setOdiaFont(context, myViewHolder.question);
+        setOdiaFont(context, myViewHolder.userAnswer);
+        setOdiaFont(context, myViewHolder.correctAnswer);
+        setOdiaFont(context, myViewHolder.correctAnsLabel);
+        setOdiaFont(context, myViewHolder.btnUserAnswer);
+        setOdiaFont(context, myViewHolder.btnCorrectAnswer);
+        setOdiaFont(context, myViewHolder.tv_you_answered_label);
+
         if (i == resultList.size() - 1) {
             resultListener.showDone(true);
         } else resultListener.showDone(false);
@@ -89,9 +116,11 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
         final ResultModalClass result = resultList.get(i);
         myViewHolder.itemView.setTag(result.getqId());
+        myViewHolder.questionImg.setVisibility(View.GONE);
+
         if (!result.getQuestionImg().equalsIgnoreCase("")) {
             myViewHolder.questionImg.setVisibility(View.VISIBLE);
-
+            myViewHolder.questionVideo.setVisibility(View.GONE);
             String fileName = Assessment_Utility.getFileName(result.getqId(), result.getQuestionImg());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
             final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -100,8 +129,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
 //            if (wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             final String path = result.getQuestionImg();
-            String[] imgPath = path.split("\\.");
-            int len;
+            final String[] imgPath = path.split("\\.");
+            final int len;
             if (imgPath.length > 0)
                 len = imgPath.length - 1;
             else len = 0;
@@ -111,20 +140,59 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         .apply(new RequestOptions()
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(myViewHolder.questionImg);
-            } else {
+                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+                        zoomImageDialog.show();*/
+                        Assessment_Utility.showZoomDialog(context, path, localPath);
+
+                    }
+                });
+            } else if (imgPath[len].equalsIgnoreCase("jpg") || imgPath[len].equalsIgnoreCase("png")) {
                 Glide.with(context)
                         .load(path)
                         .apply(new RequestOptions()
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(myViewHolder.questionImg);
+                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+                        zoomImageDialog.show();*/
+                        Assessment_Utility.showZoomDialog(context, path, localPath);
+
+                    }
+                });
+            } else if (imgPath[len].equalsIgnoreCase("mp3")) {
+                myViewHolder.questionImg.setImageResource(R.drawable.ic_play);
+                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        currentView = v;
+                        playMedia(path, localPath, v, imgPath[len]);
+                    }
+                });
+
+            } else if (imgPath[len].equalsIgnoreCase("mp4")) {
+                myViewHolder.questionImg.setImageResource(R.drawable.ic_play);
+                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myViewHolder.questionImg.setVisibility(View.GONE);
+                        myViewHolder.questionVideo.setVisibility(View.VISIBLE);
+                        playMedia(path, localPath, myViewHolder.questionVideo, imgPath[len]);
+                    }
+                });
+
             }
-            myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
+           /* myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                     zoomImageDialog.show();
                 }
-            });
+            });*/
            /* } else {
                Bitmap bitmap = BitmapFactory.decodeFile(localPath);
                 myViewHolder.questionImg.setImageBitmap(bitmap);
@@ -143,9 +211,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         myViewHolder.question.setText(result.getQuestion());
         if (!result.getUserAnswer().equalsIgnoreCase(""))
             myViewHolder.userAnswer.setText(result.getUserAnswer());
-        else if (!result.getUserAnswerId().equalsIgnoreCase("")) {
+       /* else if (!result.getUserAnswerId().equalsIgnoreCase("")) {
             showButtons(myViewHolder, true);
-        }
+        }*/
 
         myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,8 +233,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         String fileName = getFileName(scienceQuestionChoice.get(i).getQid(), scienceQuestionChoice.get(i).getChoiceurl());
                         localPath = dirPath + "/" + fileName;
 //                        }
-                        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, corrImg, localPath);
-                        zoomImageDialog.show();
+                        /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, corrImg, localPath);
+                        zoomImageDialog.show();*/
+                        Assessment_Utility.showZoomDialog(context, corrImg, localPath);
+
                     }
                 }
 
@@ -180,14 +250,18 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
                 String img = getImage(result.getUserAnswerId());
                 if (img.equalsIgnoreCase("")) {
-                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, result.getUserAnswer(), result.getUserAnswer());
-                    zoomImageDialog.show();
+                   /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, result.getUserAnswer(), result.getUserAnswer());
+                    zoomImageDialog.show();*/
+                    Assessment_Utility.showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer());
+
                 } else {
                     String fileName = getFileName(result.getqId(), img);
                     String localPath = dirPath + "/" + fileName;
 
-                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, img, localPath);
-                    zoomImageDialog.show();
+                    /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, img, localPath);
+                    zoomImageDialog.show();*/
+                    Assessment_Utility.showZoomDialog(context, img, localPath);
+
                 }
             }
         });
@@ -224,7 +298,11 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         final List<ScienceQuestionChoice> scienceQuestionChoice = AppDatabase
                 .getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(result.getqId());
         switch (scienceQuestion.getQtid()) {
+            case ARRANGE_SEQUENCE:
             case MATCHING_PAIR:
+                myViewHolder.image_you_answered.setVisibility(View.GONE);
+                myViewHolder.image_correct_ans.setVisibility(View.GONE);
+
                 showButtons(myViewHolder, result.isAttempted());
                 myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -250,8 +328,15 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         showAnswerDialog.show();
                     }
                 });
+                if (!result.isAttempted()) {
+                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                }
                 break;
             case MULTIPLE_SELECT:
+                myViewHolder.image_you_answered.setVisibility(View.GONE);
+                myViewHolder.image_correct_ans.setVisibility(View.GONE);
                 showButtons(myViewHolder, result.isAttempted());
 
                 myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
@@ -284,70 +369,113 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         showAnswerDialog.show();
                     }
                 });
-
+                if (!result.isAttempted()) {
+                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                }
                 break;
-            case ARRANGE_SEQUENCE:
+          /*  case ARRANGE_SEQUENCE:
                 showButtons(myViewHolder, result.isAttempted());
-                break;
-            case MULTIPLE_CHOICE:
-                for (int j = 0; j < scienceQuestionChoice.size(); j++) {
-                    if (!result.isAttempted()) {
-                        if (scienceQuestionChoice.get(j).getCorrect().equalsIgnoreCase("true"))
-                            if (scienceQuestionChoice.get(j).getChoiceurl().equalsIgnoreCase("")) {
-                                myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
-                                myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
-                            } else {
-                                myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
-                                myViewHolder.correctAnswer.setVisibility(View.GONE);
-                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
-                            }
-
-                        myViewHolder.btnUserAnswer.setVisibility(View.GONE);
-                        myViewHolder.userAnswer.setVisibility(View.VISIBLE);
-                        myViewHolder.userAnswer.setText("Skipped");
-                        myViewHolder.userAnswer.setTextColor(context.getResources().getColor(R.color.colorProgress15));
-
-
-                    } else {
-                        int color = myViewHolder.tv_you_answered_label.getCurrentTextColor();
-                        myViewHolder.userAnswer.setTextColor(color);
-                        if (result.getUserAnswerId().equalsIgnoreCase(scienceQuestionChoice.get(j).getQcid()) ||
-                                result.getUserAnswer().equalsIgnoreCase(scienceQuestionChoice.get(j).getChoicename())) {
-                            if (scienceQuestionChoice.get(j).getChoiceurl().equalsIgnoreCase("")) {
-                                myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
-                                myViewHolder.btnUserAnswer.setVisibility(View.GONE);
-                                myViewHolder.userAnswer.setVisibility(View.VISIBLE);
-                            } else {
-                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
-                                myViewHolder.btnUserAnswer.setVisibility(View.VISIBLE);
-                                myViewHolder.userAnswer.setVisibility(View.GONE);
-                            }
-                        }
+                myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, scienceQuestionChoice);
+                        showAnswerDialog.show();
                     }
-                    if (!result.isCorrect()) {
-                        if (scienceQuestionChoice.get(j).getCorrect().equalsIgnoreCase("true")) {
-                            if (!scienceQuestionChoice.get(j).getChoiceurl().equalsIgnoreCase(""))
-                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
-                            if (!scienceQuestionChoice.get(j).getChoicename().equalsIgnoreCase(""))
-                                myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+                });
+                break;*/
+            case FILL_IN_THE_BLANK_WITH_OPTION:
+            case MULTIPLE_CHOICE:
+                myViewHolder.image_you_answered.setVisibility(View.GONE);
+                myViewHolder.image_correct_ans.setVisibility(View.GONE);
+                ScienceQuestionChoice correctAns = new ScienceQuestionChoice();
+                ScienceQuestionChoice userAns = new ScienceQuestionChoice();
+                for (int j = 0; j < scienceQuestionChoice.size(); j++) {
+                    if (scienceQuestionChoice.get(j).getCorrect().equalsIgnoreCase("true")) {
+                        correctAns = scienceQuestionChoice.get(j);
+//                        userAns = scienceQuestionChoice.get(j);
+                    }
+                    if (scienceQuestionChoice.get(j).getQcid().equalsIgnoreCase(result.getUserAnswerId())) {
+                        userAns = scienceQuestionChoice.get(j);
+                    }
+                }
+//                for (int j = 0; j < scienceQuestionChoice.size(); j++) {
+                if (!result.isAttempted()) {
+                    if (correctAns.getChoiceurl().equalsIgnoreCase("")) {
+                        myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
+                        myViewHolder.image_correct_ans.setVisibility(View.GONE);
+                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                    } else {
+                        setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
+//                            setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
+                        myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+                        myViewHolder.correctAnswer.setVisibility(View.GONE);
+//                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
+                    }
 
-                            if (!result.getUserAnswer().equalsIgnoreCase("")) {
-                                myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
-                                myViewHolder.tv_you_answered_label.setVisibility(View.VISIBLE);
-                            }
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.image_you_answered.setVisibility(View.GONE);
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.userAnswer.setText("Skipped");
+                    myViewHolder.userAnswer.setTextColor(context.getResources().getColor(R.color.colorProgress15));
+
+
+                } else {
+                    int color = myViewHolder.tv_you_answered_label.getCurrentTextColor();
+                    myViewHolder.userAnswer.setTextColor(color);
+                    if (result.getUserAnswerId().equalsIgnoreCase(userAns.getQcid()) ||
+                            result.getUserAnswer().equalsIgnoreCase(userAns.getChoicename())) {
+                        if (userAns.getChoiceurl().equalsIgnoreCase("")) {
+                            myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
+                            myViewHolder.image_correct_ans.setVisibility(View.GONE);
+                            myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                            myViewHolder.image_you_answered.setVisibility(View.GONE);
+                            myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                        } else {
+                            setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
+                            setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
+//                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
+//                                myViewHolder.btnUserAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.image_you_answered.setVisibility(View.VISIBLE);
+                            myViewHolder.userAnswer.setVisibility(View.GONE);
+                            myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+                            myViewHolder.correctAnsLabel.setVisibility(View.VISIBLE);
+
                         }
                     }
                 }
+                if (!result.isCorrect() && result.isAttempted()) {
+                    if (userAns.getCorrect().equalsIgnoreCase("true")) {
+                        if (!userAns.getChoiceurl().equalsIgnoreCase("")) {
+//                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
+                            setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
+                            setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
+                        }
+                        if (!userAns.getChoicename().equalsIgnoreCase("")) {
+                            myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+                            myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                        }
+                        if (!result.getUserAnswer().equalsIgnoreCase("")) {
+                            myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_you_answered_label.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+//                }
                 if (!myViewHolder.correctAnswer.getText().equals("")) {
+//                    if (userAns.getChoiceurl().equalsIgnoreCase(""))
                     myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
                     myViewHolder.correctAnsLabel.setVisibility(View.VISIBLE);
 
                 } else {
                     myViewHolder.correctAnswer.setVisibility(View.GONE);
-                    myViewHolder.correctAnsLabel.setVisibility(View.GONE);
+//                    myViewHolder.correctAnsLabel.setVisibility(View.GONE);
 
                 }
-
 
              /*   if (!result.isAttempted()) {
                     myViewHolder.btnUserAnswer.setVisibility(View.GONE);
@@ -361,6 +489,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 }*/
                 break;
             case KEYWORDS_QUESTION:
+                myViewHolder.image_you_answered.setVisibility(View.GONE);
+                myViewHolder.image_correct_ans.setVisibility(View.GONE);
                 myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                 myViewHolder.btnUserAnswer.setVisibility(View.GONE);
 //                if (result.isCorrect()) {
@@ -374,6 +504,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 }*/
                 break;
             case FILL_IN_THE_BLANK:
+                myViewHolder.image_you_answered.setVisibility(View.GONE);
+                myViewHolder.image_correct_ans.setVisibility(View.GONE);
                 myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                 myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                 if (result.isCorrect()) {
@@ -383,6 +515,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     } else {
                         myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                         myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+
                     }
                 } else {
                     if (!result.getCorrectAnswer().equalsIgnoreCase("")) {
@@ -396,6 +530,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 }
                 break;
             case IMAGE_ANSWER:
+                myViewHolder.image_you_answered.setVisibility(View.GONE);
+                myViewHolder.image_correct_ans.setVisibility(View.GONE);
                 if (result.isAttempted()) {
                     myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                     myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
@@ -414,7 +550,204 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                 }
                 break;
+            case VIDEO:
+                if (result.getQuestion().equalsIgnoreCase(""))
+                    myViewHolder.question.setText("Video");
+                if (result.isAttempted()) {
+                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    myViewHolder.question.setVisibility(View.VISIBLE);
 
+                    myViewHolder.userAnswer.setVisibility(View.GONE);
+                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.image_you_answered.setVisibility(View.VISIBLE);
+                    myViewHolder.image_you_answered.setImageResource(R.drawable.ic_play);
+                    myViewHolder.image_you_answered.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+//                            myViewHolder.image_you_answered.setVisibility(View.GONE);
+//                            myViewHolder.answerVideo.setVisibility(View.VISIBLE);
+                            showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer());
+//                            playMedia(result.getUserAnswer(), result.getUserAnswer(), myViewHolder.answerVideo, "mp4");
+                        }
+                    });
+
+                } else {
+                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                }
+                break;
+            case AUDIO:
+                if (result.getQuestion().equalsIgnoreCase(""))
+                    myViewHolder.question.setText("Audio");
+                if (result.isAttempted()) {
+                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    myViewHolder.question.setVisibility(View.VISIBLE);
+
+                    myViewHolder.userAnswer.setVisibility(View.GONE);
+                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.image_you_answered.setVisibility(View.VISIBLE);
+                    myViewHolder.image_you_answered.setImageResource(R.drawable.ic_play);
+                    isAudioPlaying = false;
+                    myViewHolder.image_you_answered.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (prevView != null)
+                                ((ImageView) prevView).setImageResource(R.drawable.ic_play);
+                            currentView = view;
+                            if (prevView != null && view != prevView && isAudioPlaying) {
+                                ((ImageView) prevView).setImageResource(R.drawable.ic_play);
+                                isAudioPlaying = false;
+                                AudioUtil.stopPlayingAudio();
+                                stopPlayer();
+                            }
+                            prevView = view;
+                            if (isAudioPlaying) {
+                                isAudioPlaying = false;
+                                ((ImageView) view).setImageResource(R.drawable.ic_play);
+                                AudioUtil.stopPlayingAudio();
+                                stopPlayer();
+
+                            } else {
+                                isAudioPlaying = true;
+                                ((ImageView) view).setImageResource(R.drawable.ic_pause);
+                                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
+                                    AudioUtil.playRecording(result.getUserAnswer(), ResultAdapter.this);
+                                else
+                                    AudioUtil.playRecording(result.getUserAnswer(), ResultAdapter.this);
+                            }
+                        }
+                    });
+
+                } else {
+                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
+                }
+                break;
+
+            case TRUE_FALSE:
+                myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
+                myViewHolder.btnUserAnswer.setVisibility(View.GONE);
+                myViewHolder.image_you_answered.setVisibility(View.GONE);
+                myViewHolder.image_correct_ans.setVisibility(View.GONE);
+//                myViewHolder.answerVideo.setVisibility(View.GONE);
+                if (result.isAttempted()) {
+                    if (result.isCorrect()) {
+                        myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+                        myViewHolder.ll_user_ans.setVisibility(View.GONE);
+                    } else {
+                        myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+                        myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+
+                    }
+                }
+        }
+
+    }
+
+    private void playMedia(String path, String localPath, View view, String extension) {
+        if (extension.equalsIgnoreCase("mp3")) {
+            if (isQuestionAudioPlaying) {
+                isQuestionAudioPlaying = false;
+                ((ImageView) view).setImageResource(R.drawable.ic_play);
+                AudioUtil.stopPlayingAudio();
+                stopPlayer();
+
+            } else {
+                isQuestionAudioPlaying = true;
+                ((ImageView) view).setImageResource(R.drawable.ic_pause);
+                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
+                    AudioUtil.playRecording(path, ResultAdapter.this);
+                else AudioUtil.playRecording(localPath, ResultAdapter.this);
+            }
+        } else if (extension.equalsIgnoreCase("mp4")) {
+            MediaController mediaController = new MediaController(context);
+            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
+                ((VideoView) view).setVideoPath(path);
+            else ((VideoView) view).setVideoPath(localPath);
+
+            ((VideoView) view).setMediaController(mediaController);
+            mediaController.setAnchorView(view);
+            ((VideoView) view).setZOrderOnTop(true);
+            ((VideoView) view).setZOrderMediaOverlay(true);
+            ((VideoView) view).start();
+        }
+    }
+
+    private void setImage(ScienceQuestionChoice scienceQuestionChoice, String answer, ImageView view) {
+        final String path = answer;
+        String extension = getFileExtension(path);
+        String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), answer);
+        final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+        if (extension.equalsIgnoreCase("gif")) {
+            prevView = view;
+            Glide.with(context).asGif()
+                    .load(path)
+                    .apply(new RequestOptions()
+                            .placeholder(Drawable.createFromPath(localPath)))
+                    .into(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+                    zoomImageDialog.show();*/
+                    Assessment_Utility.showZoomDialog(context, path, localPath);
+
+                }
+            });
+        } else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
+            prevView = view;
+            Glide.with(context)
+                    .load(path)
+                    .apply(new RequestOptions()
+                            .placeholder(Drawable.createFromPath(localPath)))
+                    .into(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+                    zoomImageDialog.show();*/
+                    Assessment_Utility.showZoomDialog(context, path, localPath);
+                    /**/
+                }
+            });
+        } else if (extension.equalsIgnoreCase("mp3")) {
+            prevView = view;
+            view.setImageResource(R.drawable.ic_play);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ImageView) prevView).setImageResource(R.drawable.ic_play);
+                    currentView = view;
+                    if (prevView != null && view != prevView && isAudioPlaying) {
+                        ((ImageView) prevView).setImageResource(R.drawable.ic_play);
+                        isAudioPlaying = false;
+                        AudioUtil.stopPlayingAudio();
+                        stopPlayer();
+                    }
+                    prevView = view;
+                    if (isAudioPlaying) {
+                        isAudioPlaying = false;
+                        ((ImageView) view).setImageResource(R.drawable.ic_play);
+                        AudioUtil.stopPlayingAudio();
+                        stopPlayer();
+
+                    } else {
+                        isAudioPlaying = true;
+                        ((ImageView) view).setImageResource(R.drawable.ic_pause);
+                        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
+                            AudioUtil.playRecording(path, ResultAdapter.this);
+                        else AudioUtil.playRecording(localPath, ResultAdapter.this);
+                    }
+                }
+            });
+        } else if (extension.equalsIgnoreCase("mp4")) {
         }
 
     }
@@ -453,5 +786,19 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         return resultList.size();
     }
 
+
+    @Override
+    public void stopPlayer() {
+        if (prevView != null)
+            ((ImageView) prevView).setImageResource(R.drawable.ic_play);
+        if (currentView != null)
+            ((ImageView) currentView).setImageResource(R.drawable.ic_play);
+        if (isAudioPlaying) {
+            isAudioPlaying = false;
+        }
+        if (isQuestionAudioPlaying) {
+            isQuestionAudioPlaying = false;
+        }
+    }
 
 }

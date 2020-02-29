@@ -9,11 +9,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
@@ -21,6 +23,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
@@ -29,6 +33,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StatFs;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.IntRange;
@@ -41,6 +46,7 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -53,15 +59,20 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.domain.StorageInfo;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog_;
 import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 
@@ -75,10 +86,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.InvalidKeyException;
@@ -88,11 +101,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -211,6 +227,108 @@ public class Assessment_Utility {
         return currentVersion;
     }
 
+    //new
+    public static String getOSVersion() {
+        String osVersionNum = Build.VERSION.RELEASE;
+        String osVersionName = "";
+
+        Field[] fields = Build.VERSION_CODES.class.getFields();
+        for (Field field : fields) {
+            osVersionName = field.getName();
+            int osApiLevel = -1;
+
+            try {
+                osApiLevel = field.getInt(new Object());
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+        return osVersionName;
+    }
+
+    //new
+    public static String getOSVersionNo() {
+        return Build.VERSION.RELEASE;
+    }
+
+    //new
+    public static String getAvailableStorage() {
+        Long internalStorageSize;
+        StatFs stat = new StatFs(Environment.getDataDirectory().getPath());
+        long bytesAvailable;
+        if (android.os.Build.VERSION.SDK_INT >=
+                android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
+        } else {
+            bytesAvailable = (long) stat.getBlockSize() * (long) stat.getAvailableBlocks();
+        }
+        internalStorageSize = bytesAvailable / (1024 * 1024);
+        String storage = String.valueOf(internalStorageSize);
+        return storage + " MB";
+    }
+
+    //new
+    public static String getScreenResolution(AppCompatActivity context) {
+        Display display = context.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        String strwidth = String.valueOf(width);
+        String strheight = String.valueOf(height);
+        Configuration config = context.getResources().getConfiguration();
+        return "W " + strwidth + " x H " + strheight + " pixels dpi: " + config.densityDpi;
+    }
+
+
+    //new
+    public static String getManufacturer() {
+        return Build.MANUFACTURER;
+
+    }
+
+    //new
+    public static String getModel() {
+        return Build.MODEL;
+
+    }
+
+    //new
+    public static int getApiLevel() {
+        int osApiLevel = -1;
+        Field[] fields = Build.VERSION_CODES.class.getFields();
+        for (Field field : fields) {
+            try {
+                osApiLevel = field.getInt(new Object());
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+        return osApiLevel;
+    }
+
+    //new
+    public static String getInternalStorageSize() {
+        StatFs stat = new StatFs(Environment.getDataDirectory().getPath());
+        long bytesAvailable;
+        if (android.os.Build.VERSION.SDK_INT >=
+                android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
+        } else {
+            bytesAvailable = (long) stat.getBlockSize() * (long) stat.getAvailableBlocks();
+        }
+        return "" + bytesAvailable / (1024 * 1024);
+    }
+
+
     public static String getRandomNumStr(int NumLen) {
         Random random = new Random(System.currentTimeMillis());
         StringBuffer str = new StringBuffer();
@@ -256,7 +374,7 @@ public class Assessment_Utility {
         }
     }
 
-    public static String getVersion() {
+  /*  public static String getVersionNo() {
         Context context = AssessmentApplication.getInstance();
         String packageName = context.getPackageName();
         try {
@@ -267,6 +385,12 @@ public class Assessment_Utility {
             return null;
         }
     }
+*/
+
+    /*public static int getVersionNo() {
+        int version = Build.VERSION.SDK_INT;
+        return version;
+    }*/
 
     static int Display_Year = 0;
     static int Dont_Disclose = 0;
@@ -1820,8 +1944,101 @@ public class Assessment_Utility {
     }
 
     public static void showZoomDialog(Context context, String path, String localPath) {
-        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-        zoomImageDialog.show();
+        Intent intent = new Intent(context, ZoomImageDialog_.class);
+        intent.putExtra("onlinePath", path);
+        intent.putExtra("localPath", localPath);
+        context.startActivity(intent);
+//        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+//        zoomImageDialog.show();
+    }
+
+    public static String getFileExtension(String fileName) {
+        String extension = "";
+        String[] splitted = fileName.split("\\.");
+        extension = splitted[splitted.length - 1];
+        return extension;
+    }
+
+    public static List<StorageInfo> getStorageList() {
+        List<StorageInfo> list = new ArrayList<StorageInfo>();
+        String def_path = Environment.getExternalStorageDirectory().getPath();
+        boolean def_path_removable = Environment.isExternalStorageRemovable();
+        String def_path_state = Environment.getExternalStorageState();
+        boolean def_path_available = def_path_state.equals(Environment.MEDIA_MOUNTED)
+                || def_path_state.equals(Environment.MEDIA_MOUNTED_READ_ONLY);
+        boolean def_path_readonly = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY);
+
+        HashSet<String> paths = new HashSet<String>();
+        int cur_removable_number = 1;
+
+        if (def_path_available) {
+            paths.add(def_path);
+            list.add(0, new StorageInfo(def_path, def_path_readonly, def_path_removable, def_path_removable ? cur_removable_number++ : -1));
+        }
+
+        BufferedReader buf_reader = null;
+        try {
+            buf_reader = new BufferedReader(new FileReader("/proc/mounts"));
+            String line;
+            Log.d(TAG, "/proc/mounts");
+            while ((line = buf_reader.readLine()) != null) {
+                Log.d(TAG, line);
+                if (line.contains("vfat") || line.contains("/mnt")) {
+                    StringTokenizer tokens = new StringTokenizer(line, " ");
+                    String unused = tokens.nextToken(); //device
+                    String mount_point = tokens.nextToken(); //mount point
+                    if (paths.contains(mount_point)) {
+                        continue;
+                    }
+                    unused = tokens.nextToken(); //file system
+                    List<String> flags = Arrays.asList(tokens.nextToken().split(",")); //flags
+                    boolean readonly = flags.contains("ro");
+
+                    if (line.contains("/dev/block/vold")) {
+                        if (!line.contains("/mnt/secure")
+                                && !line.contains("/mnt/asec")
+                                && !line.contains("/mnt/obb")
+                                && !line.contains("/dev/mapper")
+                                && !line.contains("tmpfs")) {
+                            paths.add(mount_point);
+                            list.add(new StorageInfo(mount_point, readonly, true, cur_removable_number++));
+                        }
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (buf_reader != null) {
+                try {
+                    buf_reader.close();
+                } catch (IOException ex) {
+                }
+            }
+        }
+        return list;
+    }
+
+
+    public static void setOdiaFont(Context context, View view) {
+        try {
+            String currentLang = FastSave.getInstance().getString("language", "1");
+            if (currentLang.equalsIgnoreCase("12")) {
+                Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/lohit_oriya.ttf");
+                if (view instanceof CheckBox) {
+                    ((CheckBox) view).setTypeface(font);
+                } else if (view instanceof RadioButton) {
+                    ((RadioButton) view).setTypeface(font);
+                } else if (view instanceof TextView) {
+                    ((TextView) view).setTypeface(font);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

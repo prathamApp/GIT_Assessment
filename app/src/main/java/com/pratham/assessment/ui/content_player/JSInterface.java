@@ -16,6 +16,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.Score;
@@ -246,12 +247,16 @@ public class JSInterface implements RecognitionListener {
                     String deviceId = appDatabase.getStatusDao().getValue("DeviceId");
 
                     Score score = new Score();
-                    score.setSessionID(Assessment_Constants.currentSession);
+                    String currentSession = FastSave.getInstance().getString("currentSession", "");
+//                    score.setSessionID(Assessment_Constants.currentSession);
+                    score.setSessionID(currentSession);
                     score.setResourceID(WebViewActivity.webResId);
                     score.setQuestionId(questionId);
                     score.setScoredMarks(scorefromGame);
                     score.setTotalMarks(totalMarks);
-                    score.setStudentID(Assessment_Constants.currentStudentID);
+                    String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+//                    score.setStudentID(Assessment_Constants.currentStudentID);
+                    score.setStudentID(currentStudentID);
 
                     splited = startTime.split("\\s+");
                     splitedDate = splited[0].split("\\-+");
@@ -271,12 +276,18 @@ public class JSInterface implements RecognitionListener {
 
                         Assessment assessment = new Assessment();
                         assessment.setResourceIDa(/*gameWebViewList.get(WebViewActivity.gameCounter).getResourceId()*/WebViewActivity.webResId);
-                        assessment.setSessionIDa(Assessment_Constants.assessmentSession);
-                        assessment.setSessionIDm(Assessment_Constants.currentSession);
+                        String assessmentSession = FastSave.getInstance().getString("assessmentSession", "");
+
+//                        assessment.setSessionIDa(Assessment_Constants.assessmentSession);
+                        assessment.setSessionIDa(assessmentSession);
+//                        assessment.setSessionIDm(Assessment_Constants.currentSession);
+                        assessment.setSessionIDm(currentSession);
                         assessment.setQuestionIda(questionId);
                         assessment.setScoredMarksa(scorefromGame);
                         assessment.setTotalMarksa(totalMarks);
-                        assessment.setStudentIDa(Assessment_Constants.currentStudentID);
+                        String currentStudentId = FastSave.getInstance().getString("currentStudentID", "");
+//                        assessment.setStudentIDa(Assessment_Constants.currentStudentID);
+                        assessment.setStudentIDa(currentStudentId);
                         assessment.setStartDateTimea(customDate + " " + customTime);
                         assessment.setDeviceIDa(deviceId.equals(null) ? "0000" : deviceId);
                         assessment.setEndDateTime(AssessmentApplication.getCurrentDateTime());
@@ -325,12 +336,16 @@ public class JSInterface implements RecognitionListener {
                     String deviceId = appDatabase.getStatusDao().getValue("DeviceId");
 
                     Score score = new Score();
-                    score.setSessionID(Assessment_Constants.currentSession);
+                    String currentSession = FastSave.getInstance().getString("currentSession", "");
+//                    score.setSessionID(Assessment_Constants.currentSession);
+                    score.setSessionID(currentSession);
                     score.setResourceID(WebViewActivity.webResId);
                     score.setQuestionId(questionId);
                     score.setScoredMarks(scorefromGame);
                     score.setTotalMarks(totalMarks);
-                    score.setStudentID(Assessment_Constants.currentStudentID);
+                    String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+//                    score.setStudentID(Assessment_Constants.currentStudentID);
+                    score.setStudentID(currentStudentID);
 
                     splited = startTime.split("\\s+");
                     splitedDate = splited[0].split("\\-+");
@@ -351,12 +366,17 @@ public class JSInterface implements RecognitionListener {
 
                         Assessment assessment = new Assessment();
                         assessment.setResourceIDa(/*gameWebViewList.get(WebViewActivity.gameCounter).getResourceId()*/WebViewActivity.webResId);
-                        assessment.setSessionIDa(Assessment_Constants.assessmentSession);
-                        assessment.setSessionIDm(Assessment_Constants.currentSession);
+                        String assessmentSession = FastSave.getInstance().getString("assessmentSession", "");
+//                        assessment.setSessionIDa(Assessment_Constants.assessmentSession);
+                        assessment.setSessionIDa(assessmentSession);
+//                        assessment.setSessionIDm(Assessment_Constants.currentSession);
+                        assessment.setSessionIDm(currentSession);
                         assessment.setQuestionIda(questionId);
                         assessment.setScoredMarksa(scorefromGame);
                         assessment.setTotalMarksa(totalMarks);
-                        assessment.setStudentIDa(Assessment_Constants.currentStudentID);
+                        String currentstudentID = FastSave.getInstance().getString("currentStudentID", "");
+//                        assessment.setStudentIDa(Assessment_Constants.currentStudentID);
+                        assessment.setStudentIDa(currentstudentID);
                         assessment.setStartDateTimea(customDate + " " + customTime);
                         assessment.setDeviceIDa(deviceId.equals(null) ? "0000" : deviceId);
                         assessment.setEndDateTime(AssessmentApplication.getCurrentDateTime());

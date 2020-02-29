@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
@@ -23,30 +22,42 @@ import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ResultOuterModalClass;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+/*import butterknife.ButterKnife;
+import butterknife.OnClick;*/
 
+@EFragment(R.layout.fragment_result)
 public class ResultFragment extends Fragment implements ResultListener {
 
-    @BindView(R.id.rv_question_answers)
+    @ViewById(R.id.rv_question_answers)
     RecyclerView rv_question_answers;
-    @BindView(R.id.tv_out_of_marks)
+    @ViewById(R.id.tv_out_of_marks)
     TextView tv_out_of_marks;
-    @BindView(R.id.tv_marks_obtained)
+    @ViewById(R.id.tv_marks_obtained)
     TextView tv_marks_obtained;
-    @BindView(R.id.tv_topic)
+    @ViewById(R.id.tv_topic)
     TextView tv_topic;
-    @BindView(R.id.tv_subject)
+    @ViewById(R.id.tv_subject)
     TextView tv_subject;
-    @BindView(R.id.btn_done)
+    @ViewById(R.id.btn_done)
     Button btn_done;
+    @ViewById(R.id.toolbar)
+    Toolbar mToolbar;
+    @ViewById(R.id.app_bar)
+    AppBarLayout mAppBarLayout;
     /*   @BindView(R.id.certificate_frame)
        FrameLayout certificate_frame;*/
+    @Bean(ResultPresenter.class)
     ResultContract.ResultPresenter presenter;
     List<ResultModalClass> resultList;
     ResultOuterModalClass outerModalClass;
@@ -57,7 +68,59 @@ public class ResultFragment extends Fragment implements ResultListener {
         // Required empty public constructor
     }
 
-    @Override
+    @AfterViews
+    public void init() {
+        outerModalClass = (ResultOuterModalClass) getActivity().getIntent().getSerializableExtra("result");
+        resultList = outerModalClass.getResultList();
+        outOfMarks = outerModalClass.getOutOfMarks();
+        marksObtained = outerModalClass.getMarksObtained();
+        studentId = outerModalClass.getStudentId();
+        examStartTime = outerModalClass.getExamStartTime();
+        examEndTime = outerModalClass.getExamEndTime();
+        examId = outerModalClass.getExamId();
+        subjectId = outerModalClass.getSubjectId();
+        paperId = outerModalClass.getPaperId();
+        tv_marks_obtained.setText(marksObtained);
+        tv_out_of_marks.setText(outOfMarks);
+
+   /*     Bundle bundle = new Bundle();
+        bundle.putSerializable("result", outerModalClass);
+        Assessment_Utility.showFragment(getActivity(), new CertificateFragment(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+*/
+        btn_done.setVisibility(View.GONE);
+
+//        presenter = new ResultPresenter(getActivity());
+        String studentName = presenter.getStudent(studentId);
+        mToolbar.setTitle(studentName);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setSubtitleTextColor(Color.WHITE);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+
+        String subName = presenter.getSubjectName(examId);
+        String topicName = presenter.getTopicName(examId);
+        tv_topic.setText(topicName);
+        tv_subject.setText(subName);
+        ResultAdapter resultAdapter = new ResultAdapter(getActivity(), resultList, this);
+        rv_question_answers.setAdapter(resultAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        rv_question_answers.setLayoutManager(linearLayoutManager);
+        resultAdapter.notifyDataSetChanged();
+
+//        AppBarLayout mAppBarLayout = view.findViewById(R.id.app_bar);
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            //            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+            }
+        });
+    }
+
+  /*  @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -70,8 +133,8 @@ public class ResultFragment extends Fragment implements ResultListener {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_result, container, false);
     }
-
-    @Override
+*/
+/*    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Toolbar mToolbar = view.findViewById(R.id.toolbar);
@@ -90,10 +153,10 @@ public class ResultFragment extends Fragment implements ResultListener {
         tv_marks_obtained.setText(marksObtained);
         tv_out_of_marks.setText(outOfMarks);
 
-   /*     Bundle bundle = new Bundle();
+   *//*     Bundle bundle = new Bundle();
         bundle.putSerializable("result", outerModalClass);
         Assessment_Utility.showFragment(getActivity(), new CertificateFragment(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
-*/
+*//*
         btn_done.setVisibility(View.GONE);
 
         presenter = new ResultPresenter(getActivity());
@@ -125,14 +188,14 @@ public class ResultFragment extends Fragment implements ResultListener {
                 }
             }
         });
-    }
+    }*/
 
-    @OnClick(R.id.btn_done)
+    @Click(R.id.btn_done)
     public void onDoneClick() {
         AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
         Bundle bundle = new Bundle();
         bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
-        Assessment_Utility.showFragment(getActivity(), new CertificateFragment(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+        Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
 
     }
 

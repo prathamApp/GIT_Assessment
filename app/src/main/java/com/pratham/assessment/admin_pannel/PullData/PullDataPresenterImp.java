@@ -28,6 +28,7 @@ import com.pratham.assessment.interfaces.API_Content_Result;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
+import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 
 import java.lang.reflect.Type;
@@ -39,7 +40,7 @@ import java.util.List;
 /**
  * Created by PEF on 20/11/2018.
  */
-
+@EBean
 public class PullDataPresenterImp implements PullDataContract.PullDataPresenter, API_Content_Result {
     Context context;
     PullDataContract.PullDataView pullDataView;
@@ -57,10 +58,8 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
     Boolean isConnectedToRasp = false;
     API_Content api_content;
 
-    public PullDataPresenterImp(Context context, PullDataContract.PullDataView pullDataView) {
+    public PullDataPresenterImp(Context context) {
         this.context = context;
-        this.pullDataView = pullDataView;
-        checkConnectivity();
         api_content = new API_Content(context, this);
     }
 
@@ -138,6 +137,11 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
     public void loadSpinner() {
         String[] states = context.getResources().getStringArray(R.array.india_states);
         pullDataView.showStatesSpinner(states);
+    }
+
+    @Override
+    public void setView(PullDataContract.PullDataView pullDataView) {
+        this.pullDataView = pullDataView;
     }
 
     @Override
@@ -753,8 +757,8 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
 //        if (isConnectedToRasp)
 //            pullDataView.shoConfermationDialog(crlList.size(), studentList.size(), groupList.size(), raspVillageList.size());
 //        else
-        if(crlList.size()!=0 && studentList.size()!=0 && groupList.size()!=0 && villageList.size()!=0)
-        pullDataView.shoConfermationDialog(crlList.size(), studentList.size(), groupList.size(), villageList.size());
+        if (crlList.size() != 0 && studentList.size() != 0 && groupList.size() != 0 && villageList.size() != 0)
+            pullDataView.shoConfermationDialog(crlList.size(), studentList.size(), groupList.size(), villageList.size());
     }
 
     @Override

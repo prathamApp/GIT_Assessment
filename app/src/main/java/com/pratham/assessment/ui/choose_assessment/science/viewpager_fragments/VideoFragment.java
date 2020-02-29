@@ -10,12 +10,8 @@ import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -33,40 +29,44 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.Assessment
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.PermissionUtils;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 
+@EFragment(R.layout.layout_video_row)
 public class VideoFragment extends Fragment {
 
-    @BindView(R.id.tv_question)
+    @ViewById(R.id.tv_question)
     TextView question;
-    @BindView(R.id.iv_question_image)
+    @ViewById(R.id.iv_question_image)
     ImageView questionImage;
-    @BindView(R.id.iv_question_gif)
+    @ViewById(R.id.iv_question_gif)
     GifView questionGif;
-    @BindView(R.id.iv_answer_image_play_icon)
+    @ViewById(R.id.iv_answer_image_play_icon)
     ImageView iv_answer_image_play_icon;
-    @BindView(R.id.btn_capture_video)
+    @ViewById(R.id.btn_capture_video)
     Button btn_capture_video;
-    @BindView(R.id.vv_question)
+    @ViewById(R.id.vv_question)
     VideoView vv_question;
-    @BindView(R.id.vv_answer_play_video)
+    @ViewById(R.id.vv_answer_play_video)
     VideoView vv_answer;
-    /* @BindView(R.id.rl_answer_video)*/
+    @ViewById(R.id.rl_answer_video)
     RelativeLayout rl_answer_video;
     AssessmentAnswerListener assessmentAnswerListener;
     String fileName;
     String questionPath;
     public static final int VIDEO_CAPTURE = 101;
 
+    String filePath;
 
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
@@ -81,8 +81,20 @@ public class VideoFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @AfterViews
+    public void init() {
+        if (getArguments() != null) {
+            pos = getArguments().getInt(POS, 0);
+            scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
+            assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+
+        }
+        setVideoQuestion();
+
+    }
+
     public static VideoFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        VideoFragment videoFragment = new VideoFragment();
+        VideoFragment_ videoFragment = new VideoFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -90,7 +102,7 @@ public class VideoFragment extends Fragment {
         return videoFragment;
     }
 
-    @Override
+/*    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -114,9 +126,11 @@ public class VideoFragment extends Fragment {
         ButterKnife.bind(this, view);
         rl_answer_video = view.findViewById(R.id.rl_answer_video);
         setVideoQuestion();
-    }
+    }*/
 
     public void setVideoQuestion() {
+        setOdiaFont(getActivity(), question);
+
         fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
         rl_answer_video.setVisibility(View.GONE);
 //        questionPath = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded" + "/" + fileName;
@@ -163,7 +177,7 @@ public class VideoFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.btn_capture_video)
+    @Click(R.id.btn_capture_video)
     public void captureVideo() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 //        assessmentAnswerListener.setVideoResult(intent, VIDEO_CAPTURE, scienceQuestion);
@@ -174,7 +188,7 @@ public class VideoFragment extends Fragment {
 */
     }
 
-    @OnClick({R.id.iv_answer_image_play_icon, R.id.vv_answer_play_video})
+    @Click({R.id.iv_answer_image_play_icon, R.id.vv_answer_play_video})
     public void onAnswerVideoClicked() {
         MediaController mediaController = new MediaController(getActivity());
 
@@ -192,7 +206,7 @@ public class VideoFragment extends Fragment {
         zoomImageDialog.show();*/
     }
 
-    @OnClick({R.id.iv_question_image})
+    @Click({R.id.iv_question_image})
     public void onVideoClicked() {
      /*   ZoomImageDialog zoomImageDialog = new ZoomImageDialog(getActivity(), path, scienceQuestion.getQtid());
         zoomImageDialog.show();*/
@@ -223,8 +237,10 @@ public class VideoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        vv_question.pause();
-        vv_answer.pause();
+        if (vv_question != null)
+            vv_question.pause();
+        if (vv_answer != null)
+            vv_answer.pause();
     }
 
     public void showAnswerVideo() {
@@ -271,7 +287,7 @@ public class VideoFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "Camera not found", Toast.LENGTH_LONG).show();
         }
-        String filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
+        filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
 
         startActivityForResult(intent, videoCapture);
     }
@@ -320,7 +336,7 @@ public class VideoFragment extends Fragment {
         try {
 
             showAnswerVideo();
-            assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
+            assessmentAnswerListener.setAnswerInActivity("", filePath, scienceQuestion.getQid(), null);
 //        checkAssessment(queCnt);
         } catch (Exception e) {
             e.printStackTrace();

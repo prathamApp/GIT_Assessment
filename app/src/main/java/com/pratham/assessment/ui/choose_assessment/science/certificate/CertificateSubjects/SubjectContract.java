@@ -1,5 +1,7 @@
 package com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects;
 
+import android.content.Context;
+
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 
 import java.util.List;
@@ -11,6 +13,8 @@ public interface SubjectContract {
         public void getSubjectsFromDB(String selectedLang);
 
         void pullCertificates();
+
+        void setView(SubjectContract.SubjectView subjectView);
     }
 
     public interface SubjectView {
