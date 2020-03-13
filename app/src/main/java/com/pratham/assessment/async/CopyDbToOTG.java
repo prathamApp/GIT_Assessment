@@ -20,14 +20,19 @@ import static com.pratham.assessment.database.AppDatabase.DB_NAME;
 
 
 public class CopyDbToOTG extends AsyncTask {
+    String actPhotoPath;
+    DocumentFile mediaFolder;
+    DocumentFile newMediaFolder;
+    int totalActivityFolders;
+    File[] files;
 
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
+            actPhotoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/";
             Assessment_Constants.TransferredImages = 0;
             Uri treeUri = (Uri) objects[0];
             DocumentFile rootFile = DocumentFile.fromTreeUri(AssessmentApplication.getInstance(), treeUri);
-
             DocumentFile fca_backup_file = rootFile.findFile("Assessment_Backup_Data");
             if (fca_backup_file == null)
                 fca_backup_file = rootFile.createDirectory("Assessment_Backup_Data");
@@ -43,7 +48,7 @@ public class CopyDbToOTG extends AsyncTask {
                 mediaFolder = thisTabletFolder.createDirectory(media_Folder);
 
             //copy db files
-            File activityPhotosFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
+//            File activityPhotosFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
             File currentDB = AssessmentApplication.getInstance().getDatabasePath(DB_NAME);
             File parentPath = currentDB.getParentFile();
 
@@ -64,7 +69,15 @@ public class CopyDbToOTG extends AsyncTask {
                 out.close();
             }
 
-            if (activityPhotosFile.exists()) {
+            File activityPhotosFile = new File(actPhotoPath);
+            files = activityPhotosFile.listFiles();
+            if (files != null)
+                totalActivityFolders = files.length;
+
+            copyActivityData(activityPhotosFile, mediaFolder);
+
+
+/*            if (activityPhotosFile.exists()) {
                 File[] files = activityPhotosFile.listFiles();
                 Assessment_Constants.TransferredImages = files.length;
                 for (int i = 0; i < files.length; i++) {
@@ -84,13 +97,52 @@ public class CopyDbToOTG extends AsyncTask {
                     out.flush();
                     out.close();
                 }
-            }
+            }*/
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
+
+    private void copyActivityData(File activityPhotosFile, DocumentFile parentFolder) {
+        try {
+            Log.d("!!!", "inside copyActivityData");
+
+            DocumentFile currentFolder = parentFolder.findFile(activityPhotosFile.getName());
+            if (currentFolder == null)
+                currentFolder = parentFolder.createDirectory(activityPhotosFile.getName());
+            File[] files = activityPhotosFile.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    Log.d("Files", "\nDirectory : " + file.getName());//CanonicalPath());
+                    copyActivityData(file, currentFolder);
+                } else {
+                    Log.d("Files", "\nFile : " + file.getName());//CanonicalPath());
+                    DocumentFile dFile = currentFolder.createFile("image", file.getName());
+                    OutputStream out = AssessmentApplication.getInstance().getContentResolver().openOutputStream(dFile.getUri());
+                    FileInputStream in = new FileInputStream(file.getAbsolutePath());
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    in.close();
+                    out.flush();
+                    out.close();
+                    Assessment_Constants.TransferredImages++;
+                }
+            }
+            Log.d("!!!", "inside copyActivityData for");
+
+        } catch (Exception e) {
+            Log.d("!!!", "qqqqqqq");
+
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     protected void onPostExecute(Object o) {

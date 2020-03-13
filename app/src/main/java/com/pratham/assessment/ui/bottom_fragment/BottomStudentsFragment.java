@@ -86,7 +86,6 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
     @AfterViews
     public void init() {
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         addAvatarsInList();
         studentList = new ArrayList<>();

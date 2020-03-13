@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/subjects_bg"
+    android:orientation="vertical">
+    <!--    android:background="#80e3ff"-->
+
+    <TextView
+        android:id="@+id/tv_Topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="Oops, Something went wrong!!"
+        android:textAlignment="center"
+        android:textColor="@color/dark_blue"
+        android:textSize="@dimen/_18sdp" />
+
+    <TextView
+        android:id="@+id/tv_Topic_"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_Topic"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="Sorry about that. Press the report button to send the error to us."
+        android:textAlignment="center"
+        android:textColor="@color/colorBtnRedLight"
+        android:textSize="@dimen/_12sdp" />
+
+    <Button
+        android:id="@+id/catcho_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_Topic_"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/red_button"
+        android:elevation="@dimen/_5sdp"
+        android:paddingStart="@dimen/_15sdp"
+        android:paddingEnd="@dimen/_15sdp"
+        android:text="Report"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10sdp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/catcho_img"></RelativeLayout>
+
+</RelativeLayout>

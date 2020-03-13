@@ -30,8 +30,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.choose_assessment.science.certificate.AssessmentCertificateActivity"
+            android:name=".CatchoActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.choose_assessment.science.certificate.AssessmentCertificateActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.choose_assessment.result.ResultActivity_"
             android:screenOrientation="portrait" />
@@ -47,6 +50,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,11 +58,12 @@
             android:name=".ui.choose_assessment.ece.ECEActivity_"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_"
+            android:name=".ui.choose_assessment.ChooseAssessmentActivity_"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -74,37 +79,41 @@
         <activity
             android:name=".ui.login.group_selection.SelectGroupActivity_"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.content_player.WebViewActivity"
             android:screenOrientation="sensorLandscape" />
-
         <activity
             android:name=".CatchoTransparentActivity"
-            android:screenOrientation="sensorLandscape" />
+            android:parentActivityName=".BaseActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.qr_scan.QRScanActivity_"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.choose_assessment.science.custom_dialogs.ZoomImageDialog_"
             android:screenOrientation="portrait" />
-
-
-        <!--        <activity
+        <activity
+            android:name=".custom.ProcessPhoenix"
+            android:process=":phoenix"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--
+        <activity
             android:name="com.rohitss.uceh.UCEDefaultActivity"
-            android:process=":error_activity"/>-->
-
+            android:process=":error_activity"/>
+        -->
         <service
             android:name=".services.AppExitService"
             android:enabled="true"
             android:stopWithTask="false" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <!-- <service
+        <!--
+ <service
              android:name=".services.BkgdVideoRecordingService"
-             android:exported="false" />-->
-
+             android:exported="false" />
+        -->
         <receiver
             android:name=".services.OTGListener"
             android:enabled="true">
@@ -114,4 +123,5 @@
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

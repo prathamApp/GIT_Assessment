@@ -229,21 +229,19 @@ public class Assessment_Utility {
 
     //new
     public static String getOSVersion() {
-        String osVersionNum = Build.VERSION.RELEASE;
+//        String osVersionNum = Build.VERSION.RELEASE;
         String osVersionName = "";
 
         Field[] fields = Build.VERSION_CODES.class.getFields();
         for (Field field : fields) {
             osVersionName = field.getName();
-            int osApiLevel = -1;
+//            int osApiLevel = -1;
 
             try {
-                osApiLevel = field.getInt(new Object());
+//                osApiLevel = field.getInt(new Object());
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e) {
+            }  catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }

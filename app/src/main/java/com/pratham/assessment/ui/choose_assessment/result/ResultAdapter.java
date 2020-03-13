@@ -39,6 +39,7 @@ import static com.pratham.assessment.utilities.Assessment_Constants.KEYWORDS_QUE
 import static com.pratham.assessment.utilities.Assessment_Constants.MATCHING_PAIR;
 import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_CHOICE;
 import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_SELECT;
+import static com.pratham.assessment.utilities.Assessment_Constants.TEXT_PARAGRAPH;
 import static com.pratham.assessment.utilities.Assessment_Constants.TRUE_FALSE;
 import static com.pratham.assessment.utilities.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
@@ -304,6 +305,17 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.image_correct_ans.setVisibility(View.GONE);
 
                 showButtons(myViewHolder, result.isAttempted());
+
+
+                if (result.isAttempted()) {
+                    if (result.isCorrect()) {
+                        myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.btnUserAnswer.setVisibility(View.VISIBLE);
+
+                    }
+                }
                 myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -488,6 +500,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                 }*/
                 break;
+            case TEXT_PARAGRAPH:
             case KEYWORDS_QUESTION:
                 myViewHolder.image_you_answered.setVisibility(View.GONE);
                 myViewHolder.image_correct_ans.setVisibility(View.GONE);
@@ -646,6 +659,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                     }
                 }
+                break;
         }
 
     }

@@ -84,6 +84,7 @@ public class Assessment_Constants {
     public static String STORE_DOWNLOADED_MEDIA_PATH = "/.Assessment/Content/Downloaded";
     public static String STORE_VIDEO_MONITORING_PATH = "/.Assessment/Content/VideoMonitoring";
     public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
+    public static String STORE_STUDENT_IMAGE_PATH = "/.Assessment/Content/StudentImages";
     public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO = "answerAudio";
@@ -131,6 +132,8 @@ public class Assessment_Constants {
     public static String TELUGU_ID = "14";
     public static String URDU_ID = "15";
 
+    public static final String STT_REGEX = "[\"\\-+.'^?!@#%-_;&*,:|।<>()]";
+
 
     //Assessment question types
     public static final String MULTIPLE_CHOICE = "1";
@@ -144,9 +147,11 @@ public class Assessment_Constants {
     public static final String AUDIO = "9";
     public static final String KEYWORDS_QUESTION = "11";
     public static final String IMAGE_ANSWER = "12";
+    public static final String TEXT_PARAGRAPH = "13";
 
 
     public static final boolean isPracticeModeOn = true;
+    public static String StudentPhotoPath = "";
 
 
     public static enum URL {

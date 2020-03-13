@@ -109,10 +109,10 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 //                .build();
 
         muteFlg = false;
-        Catcho.Builder(this)
-                .activity(CatchoTransparentActivity.class)
+       /* Catcho.Builder(this)
+                .activity(CatchoActivity.class)
 //                .recipients("ankita.lakhamade27@gmail.com")
-                .build();
+                .build();*/
 
         Log.d("@path@@", AssessmentApplication.assessPath);
 //        overrideDefaultTypefaces();

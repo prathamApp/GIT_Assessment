@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -26,11 +27,13 @@ public class CertificateRatingAdapter extends RecyclerView.Adapter<CertificateRa
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView question;
         RatingBar ratingBar;
+        LinearLayout ll_rating;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             question = itemView.findViewById(R.id.tv_question);
             ratingBar = itemView.findViewById(R.id.rb_ratingStars);
+            ll_rating = itemView.findViewById(R.id.ll_rating);
         }
     }
 
@@ -45,8 +48,12 @@ public class CertificateRatingAdapter extends RecyclerView.Adapter<CertificateRa
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         CertificateRatingModalClass ratingModalClass = questionList.get(i);
-        myViewHolder.question.setText(ratingModalClass.getCertificateQuestion());
-        myViewHolder.ratingBar.setRating(ratingModalClass.getRating());
+        if (ratingModalClass.getCertificateQuestion().equalsIgnoreCase("") || ratingModalClass.getCertificateQuestion() == null) {
+            myViewHolder.ll_rating.setVisibility(View.GONE);
+        } else {
+            myViewHolder.question.setText(ratingModalClass.getCertificateQuestion());
+            myViewHolder.ratingBar.setRating(ratingModalClass.getRating());
+        }
     }
 
     @Override

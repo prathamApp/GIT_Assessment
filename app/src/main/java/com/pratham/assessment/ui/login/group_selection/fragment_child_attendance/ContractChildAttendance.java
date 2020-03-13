@@ -8,7 +8,7 @@ import com.pratham.assessment.domain.Student;
 public interface ContractChildAttendance {
     interface attendanceView {
         void childItemClicked(Student student, int position);
+        void clickPhoto(String studentID, int pos);
 
-        void moveToDashboardOnChildClick(Student student, int position, View v);
     }
 }

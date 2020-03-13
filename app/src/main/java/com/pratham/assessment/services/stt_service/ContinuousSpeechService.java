@@ -8,11 +8,13 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
 
 import static com.pratham.assessment.BaseActivity.setMute;
+import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 
 /**
  * Created by Ameya on 12-03-2019.
@@ -48,6 +50,7 @@ public class ContinuousSpeechService implements RecognitionListener {
 
     private String getSelectedLanguageCode() {
         String lang_code = "en";
+        Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
         if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.ENGLISH_ID))
             lang_code = Assessment_Constants.ENGLISH_CODE;
         if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.HINDI_ID))
@@ -128,7 +131,7 @@ public class ContinuousSpeechService implements RecognitionListener {
     public void onError(int error) {
         if (voiceStart) {
             resetSpeechRecognizer();
-//            speech.startListening(recognizerIntent);
+            speech.startListening(recognizerIntent);
 
             String message = "";
             if (error == SpeechRecognizer.ERROR_NETWORK_TIMEOUT) message = "network timeout";
@@ -156,9 +159,10 @@ public class ContinuousSpeechService implements RecognitionListener {
         Log.d("STT-Res", "\n");
 
         stt_result.Stt_onResult(matches);
-        resetSpeechRecognizer();
-        voiceStart = false;
-
+        if (!voiceStart) {
+            resetSpeechRecognizer();
+        } else
+            speech.startListening(recognizerIntent);
     }
 
     @Override

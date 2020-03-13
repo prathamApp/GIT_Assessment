@@ -1,15 +1,16 @@
 package com.pratham.assessment.ui.login.group_selection.fragment_child_attendance;
 
 import android.content.Intent;
-import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +26,10 @@ import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.utilities.PermissionUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -34,8 +37,13 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import static android.app.Activity.RESULT_OK;
+import static com.pratham.assessment.utilities.Assessment_Constants.StudentPhotoPath;
 
 @EFragment(R.layout.fragment_child_attendance)
 public class FragmentChildAttendance extends Fragment implements ContractChildAttendance.attendanceView {
@@ -54,12 +62,18 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
     private int revealX;
     private int revealY;
     private String groupID = "";
+    private static final int CAMERA_REQUEST = 1;
+    public static final int CAPTURE_IMAGE = 0;
 
+    int childItemPos;
+    String studID;
 
     @AfterViews
     public void init() {
         students = getArguments().getParcelableArrayList(Assessment_Constants.STUDENT_LIST);
         avatars = new ArrayList<>();
+
+
         if (AssessmentApplication.isTablet) {
             btn_attendance_next.setVisibility(View.VISIBLE);
             //         add_child.setVisibility(View.GONE);
@@ -123,7 +137,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             rv_child.setHasFixedSize(true);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
             rv_child.setLayoutManager(mLayoutManager);
-            rv_child.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(15), true));
+            rv_child.addItemDecoration(new GridSpacingItemDecoration(2, Assessment_Utility.dpToPx(getActivity(), 15), true));
             rv_child.setItemAnimator(new DefaultItemAnimator());
             // rv_child.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
             rv_child.setAdapter(childAdapter);
@@ -164,7 +178,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         // setChilds(students);
     }
 
-    @Override
+    /*@Override
     public void moveToDashboardOnChildClick(Student student, int position, View v) {
         AssessmentApplication.bubble_mp.start();
         //      FastSave.getInstance().saveString(Assessment_Constants.AVATAR, student.getAvatarName());
@@ -172,7 +186,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         s.add(student);
         markAttendance(s);
         presentActivity(v);
-    }
+    }*/
 
     @Touch(R.id.btn_attendance_next)
     public boolean setNextAvatar(View view, MotionEvent event) {
@@ -260,6 +274,98 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
     }
 
 
+    @Override
+    public void clickPhoto(String studentID, int pos) {
+
+
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
+
+            if (!((SelectGroupActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
+                Toast.makeText(getActivity(), "Give Camera permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
+            } else {
+//
+                childItemPos = pos;
+                studID = studentID;
+//                String imageName = studentID + ".jpg";
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+//                cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+            }
+        } else {
+            childItemPos = pos;
+            studID = studentID;
+//                String imageName = studentID + ".jpg";
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+//                cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+         /*   childItemPos = pos;
+            String imageName = studentID + ".jpg";
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            File imagesFolder = new File(StudentPhotoPath);
+            if (!imagesFolder.exists()) imagesFolder.mkdirs();
+            File image = new File(imagesFolder, imageName);
+            Uri capturedImageUri = Uri.fromFile(image);
+            cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);*/
+        }
+
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("codes", String.valueOf(requestCode) + resultCode);
+        try {
+            if (requestCode == CAMERA_REQUEST) {
+                if (resultCode == RESULT_OK) {
+                    String imageName = studID + ".jpg";
+//                    if (!imagesFolder.exists()) imagesFolder.mkdirs();
+//                    File image = new File(imagesFolder, imageName);
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    createDirectoryAndSaveFile(photo, imageName);
+//
+//                    Uri capturedImageUri = Uri.fromFile(image);
+                    childAdapter.notifyItemChanged(childItemPos);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) {
+        try {
+            File imagesFolder = new File(StudentPhotoPath);
+            if (!imagesFolder.exists()) imagesFolder.mkdir();
+
+            File file = new File(StudentPhotoPath + "/" + fileName);
+
+
+//           File  file1 = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
+
+//            if (!direct.exists()) direct.mkdir();
+
+//            File fileName = new File(direct, fileName);
+           /* if (fileName.exists())
+                fileName.delete();*/
+
+
+            FileOutputStream out = new FileOutputStream(file);
+            imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public void markAttendance(ArrayList<Student> stud) {
         //     FastSave.getInstance().saveString(Assessment_Constants.SESSIONID, COS_Utility.getUUID().toString());
         ArrayList<Attendance> attendances = new ArrayList<>();
@@ -304,11 +410,11 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
 
     }*/
 
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
+    /* private int dpToPx(int dp) {
+         Resources r = getResources();
+         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+     }
+ */
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;

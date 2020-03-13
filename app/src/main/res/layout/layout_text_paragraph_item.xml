@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_2sdp"
+        android:orientation="vertical">
+
+        <!--   <TextView
+               android:id="@+id/tv_question"
+               style="@style/CustomQuestionStyle"
+               android:layout_margin="@dimen/_5sdp"
+               android:layout_weight="0.5"
+               app:autoSizeTextType="uniform"
+               app:autoSizeMaxTextSize="@dimen/_20sdp"
+               app:autoSizeMinTextSize="@dimen/_12sdp"
+               android:scrollbars="vertical" />-->
+
+        <ScrollView
+            android:id="@+id/myScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.5"
+            android:elevation="5dp"
+            android:fadeScrollbars="false"
+            android:padding="@dimen/_5sdp"
+            android:scrollbarSize="6dp">
+
+            <com.nex3z.flowlayout.FlowLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/myflowlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginBottom="@dimen/_35sdp"
+                app:flChildSpacing="10dp" />
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/iv_question_image"
+            style="@style/CustomQuestionImageStyle"
+            android:layout_weight="0.5" />
+
+        <com.pratham.assessment.custom.gif_viewer.GifView
+            android:id="@+id/iv_question_gif"
+            style="@style/CustomQuestionImageStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.6" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8">
+
+            <EditText
+                android:id="@+id/et_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/custom_edit_text"
+                android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
+                android:hint="Enter Answer"
+                android:maxHeight="@dimen/_140sdp"
+                android:padding="@dimen/_15sdp"
+                android:textColor="@color/green"
+                android:textSize="@dimen/_20sdp"
+                android:visibility="gone"
+                app:autoSizeMaxTextSize="@dimen/_20sdp"
+                app:autoSizeMinTextSize="@dimen/_15sdp"
+                app:autoSizeTextType="uniform" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true">
+
+                <ImageButton
+                    android:id="@+id/ib_mic"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_rectangle"
+                    android:padding="@dimen/_15sdp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_mic_24dp" />
+
+                <ImageButton
+                    android:id="@+id/ib_stop"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_rectangle"
+                    android:padding="@dimen/_15sdp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_stop_black_24dp" />
+            </LinearLayout>
+            <!--<com.pratham.assessment.custom.voice_ripple.VoiceRippleView
+                android:id="@+id/ib_mic"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center"
+                app:VoiceRippleView_rippleColor="@color/colorAccent" />-->
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

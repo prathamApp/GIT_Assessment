@@ -29,6 +29,15 @@
     android:layout_height="@dimen/_160sdp"
     android:layout_centerInParent="true">
 
+    <!--    <ImageView
+            android:id="@+id/iv_camera"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_above="@+id/child_name"
+            android:layout_centerHorizontal="true"
+            android:elevation="@dimen/_15sdp"
+            android:src="@drawable/ic_photo_camera" />-->
+
     <ImageView
         android:id="@+id/iv_child"
         android:layout_width="@dimen/_130sdp"
@@ -36,9 +45,9 @@
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/hexagone"
+        android:elevation="@dimen/_3sdp"
         android:padding="@dimen/_25sdp"
         android:scaleType="fitCenter"
-        android:elevation="@dimen/_10sdp"
         android:src="@drawable/g1" />
 
     <ImageView
@@ -48,11 +57,25 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="@dimen/_5sdp"
-        android:src="@drawable/ic_check"
-        android:elevation="@dimen/_12sdp"
-        android:visibility="gone"
         android:layout_marginBottom="@dimen/_40sdp"
-        android:background="@drawable/main_card_bg" />
+        android:background="@drawable/main_card_bg"
+        android:elevation="@dimen/_5sdp"
+        android:src="@drawable/ic_check"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_camera"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:background="@drawable/petal_shape"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:scaleType="fitCenter"
+        android:padding="@dimen/_8sdp"
+        android:elevation="@dimen/_5sdp"
+        android:src="@drawable/ic_photo_camera_small" />
 
     <TextView
         android:id="@+id/child_name"
@@ -65,5 +88,5 @@
         android:paddingRight="@dimen/_5sdp"
         android:text="aasdldsd gnfghg"
         android:textColor="#000"
-        android:textSize="@dimen/_10sdp" />
+        android:textSize="@dimen/_7sdp" />
 </RelativeLayout><!--</com.github.florent37.shapeofview.shapes.PolygonView>--><!--</android.support.design.card.MaterialCardView>-->

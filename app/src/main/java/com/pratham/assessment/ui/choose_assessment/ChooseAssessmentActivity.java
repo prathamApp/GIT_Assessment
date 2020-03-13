@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -38,7 +39,6 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.Crl;
-import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
@@ -101,6 +101,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @AfterViews
     public void init() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
         String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(currentStudentID);
@@ -579,7 +582,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
         setLanguageInNav();
-
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments >= 1) {
+        } else {
+//            startActivity(new Intent(this, MenuActivity.class));
+            resetActivity();
+        }
 
     }
 

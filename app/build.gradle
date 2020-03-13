@@ -35,6 +35,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 
 }
 
@@ -110,6 +114,10 @@ dependencies {
 
     //ticker
     implementation 'com.robinhood.ticker:ticker:2.0.2'
+
+    //flow layout
+    // flow layout
+    implementation 'com.nex3z:flow-layout:1.2.4'
 
     //db encryption
 //    implementation "com.commonsware.cwac:saferoom:1.2.1"

@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
@@ -25,7 +26,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import static com.pratham.assessment.utilities.Assessment_Constants.StudentPhotoPath;
 
 
 @EFragment(R.layout.fragment_select_group)
@@ -41,6 +45,17 @@ public class FragmentSelectGroup extends Fragment implements ContractGroup {
     @AfterViews
     public void init() {
         ArrayList<String> present_groups = new ArrayList<>();
+
+        try {
+
+            StudentPhotoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_STUDENT_IMAGE_PATH + "/";
+            File direct = new File(StudentPhotoPath);
+            if (!direct.exists())
+                direct.mkdir();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // String groupId1 = BaseActivity.statusDao.getValue(PD_Constant.GROUPID1);
         String groupId1 = AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getValue(Assessment_Constants.GROUPID1);
 

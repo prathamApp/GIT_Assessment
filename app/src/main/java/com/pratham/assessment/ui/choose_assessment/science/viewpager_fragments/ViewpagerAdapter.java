@@ -61,6 +61,9 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                 case "12":
                     fragmentList.add(ImageAnswerFragment.newInstance(i, scienceQuestion));
                     break;
+                 case "13":
+                    fragmentList.add(TextParagraphFragment.newInstance(i, scienceQuestion));
+                    break;
                 default:
                     break;
             }

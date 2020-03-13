@@ -187,7 +187,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
         List<ScienceQuestionChoice> pairList = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
         Log.d("wwwwwwwwwww", pairList.size() + "");
         if (!pairList.isEmpty()) {
-           /* for (int p = 0; p < pairList.size(); p++) {
+          /*  for (int p = 0; p < pairList.size(); p++) {
                 list1.add(pairList.get(p).getChoicename());
             }*/
 

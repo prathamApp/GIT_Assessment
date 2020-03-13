@@ -9,13 +9,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.Student;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.pratham.assessment.utilities.Assessment_Constants.StudentPhotoPath;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder> {
     private ArrayList<Student> datalist;
@@ -36,8 +42,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
     @Override
     public ChildHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = null;
-        v = inflater.inflate(R.layout.item_child_attendance, parent, false);
+        View v = inflater.inflate(R.layout.item_child_attendance, parent, false);
         return new ChildHolder(v);
     }
 
@@ -68,11 +73,26 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
     public void onBindViewHolder(@NonNull final ChildHolder viewHolder, int pos) {
         // pos = viewHolder.getAdapterPosition();
         viewHolder.child_name.setText(datalist.get(pos).getFullName());
-        viewHolder.child_avatar.setImageResource(child_avatar.get(pos));
+        File file;
+        file = new File(StudentPhotoPath + "" + datalist.get(pos).getStudentID() + ".jpg");
+        String filepath = file.getPath();
+        if (file.exists()) {
+            Glide.with(context)
+                    .load(filepath)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                    )
 
+                    .into(viewHolder.child_avatar);
+
+        } else {
+
+            viewHolder.child_avatar.setImageResource(child_avatar.get(pos));
+        }
 
         if (datalist.get(viewHolder.getAdapterPosition()).isChecked()) {
-//            viewHolder.child_avatar.setBackground(context.getResources().getDrawable(R.drawable.hexagone2));
+//            viewHolder.child_avatar.setBackground(context.getResources().getDrawable(R.drawable.petal_shape));
 //            viewHolder.itemView.setBackground(context.getResources().getDrawable(R.drawable.correct_bg));
             viewHolder.tick.setVisibility(View.VISIBLE);
 
@@ -89,7 +109,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
             }
         });
 
-
+        viewHolder.iv_camera.setOnClickListener(v -> attendanceView.clickPhoto(datalist.get(pos).getStudentID(), pos));
     }
 /*
     @Override
@@ -136,6 +156,8 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
         ImageView child_avatar;
         @BindView(R.id.iv_tick)
         ImageView tick;
+        @BindView(R.id.iv_camera)
+        ImageView iv_camera;
        /* @BindView(R.id.child_card)
         MaterialCardView group_card;*/
 //        @BindView(R.id.card_avatar)
