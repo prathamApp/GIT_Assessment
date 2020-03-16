@@ -198,7 +198,6 @@ public class ContinuousSpeechService_New implements RecognitionListener, STT_Res
             if (silenceHandler != null) {
                 silenceHandler.removeCallbacksAndMessages(null);
                 Log.i(LOG_TAG, "silenceHandler removed");
-
             }
         } catch (Exception e) {
         }
@@ -225,7 +224,7 @@ public class ContinuousSpeechService_New implements RecognitionListener, STT_Res
         ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d("QQQ", "onPartialResults: " + matches.size());
         Log.d("QQQ", "onPartialResults: " + matches.get(0) + " ");
-
+        stt_result.Stt_onPartialResult(matches.get(0));
     }
 
     @Override

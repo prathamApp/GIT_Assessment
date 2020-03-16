@@ -133,6 +133,7 @@ public class Assessment_Constants {
     public static String URDU_ID = "15";
 
     public static final String STT_REGEX = "[\"\\-+.'^?!@#%-_;&*,:|।<>()]";
+    public static final String STT_REGEX_2 = "[\"\\-+.'^?!@#%-_;&*,:<>()]";
 
 
     //Assessment question types

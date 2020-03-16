@@ -11,6 +11,7 @@ public interface STT_Result_New {
 
     interface sttView {
         void Stt_onResult(ArrayList<String> sttResult);
+        void Stt_onPartialResult(String sttResult);
         void silenceDetected();
 
         void stoppedPressed();

@@ -14,7 +14,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -47,19 +46,17 @@ import static com.pratham.assessment.utilities.Assessment_Constants.STT_REGEX;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 
-@EFragment(R.layout.layout_text_paragraph_item)
+@EFragment(resName = "layout_text_paragraph_item")
 public class TextParagraphFragment extends Fragment implements STT_Result_New.sttView {
     @ViewById(R.id.tv_question)
     TextView question;
-    @ViewById(R.id.rg_true_false)
-    RadioGroup rg_true_false;
     @ViewById(R.id.iv_question_image)
     ImageView questionImage;
     @ViewById(R.id.iv_question_gif)
     GifView questionGif;
     @ViewById(R.id.ib_mic)
     ImageButton btn_Mic;
-   @ViewById(R.id.ib_stop)
+    @ViewById(R.id.ib_stop)
     ImageButton btn_Stop;
     @ViewById(R.id.myflowlayout)
     FlowLayout wordFlowLayout;
@@ -74,7 +71,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     static boolean[] testCorrectArr;
     public Handler handler, audioHandler, soundStopHandler, colorChangeHandler,
             startReadingHandler, quesReadHandler, endhandler;
-    public static MediaPlayer mp, mPlayer;
+//    public static MediaPlayer mp, mPlayer;
     List<String> splitWords = new ArrayList<String>();
     List<String> splitWordsPunct = new ArrayList<String>();
     List<String> wordsDurationList = new ArrayList<String>();
@@ -215,7 +212,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
                 final TextView myTextView = new TextView(context);
                 myTextView.setText(Html.fromHtml(splitWords.get(i)));
                 myTextView.setId(i);
-                myTextView.setTextSize(30);
+                myTextView.setTextSize(22);
                 myTextView.setTextColor(getResources().getColor(R.color.white));
                 final int finalI = i;
                 myTextView.setOnClickListener(v -> {
@@ -254,7 +251,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         try {
             if (quesReadHandler != null) {
                 quesReadHandler.removeCallbacksAndMessages(null);
-                try {
+               /* try {
                     if (mPlayer.isPlaying()) {
                         mPlayer.stop();
                         mPlayer.reset();
@@ -262,7 +259,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -278,9 +275,33 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
     }
 
+    @Override
+    public void Stt_onPartialResult(String sttResult) {
+        startHighlighting(sttResult);
+    }
+
+    private void startHighlighting(String sttResult) {
+        List<String> splittedResult = Arrays.asList(sttResult.split(" "));
+        int len = splittedResult.size();
+        if (wordFlowLayout != null) {
+            for (int j = 0; j < wordFlowLayout.getChildCount(); j++) {
+                wordFlowLayout.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+
+            }
+            if (scienceQuestion.getQname().toLowerCase().contains(sttResult.toLowerCase())) {
+                for (int j = 0; j < wordFlowLayout.getChildCount(); j++) {
+                    for (int i = 0; i < len; i++) {
+                        if (splittedResult.get(i).equalsIgnoreCase(((TextView) wordFlowLayout.getChildAt(j)).getText().toString()))
+                            wordFlowLayout.getChildAt(j).setBackgroundColor(Color.BLUE);
+                    }
+                }
+            }
+        }
+    }
+
 
     @Click(R.id.ib_stop)
-    public void onStopClicked(){
+    public void onStopClicked() {
         if (voiceStart) {
             voiceStart = false;
             btn_Stop.setVisibility(View.GONE);
@@ -317,6 +338,8 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
                 e.printStackTrace();
             }
         }
+        setCorrectViewColor();
+
     }
 
 
@@ -369,7 +392,6 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         String wordTime = Assessment_Utility.GetCurrentDateTime();
 //        addLearntWords(splitWordsPunct, wordsResIdList);
         addScore(0, "Words:" + word, correctWordCount, correctArr.length, wordTime, " ");
-        setCorrectViewColor();
         assessmentAnswerListener.setAnswerInActivity("", word, scienceQuestion.getQid(), null);
 
     }
@@ -387,6 +409,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         try {
             for (int x = 0; x < correctArr.length; x++) {
                 if (correctArr[x]) {
+                    (wordFlowLayout.getChildAt(x)).setBackgroundColor(getResources().getColor(R.color.transparent));
                     ((TextView) wordFlowLayout.getChildAt(x)).setTextColor(getResources().getColor(R.color.green));
                 }
             }
