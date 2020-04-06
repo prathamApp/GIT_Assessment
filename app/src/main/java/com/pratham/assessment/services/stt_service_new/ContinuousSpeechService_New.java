@@ -123,7 +123,7 @@ public class ContinuousSpeechService_New implements RecognitionListener, STT_Res
             protected Object doInBackground(Object[] objects) {
                 try {
                     Modal_Log modal_log = new Modal_Log();
-                    modal_log.setCurrentDateTime(Assessment_Utility.GetCurrentDateTime());
+                    modal_log.setCurrentDateTime(Assessment_Utility.getCurrentDateTime());
                     modal_log.setSessionId(FastSave.getInstance().getString(Assessment_Constants.currentSession, ""));
                     modal_log.setLogDetail("Stt Intent Fired - " + sttString);
                     AppDatabase.appDatabase.getLogsDao().insertLog(modal_log);

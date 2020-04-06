@@ -98,6 +98,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -241,7 +242,7 @@ public class Assessment_Utility {
 //                osApiLevel = field.getInt(new Object());
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }  catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
@@ -577,7 +578,7 @@ public class Assessment_Utility {
 
     }
 
-    public static String GetCurrentDateTime() {
+    public static String getCurrentDateTime() {
         Calendar cal = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
         return dateFormat.format(cal.getTime());
@@ -2037,6 +2038,11 @@ public class Assessment_Utility {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static String removeSpecialCharacters(String string) {
+       return Normalizer.normalize(string, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "");
     }
 
 }

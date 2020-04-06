@@ -99,4 +99,10 @@ public class ArrangeSequenceViewHolder extends RecyclerView.ViewHolder  implemen
         touchHelper.startDrag(viewHolder);
 
     }
+
+    @Override
+    public void onItemDragged(List<ScienceQuestionChoice> draggedList) {
+
+    }
+
 }

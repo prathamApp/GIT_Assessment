@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/tv_text"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_height="@dimen/_42sdp"
             android:layout_gravity="center"
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"

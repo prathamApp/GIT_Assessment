@@ -1,6 +1,5 @@
 package com.pratham.assessment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +28,7 @@ public class CatchoActivity extends AppCompatActivity {
 
             CatchoError error = (CatchoError) getIntent().getSerializableExtra(Catcho.ERROR);
             Modal_Log log = new Modal_Log();
-            log.setCurrentDateTime(Assessment_Utility.GetCurrentDateTime());
+            log.setCurrentDateTime(Assessment_Utility.getCurrentDateTime());
             log.setErrorType("ERROR");
             log.setExceptionMessage(error.toString());
             log.setExceptionStackTrace(error.getError());

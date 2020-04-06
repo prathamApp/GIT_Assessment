@@ -412,7 +412,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
                 if (toDateTemp != null) {
                     if (toDateTemp.equalsIgnoreCase("na"))
-                        AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.GetCurrentDateTime());
+                        AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
                 }
                 dialog.dismiss();
             }

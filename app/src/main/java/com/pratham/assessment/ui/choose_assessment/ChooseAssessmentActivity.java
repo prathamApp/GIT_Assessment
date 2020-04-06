@@ -118,6 +118,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public Unit invoke() {
                 Assessment_Constants.ASSESSMENT_TYPE = "supervised";
+                Assessment_Constants.supervisedAssessment=true;
 //                showSupervisionDialog();
                 return null;
             }
@@ -127,6 +128,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public Unit invoke() {
                 Assessment_Constants.ASSESSMENT_TYPE = "practice";
+                Assessment_Constants.supervisedAssessment=false;
+
                 return null;
             }
         });
@@ -459,7 +462,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
                 if (toDateTemp != null) {
                     if (toDateTemp.equalsIgnoreCase("na"))
-                        AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.GetCurrentDateTime());
+                        AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
                 }
                 finishAffinity();
 

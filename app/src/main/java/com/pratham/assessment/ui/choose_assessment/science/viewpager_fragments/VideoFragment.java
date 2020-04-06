@@ -179,6 +179,9 @@ public class VideoFragment extends Fragment {
 
     @Click(R.id.btn_capture_video)
     public void captureVideo() {
+        if (Assessment_Constants.VIDEOMONITORING) {
+            assessmentAnswerListener.pauseVideoMonitoring();
+        }
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 //        assessmentAnswerListener.setVideoResult(intent, VIDEO_CAPTURE, scienceQuestion);
         setVideoResult(intent, VIDEO_CAPTURE, scienceQuestion);
@@ -262,39 +265,49 @@ public class VideoFragment extends Fragment {
     }
 
     public void setVideoResult(Intent intent, int videoCapture, ScienceQuestion scienceQuestion) {
-        if (hasCamera()) {
-            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
 
-                if (!((ScienceAssessmentActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
-                    Toast.makeText(getActivity(), "Give Camera permissions through settings and restart the app.", Toast.LENGTH_LONG).show();
+        try {
+            if (hasCamera()) {
+                if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                    String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
+
+                    if (!((ScienceAssessmentActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
+                        Toast.makeText(getActivity(), "Give Camera permissions through settings and restart the app.", Toast.LENGTH_LONG).show();
+                    } else {
+                        videoName = scienceQuestion.getPaperid() + "_" + scienceQuestion.getQid() + ".mp4";
+                        scienceQuestion.setUserAnswer(videoName);
+                        //                    Intent takePicture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3 * 60);
+                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                        //                    startActivityForResult(intent, VIDEO_CAPTURE);
+                    }
                 } else {
                     videoName = scienceQuestion.getPaperid() + "_" + scienceQuestion.getQid() + ".mp4";
                     scienceQuestion.setUserAnswer(videoName);
-//                    Intent takePicture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+                    //                Intent takePicture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                     intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3 * 60);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-//                    startActivityForResult(intent, VIDEO_CAPTURE);
+                    //                startActivityForResult(intent, VIDEO_CAPTURE);
                 }
             } else {
-                videoName = scienceQuestion.getPaperid() + "_" + scienceQuestion.getQid() + ".mp4";
-                scienceQuestion.setUserAnswer(videoName);
+                assessmentAnswerListener.showCameraError();
 
-//                Intent takePicture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3 * 60);
-//                startActivityForResult(intent, VIDEO_CAPTURE);
+//                Toast.makeText(getActivity(), "Camera not found", Toast.LENGTH_LONG).show();
             }
-        } else {
-            Toast.makeText(getActivity(), "Camera not found", Toast.LENGTH_LONG).show();
-        }
-        filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
 
-        startActivityForResult(intent, videoCapture);
+            filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
+
+            startActivityForResult(intent, videoCapture);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assessmentAnswerListener.showCameraError();
+
+        }
     }
 
     private boolean hasCamera() {
         return getActivity().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA);
+                PackageManager.FEATURE_CAMERA_ANY);
     }
 
     @Override
@@ -324,6 +337,7 @@ public class VideoFragment extends Fragment {
                 in.close();
                 out.close();
                 showCapturedVideo();
+                assessmentAnswerListener.resumeVideoMonitoring();
             }
 
 

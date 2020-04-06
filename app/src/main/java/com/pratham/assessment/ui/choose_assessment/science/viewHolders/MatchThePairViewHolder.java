@@ -127,4 +127,9 @@ public class MatchThePairViewHolder extends RecyclerView.ViewHolder implements S
     public void requestDrag(RecyclerView.ViewHolder viewHolder) {
         touchHelper.startDrag(viewHolder);
     }
+
+    @Override
+    public void onItemDragged(List<ScienceQuestionChoice> draggedList) {
+
+    }
 }

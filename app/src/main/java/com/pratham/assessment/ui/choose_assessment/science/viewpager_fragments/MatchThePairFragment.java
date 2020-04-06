@@ -56,6 +56,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     private int pos;
     private ScienceQuestion scienceQuestion;
     ItemTouchHelper touchHelper;
+    MatchPairDragDropAdapter matchPairDragDropAdapter;
 
     @AfterViews
     public void init() {
@@ -213,7 +214,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
 
             }
 
-            MatchPairDragDropAdapter matchPairDragDropAdapter = new MatchPairDragDropAdapter(this, shuffledList, getActivity());
+            matchPairDragDropAdapter = new MatchPairDragDropAdapter(this, shuffledList, getActivity());
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(matchPairDragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
@@ -233,4 +234,10 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     public void requestDrag(RecyclerView.ViewHolder viewHolder) {
         touchHelper.startDrag(viewHolder);
     }
+
+    @Override
+    public void onItemDragged(List<ScienceQuestionChoice> draggedList) {
+        matchPairDragDropAdapter.notifyDataSetChanged();
+    }
+
 }

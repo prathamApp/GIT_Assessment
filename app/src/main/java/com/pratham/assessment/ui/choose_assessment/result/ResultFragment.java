@@ -14,15 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
+import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ResultOuterModalClass;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
+import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -32,6 +35,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
+import java.util.Objects;
 
 /*import butterknife.ButterKnife;
 import butterknife.OnClick;*/
@@ -43,6 +47,8 @@ public class ResultFragment extends Fragment implements ResultListener {
     RecyclerView rv_question_answers;
     @ViewById(R.id.tv_out_of_marks)
     TextView tv_out_of_marks;
+    @ViewById(R.id.tv_name)
+    TextView tv_name;
     @ViewById(R.id.tv_marks_obtained)
     TextView tv_marks_obtained;
     @ViewById(R.id.tv_topic)
@@ -55,6 +61,10 @@ public class ResultFragment extends Fragment implements ResultListener {
     Toolbar mToolbar;
     @ViewById(R.id.app_bar)
     AppBarLayout mAppBarLayout;
+    @ViewById(R.id.rl_result)
+    RelativeLayout rl_result;
+    @ViewById(R.id.rl_thanks)
+    RelativeLayout rl_thanks;
     /*   @BindView(R.id.certificate_frame)
        FrameLayout certificate_frame;*/
     @Bean(ResultPresenter.class)
@@ -87,39 +97,47 @@ public class ResultFragment extends Fragment implements ResultListener {
         bundle.putSerializable("result", outerModalClass);
         Assessment_Utility.showFragment(getActivity(), new CertificateFragment(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
 */
-        btn_done.setVisibility(View.GONE);
-
-//        presenter = new ResultPresenter(getActivity());
         String studentName = presenter.getStudent(studentId);
-        mToolbar.setTitle(studentName);
-        mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setSubtitleTextColor(Color.WHITE);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        tv_name.setText(studentName);
+        btn_done.setVisibility(View.GONE);
+        if (!Assessment_Constants.supervisedAssessment || !Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {
+            rl_thanks.setVisibility(View.GONE);
+//        presenter = new ResultPresenter(getActivity());
 
-        String subName = presenter.getSubjectName(examId);
-        String topicName = presenter.getTopicName(examId);
-        tv_topic.setText(topicName);
-        tv_subject.setText(subName);
-        ResultAdapter resultAdapter = new ResultAdapter(getActivity(), resultList, this);
-        rv_question_answers.setAdapter(resultAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        rv_question_answers.setLayoutManager(linearLayoutManager);
-        resultAdapter.notifyDataSetChanged();
+            mToolbar.setTitle(studentName);
+            mToolbar.setTitleTextColor(Color.WHITE);
+            mToolbar.setSubtitleTextColor(Color.WHITE);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+
+            String subName = presenter.getSubjectName(examId);
+            String topicName = presenter.getTopicName(examId);
+            tv_topic.setText(topicName);
+            tv_subject.setText(subName);
+            ResultAdapter resultAdapter = new ResultAdapter(getActivity(), resultList, this);
+            rv_question_answers.setAdapter(resultAdapter);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            rv_question_answers.setLayoutManager(linearLayoutManager);
+            resultAdapter.notifyDataSetChanged();
 
 //        AppBarLayout mAppBarLayout = view.findViewById(R.id.app_bar);
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            //            boolean isShow = false;
-            int scrollRange = -1;
+            mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                //            boolean isShow = false;
+                int scrollRange = -1;
 
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    if (scrollRange == -1) {
+                        scrollRange = appBarLayout.getTotalScrollRange();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            rl_result.setVisibility(View.GONE);
+            mAppBarLayout.setVisibility(View.GONE);
+            rl_thanks.setVisibility(View.VISIBLE);
+            btn_done.setVisibility(View.GONE);
+        }
     }
-
   /*  @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,13 +208,25 @@ public class ResultFragment extends Fragment implements ResultListener {
         });
     }*/
 
-    @Click(R.id.btn_done)
-    public void onDoneClick() {
-        AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
-        Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
 
+    @Click({R.id.btn_done, R.id.btn_ok})
+    public void onDoneClick() {
+
+        AssessmentPaperPattern paperPattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubIdAndExamId(subjectId, examId);
+        if (paperPattern.getCertificateQuestion1().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion2().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion3().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion4().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion5().equalsIgnoreCase("")
+        ) {
+            Objects.requireNonNull(getActivity()).finish();
+        } else {
+            AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
+            Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+        }
     }
 
     @Override

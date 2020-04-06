@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,7 +23,6 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Village;
-import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity_;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -371,7 +369,7 @@ public class Activity_AssignGroups extends BaseActivity {
 
                             AppDatabase.getDatabaseInstance(Activity_AssignGroups.this).getStatusDao().updateValue("village", Integer.toString(vilID));
                             AppDatabase.getDatabaseInstance(Activity_AssignGroups.this).getStatusDao().updateValue("DeviceId", "" + Settings.Secure.getString(Activity_AssignGroups.this.getContentResolver(), Settings.Secure.ANDROID_ID));
-                            AppDatabase.getDatabaseInstance(Activity_AssignGroups.this).getStatusDao().updateValue("ActivatedDate", Assessment_Utility.GetCurrentDateTime());
+                            AppDatabase.getDatabaseInstance(Activity_AssignGroups.this).getStatusDao().updateValue("ActivatedDate", Assessment_Utility.getCurrentDateTime());
                             AppDatabase.getDatabaseInstance(Activity_AssignGroups.this).getStatusDao().updateValue("ActivatedForGroups", group1 + "," + group2 + "," + group3 + "," + group4 + "," + group5);
 
                             //  MultiPhotoSelectActivity.dilog.dismissDilog();

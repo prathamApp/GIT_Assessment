@@ -171,6 +171,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -179,19 +180,71 @@
             android:id="@+id/rv_question_answers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/btn_done"
-             />
+            android:layout_above="@+id/btn_done" />
 
 
         <Button
             android:id="@+id/btn_done"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom|center"
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/ripple_effect"
             android:text="Done" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_thanks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_chk"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_67sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/_5sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_check_circle_36dp" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_chk"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="Name"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp" />
+
+        <TextView
+            android:id="@+id/tv_thanks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_margin="@dimen/_5sdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="@string/thank_you_for_giving_assessment"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp" />
+
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@+id/tv_thanks"
+            android:text="@string/Okay"
+            android:padding="@dimen/_3sdp"
+            android:textSize="@dimen/_15sdp"
+            android:layout_margin="@dimen/_15sdp"
+            android:background="@drawable/ripple_effect_save_btn"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

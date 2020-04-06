@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
+package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.Audio;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.AudioUtil;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -30,13 +31,12 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 
-
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_audio_row)
-public class AudioFragment extends Fragment implements AudioPlayerInterface {
+public class AudioFragment extends Fragment implements AudioPlayerInterface,AudioContract.AudioView {
     @ViewById(R.id.tv_question)
     TextView question;
     @ViewById(R.id.iv_question_image)
@@ -65,6 +65,8 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     private ScienceQuestion scienceQuestion;
     AssessmentAnswerListener assessmentAnswerListener;
 
+    @Bean(AudioPresenterImpl.class)
+    AudioContract.AudioPresenter presenter;
 
     public AudioFragment() {
         // Required empty public constructor

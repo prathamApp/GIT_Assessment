@@ -135,7 +135,7 @@ public class SelectGroupActivity extends BaseActivity {
 
                 if (toDateTemp != null) {
                     if (toDateTemp.equalsIgnoreCase("na"))
-                        AppDatabase.getDatabaseInstance(SelectGroupActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.GetCurrentDateTime());
+                        AppDatabase.getDatabaseInstance(SelectGroupActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
                 }
                 finishAffinity();
 

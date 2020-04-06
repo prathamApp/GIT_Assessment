@@ -26,7 +26,7 @@ import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequenceFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequence.ArrangeSequenceFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -44,7 +44,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
     //    QuestionTypeListener questionTypeListener;
     StartDragListener startDragListener;
     AssessmentAnswerListener assessmentAnswerListener;
-
+    String qid = "";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -84,9 +84,8 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
 //        holder.mTitle.setText(data.get(position));
 //        if(data.get(position))
         setOdiaFont(context, holder.mTitle);
-
+        holder.setIsRecyclable(false);
         holder.mTitle.setTextColor(Assessment_Utility.selectedColor);
-
         Drawable drawable = context.getResources().getDrawable(R.drawable.ic_swap_vertical_small);
         drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * 0.2),
                 (int) (drawable.getIntrinsicHeight() * 0.2));
@@ -95,7 +94,8 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
 
         draggedList.clear();
         if (data.size() > 0) {
-            ScienceQuestionChoice scienceQuestionChoice = data.get(position);
+            qid=data.get(0).getQid();
+                    ScienceQuestionChoice scienceQuestionChoice = data.get(position);
             if (!scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
                 final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getChoiceurl();
 
@@ -171,24 +171,57 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
     public void onRowMoved(int fromPosition, int toPosition) {
         try {
 
-            Log.d("QQQ", fromPosition + " " + toPosition);
-            if (fromPosition < toPosition) {
+/*            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(data, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(data, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+            draggedList = data;
+            Log.d("sss", draggedList.toString());*/
+
+
+
+
+         /*   Log.d("QQQ", fromPosition + " " + toPosition);
+            if (fromPosition < toPosition && fromPosition > 0 ) {
                 for (int i = fromPosition; i < toPosition; i++) {
                     Log.d("QQQfor1", fromPosition + " " + toPosition);
                     Collections.swap(data, i, i + 1);
                 }
             } else {
                 for (int i = fromPosition; i > toPosition; i--) {
-                    Log.d("QQQfor2", fromPosition + " " + toPosition);
-                    Collections.swap(data, i, i - 1);
+                   Log.d("QQQfor2", fromPosition + " " + toPosition);
+                    if (i > 0)
+                        Collections.swap(data, i, i - 1);
                 }
             }
             notifyItemMoved(fromPosition, toPosition);
             draggedList = data;
-            Log.d("sss", draggedList.toString());
+            startDragListener.onItemDragged(draggedList);
+
+//            Log.d("sss", draggedList.toString());ba
 //        dragDropListener.setList(draggedList, data.get(0).getQid());
 //        questionTypeListener.setAnswer("", "", data.get(0).getQid(), draggedList);
-            assessmentAnswerListener.setAnswerInActivity("", "", data.get(0).getQid(), draggedList);
+            assessmentAnswerListener.setAnswerInActivity("", "", data.get(0).getQid(), draggedList);*/
+
+
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(data, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(data, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+           /* draggedList = data;*/
+            assessmentAnswerListener.setAnswerInActivity("", "",qid, data);
         } catch (Exception e) {
             e.printStackTrace();
         }

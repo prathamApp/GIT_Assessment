@@ -296,25 +296,36 @@ public class ImageAnswerFragment extends Fragment {
         chooseImageDialog.btn_take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImageDialog.cancel();
-                if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                    String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
+                try {
 
-                    if (!((ScienceAssessmentActivity) context).isPermissionsGranted(context, permissionArray)) {
-                        Toast.makeText(context, "Give Camera permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
-                    } else {
+                    chooseImageDialog.cancel();
+
+                    if(Assessment_Constants.VIDEOMONITORING){
+                        assessmentAnswerListener.pauseVideoMonitoring();
+                    }
+                    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                        String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
+
+                        if (!((ScienceAssessmentActivity) context).isPermissionsGranted(context, permissionArray)) {
+                            Toast.makeText(context, "Give Camera permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
+                        } else {
 //                        imageName = Assessment_Utility.getFileName(scienceQuestion.getQid())
-                        scienceQuestion.setUserAnswer(fileName);
+                            scienceQuestion.setUserAnswer(fileName);
 //                        selectedImage = selectedImageTemp;
+                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, CAPTURE_IMAGE);
+                        }
+                    } else {
+//                    imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
+                        scienceQuestion.setUserAnswer(fileName);
+//                    selectedImage = selectedImageTemp;
                         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(takePicture, CAPTURE_IMAGE);
                     }
-                } else {
-//                    imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
-                    scienceQuestion.setUserAnswer(fileName);
-//                    selectedImage = selectedImageTemp;
-                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, CAPTURE_IMAGE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+//                    Toast.makeText(getActivity(), "Camera open failed", Toast.LENGTH_SHORT).show();
+                    assessmentAnswerListener.showCameraError();
                 }
             }
         });
@@ -324,6 +335,11 @@ public class ImageAnswerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 chooseImageDialog.cancel();
+                if(Assessment_Constants.VIDEOMONITORING){
+                    assessmentAnswerListener.pauseVideoMonitoring();
+                }
+
+
                 if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                     String[] permissionArray = new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE};
 
@@ -394,6 +410,7 @@ public class ImageAnswerFragment extends Fragment {
                     assessmentAnswerListener.setAnswerInActivity("", path + "/" + fileName, scienceQuestion.getQid(), null);
 
             }
+            assessmentAnswerListener.resumeVideoMonitoring();
         } catch (Exception e) {
             e.printStackTrace();
         }

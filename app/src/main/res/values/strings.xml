@@ -226,5 +226,6 @@
     <string name="unchecked_text">Practice Mode</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="thank_you_for_giving_assessment">Thank you for giving assessment.</string>
 
 </resources>

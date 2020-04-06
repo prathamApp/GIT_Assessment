@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
+package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequence;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -39,7 +40,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_arrange_seq_row)
-public class ArrangeSequenceFragment extends Fragment implements StartDragListener {
+public class ArrangeSequenceFragment extends Fragment implements StartDragListener, ArrangeSequenceContract.ArrangeSequenceView {
     @ViewById(R.id.tv_question)
     TextView question;
     @ViewById(R.id.iv_question_image)
@@ -49,13 +50,18 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
     @ViewById(R.id.rl_arrange_seq)
     RecyclerView recyclerArrangeSeq;
 
+    @Bean(ArrangeSequencePresenterImpl.class)
+    ArrangeSequenceContract.ArrangeSequencePresenter presenter;
+
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
 
     private int pos;
     private ScienceQuestion scienceQuestion;
     ItemTouchHelper touchHelper;
+    List<ScienceQuestionChoice> shuffledList = new ArrayList<>();
 
+    ArrangeSeqDragDropAdapter dragDropAdapter;
 
     public ArrangeSequenceFragment() {
         // Required empty public constructor
@@ -172,6 +178,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
 
         List<ScienceQuestionChoice> AnswerList = new ArrayList<>();
 
+
         if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
             String[] ansIds = scienceQuestion.getUserAnswer().split(",");
             for (int i = 0; i < ansIds.length; i++) {
@@ -181,15 +188,15 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
 
         }
 
-
-//        List list1 = new ArrayList();
+        List list1 = new ArrayList();
         List<ScienceQuestionChoice> shuffledList = new ArrayList<>();
         List<ScienceQuestionChoice> pairList = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
         Log.d("wwwwwwwwwww", pairList.size() + "");
         if (!pairList.isEmpty()) {
-          /*  for (int p = 0; p < pairList.size(); p++) {
+/*  for (int p = 0; p < pairList.size(); p++) {
                 list1.add(pairList.get(p).getChoicename());
             }*/
+
 
             if (scienceQuestion.getMatchingNameList() == null) {
                 shuffledList.clear();
@@ -208,7 +215,9 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
             }
 
 
-            ArrangeSeqDragDropAdapter dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, getActivity());
+//        presenter.getShuffledList(scienceQuestion);
+
+            dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, getActivity());
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
@@ -227,5 +236,15 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
 
     }
 
+    @Override
+    public void onItemDragged(List<ScienceQuestionChoice> draggedList) {
+        dragDropAdapter.notifyDataSetChanged();
+        shuffledList = draggedList;
+    }
 
+
+  /*  @Override
+    public void setShuffledList(List<ScienceQuestionChoice> shuffledList) {
+        this.shuffledList = shuffledList;
+    }*/
 }
