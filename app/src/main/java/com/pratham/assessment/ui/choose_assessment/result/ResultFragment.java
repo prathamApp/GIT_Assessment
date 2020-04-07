@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
@@ -100,7 +101,8 @@ public class ResultFragment extends Fragment implements ResultListener {
         String studentName = presenter.getStudent(studentId);
         tv_name.setText(studentName);
         btn_done.setVisibility(View.GONE);
-        if (!Assessment_Constants.supervisedAssessment || !Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {
+        /*if (!Assessment_Constants.supervisedAssessment || !Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {*/
+        if (FastSave.getInstance().getBoolean("supervised", false)) {
             rl_thanks.setVisibility(View.GONE);
 //        presenter = new ResultPresenter(getActivity());
 
@@ -218,6 +220,11 @@ public class ResultFragment extends Fragment implements ResultListener {
                 && paperPattern.getCertificateQuestion3().equalsIgnoreCase("")
                 && paperPattern.getCertificateQuestion4().equalsIgnoreCase("")
                 && paperPattern.getCertificateQuestion5().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion6().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion7().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion8().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion9().equalsIgnoreCase("")
+                && paperPattern.getCertificateQuestion10().equalsIgnoreCase("")
         ) {
             Objects.requireNonNull(getActivity()).finish();
         } else {

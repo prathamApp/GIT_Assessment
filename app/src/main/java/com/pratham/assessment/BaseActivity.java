@@ -110,7 +110,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
         muteFlg = false;
        /* Catcho.Builder(this)
-                .activity(CatchoActivity.class)
+                .activity(CatchoActivity_.class)
 //                .recipients("ankita.lakhamade27@gmail.com")
                 .build();*/
 

@@ -868,7 +868,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
 
                 List<ScienceQuestion> scienceQuestions;
-                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
+//                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
+                if (assessmentPaperPatterns.getIsRandom()) {
                     scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                             getScienceQuestionDao().getQuestionListByPattern(Assessment_Constants.SELECTED_LANGUAGE,
                             subjectId, assessmentPatternDetails.get(j).getTopicid(),
@@ -888,9 +889,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 if (scienceQuestions.size() > 0)
                     scienceQuestionList.addAll(scienceQuestions);
 
-                String qtid = assessmentPatternDetails.get(j).getQtid();
+              /*  String qtid = assessmentPatternDetails.get(j).getQtid();
                 if (qtid.equalsIgnoreCase("8") || qtid.equalsIgnoreCase("12"))
-                    isCameraQuestion = true;
+                    isCameraQuestion = true;*/
 
             }
         /*if (isCameraQuestion) {
@@ -906,8 +907,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         }*/
 
 
-        if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser"))
-            Collections.shuffle(scienceQuestionList);
+//        if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser"))
+        if (assessmentPaperPatterns.getIsRandom()) Collections.shuffle(scienceQuestionList);
         for (int i = 0; i < scienceQuestionList.size(); i++) {
             scienceQuestionList.get(i).setPaperid(assessmentSession);
             String qid = scienceQuestionList.get(i).getQid();
@@ -923,6 +924,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 Toast.makeText(ScienceAssessmentActivity.this, "No questions.", Toast.LENGTH_SHORT).show();
         }
 
+
+        if (assessmentPaperPatterns.getExammode().equalsIgnoreCase("supervised")) {
+            Assessment_Constants.supervisedAssessment = true;
+            Assessment_Constants.ASSESSMENT_TYPE = "supervised";
+            FastSave.getInstance().saveBoolean("supervised", true);
+        }
+//todo show supervisor fragment
         tv_exam_name.setText("Exam : " + assessmentPaperPatterns.getExamname());
         tv_time.setText("Time : " + assessmentPaperPatterns.getExamduration() + " mins.");
         tv_marks.setText("Marks : " + assessmentPaperPatterns.getOutofmarks());
@@ -1637,25 +1645,25 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         }
     }
 
-    @Override
-    public void pauseVideoMonitoring() {
-        Log.d("ji", "pauseVideoMonitoring:");
-        String fileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + ".mp4";
-        String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + fileName;
-        VideoMonitoringService.releaseMediaRecorder();
+        @Override
+        public void pauseVideoMonitoring() {
+            Log.d("ji", "pauseVideoMonitoring:");
+            String fileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + ".mp4";
+            String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + fileName;
+            VideoMonitoringService.releaseMediaRecorder();
 
-        Assessment_Constants.VIDEOMONITORING = false;
-        texture_view.setVisibility(View.GONE);
-        tv_timer.setTextColor(Color.BLACK);
-        frame_video_monitoring.setVisibility(View.GONE);
-        btn_save_Assessment.setVisibility(View.VISIBLE);
-        DownloadMedia video = new DownloadMedia();
-        video.setMediaType(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
-        video.setPhotoUrl(videoPath);
-        video.setPaperId(assessmentSession);
-        AppDatabase.getDatabaseInstance(this).getDownloadMediaDao().insert(video);
-//            Toast.makeText(this, "video monitoring not prepared", Toast.LENGTH_LONG).show();
-    }
+             Assessment_Constants.VIDEOMONITORING = false;
+            texture_view.setVisibility(View.GONE);
+            tv_timer.setTextColor(Color.BLACK);
+            frame_video_monitoring.setVisibility(View.GONE);
+            btn_save_Assessment.setVisibility(View.VISIBLE);
+            DownloadMedia video = new DownloadMedia();
+            video.setMediaType(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+            video.setPhotoUrl(videoPath);
+            video.setPaperId(assessmentSession);
+            AppDatabase.getDatabaseInstance(this).getDownloadMediaDao().insert(video);
+    //            Toast.makeText(this, "video monitoring not prepared", Toast.LENGTH_LONG).show();
+        }
 
     @Override
     public void showCameraError() {
@@ -1668,14 +1676,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         Toast.makeText(this, "video monitoring not prepared", Toast.LENGTH_LONG).show();*/
     }
 
-    @Override
-    public void resumeVideoMonitoring() {
-        serviceIntent = null;
+        @Override
+        public void resumeVideoMonitoring() {
+            serviceIntent = null;
 
-                startCameraService();
+            startCameraService();
 
 
-    }
+        }
 
     /*private boolean hasCamera() {
         return getPackageManager().hasSystemFeature(
@@ -2104,9 +2112,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
             score.setTotalMarks(Integer.parseInt(scienceQuestionList.get(i).getOutofmarks()));
             score.setExamId(scienceQuestionList.get(i).getExamid());
             score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
-            if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice"))
-                score.setLabel("practice" + examStatus);
-            else score.setLabel("supervised assessment" + examStatus);
+            if (FastSave.getInstance().getBoolean("supervised", false))
+//            if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice"))
+                score.setLabel("supervised assessment" + examStatus);
+            else score.setLabel("practice" + examStatus);
             score.setEndDateTime(scienceQuestionList.get(i).getEndTime());
 //            score.setStudentID(Assessment_Constants.currentStudentID);
             score.setStudentID(currentStudentID);
@@ -2342,7 +2351,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                     }
 
                 }
-            },300);
+            }, 300);
 
 
         } catch (Exception e) {

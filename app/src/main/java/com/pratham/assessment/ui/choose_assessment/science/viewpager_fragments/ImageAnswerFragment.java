@@ -299,8 +299,7 @@ public class ImageAnswerFragment extends Fragment {
                 try {
 
                     chooseImageDialog.cancel();
-
-                    if(Assessment_Constants.VIDEOMONITORING){
+                    if (Assessment_Constants.VIDEOMONITORING) {
                         assessmentAnswerListener.pauseVideoMonitoring();
                     }
                     if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
@@ -335,8 +334,8 @@ public class ImageAnswerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 chooseImageDialog.cancel();
-                if(Assessment_Constants.VIDEOMONITORING){
-                    assessmentAnswerListener.pauseVideoMonitoring();
+                if (Assessment_Constants.VIDEOMONITORING) {
+                       assessmentAnswerListener.pauseVideoMonitoring();
                 }
 
 
@@ -408,9 +407,9 @@ public class ImageAnswerFragment extends Fragment {
                     assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
                 else
                     assessmentAnswerListener.setAnswerInActivity("", path + "/" + fileName, scienceQuestion.getQid(), null);
-
             }
-            assessmentAnswerListener.resumeVideoMonitoring();
+
+                assessmentAnswerListener.resumeVideoMonitoring();
         } catch (Exception e) {
             e.printStackTrace();
         }

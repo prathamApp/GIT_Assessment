@@ -644,7 +644,6 @@ public class PushDataToServer {
             metaDataObj.put("InternalStorageSize", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("InternalStorageSize"));
 
 
-
             sessionObj.put("scoreData", assessmentScoreData);
             sessionObj.put("eceScoreData", eceScoreData);
 /*            if (!COS_Constants.SD_CARD_Content)
@@ -841,6 +840,14 @@ public class PushDataToServer {
                     _obj_paper.put("question1Rating", _paper.getQuestion1Rating());
                     _obj_paper.put("question2Rating", _paper.getQuestion2Rating());
                     _obj_paper.put("question3Rating", _paper.getQuestion3Rating());
+                    _obj_paper.put("question4Rating", _paper.getQuestion4Rating());
+                    _obj_paper.put("question5Rating", _paper.getQuestion5Rating());
+                    //TODO UNCOMMENT
+                    _obj_paper.put("question6Rating", _paper.getQuestion6Rating());
+                    _obj_paper.put("question7Rating", _paper.getQuestion7Rating());
+                    _obj_paper.put("question8Rating", _paper.getQuestion8Rating());
+                    _obj_paper.put("question9Rating", _paper.getQuestion9Rating());
+                    _obj_paper.put("question10Rating", _paper.getQuestion10Rating());
 //                    DownloadMedia video = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeAndPaperId(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, _paper.getPaperId());
 
                     /*  DownloadMedia video = new DownloadMedia();

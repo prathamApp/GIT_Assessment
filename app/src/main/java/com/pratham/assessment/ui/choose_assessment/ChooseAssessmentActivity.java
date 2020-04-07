@@ -114,11 +114,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
 
 
-        toggle_btn.setOnSwipedOnListener(new Function0<Unit>() {
+      /*  toggle_btn.setOnSwipedOnListener(new Function0<Unit>() {
             @Override
             public Unit invoke() {
                 Assessment_Constants.ASSESSMENT_TYPE = "supervised";
-                Assessment_Constants.supervisedAssessment=true;
+                Assessment_Constants.supervisedAssessment = true;
 //                showSupervisionDialog();
                 return null;
             }
@@ -128,11 +128,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public Unit invoke() {
                 Assessment_Constants.ASSESSMENT_TYPE = "practice";
-                Assessment_Constants.supervisedAssessment=false;
+                Assessment_Constants.supervisedAssessment = false;
 
                 return null;
             }
-        });
+        });*/
 
         eceLoginDialog = new ECELoginDialog(this);
 
@@ -162,7 +162,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         rlSubject.setVisibility(View.VISIBLE);
                         frameLayout.setVisibility(View.GONE);
                         tv_choose_assessment.setText("Choose subject");
-                        toggle_btn.setVisibility(View.VISIBLE);
+//                        toggle_btn.setVisibility(View.VISIBLE);
                         clearContentList();
                         presenter.copyListData();
 
@@ -173,13 +173,14 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         break;
 
                     case R.id.menu_language:
-                        toggle_btn.setVisibility(View.GONE);
+//                        toggle_btn.setVisibility(View.GONE);
+                        menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
 
-                        if (toggle_btn.getVisibility() != View.VISIBLE)
+                      /*  if (toggle_btn.getVisibility() != View.VISIBLE)
                             menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
                         else
                             menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
-
+*/
                         rlSubject.setVisibility(View.GONE);
                         frameLayout.setVisibility(View.VISIBLE);
                         Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new LanguageFragment_(), R.id.nav_frame_layout,
@@ -336,13 +337,14 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @Click(R.id.menu_icon)
     public void openMenu() {
-        if (toggle_btn.getVisibility() != View.VISIBLE)
+     /*   if (toggle_btn.getVisibility() != View.VISIBLE)
             menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
         else menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
-
+*/
         getSupportFragmentManager().popBackStack();
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (fragments == 0) {
+            menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
             if (drawerLayout.isDrawerOpen(Gravity.START))
                 drawerLayout.closeDrawer(Gravity.START);
             else
@@ -495,13 +497,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
 
         rlSubject.setVisibility(View.GONE);
-        toggle_btn.setVisibility(View.GONE);
+//        toggle_btn.setVisibility(View.GONE);
         frameLayout.setVisibility(View.VISIBLE);
 
         if (sub.getSubjectname().equalsIgnoreCase("ece")) {
             if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("") || Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice")) {
                 rlSubject.setVisibility(View.VISIBLE);
-                toggle_btn.setVisibility(View.VISIBLE);
+//                toggle_btn.setVisibility(View.VISIBLE);
                 frameLayout.setVisibility(View.GONE);
                 Toast.makeText(this, "Switch on supervision mode", Toast.LENGTH_SHORT).show();
             } else {
@@ -534,10 +536,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         getSupportFragmentManager().popBackStackImmediate();
         frameLayout.setVisibility(View.GONE);
         rlSubject.setVisibility(View.VISIBLE);
-        toggle_btn.setVisibility(View.VISIBLE);
-        if (toggle_btn.getVisibility() != View.VISIBLE)
+//        toggle_btn.setVisibility(View.VISIBLE);
+        /*if (toggle_btn.getVisibility() != View.VISIBLE)
             menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
-        else menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
+        else*/
+        menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
 
 
     }
@@ -609,17 +612,17 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     }
 
     public void resetActivity() {
-        toggle_btn.setVisibility(View.VISIBLE);
+//        toggle_btn.setVisibility(View.VISIBLE);
 
-        if (toggle_btn.getVisibility() == View.VISIBLE)
+      /*  if (toggle_btn.getVisibility() == View.VISIBLE)*/
             menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
 
         getSupportFragmentManager().popBackStack();
-        if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {
+      /*  if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {
             toggle_btn.setChecked(true);
         } else if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice")) {
             toggle_btn.setChecked(false);
-        } else toggle_btn.setChecked(false);
+        } else toggle_btn.setChecked(false);*/
 
 
         rlSubject.setVisibility(View.VISIBLE);

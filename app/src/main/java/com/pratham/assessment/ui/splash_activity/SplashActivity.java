@@ -262,7 +262,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         createDataBase();
         if (!AssessmentApplication.isTablet) {
 //            splashPresenter.pushData();
-            //todo uncomment PushDataToServer below
             //new PushDataToServer(this, false).execute();
             pushDataToServer.setValue(this, false);
             pushDataToServer.doInBackground();
@@ -505,17 +504,21 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             dismissProgressDialog();
         } else {*/
 
-        context.startService(new Intent(context, AppExitService.class));
-        dismissProgressDialog();
+        try {
+            context.startService(new Intent(context, AppExitService.class));
+            dismissProgressDialog();
 
 
-        if (!AssessmentApplication.isTablet) {
-            if (!FastSave.getInstance().getBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, false))
-                show_STT_Dialog();
-            else
-                showBottomFragment();
-        } else {
-            startActivity(new Intent(context, SelectGroupActivity_.class));
+            if (!AssessmentApplication.isTablet) {
+                if (!FastSave.getInstance().getBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, false))
+                    show_STT_Dialog();
+                else
+                    showBottomFragment();
+            } else {
+                startActivity(new Intent(context, SelectGroupActivity_.class));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 

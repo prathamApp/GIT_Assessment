@@ -60,7 +60,7 @@ import com.pratham.assessment.domain.Village;
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
-        SupervisorData.class, DownloadMedia.class}, version = 4/*,exportSchema = false*/)
+        SupervisorData.class, DownloadMedia.class}, version = 5/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -127,7 +127,7 @@ public abstract class AppDatabase extends RoomDatabase {
         try {
             if (appDatabase == null) {
                 appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
-                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5)
                         .allowMainThreadQueries().build();
 
             }
@@ -193,5 +193,32 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_4_5");
+            try {
+
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question6Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question7Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question8Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question9Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN question10Rating text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion6 text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion7 text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion8 text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion9 text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion10 text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN IsRandom BIT default 'false'");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN noofcertificateq text");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN exammode text");
+                Log.d("$$$", "MIGRATION_4_5After");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
 
 }

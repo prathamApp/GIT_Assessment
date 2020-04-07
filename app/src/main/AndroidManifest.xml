@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".CatchoActivity"
+            android:name=".CatchoActivity_"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.choose_assessment.science.certificate.AssessmentCertificateActivity"

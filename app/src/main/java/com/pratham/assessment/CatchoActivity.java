@@ -17,9 +17,40 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import net.alhazmy13.catcho.library.Catcho;
 import net.alhazmy13.catcho.library.error.CatchoError;
 
-public class CatchoActivity extends AppCompatActivity {
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
 
-    @Override
+@EActivity(R.layout.activity_catcho_new)
+public class CatchoActivity extends AppCompatActivity {
+    @AfterViews
+    public void init() {
+        try {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        CatchoError error = (CatchoError) getIntent().getSerializableExtra(Catcho.ERROR);
+        Modal_Log log = new Modal_Log();
+        log.setCurrentDateTime(Assessment_Utility.getCurrentDateTime());
+        log.setErrorType("ERROR");
+        log.setExceptionMessage(error.toString());
+        log.setExceptionStackTrace(error.getError());
+        log.setMethodName("NO_METHOD");
+        log.setGroupId(FastSave.getInstance().getString(Assessment_Constants.currentStudentID, "no_group"));
+        log.setDeviceId("" + Assessment_Utility.getDeviceId(this));
+        log.setLogDetail("Apk version : " + Assessment_Utility.getCurrentVersion(this) + " Apk type : " + (AssessmentApplication.isTablet ? "Tablet" : "Smartphone"));
+        log.setSessionId(Assessment_Constants.currentSession);
+        AppDatabase.getDatabaseInstance(CatchoActivity.this).getLogsDao().insertLog(log);
+        BackupDatabase.backup(CatchoActivity.this);
+            /*findViewById(R.id.catcho_button).setOnClickListener(v -> {
+//            finishAffinity();
+                ProcessPhoenix.triggerRebirth(CatchoActivity.this);
+            });*/
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
+
+  /*  @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catcho_new);
@@ -39,14 +70,26 @@ public class CatchoActivity extends AppCompatActivity {
             log.setSessionId(Assessment_Constants.currentSession);
             AppDatabase.getDatabaseInstance(CatchoActivity.this).getLogsDao().insertLog(log);
             BackupDatabase.backup(CatchoActivity.this);
-            findViewById(R.id.catcho_button).setOnClickListener(v -> {
+            *//*findViewById(R.id.catcho_button).setOnClickListener(v -> {
 //            finishAffinity();
                 ProcessPhoenix.triggerRebirth(CatchoActivity.this);
-            });
+            });*//*
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }*/
+
+
+    @Click(R.id.catcho_button)
+    public void onCatchoClick(){
+        try {
+            ProcessPhoenix.triggerRebirth(CatchoActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
 
     @Override
     public void onBackPressed() {
