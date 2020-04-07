@@ -87,88 +87,88 @@ public class VideoMonitoringService extends Service {
 
     }
 
-    public static boolean prepareVideoRecorder(TextureView textureView, String fileName) {
+        public static boolean prepareVideoRecorder(TextureView textureView, String fileName) {
 
-        // BEGIN_INCLUDE (configure_preview)
-        // mCamera = CameraHelper.getDefaultCameraInstance();
-        if (!isRecording) {
-            isRecording = true;
-            if (mCamera == null)
-                mCamera = CameraHelper.getDefaultFrontFacingCameraInstance();
+            // BEGIN_INCLUDE (configure_preview)
+            // mCamera = CameraHelper.getDefaultCameraInstance();
+                if (!isRecording) {
+                isRecording = true;
+                if (mCamera == null)
+                    mCamera = CameraHelper.getDefaultFrontFacingCameraInstance();
 
-            // We need to make sure that our preview and recording video size are supported by the
-            // camera. Query camera to find all the sizes and choose the optimal size given the
-            // dimensions of our preview surface.
-            Camera.Parameters parameters = mCamera.getParameters();
-            parameters.set("orientation", "portrait");
-            mCamera.setDisplayOrientation(90);
-            List<Camera.Size> mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
-            List<Camera.Size> mSupportedVideoSizes = parameters.getSupportedVideoSizes();
-            Camera.Size optimalSize = CameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
-                    mSupportedPreviewSizes, 300, 300);
-            // Use the same size for recording profile.
-            CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
-            profile.videoFrameWidth = optimalSize.width;
-            profile.videoFrameHeight = optimalSize.height;
+                // We need to make sure that our preview and recording video size are supported by the
+                // camera. Query camera to find all the sizes and choose the optimal size given the
+                // dimensions of our preview surface.
+                Camera.Parameters parameters = mCamera.getParameters();
+                parameters.set("orientation", "portrait");
+                mCamera.setDisplayOrientation(90);
+                List<Camera.Size> mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
+                List<Camera.Size> mSupportedVideoSizes = parameters.getSupportedVideoSizes();
+                Camera.Size optimalSize = CameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
+                        mSupportedPreviewSizes, 300, 300);
+                // Use the same size for recording profile.
+                CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+                profile.videoFrameWidth = optimalSize.width;
+                profile.videoFrameHeight = optimalSize.height;
 
 
-            // likewise for the camera object itself.
-            parameters.setPreviewSize(profile.videoFrameWidth, profile.videoFrameHeight);
-            mCamera.setParameters(parameters);
-            try {
-                // Requires API level 11+, For backward compatibility use {@link setPreviewDisplay}
-                // with {@link SurfaceView}
-                mCamera.setPreviewTexture(textureView.getSurfaceTexture());
-            } catch (IOException e) {
-                Log.e("service:::", "Surface texture is unavailable or unsuitable" + e.getMessage());
+                // likewise for the camera object itself.
+                parameters.setPreviewSize(profile.videoFrameWidth, profile.videoFrameHeight);
+                mCamera.setParameters(parameters);
+                try {
+                    // Requires API level 11+, For backward compatibility use {@link setPreviewDisplay}
+                    // with {@link SurfaceView}
+                    mCamera.setPreviewTexture(textureView.getSurfaceTexture());
+                } catch (IOException e) {
+                    Log.e("service:::", "Surface texture is unavailable or unsuitable" + e.getMessage());
+                    return false;
+                }
+                // END_INCLUDE (configure_preview)
+
+
+                // BEGIN_INCLUDE (configure_media_recorder)
+                mMediaRecorder = new MediaRecorder();
+
+                // Step 1: Unlock and set camera to MediaRecorder
+                mCamera.unlock();
+                mMediaRecorder.setCamera(mCamera);
+
+                // Step 2: Set sources
+                mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+                mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+
+                // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
+                mMediaRecorder.setProfile(profile);
+
+                // Step 4: Set output file
+                File root = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH);
+                if (!root.exists()) root.mkdir();
+                mOutputFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH +"/"+ fileName);
+
+    //            CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
+                if (mOutputFile == null) {
+                    return false;
+                }
+                mMediaRecorder.setOutputFile(mOutputFile.getAbsolutePath());
+                // END_INCLUDE (configure_media_recorder)
+
+                // Step 5: Prepare configured MediaRecorder
+                try {
+                    mMediaRecorder.prepare();
+                } catch (IllegalStateException e) {
+                    Log.d("service:::", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
+                    releaseMediaRecorder();
+                    return false;
+                } catch (IOException e) {
+                    Log.d("Service:::", "IOException preparing MediaRecorder: " + e.getMessage());
+                    releaseMediaRecorder();
+                    return false;
+                }
+                return true;
+            } else {
                 return false;
             }
-            // END_INCLUDE (configure_preview)
-
-
-            // BEGIN_INCLUDE (configure_media_recorder)
-            mMediaRecorder = new MediaRecorder();
-
-            // Step 1: Unlock and set camera to MediaRecorder
-            mCamera.unlock();
-            mMediaRecorder.setCamera(mCamera);
-
-            // Step 2: Set sources
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-
-            // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-            mMediaRecorder.setProfile(profile);
-
-            // Step 4: Set output file
-            File root = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH);
-            if (!root.exists()) root.mkdir();
-            mOutputFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH +"/"+ fileName);
-
-//            CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
-            if (mOutputFile == null) {
-                return false;
-            }
-            mMediaRecorder.setOutputFile(mOutputFile.getAbsolutePath());
-            // END_INCLUDE (configure_media_recorder)
-
-            // Step 5: Prepare configured MediaRecorder
-            try {
-                mMediaRecorder.prepare();
-            } catch (IllegalStateException e) {
-                Log.d("service:::", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
-                releaseMediaRecorder();
-                return false;
-            } catch (IOException e) {
-                Log.d("Service:::", "IOException preparing MediaRecorder: " + e.getMessage());
-                releaseMediaRecorder();
-                return false;
-            }
-            return true;
-        } else {
-            return false;
         }
-    }
 
 
     public static void releaseMediaRecorder() {

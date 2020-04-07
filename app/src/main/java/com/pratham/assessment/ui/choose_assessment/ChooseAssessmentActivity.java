@@ -321,10 +321,10 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 getLoggedInCrl(userName, password);
                 if (loggedCrl != null) {
                     String loggedCrlId = loggedCrl.getCRLId();*/
-        Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity_.class);
+        /*Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity_.class);
         intent.putExtra("crlId", "");
 //                    intent.putExtra("subId", sub);
-        startActivity(intent);
+        startActivity(intent);*/
 //                    eceLoginDialog.dismiss();
             /*    }
             }
@@ -507,10 +507,10 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 frameLayout.setVisibility(View.GONE);
                 Toast.makeText(this, "Switch on supervision mode", Toast.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity_.class);
+               /* Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity_.class);
                 intent.putExtra("crlId", "");
 //                    intent.putExtra("subId", sub);
-                startActivity(intent);
+                startActivity(intent);*/
                /* Intent intent = new Intent(ChooseAssessmentActivity.this, ECEActivity.class);
                 intent.putExtra("resId", "9962");
                 intent.putExtra("crlId", "");
@@ -553,12 +553,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         if (tests.size() <= 0) {
             downloadPaperPattern();
         }*/
-        if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised"))
+   /*     if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised"))
             showSupervisionDialog();
-        else {
+        else {*/
             Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity_.class);
             startActivity(intent);
-        }
+//        }
     }
 
 

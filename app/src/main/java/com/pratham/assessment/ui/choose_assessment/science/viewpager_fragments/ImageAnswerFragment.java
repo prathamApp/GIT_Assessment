@@ -335,7 +335,7 @@ public class ImageAnswerFragment extends Fragment {
             public void onClick(View v) {
                 chooseImageDialog.cancel();
                 if (Assessment_Constants.VIDEOMONITORING) {
-                       assessmentAnswerListener.pauseVideoMonitoring();
+                    assessmentAnswerListener.pauseVideoMonitoring();
                 }
 
 
@@ -409,7 +409,7 @@ public class ImageAnswerFragment extends Fragment {
                     assessmentAnswerListener.setAnswerInActivity("", path + "/" + fileName, scienceQuestion.getQid(), null);
             }
 
-                assessmentAnswerListener.resumeVideoMonitoring();
+            assessmentAnswerListener.resumeVideoMonitoring();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -15,9 +15,9 @@ public interface AssessmentAnswerListener {
 //    void setImageCaptureResult(ScienceQuestion scienceQuestion);
     void setAudio(String fileName, boolean isRecording);
 
-     void pauseVideoMonitoring();
+    void pauseVideoMonitoring();
 
     void showCameraError();
 
-     void resumeVideoMonitoring();
+    void resumeVideoMonitoring();
 }
