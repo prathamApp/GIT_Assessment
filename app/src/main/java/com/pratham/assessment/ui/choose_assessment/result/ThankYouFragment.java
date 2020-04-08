@@ -15,11 +15,13 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 
-
 @EFragment(R.layout.fragment_thank_you)
 public class ThankYouFragment extends Fragment {
+
     @ViewById(R.id.tv_name)
     TextView studentName;
+    @ViewById(R.id.tv_thanks)
+    TextView thanks;
 
     public ThankYouFragment() {
         // Required empty public constructor
