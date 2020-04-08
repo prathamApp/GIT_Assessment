@@ -24,6 +24,7 @@ import com.pratham.assessment.custom.custom_dialogs.ChooseImageDialog;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.science.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -300,7 +301,8 @@ public class ImageAnswerFragment extends Fragment {
 
                     chooseImageDialog.cancel();
                     if (Assessment_Constants.VIDEOMONITORING) {
-                        assessmentAnswerListener.pauseVideoMonitoring();
+//                        assessmentAnswerListener.pauseVideoMonitoring();
+                        VideoMonitoringService.releaseMediaRecorder();
                     }
                     if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                         String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
@@ -324,7 +326,7 @@ public class ImageAnswerFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    Toast.makeText(getActivity(), "Camera open failed", Toast.LENGTH_SHORT).show();
-                    assessmentAnswerListener.showCameraError();
+//                    assessmentAnswerListener.showCameraError();
                 }
             }
         });
@@ -334,9 +336,9 @@ public class ImageAnswerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 chooseImageDialog.cancel();
-                if (Assessment_Constants.VIDEOMONITORING) {
+             /*   if (Assessment_Constants.VIDEOMONITORING) {
                     assessmentAnswerListener.pauseVideoMonitoring();
-                }
+                }*/
 
 
                 if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
@@ -409,7 +411,8 @@ public class ImageAnswerFragment extends Fragment {
                     assessmentAnswerListener.setAnswerInActivity("", path + "/" + fileName, scienceQuestion.getQid(), null);
             }
 
-            assessmentAnswerListener.resumeVideoMonitoring();
+//            assessmentAnswerListener.resumeVideoMonitoring();
+            scienceAssessmentActivity.startCameraService();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -49,7 +49,7 @@ public class ECELoginDialog extends Dialog {
         if (Assessment_Constants.SELECTED_SUBJECT.equalsIgnoreCase("")) {
             Toast.makeText(context, "Select subject", Toast.LENGTH_SHORT).show();
         } else
-            Assessment_Constants.ASSESSMENT_TYPE = "practice";
+            Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.PRACTICE;
     }
 
     @Override

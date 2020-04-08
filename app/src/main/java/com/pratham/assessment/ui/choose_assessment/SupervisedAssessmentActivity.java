@@ -116,7 +116,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
         String sName = "" + supervisor_name.getText();
         if (isPhotoSaved) {
             if (sName.length() != 0) {
-                Assessment_Constants.ASSESSMENT_TYPE = "supervised";
+                Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.SUPERVISED;
                 Assessment_Constants.supervisedAssessment = true;
                 AddSupervisorToDB(supervisorId, sName, imageName);
             }

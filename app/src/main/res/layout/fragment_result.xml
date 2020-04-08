@@ -7,6 +7,12 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.choose_assessment.result.ResultActivity">
 
+    <FrameLayout
+        android:id="@+id/frame_thanks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -199,6 +205,7 @@
         android:id="@+id/rl_thanks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_gravity="center">
 
         <ImageView
@@ -239,12 +246,12 @@
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_below="@+id/tv_thanks"
-            android:text="@string/Okay"
-            android:padding="@dimen/_3sdp"
-            android:textSize="@dimen/_15sdp"
+            android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/_15sdp"
             android:background="@drawable/ripple_effect_save_btn"
-            android:layout_centerHorizontal="true" />
+            android:padding="@dimen/_3sdp"
+            android:text="@string/Okay"
+            android:textSize="@dimen/_15sdp" />
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

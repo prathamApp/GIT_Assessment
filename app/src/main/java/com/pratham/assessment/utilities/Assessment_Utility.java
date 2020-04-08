@@ -71,6 +71,7 @@ import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.domain.StorageInfo;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog_;
 import com.pratham.assessment.ui.login.MainActivity;
@@ -484,6 +485,12 @@ public class Assessment_Utility {
                     .commit();
         } else if (mActivity instanceof ResultActivity) {
             ((ResultActivity) mActivity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(frame, mFragment, TAG)
+                    .addToBackStack(TAG)
+                    .commit();
+        } else if (mActivity instanceof ScienceAssessmentActivity) {
+            ((ScienceAssessmentActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)

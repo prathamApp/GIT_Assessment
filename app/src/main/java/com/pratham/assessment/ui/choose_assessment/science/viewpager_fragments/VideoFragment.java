@@ -25,6 +25,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.science.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.PermissionUtils;
@@ -76,6 +77,7 @@ public class VideoFragment extends Fragment {
     private String answerPath;
     private boolean VideoCaptured;
     String videoName = "";
+    ScienceAssessmentActivity scienceAssessmentActivity;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -87,6 +89,7 @@ public class VideoFragment extends Fragment {
             pos = getArguments().getInt(POS, 0);
             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+            scienceAssessmentActivity = (ScienceAssessmentActivity) getActivity();
 
         }
         setVideoQuestion();
@@ -180,7 +183,8 @@ public class VideoFragment extends Fragment {
     @Click(R.id.btn_capture_video)
     public void captureVideo() {
         if (Assessment_Constants.VIDEOMONITORING) {
-            assessmentAnswerListener.pauseVideoMonitoring();
+//            assessmentAnswerListener.pauseVideoMonitoring();
+            VideoMonitoringService.releaseMediaRecorder();
         }
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 //        assessmentAnswerListener.setVideoResult(intent, VIDEO_CAPTURE, scienceQuestion);
@@ -290,7 +294,7 @@ public class VideoFragment extends Fragment {
                     //                startActivityForResult(intent, VIDEO_CAPTURE);
                 }
             } else {
-                assessmentAnswerListener.showCameraError();
+//                assessmentAnswerListener.showCameraError();
 
 //                Toast.makeText(getActivity(), "Camera not found", Toast.LENGTH_LONG).show();
             }
@@ -300,7 +304,7 @@ public class VideoFragment extends Fragment {
             startActivityForResult(intent, videoCapture);
         } catch (Exception e) {
             e.printStackTrace();
-            assessmentAnswerListener.showCameraError();
+//            assessmentAnswerListener.showCameraError();
 
         }
     }
@@ -337,7 +341,8 @@ public class VideoFragment extends Fragment {
                 in.close();
                 out.close();
                 showCapturedVideo();
-                assessmentAnswerListener.resumeVideoMonitoring();
+//                assessmentAnswerListener.resumeVideoMonitoring();
+                scienceAssessmentActivity.startCameraService();
             }
 
 

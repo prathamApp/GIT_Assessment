@@ -100,9 +100,10 @@ public class ResultFragment extends Fragment implements ResultListener {
 */
         String studentName = presenter.getStudent(studentId);
         tv_name.setText(studentName);
+
         btn_done.setVisibility(View.GONE);
         /*if (!Assessment_Constants.supervisedAssessment || !Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {*/
-        if (FastSave.getInstance().getBoolean("supervised", false)) {
+        if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
             rl_thanks.setVisibility(View.GONE);
 //        presenter = new ResultPresenter(getActivity());
 
@@ -136,8 +137,15 @@ public class ResultFragment extends Fragment implements ResultListener {
         } else {
             rl_result.setVisibility(View.GONE);
             mAppBarLayout.setVisibility(View.GONE);
-            rl_thanks.setVisibility(View.VISIBLE);
             btn_done.setVisibility(View.GONE);
+            Bundle bundle = new Bundle();
+            bundle.putString("studentName", studentName);
+            Assessment_Utility.showFragment(getActivity(), new ThankYouFragment_(), R.id.frame_thanks, bundle, ThankYouFragment.class.getName());
+
+           /* rl_result.setVisibility(View.GONE);
+            mAppBarLayout.setVisibility(View.GONE);
+            rl_thanks.setVisibility(View.VISIBLE);
+            btn_done.setVisibility(View.GONE);*/
         }
     }
   /*  @Override

@@ -501,7 +501,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         frameLayout.setVisibility(View.VISIBLE);
 
         if (sub.getSubjectname().equalsIgnoreCase("ece")) {
-            if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("") || Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice")) {
+            if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("") || Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase(Assessment_Constants.PRACTICE)) {
                 rlSubject.setVisibility(View.VISIBLE);
 //                toggle_btn.setVisibility(View.VISIBLE);
                 frameLayout.setVisibility(View.GONE);
