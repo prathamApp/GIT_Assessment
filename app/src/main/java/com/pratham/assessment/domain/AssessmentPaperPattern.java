@@ -50,9 +50,9 @@ public class AssessmentPaperPattern implements Serializable {
     private String subjectid;
 
 
-    private boolean IsRandom;
-    private String noofcertificateq;
-    private String exammode;
+        private boolean IsRandom;
+        private String noofcertificateq;
+        private String exammode;
 
     public String getSubjectname() {
         return subjectname;
