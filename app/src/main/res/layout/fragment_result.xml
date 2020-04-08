@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.choose_assessment.result.ResultActivity">
 
+
     <FrameLayout
         android:id="@+id/frame_thanks"
         android:layout_width="match_parent"

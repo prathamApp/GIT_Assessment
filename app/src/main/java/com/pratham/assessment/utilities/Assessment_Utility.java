@@ -483,12 +483,12 @@ public class Assessment_Utility {
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
                     .commit();
-        } else if (mActivity instanceof ResultActivity) {
-            ((ResultActivity) mActivity).getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(frame, mFragment, TAG)
-                    .addToBackStack(TAG)
-                    .commit();
+            } else if (mActivity instanceof ResultActivity) {
+                ((ResultActivity) mActivity).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(frame, mFragment, TAG)
+                        .addToBackStack(TAG)
+                        .commit();
         } else if (mActivity instanceof ScienceAssessmentActivity) {
             ((ScienceAssessmentActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()

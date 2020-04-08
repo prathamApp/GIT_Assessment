@@ -142,6 +142,7 @@ public class ResultFragment extends Fragment implements ResultListener {
             bundle.putString("studentName", studentName);
             Assessment_Utility.showFragment(getActivity(), new ThankYouFragment_(), R.id.frame_thanks, bundle, ThankYouFragment.class.getName());
 
+
            /* rl_result.setVisibility(View.GONE);
             mAppBarLayout.setVisibility(View.GONE);
             rl_thanks.setVisibility(View.VISIBLE);

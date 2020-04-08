@@ -72,6 +72,7 @@ public class Assessment_Constants {
     public static boolean supervisedAssessment = false;
     public static String assessmentSession = "";
     public static String currentSupervisorID = "";
+
     public static String SUPERVISED = "supervised";
     public static String PRACTICE = "practice";
 
