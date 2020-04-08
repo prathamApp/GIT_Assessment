@@ -20,6 +20,7 @@ public class ThankYouFragment extends Fragment {
 
     @ViewById(R.id.tv_name)
     TextView studentName;
+
     @ViewById(R.id.tv_thanks)
     TextView thanks;
 
