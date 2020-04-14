@@ -63,6 +63,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.utilities.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
 @EActivity(R.layout.activity_choose_assessment)
@@ -461,7 +462,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 String toDateTemp = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().getToDate(curSession);
 
                 Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
-
+                VIDEOMONITORING = false;
                 if (toDateTemp != null) {
                     if (toDateTemp.equalsIgnoreCase("na"))
                         AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
@@ -474,6 +475,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         cancel_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                VIDEOMONITORING = false;
                 finish();
                 startActivity(new Intent(ChooseAssessmentActivity.this, SplashActivity_.class));
             }
@@ -556,8 +558,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
    /*     if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised"))
             showSupervisionDialog();
         else {*/
-            Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity_.class);
-            startActivity(intent);
+        Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity_.class);
+        startActivity(intent);
 //        }
     }
 
@@ -614,8 +616,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     public void resetActivity() {
 //        toggle_btn.setVisibility(View.VISIBLE);
 
-      /*  if (toggle_btn.getVisibility() == View.VISIBLE)*/
-            menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
+        /*  if (toggle_btn.getVisibility() == View.VISIBLE)*/
+        menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
 
         getSupportFragmentManager().popBackStack();
       /*  if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {

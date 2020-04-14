@@ -302,12 +302,70 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     @Override
     public void Stt_onResult(ArrayList<String> sttResult) {
         flgPerMarked = false;
-        for (String str : sttResult)
-            this.sttResult.append(" " + str);
+//        if(AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+//            for (String str : sttResult)
+//                this.sttResult.append(" " + str);
+//        }else {
+//
+//        }
         sttResultProcess(sttResult, splitWordsPunct, wordsResIdList);
 
     }
 
+    /*private void getAccurateResult(ArrayList<String> result) {
+        String sttResult = "";
+//        String sttResult = matches.get(0);
+        String sttQuestion;
+        for (int i = 0; i < result.size(); i++) {
+            System.out.println("LogTag" + " onResults :  " + result.get(i));
+
+            if (result.get(i).equalsIgnoreCase(scienceQuestion.getAnswer()))
+                sttResult = result.get(i);
+            else sttResult = result.get(0);
+        }
+        sttQuestion = scienceQuestion.getQname();
+        String regex = "[\\-+.\"^?!@#%&*,:]";
+        String quesFinal = sttQuestion.replaceAll(regex, "");
+
+
+        String[] splitQues = quesFinal.split(" ");
+        String[] splitRes = sttResult.split(" ");
+
+        if (splitQues.length < splitRes.length)
+            correctArr = new boolean[splitRes.length];
+        else correctArr = new boolean[splitQues.length];
+
+
+        for (int j = 0; j < splitRes.length; j++) {
+            for (int i = 0; i < splitQues.length; i++) {
+                if (splitRes[j].equalsIgnoreCase(splitQues[i])) {
+                    // ((TextView) readChatFlow.getChildAt(i)).setTextColor(getResources().getColor(R.color.readingGreen));
+                    correctArr[i] = true;
+                    //sendClikChanger(1);
+                    break;
+                }
+            }
+        }
+
+
+        int correctCnt = 0;
+        for (int x = 0; x < correctArr.length; x++) {
+            if (correctArr[x])
+                correctCnt++;
+        }
+       float perc = ((float) correctCnt / (float) correctArr.length) * 100;
+        Log.d("Punctu", "onResults: " + perc);
+        if (perc >= 75) {
+
+            for (int i = 0; i < splitQues.length; i++) {
+                //((TextView) readChatFlow.getChildAt(i)).setTextColor(getResources().getColor(R.color.readingGreen));
+                correctArr[i] = true;
+            }
+
+//            scrollView.setBackgroundResource(R.drawable.convo_correct_bg);
+
+        }
+    }*/
     @Override
     public void Stt_onPartialResult(String sttResult) {
         startHighlighting(sttResult);
@@ -342,7 +400,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
                 }
             }
 //            }
-            new Handler().postDelayed(this::removeHighlight, 2000);
+            new Handler().postDelayed(this::removeHighlight, 2500);
         }
     }
 
@@ -430,7 +488,14 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     public void sttResultProcess
             (ArrayList<String> sttResult, List<String> splitWordsPunct, List<String> wordsResIdList) {
 
-        String sttRes = sttResult.get(0);
+        String sttRes = "";
+        for (int i = 0; i < sttResult.size(); i++) {
+            System.out.println("LogTag" + " onResults :  " + sttResult.get(i));
+
+            if (sttResult.get(i).equalsIgnoreCase(scienceQuestion.getAnswer()))
+                sttRes = sttResult.get(i);
+            else sttRes = sttResult.get(0);
+        }
         String[] splitRes = sttRes.split(" ");
         answer = " ";
 //        addSttResultDB(sttResult);
@@ -453,6 +518,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         String wordTime = Assessment_Utility.getCurrentDateTime();
 //        addLearntWords(splitWordsPunct, wordsResIdList);
 //        addScore(0, "Words:" + word, correctWordCount, correctArr.length, wordTime, " ");
+        this.sttResult.append(" ").append(sttRes);
         assessmentAnswerListener.setAnswerInActivity("" + calculateMarks(), this.sttResult.toString(), scienceQuestion.getQid(), null);
 
     }

@@ -127,7 +127,7 @@ public abstract class AppDatabase extends RoomDatabase {
         try {
             if (appDatabase == null) {
                 appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
-                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                         .allowMainThreadQueries().build();
 
             }
@@ -210,7 +210,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion8 text");
                 database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion9 text");
                 database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN certificateQuestion10 text");
-                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN IsRandom BIT default 'false'");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN IsRandom INTEGER not null DEFAULT 0");
                 database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN noofcertificateq text");
                 database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN exammode text");
                 Log.d("$$$", "MIGRATION_4_5After");

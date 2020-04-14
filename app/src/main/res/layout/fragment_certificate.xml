@@ -368,7 +368,7 @@
                         android:layout_below="@+id/ll_time"
                         android:layout_margin="@dimen/_3sdp"/>
 
-                    <LinearLayout
+                  <!--  <LinearLayout
                         android:id="@+id/ll_qiestions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -537,7 +537,7 @@
                                 android:visibility="visible" />
                         </LinearLayout>
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <!-- <RelativeLayout
                          android:layout_width="@dimen/_120sdp"

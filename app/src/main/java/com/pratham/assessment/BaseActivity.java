@@ -102,17 +102,13 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         ttsService.setActivity(this);
         ttsService.setSpeechRate(0.7f);
         ttsService.setLanguage(new Locale("en", "IN"));
-        sttService = STTService.init(getApplicationContext());
-//        appDatabase = Room.databaseBuilder(BaseActivity.this,
-//                AppDatabase.class, AppDatabase.DB_NAME)
-//                .allowMainThreadQueries()
-//                .build();
+
 
         muteFlg = false;
-       /* Catcho.Builder(this)
+        Catcho.Builder(this)
                 .activity(CatchoActivity_.class)
-//                .recipients("ankita.lakhamade27@gmail.com")
-                .build();*/
+                .recipients("ankita.lakhamade27@gmail.com")
+                .build();
 
         Log.d("@path@@", AssessmentApplication.assessPath);
 //        overrideDefaultTypefaces();

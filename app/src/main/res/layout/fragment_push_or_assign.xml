@@ -55,7 +55,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/_5sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Video monitoring is "
+                android:text="@string/video_monitoring_is"
                 android:textSize="@dimen/_12sdp" />
 
             <ToggleButton

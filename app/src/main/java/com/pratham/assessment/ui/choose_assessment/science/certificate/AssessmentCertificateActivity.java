@@ -61,7 +61,7 @@ public class AssessmentCertificateActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         Assessment_Utility.showFragment(this, new CertificateSubjectsFragment_(),
-                R.id.frame_certificate, null, CertificateSubjectsFragment_.class.getSimpleName());
+                R.id.frame_certificate, null, CertificateSubjectsFragment.class.getSimpleName());
 
      /*   presenter = new AssessmentCertificatePresenterImpl(this);
         presenter.getStudent(Assessment_Constants.currentStudentID);

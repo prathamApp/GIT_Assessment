@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.CertificateRatingModalClass;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
@@ -48,12 +49,11 @@ public class CertificateRatingAdapter extends RecyclerView.Adapter<CertificateRa
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         CertificateRatingModalClass ratingModalClass = questionList.get(i);
-        if (ratingModalClass.getCertificateQuestion().equalsIgnoreCase("") || ratingModalClass.getCertificateQuestion() == null) {
-            myViewHolder.ll_rating.setVisibility(View.GONE);
-        } else {
-            myViewHolder.question.setText(ratingModalClass.getCertificateQuestion());
-            myViewHolder.ratingBar.setRating(ratingModalClass.getRating());
-        }
+
+        Assessment_Utility.setOdiaFont(context, myViewHolder.question);
+        myViewHolder.question.setText(ratingModalClass.getCertificateQuestion());
+        myViewHolder.ratingBar.setRating(ratingModalClass.getRating());
+
     }
 
     @Override

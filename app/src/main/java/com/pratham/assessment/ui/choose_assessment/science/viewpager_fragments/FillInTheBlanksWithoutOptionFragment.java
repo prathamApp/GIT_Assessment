@@ -22,8 +22,8 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
-import com.pratham.assessment.services.stt_service.ContinuousSpeechService;
-import com.pratham.assessment.services.stt_service.STT_Result;
+import com.pratham.assessment.services.stt_service_new.ContinuousSpeechService_New;
+import com.pratham.assessment.services.stt_service_new.STT_Result_New;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -43,7 +43,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_fill_in_the_blanks_wo_option_row)
-public class FillInTheBlanksWithoutOptionFragment extends Fragment implements STT_Result {
+public class FillInTheBlanksWithoutOptionFragment extends Fragment implements STT_Result_New.sttView {
 
     @ViewById(R.id.tv_question)
     TextView question;
@@ -56,7 +56,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     @ViewById(R.id.ib_mic)
     ImageButton ib_mic;
 
-    ContinuousSpeechService speechService;
+    ContinuousSpeechService_New speechService;
 
     private float perc = 0;
 
@@ -84,7 +84,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
             context = getActivity();
-            speechService = new ContinuousSpeechService(context, this);
+            speechService = new ContinuousSpeechService_New(context, this, "");
             speechService.resetSpeechRecognizer();
         }
         question.setMovementMethod(new ScrollingMovementMethod());
@@ -304,7 +304,6 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         }*/
     }
 
-
     @Override
     public void Stt_onResult(ArrayList<String> matches) {
         micPressed(0);
@@ -314,7 +313,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
 //        ArrayList<String> matches = results;
 
         String sttResult = "";
-//        String sttResult = matches.get(0);
+//        String sttResult = matchses.get(0);
         String sttQuestion;
         for (int i = 0; i < matches.size(); i++) {
             System.out.println("LogTag" + " onResults :  " + matches.get(i));
@@ -373,11 +372,37 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
 
     }
 
+    @Override
+    public void Stt_onPartialResult(String sttResult) {
+
+    }
 
     @Override
+    public void silenceDetected() {
+        if (voiceStart) {
+            speechService.resetHandler(true);
+           /* silence_outer_layout.setVisibility(View.VISIBLE);
+            silenceViewHandler = new Handler();
+            silence_iv.startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate_continuous_shake));
+            AnimateTextView(context, silence_main_layout);*/
+        }
+    }
+
+    @Override
+    public void stoppedPressed() {
+
+    }
+
+    @Override
+    public void sttEngineReady() {
+
+    }
+
+
+    /*@Override
     public void Stt_onError() {
         voiceStart = false;
         micPressed(0);
-    }
+    }*/
 
 }

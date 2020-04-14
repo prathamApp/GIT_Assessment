@@ -21,6 +21,7 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import java.util.ArrayList;
 
 import static com.pratham.assessment.BaseActivity.setMute;
+import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 
 
 /**
@@ -41,14 +42,12 @@ public class ContinuousSpeechService_New implements RecognitionListener, STT_Res
         this.stt_result = stt_result;
         resetFlg = false;
         this.language = language;
-//        if (FastSave.getInstance().getString(FC_Constants.CURRENT_FOLDER_NAME, "").equalsIgnoreCase("English"))
         myLocal = "en-IN";
-       /* else
-            myLocal = "hi-IN";*/
         resetSpeechRecognizer();
     }
 
     public void setRecogniserIntent() {
+        myLocal = getSelectedLanguageCode();
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, myLocal);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, myLocal);
@@ -63,13 +62,45 @@ public class ContinuousSpeechService_New implements RecognitionListener, STT_Res
         speech.destroy();
     }
 
-    public void setMyLocal(String language) {
+
+    private String getSelectedLanguageCode() {
+        String lang_code = "en";
+        Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.ENGLISH_ID))
+            lang_code = Assessment_Constants.ENGLISH_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.HINDI_ID))
+            lang_code = Assessment_Constants.HINDI_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.MARATHI_ID))
+            lang_code = Assessment_Constants.MARATHI_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.GUJARATI_ID))
+            lang_code = Assessment_Constants.GUJARATI_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.KANNADA_ID))
+            lang_code = Assessment_Constants.KANNADA_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.ASSAMESE_ID))
+            lang_code = Assessment_Constants.ASSAMESE_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.BENGALI_ID))
+            lang_code = Assessment_Constants.BENGALI_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.PUNJABI_ID))
+            lang_code = Assessment_Constants.PUNJABI_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.ODIA_ID))
+            lang_code = Assessment_Constants.ODIA_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.TAMIL_ID))
+            lang_code = Assessment_Constants.TAMIL_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.TELUGU_ID))
+            lang_code = Assessment_Constants.TELUGU_CODE;
+        if (Assessment_Constants.SELECTED_LANGUAGE.equalsIgnoreCase(Assessment_Constants.URDU_ID))
+            lang_code = Assessment_Constants.URDU_CODE;
+
+        return lang_code;
+    }
+
+   /* public void setMyLocal(String language) {
         if (language.equalsIgnoreCase("English"))
             myLocal = "en-IN";
         else
             myLocal = "hi-IN";
         resetSpeechRecognizer();
-    }
+    }*/
 
 
     public void resetSpeechRecognizer() {

@@ -14,7 +14,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -69,8 +68,6 @@ import com.pratham.assessment.services.BkgdVideoRecordingService;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment_;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity_;
-import com.pratham.assessment.ui.choose_assessment.result.ResultFragment;
-import com.pratham.assessment.ui.choose_assessment.result.ResultFragment_;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
 import com.pratham.assessment.ui.choose_assessment.science.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.AssessmentTimeUpDialog;
@@ -117,7 +114,6 @@ import static com.pratham.assessment.utilities.Assessment_Constants.TEXT_PARAGRA
 import static com.pratham.assessment.utilities.Assessment_Constants.TRUE_FALSE;
 import static com.pratham.assessment.utilities.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
-import static com.pratham.assessment.utilities.Assessment_Utility.showFragment;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -476,7 +472,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
-                        boolean isCameraQuestion = false;
                         Gson gson = new Gson();
                         AssessmentPaperPattern assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
                         if (assessmentPaperPattern != null)
@@ -942,7 +937,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 Assessment_Utility.showFragment(this, new SupervisedAssessmentFragment_(), R.id.frame_supervisor, null, SupervisedAssessmentFragment.class.getSimpleName());
 
             }
-        }else {
+        } else {
+            setExamInfo();
             Assessment_Constants.supervisedAssessment = false;
             Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.PRACTICE;
             FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, false);
@@ -1402,11 +1398,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
     @Override
     public void onBackPressed() {
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count > 0) {
-            frame_supervisor.setVisibility(View.GONE);
-            rl_exam_info.setVisibility(View.VISIBLE);
-        } else {
+        {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -1427,7 +1419,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    ScienceAssessmentActivity.super.onBackPressed();
+                    finish();
 //                chronometer.stop();
                     if (mCountDownTimer != null)
                         mCountDownTimer.cancel();
@@ -1566,12 +1558,17 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
     @Override
     public void removeSupervisorFragment() {
-      /*  int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count > 0) {*/
-        rl_exam_info.setVisibility(View.VISIBLE);
-        frame_supervisor.setVisibility(View.GONE);
-        setExamInfo();
-//        }
+
+        try {
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+            if (count > 0) {
+                setExamInfo();
+                frame_supervisor.setVisibility(View.GONE);
+                rl_exam_info.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /*  @Override
@@ -2287,6 +2284,17 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
                 if (mCountDownTimer != null)
                     mCountDownTimer.cancel();
             }
+        } else if (Assessment_Constants.VIDEOMONITORING) {
+
+            //******* Video monitoring *******
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (serviceIntent != null)
+                        startCameraService();
+                }
+            }, 1000);
         }
 //todo
 //        resetSpeechRecognizer(); remove speech=null from onStop
@@ -2362,29 +2370,28 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         if (serviceIntent != null)
             startService(serviceIntent);
         String fileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + ".mp4";
+        fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
         String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + fileName;
         VideoMonitoringService.releaseMediaRecorder();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (VideoMonitoringService.prepareVideoRecorder(texture_view, fileName)) {
-                    VideoMonitoringService.startCapture();
-                    DownloadMedia video = new DownloadMedia();
-                    video.setMediaType(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
-                    video.setPhotoUrl(videoPath);
-                    video.setPaperId(assessmentSession);
-                    AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getDownloadMediaDao().insert(video);
+        String finalFileName = fileName;
+        new Handler().postDelayed(() -> {
+            if (VideoMonitoringService.prepareVideoRecorder(texture_view, finalFileName)) {
+                VideoMonitoringService.startCapture();
+                DownloadMedia video = new DownloadMedia();
+                video.setMediaType(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+                video.setPhotoUrl(videoPath);
+                video.setPaperId(assessmentSession);
+                AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getDownloadMediaDao().insert(video);
 
-                } else {
-                    Assessment_Constants.VIDEOMONITORING = false;
-                    texture_view.setVisibility(View.GONE);
-                    tv_timer.setTextColor(Color.BLACK);
-                    frame_video_monitoring.setVisibility(View.GONE);
-                    btn_save_Assessment.setVisibility(View.VISIBLE);
-                    Toast.makeText(ScienceAssessmentActivity.this, "video monitoring not prepared", Toast.LENGTH_LONG).show();
-                }
-
+            } else {
+                Assessment_Constants.VIDEOMONITORING = false;
+                texture_view.setVisibility(View.GONE);
+                tv_timer.setTextColor(Color.BLACK);
+                frame_video_monitoring.setVisibility(View.GONE);
+                btn_save_Assessment.setVisibility(View.VISIBLE);
+                Toast.makeText(ScienceAssessmentActivity.this, "video monitoring not prepared", Toast.LENGTH_LONG).show();
             }
+
         }, 300);
     }
 

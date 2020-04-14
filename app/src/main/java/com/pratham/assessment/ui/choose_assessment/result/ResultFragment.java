@@ -224,25 +224,17 @@ public class ResultFragment extends Fragment implements ResultListener {
     public void onDoneClick() {
 
         AssessmentPaperPattern paperPattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubIdAndExamId(subjectId, examId);
-        if (paperPattern.getCertificateQuestion1().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion2().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion3().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion4().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion5().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion6().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion7().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion8().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion9().equalsIgnoreCase("")
-                && paperPattern.getCertificateQuestion10().equalsIgnoreCase("")
-        ) {
-            Objects.requireNonNull(getActivity()).finish();
-        } else {
-            AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
+        if (paperPattern.getNoofcertificateq() != null) {
+            if (paperPattern.getNoofcertificateq().equalsIgnoreCase("") || Integer.parseInt(paperPattern.getNoofcertificateq()) == 0) {
+                Objects.requireNonNull(getActivity()).finish();
+            } else {
+                AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
+                Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+            }
+        } else Objects.requireNonNull(getActivity()).finish();
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
-            Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
-        }
     }
 
     @Override

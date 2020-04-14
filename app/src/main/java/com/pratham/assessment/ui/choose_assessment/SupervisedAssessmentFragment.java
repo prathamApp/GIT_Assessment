@@ -143,6 +143,8 @@ public class SupervisedAssessmentFragment extends Fragment {
                                   final String supervisorPhoto) {
         new AsyncTask<Object, Void, Object>() {
 
+
+
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
@@ -177,12 +179,18 @@ public class SupervisedAssessmentFragment extends Fragment {
                     AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getSessionDao().insert(startSesion);
 */
 //                    getStudents();
-                    goToAssessment();
                     return null;
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
                 }
+
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                goToAssessment();
 
             }
         }.execute();

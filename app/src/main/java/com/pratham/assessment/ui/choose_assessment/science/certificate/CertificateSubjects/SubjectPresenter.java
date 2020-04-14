@@ -7,12 +7,16 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
+import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentSubjects;
+import com.pratham.assessment.domain.RaspStudent;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 import com.pratham.assessment.utilities.APIs;
@@ -23,11 +27,13 @@ import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
 @EBean
 public class SubjectPresenter implements SubjectContract.SubjectPresenter {
     Context context;
@@ -63,27 +69,41 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         }
 
         for (AssessmentSubjects assessmentSubjects : subjects) {
-//            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), Assessment_Constants.currentStudentID, langId);
-            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), currentStudentID, langId);
-            Collections.sort(assessmentPaperForPush, new Comparator<AssessmentPaperForPush>() {
-                @Override
-                public int compare(AssessmentPaperForPush o1, AssessmentPaperForPush o2) {
-                    Date date1 = Assessment_Utility.stringToDate(o1.getPaperEndTime());
-                    Date date2 = Assessment_Utility.stringToDate(o2.getPaperEndTime());
-                    if (date1 != null && date2 != null)
-                        return date1.compareTo(date2);
-                    else return 0;
-                }
-            });
-            if (assessmentPaperForPush.size() > 0) {
-                Collections.reverse(assessmentPaperForPush);
-                assessmentSubjectsExpandables.add(new AssessmentSubjectsExpandable(assessmentSubjects.getSubjectid(), assessmentSubjects.getSubjectname(), assessmentPaperForPush));
-            } else {
-                assessmentSubjectsExpandables.add(new AssessmentSubjectsExpandable("", "", assessmentPaperForPush));
+            List<AssessmentPaperPattern> paperPatterns = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubIdNoCertificates(assessmentSubjects.getSubjectid());
+            List<String> examIds = new ArrayList<>();
+            for (int i = 0; i < paperPatterns.size(); i++) {
+                if (!examIds.contains(paperPatterns.get(i).getExamid()))
+                    examIds.add(paperPatterns.get(i).getExamid());
+            }
 
+//            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), Assessment_Constants.currentStudentID, langId);
+            List<AssessmentPaperForPush> assessmentPaperForPush = new ArrayList<>();
+            if (!examIds.isEmpty()) {
+                for (int i = 0; i < examIds.size(); i++) {
+                    assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangIdExamId(assessmentSubjects.getSubjectid(), currentStudentID, langId, examIds.get(i)));
+                }
+
+                Collections.sort(assessmentPaperForPush, new Comparator<AssessmentPaperForPush>() {
+                    @Override
+                    public int compare(AssessmentPaperForPush o1, AssessmentPaperForPush o2) {
+                        Date date1 = Assessment_Utility.stringToDate(o1.getPaperEndTime());
+                        Date date2 = Assessment_Utility.stringToDate(o2.getPaperEndTime());
+                        if (date1 != null && date2 != null)
+                            return date1.compareTo(date2);
+                        else return 0;
+                    }
+                });
+                if (assessmentPaperForPush.size() > 0) {
+                    Collections.reverse(assessmentPaperForPush);
+                    assessmentSubjectsExpandables.add(new AssessmentSubjectsExpandable(assessmentSubjects.getSubjectid(), assessmentSubjects.getSubjectname(), assessmentPaperForPush));
+                } else {
+                    assessmentSubjectsExpandables.add(new AssessmentSubjectsExpandable("", "", assessmentPaperForPush));
+
+                }
             }
         }
         subjectView.setSubjects(assessmentSubjectsExpandables);
+
     }
 
     @Override
@@ -104,7 +124,11 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                     public void onResponse(JSONArray response) {
                         try {
                             paperList = new ArrayList<>();
-                            for (int i = 0; i < response.length(); i++) {
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<AssessmentPaperForPush>>() {
+                            }.getType();
+                            paperList = gson.fromJson(response.toString(), listType);
+                           /* for (int i = 0; i < response.length(); i++) {
                                 AssessmentPaperForPush paper = new AssessmentPaperForPush();
                                 paper.setPaperStartTime(response.getJSONObject(i).getString("paperstarttime"));
                                 paper.setPaperEndTime(response.getJSONObject(i).getString("paperendtime"));
@@ -124,7 +148,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                                 paper.setQuestion3Rating(response.getJSONObject(i).getString("question3Rating"));
                                 paperList.add(paper);
 
-                            }
+                            }*/
                             if (paperList.size() > 0) {
                                 List<AssessmentLanguages> languages = AppDatabase.getDatabaseInstance(context).getLanguageDao().getAllLangs();
                                 if (languages.size() <= 0) getLanguageData();
@@ -142,7 +166,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                                 subjectView.setSubjectToSpinner();
                                 progressDialog.dismiss();
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                             progressDialog.dismiss();
 
@@ -184,7 +208,15 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
     private void addSubjectsToDB() {
         if (subjectCnt < langIds.size()) {
-            getSubjectData(langIds.get(subjectCnt));
+            String id = langIds.get(subjectCnt);
+            if (id != null && !id.equalsIgnoreCase(""))
+                getSubjectData(langIds.get(subjectCnt));
+            else {
+                Toast.makeText(context, "Nothing to pull", Toast.LENGTH_SHORT).show();
+                BackupDatabase.backup(context);
+                progressDialog.dismiss();
+
+            }
         } else {
             for (int i = 0; i < paperList.size(); i++) {
                 AssessmentPaperForPush paper = paperList.get(i);
