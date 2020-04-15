@@ -2036,6 +2036,7 @@ public class Assessment_Utility {
     }
 
 
+
     public static String removeSpecialCharacters(String string) {
        return Normalizer.normalize(string, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "");
     }
