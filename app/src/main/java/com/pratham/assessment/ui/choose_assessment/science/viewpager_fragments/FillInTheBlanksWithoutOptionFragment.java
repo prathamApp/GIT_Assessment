@@ -138,11 +138,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     }
 
     public void setFillInTheBlanksQuestion() {
-        int id = etAnswer.getId();
-        int id1 = question.getId();
-        Log.d("etAnswer;;;", id + "");
-        Log.d("question;;;", id1 + "" + scienceQuestion.getQname());
-        if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
+       if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
             if (!Assessment_Constants.SELECTED_LANGUAGE.equals("1") && !Assessment_Constants.SELECTED_LANGUAGE.equals("2")) {
                 ib_mic.setVisibility(View.INVISIBLE);
             }
@@ -260,7 +256,6 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     public void micPressed(int micPressed) {
         if (ib_mic != null) {
             if (micPressed == 0) {
-                if (ib_mic != null)
                     ib_mic.setImageResource(R.drawable.ic_mic_24dp);
             } else if (micPressed == 1) {
                 ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);

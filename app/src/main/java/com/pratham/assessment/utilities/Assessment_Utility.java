@@ -374,18 +374,6 @@ public class Assessment_Utility {
         }
     }
 
-  /*  public static String getVersionNo() {
-        Context context = AssessmentApplication.getInstance();
-        String packageName = context.getPackageName();
-        try {
-            PackageManager pm = context.getPackageManager();
-            return pm.getPackageInfo(packageName, 0).versionName;
-        } catch (NameNotFoundException e) {
-            Log.d("Unable to find", "the name " + packageName + " in the package");
-            return null;
-        }
-    }
-*/
 
     /*public static int getVersionNo() {
         int version = Build.VERSION.SDK_INT;
