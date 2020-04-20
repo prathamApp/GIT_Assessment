@@ -109,30 +109,34 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
 
     @Override
     public void showProgram(final List<ModalProgram> prgrmList) {
-        this.prgrmList = prgrmList;
-        List<String> prgrms = new ArrayList<>();
-        for (ModalProgram mp : prgrmList) {
-            prgrms.add(mp.getProgramName());
-        }
-        ArrayAdapter arrayStateAdapter = new ArrayAdapter(Objects.requireNonNull(Objects.requireNonNull(getActivity())), android.R.layout.simple_spinner_item, prgrms);
-        arrayStateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        programSpinner.setAdapter(arrayStateAdapter);
-        programSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                disableSaveButton();
-                if (position <= 0) {
-                    pullDataPresenter.clearLists();
-                } else {
-                    selectedProgram = prgrmList.get(position).getProgramId();
-                    pullDataPresenter.loadSpinner();
+        try {
+            this.prgrmList = prgrmList;
+            List<String> prgrms = new ArrayList<>();
+            for (ModalProgram mp : prgrmList) {
+                prgrms.add(mp.getProgramName());
+            }
+            ArrayAdapter arrayStateAdapter = new ArrayAdapter(Objects.requireNonNull(Objects.requireNonNull(getActivity())), android.R.layout.simple_spinner_item, prgrms);
+            arrayStateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            programSpinner.setAdapter(arrayStateAdapter);
+            programSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    disableSaveButton();
+                    if (position <= 0) {
+                        pullDataPresenter.clearLists();
+                    } else {
+                        selectedProgram = prgrmList.get(position).getProgramId();
+                        pullDataPresenter.loadSpinner();
+                    }
                 }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

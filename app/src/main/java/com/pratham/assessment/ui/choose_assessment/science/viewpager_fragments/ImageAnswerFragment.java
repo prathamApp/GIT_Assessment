@@ -374,22 +374,13 @@ public class ImageAnswerFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
         try {
-
             if (resultCode == -1 && requestCode == PICK_IMAGE_FROM_GALLERY) {
                 Uri selectedImage = data.getData();
-//            if (currentFragment instanceof ImageAnswerFragment)
-//                ((ImageAnswerFragment) currentFragment).setImage(selectedImage);
-                setImage(selectedImage);
-//                this.selectedImage.setImageURI(selectedImage);
+               setImage(selectedImage);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedImage);
 //                createDirectoryAndSaveFile(bitmap, imageFileName);
                 String path;
-            /*    if (android.os.Build.VERSION.SDK_INT >= 19) {
-                    path = RealPathUtil.getRealPathFromURI_API19(context, selectedImage);
-                } else if (android.os.Build.VERSION.SDK_INT > 10) {
-                    path = RealPathUtil.getRealPathFromURI_API11to18(context, selectedImage);
-                } else path = RealPathUtil.getRealPathFromURI_BelowAPI11(context, selectedImage);
-*/
+
                 path = RealPathUtil.getUriRealPathAboveKitkat(context, selectedImage);
                 scienceQuestion.setUserAnswer(path);
 

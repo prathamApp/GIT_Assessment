@@ -482,7 +482,7 @@ public class Assessment_Utility {
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
 
 

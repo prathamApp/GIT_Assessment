@@ -217,7 +217,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
 
 //        presenter.getShuffledList(scienceQuestion);
 
-            dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, getActivity());
+            dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, scienceQuestion.getQtid(),getActivity());
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);

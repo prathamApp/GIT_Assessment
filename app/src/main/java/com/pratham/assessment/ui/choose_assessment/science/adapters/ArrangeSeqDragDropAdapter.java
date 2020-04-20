@@ -45,6 +45,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
     StartDragListener startDragListener;
     AssessmentAnswerListener assessmentAnswerListener;
     String qid = "";
+    String qtId = "";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -64,13 +65,13 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
     }
 
 
-    public ArrangeSeqDragDropAdapter(ArrangeSequenceFragment fragment, List<ScienceQuestionChoice> data, Context context) {
+    public ArrangeSeqDragDropAdapter(ArrangeSequenceFragment fragment, List<ScienceQuestionChoice> data, String qtId, Context context) {
         this.data = data;
         this.context = context;
 //        questionTypeListener = scienceAdapter;
         startDragListener = fragment;
         assessmentAnswerListener = (ScienceAssessmentActivity) context;
-
+        this.qtId = qtId;
     }
 
     @Override
@@ -94,8 +95,8 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
 
         draggedList.clear();
         if (data.size() > 0) {
-            qid=data.get(0).getQid();
-                    ScienceQuestionChoice scienceQuestionChoice = data.get(position);
+            qid = data.get(0).getQid();
+            ScienceQuestionChoice scienceQuestionChoice = data.get(position);
             if (!scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
                 final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getChoiceurl();
 
@@ -220,8 +221,8 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                 }
             }
             notifyItemMoved(fromPosition, toPosition);
-           /* draggedList = data;*/
-            assessmentAnswerListener.setAnswerInActivity("", "",qid, data);
+            /* draggedList = data;*/
+            assessmentAnswerListener.setAnswerInActivity("", "", qid, data);
         } catch (Exception e) {
             e.printStackTrace();
         }

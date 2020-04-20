@@ -204,10 +204,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
     String assessmentSession;
     private int correctAnsCnt = 0, wrongAnsCnt = 0, skippedCnt = 0;
 
+    BottomQuestionFragment bottomQuestionFragment;
+
+
     @AfterViews
     public void init() {
+
         assessmentSession = "" + UUID.randomUUID().toString();
 //        Assessment_Constants.assessmentSession=assessmentSession;
+        downloadMediaList = new ArrayList<>();
 
 
         rl_que.setBackgroundColor(Assessment_Utility.selectedColor);
@@ -257,6 +262,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         // setQuestions();
 
         Assessment_Constants.isShowcaseDisplayed = false;
+        bottomQuestionFragment = new BottomQuestionFragment();
 
 
         Resources res = getResources();
@@ -656,7 +662,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
     private void insertQuestionsToDB(JSONArray response) {
         try {
-            downloadMediaList = new ArrayList<>();
             Gson gson = new Gson();
             String jsonOutput = response.toString();
             Type listType = new TypeToken<List<ScienceQuestion>>() {
@@ -717,29 +722,32 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
                 }
 //                progressDialog.dismiss();
-                if (downloadMediaList.size() > 0) {
-
-                    mediaProgressDialog.setTitle("Downloading media please wait..");
-//                    mediaProgressDialog.setMessage("Progress : ");
-
-                    mediaProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    mediaProgressDialog.setProgress(0);
-                    mediaProgressDialog.setMax(downloadMediaList.size());
-                    mediaProgressDialog.setCancelable(false);
-                    if (mediaProgressDialog != null && isActivityRunning)
-                        mediaProgressDialog.show();
-//                    if (downloadMediaList.get(mediaDownloadCnt).getQtId().contains("8") || downloadMediaList.get(mediaDownloadCnt).getQtId().contains("9"))
-                    File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
-                    if (!direct.exists())
-                        direct.mkdir();
-                    if (direct.exists())
-                        downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
-                    else {
-                        Toast.makeText(this, "Media download failed..", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                }
+//                if (queDownloadIndex >= topicIdList.size()) {
+//
+//                    if (downloadMediaList.size() > 0) {
+//
+//                        mediaProgressDialog.setTitle("Downloading media please wait..");
+////                    mediaProgressDialog.setMessage("Progress : ");
+//
+//                        mediaProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//                        mediaProgressDialog.setProgress(0);
+//                        mediaProgressDialog.setMax(downloadMediaList.size());
+//                        mediaProgressDialog.setCancelable(false);
+//                        if (mediaProgressDialog != null && isActivityRunning)
+//                            mediaProgressDialog.show();
+////                    if (downloadMediaList.get(mediaDownloadCnt).getQtId().contains("8") || downloadMediaList.get(mediaDownloadCnt).getQtId().contains("9"))
+//                        File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
+//                        if (!direct.exists())
+//                            direct.mkdir();
+//                        if (direct.exists())
+//                            downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+//                        else {
+//                            Toast.makeText(this, "Media download failed..", Toast.LENGTH_SHORT).show();
+//                            finish();
+//                        }
+//
+//                    }
+//                }
             }
             BackupDatabase.backup(this);
         } catch (Exception e) {
@@ -749,154 +757,184 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
     private void downloadMedia(String qid, String photoUrl) {
 
+        try {
 //        String dirPath = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded";
-        String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
+            String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
 
-        String fileName = getFileName(qid, photoUrl);
-        AndroidNetworking.download(photoUrl, dirPath, fileName)
-//                .setTag("downloadTest")
-//                .setPriority(Priority.MEDIUM)
-                .build()
-                .setDownloadProgressListener(new DownloadProgressListener() {
-                    @Override
-                    public void onProgress(long bytesDownloaded, long totalBytes) {
-                        // do anything with progress
-//                        int progress = (int) (bytesDownloaded / totalBytes);
-                        mediaProgressDialog.setProgress(mediaDownloadCnt);
-                    }
-                })
-                .startDownload(new DownloadListener() {
-                    @Override
-                    public void onDownloadComplete() {
-                        // do anything after completion
-//                        progressDialog.dismiss();
-//                        downloadMediaList.get(mediaDownloadCnt).setDownloadSuccessful(true);
-//                        mediaProgressDialog.setMessage("Progress : " + mediaDownloadCnt + "/" + downloadMediaList.size());
+            String fileName = getFileName(qid, photoUrl);
+            AndroidNetworking.download(photoUrl, dirPath, fileName)
+                    //                .setTag("downloadTest")
+                    //                .setPriority(Priority.MEDIUM)
+                    .build()
+                    .setDownloadProgressListener(new DownloadProgressListener() {
+                        @Override
+                        public void onProgress(long bytesDownloaded, long totalBytes) {
+                            // do anything with progress
+                            //                        int progress = (int) (bytesDownloaded / totalBytes);
+                            mediaProgressDialog.setProgress(mediaDownloadCnt);
+                        }
+                    })
+                    .startDownload(new DownloadListener() {
+                        @Override
+                        public void onDownloadComplete() {
+                            // do anything after completion
+                            //                        progressDialog.dismiss();
+                            //                        downloadMediaList.get(mediaDownloadCnt).setDownloadSuccessful(true);
+                            //                        mediaProgressDialog.setMessage("Progress : " + mediaDownloadCnt + "/" + downloadMediaList.size());
 
-                        mediaDownloadCnt++;
+                            mediaDownloadCnt++;
 
-                        if (mediaDownloadCnt < downloadMediaList.size())
-                            downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
-                        else if (mediaProgressDialog != null && isActivityRunning)
-                            mediaProgressDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onError(ANError error) {
-                        // handle error
-//                        progressDialog.dismiss();
-//                        downloadMediaList.get(mediaDownloadCnt).setDownloadSuccessful(true);
-                        Log.d("media error:::", downloadMediaList.get(mediaDownloadCnt).getPhotoUrl() + " " + downloadMediaList.get(mediaDownloadCnt).getqId());
-//                        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-
-                        final Dialog dialog = new Dialog(ScienceAssessmentActivity.this);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.setContentView(R.layout.exit_dialog);
-                        dialog.setCanceledOnTouchOutside(false);
-                        TextView title = dialog.findViewById(R.id.dia_title);
-                        Button skip_btn = dialog.findViewById(R.id.dia_btn_restart);
-                        Button restart_btn = dialog.findViewById(R.id.dia_btn_exit);
-                        Button cancel_btn = dialog.findViewById(R.id.dia_btn_cancel);
-                        cancel_btn.setVisibility(View.VISIBLE);
-                        title.setText("Media download failed..!");
-                        restart_btn.setText("Skip All");
-                        skip_btn.setText("Skip this");
-                        cancel_btn.setText("Cancel");
-                        dialog.show();
-
-                        skip_btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaDownloadCnt++;
-                                if (mediaDownloadCnt < downloadMediaList.size()) {
-                                    downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
-                                } else
+                            if (mediaDownloadCnt < downloadMediaList.size())
+                                downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                            else {
+                                if (mediaProgressDialog != null && isActivityRunning) {
                                     mediaProgressDialog.dismiss();
-                                dialog.dismiss();
+                                }
+                                createPaperPatten();
                             }
-                        });
+                        }
 
-                        restart_btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaDownloadCnt = downloadMediaList.size();
-                                /*if (mediaDownloadCnt < downloadMediaList.size()) {
-                                    downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
-                                } else*/
-                                mediaProgressDialog.dismiss();
-                                dialog.dismiss();
+                        @Override
+                        public void onError(ANError error) {
+                            // handle error
+                            //                        progressDialog.dismiss();
+                            //                        downloadMediaList.get(mediaDownloadCnt).setDownloadSuccessful(true);
+                            Log.d("media error:::", downloadMediaList.get(mediaDownloadCnt).getPhotoUrl() + " " + downloadMediaList.get(mediaDownloadCnt).getqId());
+                            //                        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
 
-                            }
-                        });
+                            final Dialog dialog = new Dialog(ScienceAssessmentActivity.this);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialog.setContentView(R.layout.exit_dialog);
+                            dialog.setCanceledOnTouchOutside(false);
+                            TextView title = dialog.findViewById(R.id.dia_title);
+                            Button skip_btn = dialog.findViewById(R.id.dia_btn_restart);
+                            Button restart_btn = dialog.findViewById(R.id.dia_btn_exit);
+                            Button cancel_btn = dialog.findViewById(R.id.dia_btn_cancel);
+                            cancel_btn.setVisibility(View.VISIBLE);
+                            title.setText("Media download failed..!");
+                            restart_btn.setText("Skip All");
+                            skip_btn.setText("Skip this");
+                            cancel_btn.setText("Cancel");
+                            dialog.show();
 
-                        cancel_btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaProgressDialog.dismiss();
-                                AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionDao().deleteQuestionByExamId(scienceQuestionList.get(0).getExamid());
+                            skip_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mediaDownloadCnt++;
+                                    if (mediaDownloadCnt < downloadMediaList.size()) {
+                                        downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                                    } else
+                                        mediaProgressDialog.dismiss();
+                                    dialog.dismiss();
+                                    //                                createPaperPatten();
+                                }
+                            });
+
+                            restart_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mediaDownloadCnt = downloadMediaList.size();
+                                    /*if (mediaDownloadCnt < downloadMediaList.size()) {
+                                        downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                                    } else*/
+                                    mediaProgressDialog.dismiss();
+                                    dialog.dismiss();
+                                    createPaperPatten();
+
+                                }
+                            });
+
+                            cancel_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mediaProgressDialog.dismiss();
+                                    if (isActivityRunning) {
+                                        if (scienceQuestionList.size() > 0)
+                                            AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionDao().deleteQuestionByExamId(scienceQuestionList.get(0).getExamid());
+                                        finish();
+                                    }
+                                }
+                            });
+
+                            /*} else {
+                                Toast.makeText(ScienceAssessmentActivity.this, "Connect to internet", Toast.LENGTH_SHORT).show();
                                 finish();
-                            }
-                        });
-
-                        /*} else {
-                            Toast.makeText(ScienceAssessmentActivity.this, "Connect to internet", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }*/
+                            }*/
 
 
 
-                        /* mediaDownloadCnt++;
-                        if (mediaDownloadCnt < downloadMediaList.size()) {
-                            downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
-                        } else*/
-                       /* mediaProgressDialog.dismiss();
-                        AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionDao().deleteQuestionByExamId(scienceQuestionList.get(0).getExamid());
-                        Toast.makeText(ScienceAssessmentActivity.this, "Error downloading Media..Try again", Toast.LENGTH_SHORT).show();
-                        finish();*/
-                    }
-                });
+                            /* mediaDownloadCnt++;
+                            if (mediaDownloadCnt < downloadMediaList.size()) {
+                                downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                            } else*/
+                           /* mediaProgressDialog.dismiss();
+                            AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionDao().deleteQuestionByExamId(scienceQuestionList.get(0).getExamid());
+                            Toast.makeText(ScienceAssessmentActivity.this, "Error downloading Media..Try again", Toast.LENGTH_SHORT).show();
+                            finish();*/
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     private void generatePaperPattern() {
-        assessmentPaperPatterns = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
-        assessmentPatternDetails = AppDatabase.getDatabaseInstance(this).getAssessmentPatternDetailsDao().getAssessmentPatternDetailsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
-        // topicIdList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPatternDetailsDao().getDistinctTopicIds();
-        boolean isCameraQuestion = false;
+        try {
+            if (downloadMediaList.size() > 0)
+                downloadMediaFiles();
+            else {
+                createPaperPatten();
 
-        if (assessmentPatternDetails.size() > 0)
-            for (int j = 0; j < assessmentPatternDetails.size(); j++) {
-                int noOfQues = Integer.parseInt(assessmentPatternDetails.get(j).getNoofquestion());
-
-
-                List<ScienceQuestion> scienceQuestions;
-//                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
-                if (assessmentPaperPatterns.getIsRandom()) {
-                    scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
-                            getScienceQuestionDao().getQuestionListByPattern(Assessment_Constants.SELECTED_LANGUAGE,
-                            subjectId, assessmentPatternDetails.get(j).getTopicid(),
-                            assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
-                } else {
-                    scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
-                            getScienceQuestionDao().getQuestionListByPatternForAser(Assessment_Constants.SELECTED_LANGUAGE,
-                            subjectId, assessmentPatternDetails.get(j).getTopicid(),
-                            assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
-
-                }
-
-                for (int i = 0; i < scienceQuestions.size(); i++) {
-                    scienceQuestions.get(i).setOutofmarks(assessmentPatternDetails.get(j).getMarksperquestion());
-                    scienceQuestions.get(i).setExamid(assessmentPatternDetails.get(j).getExamId());
-                }
-                if (scienceQuestions.size() > 0)
-                    scienceQuestionList.addAll(scienceQuestions);
-
-              /*  String qtid = assessmentPatternDetails.get(j).getQtid();
-                if (qtid.equalsIgnoreCase("8") || qtid.equalsIgnoreCase("12"))
-                    isCameraQuestion = true;*/
-
+                //        setExamInfo();
+                //todo show supervisor fragment
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createPaperPatten() {
+
+        try {
+            assessmentPaperPatterns = AppDatabase.getDatabaseInstance(this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
+            assessmentPatternDetails = AppDatabase.getDatabaseInstance(this).getAssessmentPatternDetailsDao().getAssessmentPatternDetailsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
+            // topicIdList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPatternDetailsDao().getDistinctTopicIds();
+            boolean isCameraQuestion = false;
+
+            if (assessmentPatternDetails.size() > 0)
+                for (int j = 0; j < assessmentPatternDetails.size(); j++) {
+                    int noOfQues = Integer.parseInt(assessmentPatternDetails.get(j).getNoofquestion());
+
+
+                    List<ScienceQuestion> scienceQuestions;
+                    //                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
+                    if (assessmentPaperPatterns.getIsRandom()) {
+                        scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
+                                getScienceQuestionDao().getQuestionListByPattern(Assessment_Constants.SELECTED_LANGUAGE,
+                                subjectId, assessmentPatternDetails.get(j).getTopicid(),
+                                assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
+                    } else {
+                        scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
+                                getScienceQuestionDao().getQuestionListByPatternForAser(Assessment_Constants.SELECTED_LANGUAGE,
+                                subjectId, assessmentPatternDetails.get(j).getTopicid(),
+                                assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
+
+                    }
+
+                    for (int i = 0; i < scienceQuestions.size(); i++) {
+                        scienceQuestions.get(i).setOutofmarks(assessmentPatternDetails.get(j).getMarksperquestion());
+                        scienceQuestions.get(i).setExamid(assessmentPatternDetails.get(j).getExamId());
+                    }
+                    if (scienceQuestions.size() > 0)
+                        scienceQuestionList.addAll(scienceQuestions);
+
+                  /*  String qtid = assessmentPatternDetails.get(j).getQtid();
+                    if (qtid.equalsIgnoreCase("8") || qtid.equalsIgnoreCase("12"))
+                        isCameraQuestion = true;*/
+
+                }
         /*if (isCameraQuestion) {
             if (!AssessmentApplication.isTablet) {
                 VideoMonitoringService.releaseMediaRecorder();
@@ -911,41 +949,73 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
 
 
 //        if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser"))
-        if (assessmentPaperPatterns.getIsRandom()) Collections.shuffle(scienceQuestionList);
-        for (int i = 0; i < scienceQuestionList.size(); i++) {
-            scienceQuestionList.get(i).setPaperid(assessmentSession);
-            String qid = scienceQuestionList.get(i).getQid();
-            ArrayList<ScienceQuestionChoice> scienceQuestionChoiceList = (ArrayList<ScienceQuestionChoice>) AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionChoicesDao().getQuestionChoicesByQID(qid);
-            scienceQuestionList.get(i).setLstquestionchoice(scienceQuestionChoiceList);
-        }
-
-        if (scienceQuestionList.size() <= 0) {
-            finish();
-            if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
-                Toast.makeText(ScienceAssessmentActivity.this, "Connect to internet to download questions.", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(ScienceAssessmentActivity.this, "No questions.", Toast.LENGTH_SHORT).show();
-        }
-
-        if (assessmentPaperPatterns.getExammode() != null) {
-            if (assessmentPaperPatterns.getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED)) {
-                frame_supervisor.setVisibility(View.VISIBLE);
-                rl_exam_info.setVisibility(View.GONE);
-                Assessment_Constants.supervisedAssessment = true;
-                Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.SUPERVISED;
-                FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, true);
-                Assessment_Utility.showFragment(this, new SupervisedAssessmentFragment_(), R.id.frame_supervisor, null, SupervisedAssessmentFragment.class.getSimpleName());
-
+            if (assessmentPaperPatterns.getIsRandom()) Collections.shuffle(scienceQuestionList);
+            for (int i = 0; i < scienceQuestionList.size(); i++) {
+                scienceQuestionList.get(i).setPaperid(assessmentSession);
+                String qid = scienceQuestionList.get(i).getQid();
+                ArrayList<ScienceQuestionChoice> scienceQuestionChoiceList = (ArrayList<ScienceQuestionChoice>) AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionChoicesDao().getQuestionChoicesByQID(qid);
+                scienceQuestionList.get(i).setLstquestionchoice(scienceQuestionChoiceList);
             }
-        } else {
-            setExamInfo();
-            Assessment_Constants.supervisedAssessment = false;
-            Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.PRACTICE;
-            FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, false);
-        }
-//        setExamInfo();
-//todo show supervisor fragment
 
+            if (scienceQuestionList.size() <= 0) {
+                finish();
+                if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
+                    Toast.makeText(ScienceAssessmentActivity.this, "Connect to internet to download questions.", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(ScienceAssessmentActivity.this, "No questions.", Toast.LENGTH_SHORT).show();
+            }
+
+            if (assessmentPaperPatterns.getExammode() != null) {
+                if (assessmentPaperPatterns.getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED)) {
+                    frame_supervisor.setVisibility(View.VISIBLE);
+                    rl_exam_info.setVisibility(View.GONE);
+                    Assessment_Constants.supervisedAssessment = true;
+                    Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.SUPERVISED;
+                    FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, true);
+                    if (mediaDownloadCnt >= downloadMediaList.size()) {
+                        if (mediaProgressDialog != null && isActivityRunning)
+                            mediaProgressDialog.dismiss();
+                        Assessment_Utility.showFragment(this, new SupervisedAssessmentFragment_(), R.id.frame_supervisor, null, SupervisedAssessmentFragment.class.getSimpleName());
+                    }
+                }
+            } else {
+                setExamInfo();
+                Assessment_Constants.supervisedAssessment = false;
+                Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.PRACTICE;
+                FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, false);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void downloadMediaFiles() {
+//        if (queDownloadIndex >= topicIdList.size()) {
+
+        if (downloadMediaList.size() > 0) {
+
+            mediaProgressDialog.setTitle("Downloading media please wait..");
+//                    mediaProgressDialog.setMessage("Progress : ");
+
+            mediaProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mediaProgressDialog.setProgress(0);
+            mediaProgressDialog.setMax(downloadMediaList.size());
+            mediaProgressDialog.setCancelable(false);
+            if (mediaProgressDialog != null && isActivityRunning)
+                mediaProgressDialog.show();
+//                    if (downloadMediaList.get(mediaDownloadCnt).getQtId().contains("8") || downloadMediaList.get(mediaDownloadCnt).getQtId().contains("9"))
+            File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
+            if (!direct.exists())
+                direct.mkdir();
+            if (direct.exists())
+                downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+            else {
+                Toast.makeText(this, "Media download failed..", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+        }
+//        }
     }
 
     private void setExamInfo() {
@@ -1239,7 +1309,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
        /* if (mCountDownTimer != null)
             mCountDownTimer.cancel();*/
         scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.getCurrentDateTime());
-        BottomQuestionFragment bottomQuestionFragment = new BottomQuestionFragment();
+//        BottomQuestionFragment bottomQuestionFragment = new BottomQuestionFragment();
         if (!bottomQuestionFragment.isVisible()) {
             bottomQuestionFragment.show(getSupportFragmentManager(), BottomQuestionFragment.class.getSimpleName());
             Bundle args = new Bundle();
@@ -1669,60 +1739,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
          startActivityForResult(intent, videoCapture);
      }
  */
-    @Override
+/*    @Override
     public void setAudio(String path, boolean isAudioRecording) {
         if (isAudioRecording) {
             AudioUtil.startRecording(path);
         } else {
             AudioUtil.stopRecording();
         }
-    }
-
-   /* @Override
-    public void pauseVideoMonitoring() {
-        Log.d("ji", "pauseVideoMonitoring:");
-        String fileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + ".mp4";
-        String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + fileName;
-        VideoMonitoringService.releaseMediaRecorder();
-
-        Assessment_Constants.VIDEOMONITORING = false;
-        texture_view.setVisibility(View.GONE);
-        tv_timer.setTextColor(Color.BLACK);
-        frame_video_monitoring.setVisibility(View.GONE);
-        btn_save_Assessment.setVisibility(View.VISIBLE);
-        DownloadMedia video = new DownloadMedia();
-        video.setMediaType(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
-        video.setPhotoUrl(videoPath);
-        video.setPaperId(assessmentSession);
-        AppDatabase.getDatabaseInstance(this).getDownloadMediaDao().insert(video);
-        //            Toast.makeText(this, "video monitoring not prepared", Toast.LENGTH_LONG).show();
     }*/
-
-  /*  @Override
-    public void showCameraError() {
-        *//*Toast.makeText(this, "camera open failed..", Toast.LENGTH_SHORT).show();
-        Assessment_Constants.VIDEOMONITORING = false;
-        texture_view.setVisibility(View.GONE);
-        tv_timer.setTextColor(Color.BLACK);
-        frame_video_monitoring.setVisibility(View.GONE);
-        btn_save_Assessment.setVisibility(View.VISIBLE);
-        Toast.makeText(this, "video monitoring not prepared", Toast.LENGTH_LONG).show();*//*
-    }*/
-
-   /* @Override
-    public void resumeVideoMonitoring() {
-        serviceIntent = null;
-
-        startCameraService();
-
-
-    }
-*/
-    /*private boolean hasCamera() {
-        return getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA);
-    }*/
-
 
     private void checkAssessment(int queCnt) {
         ScienceQuestion scienceQuestion = scienceQuestionList.get(queCnt);
@@ -1956,7 +1980,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         else {
 //            mCountDownTimer.cancel();
             scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.getCurrentDateTime());
-            BottomQuestionFragment bottomQuestionFragment = new BottomQuestionFragment();
+//            BottomQuestionFragment bottomQuestionFragment = new BottomQuestionFragment();
             bottomQuestionFragment.show(getSupportFragmentManager(), BottomQuestionFragment.class.getSimpleName());
             Bundle args = new Bundle();
             args.putSerializable("questionList", (Serializable) scienceQuestionList);
@@ -2298,7 +2322,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements DiscreteS
         }
 //todo
 //        resetSpeechRecognizer(); remove speech=null from onStop
-
+        if (mediaProgressDialog != null && isActivityRunning && mediaProgressDialog.isShowing())
+            if (mediaDownloadCnt >= downloadMediaList.size()) {
+                mediaProgressDialog.dismiss();
+            }
     }
 
    /* @Override
