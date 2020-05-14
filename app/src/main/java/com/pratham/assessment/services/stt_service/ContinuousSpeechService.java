@@ -151,6 +151,7 @@ public class ContinuousSpeechService implements RecognitionListener {
 
     @Override
     public void onResults(Bundle results) {
+        voiceStart = false;
         Log.i(LOG_TAG, "onResults");
         ArrayList<String> matches = results
                 .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);

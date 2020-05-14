@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
@@ -21,6 +22,7 @@ import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -29,6 +31,7 @@ import java.io.InputStream;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_true_false_row)
 public class TrueFalseFragment extends Fragment {
@@ -44,6 +47,9 @@ public class TrueFalseFragment extends Fragment {
     Button radioButtonTrue;
     @ViewById(R.id.rb_false)
     Button radioButtonFalse;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
+
     AssessmentAnswerListener assessmentAnswerListener;
 
     private static final String POS = "pos";
@@ -57,7 +63,7 @@ public class TrueFalseFragment extends Fragment {
     }
 
     @AfterViews
-    public void init(){
+    public void init() {
         if (getArguments() != null) {
             pos = getArguments().getInt(POS, 0);
             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
@@ -105,7 +111,12 @@ public class TrueFalseFragment extends Fragment {
 */
 
     public void setTrueFalseQuestion() {
-
+     /*   String para = "";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
         setOdiaFont(getActivity(), question);
         question.setText(scienceQuestion.getQname());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
@@ -237,4 +248,49 @@ public class TrueFalseFragment extends Fragment {
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            } else btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
+    }
 }

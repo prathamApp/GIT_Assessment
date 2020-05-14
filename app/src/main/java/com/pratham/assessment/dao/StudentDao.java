@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface StudentDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Student student);
 
     /*@Insert

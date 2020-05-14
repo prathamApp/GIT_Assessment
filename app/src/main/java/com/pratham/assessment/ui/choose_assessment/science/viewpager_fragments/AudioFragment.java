@@ -1,9 +1,10 @@
-package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.Audio;
+package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
@@ -36,7 +38,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_audio_row)
-public class AudioFragment extends Fragment implements AudioPlayerInterface,AudioContract.AudioView {
+public class AudioFragment extends Fragment implements AudioPlayerInterface {
     @ViewById(R.id.tv_question)
     TextView question;
     @ViewById(R.id.iv_question_image)
@@ -54,6 +56,8 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface,Audi
     boolean isPlaying;
     boolean isAnsPlaying;
     boolean isAudioRecording;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
 
     String fileName;
     String localPath;
@@ -65,8 +69,6 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface,Audi
     private ScienceQuestion scienceQuestion;
     AssessmentAnswerListener assessmentAnswerListener;
 
-    @Bean(AudioPresenterImpl.class)
-    AudioContract.AudioPresenter presenter;
 
     public AudioFragment() {
         // Required empty public constructor
@@ -124,6 +126,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface,Audi
     }
 */
     public void setAudioQuestion() {
+   /*     String para = "";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
+
         setOdiaFont(getActivity(), question);
 
         if (scienceQuestion.getQname().equalsIgnoreCase(""))
@@ -180,13 +189,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface,Audi
             questionImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
                 }
             });
             questionGif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
                 }
             });
 
@@ -341,5 +350,50 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface,Audi
         if (isPlaying || isAnsPlaying)
             AudioUtil.stopPlayingAudio();
         stopPlayer();
+    }
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            }else  btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
     }
 }

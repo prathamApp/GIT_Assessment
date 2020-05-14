@@ -60,7 +60,7 @@ import com.pratham.assessment.domain.Village;
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
-        SupervisorData.class, DownloadMedia.class}, version = 5/*,exportSchema = false*/)
+        SupervisorData.class, DownloadMedia.class}, version = 7/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -127,7 +127,7 @@ public abstract class AppDatabase extends RoomDatabase {
         try {
             if (appDatabase == null) {
                 appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
-                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                         .allowMainThreadQueries().build();
 
             }
@@ -214,6 +214,40 @@ public abstract class AppDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN noofcertificateq text");
                 database.execSQL("ALTER TABLE AssessmentPaperPattern add COLUMN exammode text");
                 Log.d("$$$", "MIGRATION_4_5After");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+
+    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_5_6");
+            try {
+
+                database.execSQL("ALTER TABLE ScienceQuestion add COLUMN IsParaQuestion INTEGER not null DEFAULT 0");
+                database.execSQL("ALTER TABLE ScienceQuestion add COLUMN RefParaID text");
+                Log.d("$$$", "after MIGRATION_5_6");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+    static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_6_7");
+            try {
+
+                database.execSQL("ALTER TABLE AssessmentPatternDetails add COLUMN paralevel text");
+                database.execSQL("ALTER TABLE AssessmentPatternDetails add COLUMN qlevelmarks text");
+                Log.d("$$$", "after MIGRATION_6_7");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -1,42 +1,42 @@
 package com.pratham.assessment.ui.choose_assessment.result;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+        import android.graphics.Color;
+        import android.os.Bundle;
+        import android.support.annotation.NonNull;
+        import android.support.annotation.Nullable;
+        import android.support.design.widget.AppBarLayout;
+        import android.support.v4.app.Fragment;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.support.v7.widget.Toolbar;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.RelativeLayout;
+        import android.widget.TextView;
 
-import com.pratham.assessment.R;
-import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.domain.AssessmentPaperForPush;
-import com.pratham.assessment.domain.AssessmentPaperPattern;
-import com.pratham.assessment.domain.ResultModalClass;
-import com.pratham.assessment.domain.ResultOuterModalClass;
-import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
-import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
-import com.pratham.assessment.utilities.Assessment_Constants;
-import com.pratham.assessment.utilities.Assessment_Utility;
+        import com.pratham.assessment.R;
+        import com.pratham.assessment.custom.FastSave;
+        import com.pratham.assessment.database.AppDatabase;
+        import com.pratham.assessment.domain.AssessmentPaperForPush;
+        import com.pratham.assessment.domain.AssessmentPaperPattern;
+        import com.pratham.assessment.domain.ResultModalClass;
+        import com.pratham.assessment.domain.ResultOuterModalClass;
+        import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
+        import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
+        import com.pratham.assessment.utilities.Assessment_Constants;
+        import com.pratham.assessment.utilities.Assessment_Utility;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.ViewById;
+        import org.androidannotations.annotations.AfterViews;
+        import org.androidannotations.annotations.Bean;
+        import org.androidannotations.annotations.Click;
+        import org.androidannotations.annotations.EFragment;
+        import org.androidannotations.annotations.ViewById;
 
-import java.util.List;
-import java.util.Objects;
+        import java.util.List;
+        import java.util.Objects;
 
 /*import butterknife.ButterKnife;
 import butterknife.OnClick;*/

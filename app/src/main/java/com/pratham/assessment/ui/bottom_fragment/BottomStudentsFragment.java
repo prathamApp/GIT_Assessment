@@ -42,6 +42,7 @@ import com.pratham.assessment.interfaces.SplashInterface;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.services.LocationService;
 import com.pratham.assessment.ui.bottom_fragment.add_student.AddStudentFragment;
+import com.pratham.assessment.ui.bottom_fragment.add_student.EnrollmentNoFragment;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -85,16 +86,17 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
     @AfterViews
     public void init() {
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        addAvatarsInList();
-        studentList = new ArrayList<>();
-        gson = new Gson();
-        adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
+        try {
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            addAvatarsInList();
+            studentList = new ArrayList<>();
+            gson = new Gson();
+            adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        rl_students.setLayoutManager(mLayoutManager);
-        rl_students.setAdapter(adapter);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+            rl_students.setLayoutManager(mLayoutManager);
+            rl_students.setAdapter(adapter);
 
 //        btn_download_all_data.setVisibility(View.GONE);
 
@@ -102,7 +104,10 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
                 btn_download_all_data.setVisibility(View.VISIBLE);
             }*/
-        showStudents();
+            showStudents();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -691,10 +696,11 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                             Student studentAvatar = new Student();
                             studentAvatar.setStudentID(studentDBList.get(i).getStudentID());
                             studentAvatar.setFullName(studentDBList.get(i).getFullName());
+                            studentAvatar.setGroupId(studentDBList.get(i).getGroupId());
                             if (studentDBList.get(i).getAvatarName() != null)
                                 studentAvatar.setAvatarName(studentDBList.get(i).getAvatarName());
                             else
-                                studentAvatar.setAvatarName("" + Assessment_Utility.getRandomAvatarNames(getActivity()));
+                                studentAvatar.setAvatarName("" + Assessment_Utility.getRandomAvatarName(getActivity()));
                             studentList.add(studentAvatar);
                         }
                     }
@@ -724,6 +730,13 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         SplashActivity.fragmentAddStudentOpenFlg = true;
         AddStudentFragment addStudentFragment = AddStudentFragment.newInstance(this);
         addStudentFragment.show(getActivity().getSupportFragmentManager(), AddStudentFragment.class.getSimpleName());
+
+    }
+
+    @Click(R.id.enter_enrollment_no)
+    public void addStudentByEnrollmentNo() {
+        EnrollmentNoFragment enrollmentNoFragment = EnrollmentNoFragment.newInstance(this);
+        enrollmentNoFragment.show(getActivity().getSupportFragmentManager(), EnrollmentNoFragment.class.getSimpleName());
 
     }
 
@@ -786,7 +799,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 
     @Override
-    public void onStudentClick(final String studentName, final String studentId) {
+    public void onStudentClick(final String studentName, final String studentId, String groupId) {
 
         new AsyncTask<Object, Void, Object>() {
 
@@ -807,7 +820,9 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                     attendance.setSessionID(currentSession);
                     attendance.setStudentID(studentId);
                     attendance.setDate(AssessmentApplication.getCurrentDateTime());
-                    attendance.setGroupID("PS");
+                    if (groupId != null && !groupId.equalsIgnoreCase(""))
+                        attendance.setGroupID(groupId);
+                    else attendance.setGroupID("PS");
                     attendance.setSentFlag(0);
 
                     Assessment_Constants.currentStudentID = studentId;

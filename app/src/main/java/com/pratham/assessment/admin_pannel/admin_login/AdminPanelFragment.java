@@ -39,7 +39,7 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     @AfterViews
     public void init() {
         Assessment_Utility.HideInputKeypad(getActivity());
-      /* userNameET.setText("pravinthorat");
+       /*userNameET.setText("pravinthorat");
         passwordET.setText("pratham123");*/
         /*  userNameET.setText("admin");
         passwordET.setText("admin");*/

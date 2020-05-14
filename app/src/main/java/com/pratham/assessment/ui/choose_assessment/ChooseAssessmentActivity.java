@@ -29,8 +29,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
+import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.custom.toggle_button.SwipeableButton;
@@ -42,6 +44,7 @@ import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
+import com.pratham.assessment.ui.choose_assessment.science.DownloadQuestionsActivity;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.splash_activity.SplashActivity_;
@@ -63,6 +66,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.utilities.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
 import static com.pratham.assessment.utilities.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
@@ -99,6 +103,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     ChooseAssessmentAdapter chooseAssessAdapter;
     ECELoginDialog eceLoginDialog;
     Crl loggedCrl;
+    boolean videoMonitoring = false;
+    @Bean(PushDataToServer.class)
+    PushDataToServer pushDataToServer;
 
     @AfterViews
     public void init() {
@@ -113,6 +120,30 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         name.setText(studentName);
 
         Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
+
+        Menu menu = navigation.getMenu();
+        MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
+        MenuItem nav_push = menu.findItem(R.id.menu_push_data);
+        if (!AssessmentApplication.isTablet) {
+            nav_video.setVisible(true);
+            nav_push.setVisible(true);
+        } else {
+            nav_video.setVisible(false);
+            nav_push.setVisible(false);
+        }
+
+        if (!AssessmentApplication.isTablet) {
+            if (Assessment_Constants.VIDEOMONITORING) {
+                videoMonitoring = true;
+                nav_video.setTitle("Video monitoring(ON)");
+                Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : ON", Toast.LENGTH_SHORT).show();
+
+            } else {
+                videoMonitoring = false;
+                nav_video.setTitle("Video monitoring(OFF)");
+                Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : OFF", Toast.LENGTH_SHORT).show();
+            }
+        }
 
 
       /*  toggle_btn.setOnSwipedOnListener(new Function0<Unit>() {
@@ -194,7 +225,26 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         break;
+                    case R.id.menu_video_monitoring:
+                        Menu menu = navigation.getMenu();
+                        MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
+                        if (!videoMonitoring) {
+                            videoMonitoring = true;
+                            Assessment_Constants.VIDEOMONITORING = true;
+                            nav_video.setTitle("Video monitoring(ON)");
+                            Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : ON", Toast.LENGTH_SHORT).show();
+                        } else {
+                            videoMonitoring = false;
+                            Assessment_Constants.VIDEOMONITORING = false;
+                            nav_video.setTitle("Video monitoring(OFF)");
+                            Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : OFF", Toast.LENGTH_SHORT).show();
 
+                        }
+                        break;
+                    case R.id.menu_push_data:
+                        PUSH_DATA_FROM_DRAWER = true;
+                        pushDataToServer.setValue(ChooseAssessmentActivity.this, false);
+                        pushDataToServer.doInBackground();
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
 
@@ -559,6 +609,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             showSupervisionDialog();
         else {*/
         Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity_.class);
+//        Intent intent = new Intent(ChooseAssessmentActivity.this, DownloadQuestionsActivity_.class);
         startActivity(intent);
 //        }
     }

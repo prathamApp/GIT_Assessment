@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +25,7 @@ import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequence.ArrangeSequenceFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequenceFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -119,7 +118,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                     public void onClick(View v) {
                       /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath);
+                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
                     }
                 });
             } else holder.mTitle.setText(scienceQuestionChoice.getChoicename());

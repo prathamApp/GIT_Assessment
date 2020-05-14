@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +23,10 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.custom_dialogs.ChooseImageDialog;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.ui.choose_assessment.science.camera.VideoMonitoringService;
+import com.pratham.assessment.services.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -55,6 +57,8 @@ public class ImageAnswerFragment extends Fragment {
     GifView questionGif;
     @ViewById(R.id.captured_img)
     ImageView captured_img;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
 
     ChooseImageDialog chooseImageDialog;
     private static final String POS = "pos";
@@ -129,6 +133,14 @@ public class ImageAnswerFragment extends Fragment {
 */
 
     public void setImageQuestion() {
+    /*    String para="";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
+
+
         /*etAnswer.setTextColor(Assessment_Utility.selectedColor);
         etAnswer.setText(scienceQuestion.getUserAnswer());*/
         chooseImageDialog = new ChooseImageDialog(getActivity());
@@ -193,13 +205,13 @@ public class ImageAnswerFragment extends Fragment {
             questionImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath,"");
                 }
             });
             questionGif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath,"");
                 }
             });
 
@@ -221,7 +233,7 @@ public class ImageAnswerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 //                if(!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
-                Assessment_Utility.showZoomDialog(getActivity(), scienceQuestion.getUserAnswer(), scienceQuestion.getUserAnswer());
+                Assessment_Utility.showZoomDialog(getActivity(), scienceQuestion.getUserAnswer(), scienceQuestion.getUserAnswer(),"");
             }
         });
 
@@ -267,10 +279,6 @@ public class ImageAnswerFragment extends Fragment {
         super.onPause();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     public void setImage(Uri uri) {
         captured_img.setVisibility(View.VISIBLE);
@@ -300,10 +308,10 @@ public class ImageAnswerFragment extends Fragment {
                 try {
 
                     chooseImageDialog.cancel();
-                    if (Assessment_Constants.VIDEOMONITORING) {
+                    /*if (Assessment_Constants.VIDEOMONITORING) {
 //                        assessmentAnswerListener.pauseVideoMonitoring();
                         VideoMonitoringService.releaseMediaRecorder();
-                    }
+                    }*/
                     if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                         String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
 
@@ -403,8 +411,8 @@ public class ImageAnswerFragment extends Fragment {
             }
 
 //            assessmentAnswerListener.resumeVideoMonitoring();
-            if (Assessment_Constants.VIDEOMONITORING)
-                scienceAssessmentActivity.startCameraService();
+           /* if (Assessment_Constants.VIDEOMONITORING)
+                scienceAssessmentActivity.startCameraService();*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -450,5 +458,49 @@ public class ImageAnswerFragment extends Fragment {
         cursor.close();
         return thePath;
     }
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            }else  btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
+    }
 }

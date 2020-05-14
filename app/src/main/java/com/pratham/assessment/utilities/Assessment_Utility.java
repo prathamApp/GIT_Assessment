@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.hardware.Camera;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
@@ -71,6 +72,7 @@ import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.domain.StorageInfo;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
+import com.pratham.assessment.ui.choose_assessment.science.DownloadQuestionsActivity;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog_;
@@ -471,14 +473,20 @@ public class Assessment_Utility {
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
                     .commit();
-            } else if (mActivity instanceof ResultActivity) {
-                ((ResultActivity) mActivity).getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(frame, mFragment, TAG)
-                        .addToBackStack(TAG)
-                        .commit();
+        } else if (mActivity instanceof ResultActivity) {
+            ((ResultActivity) mActivity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(frame, mFragment, TAG)
+                    .addToBackStack(TAG)
+                    .commit();
         } else if (mActivity instanceof ScienceAssessmentActivity) {
             ((ScienceAssessmentActivity) mActivity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(frame, mFragment, TAG)
+                    .addToBackStack(TAG)
+                    .commitAllowingStateLoss();
+        } else if (mActivity instanceof DownloadQuestionsActivity) {
+            ((DownloadQuestionsActivity) mActivity).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(frame, mFragment, TAG)
                     .addToBackStack(TAG)
@@ -622,9 +630,27 @@ public class Assessment_Utility {
         return word;*/
     }
 
-    public static String getRandomAvatarNames(Context context) {
+    public static String getRandomAvatarName(Context context) {
         String[] drawables = {"b1.png", "b2.png", "b3.png",
                 "g1.png", "g2.png", "g3.png"};
+        String a = drawables[new Random().nextInt(drawables.length)];
+        return a;
+       /* String[] avatars = context.getResources().getStringArray(R.array.avatars);
+        String word = avatars[new Random().nextInt(avatars.length)];
+        return word;*/
+    }
+
+    public static String getRandomFemaleAvatarName(Context context) {
+        String[] drawables = {"g1.png", "g2.png", "g3.png"};
+        String a = drawables[new Random().nextInt(drawables.length)];
+        return a;
+       /* String[] avatars = context.getResources().getStringArray(R.array.avatars);
+        String word = avatars[new Random().nextInt(avatars.length)];
+        return word;*/
+    }
+
+    public static String getRandomMaleAvatarName(Context context) {
+        String[] drawables = {"b1.png", "b2.png", "b3.png"};
         String a = drawables[new Random().nextInt(drawables.length)];
         return a;
        /* String[] avatars = context.getResources().getStringArray(R.array.avatars);
@@ -1937,10 +1963,11 @@ public class Assessment_Utility {
         }
     }
 
-    public static void showZoomDialog(Context context, String path, String localPath) {
+    public static void showZoomDialog(Context context, String path, String localPath, String para) {
         Intent intent = new Intent(context, ZoomImageDialog_.class);
         intent.putExtra("onlinePath", path);
         intent.putExtra("localPath", localPath);
+        intent.putExtra("paragraph", para);
         context.startActivity(intent);
 //        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
 //        zoomImageDialog.show();
@@ -2036,9 +2063,22 @@ public class Assessment_Utility {
     }
 
 
-
     public static String removeSpecialCharacters(String string) {
-       return Normalizer.normalize(string, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "");
+        return Normalizer.normalize(string, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "");
     }
+
+    public static boolean isCameraBusy() {
+        Camera camerastatus = null;
+        try {
+            camerastatus = Camera.open();
+        } catch (RuntimeException e) {
+            return true;
+        } finally {
+            if (camerastatus != null) camerastatus.release();
+        }
+        return false;
+    }
+
+
 
 }

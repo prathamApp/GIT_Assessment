@@ -56,7 +56,6 @@ public class ProSwipeButton extends RelativeLayout {
     private LinearLayout arrowHintContainer;
     private ProgressBar progressBar;
 
-    //// TODO: 26/10/17 Add touch blocking
 
     /*
         User configurable settings

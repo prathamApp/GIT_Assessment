@@ -32,8 +32,21 @@ public interface AssessmentPaperForPushDao {
     @Query("select distinct subjectId from AssessmentPaperForPush where languageId=:langId and studentId=:studId")
     public List<String> getAssessmentPapersByUniqueSubId(String langId, String studId);
 
-    @Query("select distinct languageId from AssessmentPaperForPush where studentId=:studId")
-    public List<String> getAssessmentPapersByUniqueLang(String studId);
+    @Query("select distinct examId from AssessmentPaperForPush where languageId=:langId and studentId=:studId")
+    public List<String> getAssessmentPapersByUniqueExamId(String langId, String studId);
+
+    @Query("select distinct languageId from AssessmentPaperForPush where studentId=:studId and" +
+            " question1Rating  !='null' " +
+            "or question2Rating !='null' " +
+            "or question3Rating !='null' " +
+            "or question4Rating !='null' " +
+            "or question5Rating !='null' " +
+            "or question6Rating !='null' " +
+            "or question7Rating !='null' " +
+            "or question8Rating !='null' " +
+            "or question9Rating !='null' " +
+            "or question10Rating !='null'")
+    public List<String> getAssessmentPapersByUniqueLangCertificatequestionsNotNull(String studId);
 
     @Query("select * from AssessmentPaperForPush where examid=:examId and subjectId=:subId and studentId=:studentId")
     public List<AssessmentPaperForPush> getAssessmentPapersByExamIdAndSubId(String examId, String subId, String studentId);

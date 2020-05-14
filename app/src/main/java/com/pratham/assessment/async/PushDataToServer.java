@@ -64,6 +64,7 @@ import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MED
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
+import static com.pratham.assessment.utilities.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 
 /******* This async task is used for data push******/
@@ -125,7 +126,7 @@ public class PushDataToServer {
     protected void onPreExecute() {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Pushing data..");
-        if (isTablet)
+        if (isTablet || PUSH_DATA_FROM_DRAWER)
             progressDialog.show();
 
     }
@@ -224,7 +225,7 @@ public class PushDataToServer {
             requestJsonObjectScience = generateRequestString(scoreData, assessmentScoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentScienceData, studentData);
 
 
-            if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
+            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
                     try {
                         JSONObject object = new JSONObject();
@@ -273,7 +274,7 @@ public class PushDataToServer {
 
         //        if (checkEmptyness(requestString))
 
-        if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
+        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             if (!AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
 
 //            pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
@@ -286,11 +287,12 @@ public class PushDataToServer {
              /*   } else {
 
                 }*/
-            }/* else {
+            }/* else {//todo raspberry push
                 pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
                         "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
             }*/
         } else {
+            onPostExecute();
             if (progressDialog != null)
                 progressDialog.dismiss();
         }
@@ -353,7 +355,7 @@ public class PushDataToServer {
                     e.printStackTrace();
                 }
             }*/
-                }
+                } else PushDataToServer.this.onPostExecute();
                 return null;
             }
         }.execute();
@@ -392,12 +394,14 @@ public class PushDataToServer {
                 }
             } else {
                 for (int i = 0; i < videoRecordingList.size(); i++) {
-                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId();
+//                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId();
+                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId() + "_" + Assessment_Utility.getCurrentDateTime() + "_" + i;
+                    fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
                     String extension = getFileExtension(videoRecordingList.get(i).getPhotoUrl());
                     String fileWithExt = fileName + "." + extension;
                     File f = new File(videoRecordingList.get(i).getPhotoUrl());
                     if (f.exists()) {
-                        builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(MEDIA_TYPE_MP4, f));
+                        builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(MEDIA_TYPE_JPG, f));
                     }
                 }
             }
@@ -417,7 +421,7 @@ public class PushDataToServer {
             if (response.isSuccessful())
                 setMediaPushFlag(type);
             else Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
-
+            onPostExecute();
 
 //            return new JSONObject(response.body().string());
 
@@ -552,10 +556,10 @@ public class PushDataToServer {
         try {
 
             if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                if (isTablet)
-                    Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
+                if (isTablet || PUSH_DATA_FROM_DRAWER)
+                    Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
             }
-            if (isTablet) {
+            if (isTablet || PUSH_DATA_FROM_DRAWER) {
                 String msg = "";
                 if (dataPushed) {
                     msg = "Data pushed Successfully.";
@@ -569,7 +573,8 @@ public class PushDataToServer {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                ((MainActivity) context).onResponseGet();
+                                if (context instanceof MainActivity)
+                                    ((MainActivity) context).onResponseGet();
 
                             }
                         });
@@ -577,6 +582,7 @@ public class PushDataToServer {
             }
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
+            PUSH_DATA_FROM_DRAWER = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -842,7 +848,6 @@ public class PushDataToServer {
                     _obj_paper.put("question3Rating", _paper.getQuestion3Rating());
                     _obj_paper.put("question4Rating", _paper.getQuestion4Rating());
                     _obj_paper.put("question5Rating", _paper.getQuestion5Rating());
-                    //TODO UNCOMMENT
                     _obj_paper.put("question6Rating", _paper.getQuestion6Rating());
                     _obj_paper.put("question7Rating", _paper.getQuestion7Rating());
                     _obj_paper.put("question8Rating", _paper.getQuestion8Rating());
@@ -1093,7 +1098,7 @@ public class PushDataToServer {
                                             });
                                     alertDialog.create().show();*/
                                 }
-                                onPostExecute();
+//                                onPostExecute();
                             }
 
                             setPushFlag();

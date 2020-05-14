@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
@@ -19,6 +20,7 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.custom.sparkbutton.SparkButton;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
@@ -27,6 +29,7 @@ import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -50,6 +53,9 @@ public class MultipleSelectFragment extends Fragment {
     GifView questionGif;
     @ViewById(R.id.gl_multiselect)
     GridLayout gridLayout;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
+
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
 
@@ -108,6 +114,12 @@ public class MultipleSelectFragment extends Fragment {
     }*/
 
     public void setMultipleSelectQuestion() {
+        /*String para = "";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
         setOdiaFont(getActivity(), question);
 
         question.setText(scienceQuestion.getQname());
@@ -165,13 +177,13 @@ public class MultipleSelectFragment extends Fragment {
         questionImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
             }
         });
         questionGif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
             }
         });
 
@@ -201,7 +213,7 @@ public class MultipleSelectFragment extends Fragment {
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Assessment_Utility.showZoomDialog(getActivity(), path, localPathChoice);
+                        Assessment_Utility.showZoomDialog(getActivity(), path, localPathChoice, "");
 
                     }
                 });
@@ -237,15 +249,15 @@ public class MultipleSelectFragment extends Fragment {
                     }
                 }
             } else {*/
-                if (scienceQuestion.getIsAttempted()) {
-                    if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
-                        checkBox.setChecked(true);
-                        checkBox.setTextColor(Assessment_Utility.selectedColor);
-                    } else {
-                        checkBox.setChecked(false);
-                        checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
+            if (scienceQuestion.getIsAttempted()) {
+                if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
+                    checkBox.setChecked(true);
+                    checkBox.setTextColor(Assessment_Utility.selectedColor);
+                } else {
+                    checkBox.setChecked(false);
+                    checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
 
-                    }
+                }
 //                }
             }
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -325,5 +337,49 @@ public class MultipleSelectFragment extends Fragment {
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            }else  btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
+    }
 }

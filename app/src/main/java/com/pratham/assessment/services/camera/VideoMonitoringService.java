@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment.science.camera;
+package com.pratham.assessment.services.camera;
 
 import android.Manifest;
 import android.app.Service;
@@ -7,7 +7,7 @@ import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Binder;
-import android.os.Environment;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.TextureView;

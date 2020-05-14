@@ -83,7 +83,7 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 
 //        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLang(Assessment_Constants.currentStudentID);
-        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLang(currentStudentID);
+        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLangCertificatequestionsNotNull(currentStudentID);
         List<String> languages = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getLangList(languageIds);
         if (languages.size() > 0 && languageIds.size() > 0) {
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.custom_spinner, languages);

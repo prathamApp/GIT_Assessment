@@ -43,9 +43,13 @@ public class PushOrAssignFragment extends Fragment {
 
     @AfterViews
     public void init() {
-        if (Assessment_Constants.VIDEOMONITORING)
+        if (Assessment_Constants.VIDEOMONITORING) {
             video_toggle.setTextOn("ON");
-        else video_toggle.setTextOff("OFF");
+            video_toggle.setChecked(true);
+        } else {
+            video_toggle.setTextOff("OFF");
+            video_toggle.setChecked(false);
+        }
     }
 
 

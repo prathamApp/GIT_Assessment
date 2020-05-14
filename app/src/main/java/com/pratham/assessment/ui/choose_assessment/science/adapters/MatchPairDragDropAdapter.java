@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.pratham.assessment.AssessmentApplication;
@@ -93,11 +95,20 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
                 holder.rl_img.setVisibility(View.VISIBLE);
                 holder.mTitle.setVisibility(View.GONE);
                 holder.mTitle.setTextColor(Color.WHITE);
-                Glide.with(context).asBitmap().
+               /* Glide.with(context).asBitmap().
                         load(path).apply(new RequestOptions()
                         .fitCenter()
                         .format(DecodeFormat.PREFER_ARGB_8888)
                         .override(Target.SIZE_ORIGINAL))
+                        .into(holder.iv_choice_image);*/
+
+                Glide.with(context)
+                        .load(path)
+//                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .placeholder(Drawable.createFromPath(localPath)))
                         .into(holder.iv_choice_image);
 
 //                holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +118,7 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
                         Log.d("QQQ", "choice clicked....");
                       /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath);
+                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
                     }
                 });
             } else {

@@ -83,6 +83,7 @@ public class Assessment_Constants {
     public static String SELECTED_EXAM_ID = "";
     public static String ASSESSMENT_TYPE = PRACTICE;
     public static boolean VIDEOMONITORING = false;
+    public static boolean PUSH_DATA_FROM_DRAWER = false;
     public static String STORE_ANSWER_MEDIA_PATH = "/.Assessment/Content/Answers";
     public static String STORE_DOWNLOADED_MEDIA_PATH = "/.Assessment/Content/Downloaded";
     public static String STORE_VIDEO_MONITORING_PATH = "/.Assessment/Content/VideoMonitoring";
@@ -151,6 +152,7 @@ public static final String STT_REGEX_2 = "[\"\\-+\\.'^?!@#%-_;&*,:<>()]";
     public static final String KEYWORDS_QUESTION = "11";
     public static final String IMAGE_ANSWER = "12";
     public static final String TEXT_PARAGRAPH = "13";
+    public static final String PARAGRAPH_BASED_QUESTION = "14";
 
 
     public static final boolean isPracticeModeOn = true;

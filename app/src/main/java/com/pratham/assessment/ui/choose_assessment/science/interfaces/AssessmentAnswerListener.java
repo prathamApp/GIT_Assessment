@@ -9,4 +9,6 @@ public interface AssessmentAnswerListener {
     void setAnswerInActivity(String ansId, String answer, String qid, List<ScienceQuestionChoice> list);
 
     void removeSupervisorFragment();
+
+//    void setParagraph(String para, boolean isParaQuestion);
 }

@@ -111,7 +111,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 .build();
 
         Log.d("@path@@", AssessmentApplication.assessPath);
-//        overrideDefaultTypefaces();
+//        overrideDefaultTypefacenots();
     }
 /*    private void overrideDefaultTypefaces() {
         FontChanger.overrideDefaultFont(this, "DEFAULT", "fonts/lohit_oriya.ttf");

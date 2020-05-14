@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment;
 import com.pratham.assessment.admin_pannel.admin_login.AdminPanelFragment_;
 import com.pratham.assessment.domain.ModalProgram;
+import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -267,10 +269,14 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
 
     @Override
     public void openLoginActivity() {
-        getActivity().getSupportFragmentManager().beginTransaction().
+        /*getActivity().getSupportFragmentManager().beginTransaction().
                 remove(getActivity().getSupportFragmentManager().findFragmentById(R.id.frame_attendance)).commit();
+       */
         Assessment_Utility.showFragment(getActivity(), new AdminPanelFragment_(), R.id.frame_attendance,
                 null, AdminPanelFragment.class.getSimpleName());
+//        startActivity(new Intent(getActivity(), Activity_AssignGroups_.class));
+
+
         // getActivity().getSupportFragmentManager().popBackStack();
     }
 

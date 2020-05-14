@@ -43,12 +43,33 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_below="@id/students_recyclerView"
-            android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_marginBottom="@dimen/_15sdp"
+            android:layout_margin="@dimen/_7sdp"
             android:background="@drawable/correct_bg"
             android:elevation="@dimen/_3sdp"
             android:text="Create Profile"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp" />
+
+        <TextView
+            android:id="@+id/tv_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_student"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/_3sdp"
+            android:text="OR"
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold" />
+
+        <com.pratham.assessment.custom.customFont.SansButton
+            android:id="@+id/enter_enrollment_no"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/tv_or"
+            android:layout_margin="@dimen/_7sdp"
+            android:background="@drawable/gradiance_bg_3"
+            android:elevation="@dimen/_3sdp"
+            android:text="Enter enrollment number"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp" />
 

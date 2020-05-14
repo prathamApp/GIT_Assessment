@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequence;
+package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -40,7 +42,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_arrange_seq_row)
-public class ArrangeSequenceFragment extends Fragment implements StartDragListener, ArrangeSequenceContract.ArrangeSequenceView {
+public class ArrangeSequenceFragment extends Fragment implements StartDragListener {
     @ViewById(R.id.tv_question)
     TextView question;
     @ViewById(R.id.iv_question_image)
@@ -49,9 +51,9 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
     GifView questionGif;
     @ViewById(R.id.rl_arrange_seq)
     RecyclerView recyclerArrangeSeq;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
 
-    @Bean(ArrangeSequencePresenterImpl.class)
-    ArrangeSequenceContract.ArrangeSequencePresenter presenter;
 
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
@@ -112,6 +114,12 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
       }
   */
     public void setArrangeSeqQuestion() {
+      /*  String para="";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
         question.setText(scienceQuestion.getQname());
         setOdiaFont(getActivity(), question);
 
@@ -165,13 +173,13 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
         questionImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
             }
         });
         questionGif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
             }
         });
 
@@ -202,8 +210,10 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
                 shuffledList.clear();
 
                 shuffledList.addAll(pairList);
-                Collections.shuffle(shuffledList);
-                Collections.shuffle(shuffledList);
+                while (shuffledList.equals(pairList)) {
+                    Collections.shuffle(shuffledList);
+                }
+//                Collections.shuffle(shuffledList);
             } else {
                 if (AnswerList.size() > 0)
                     shuffledList.addAll(AnswerList);
@@ -217,7 +227,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
 
 //        presenter.getShuffledList(scienceQuestion);
 
-            dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, scienceQuestion.getQtid(),getActivity());
+            dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, scienceQuestion.getQtid(), getActivity());
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
@@ -242,7 +252,41 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
         shuffledList = draggedList;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
 
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            } else btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
+    }
   /*  @Override
     public void setShuffledList(List<ScienceQuestionChoice> shuffledList) {
         this.shuffledList = shuffledList;

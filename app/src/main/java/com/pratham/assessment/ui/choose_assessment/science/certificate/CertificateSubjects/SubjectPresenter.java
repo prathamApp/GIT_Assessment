@@ -69,7 +69,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         }
 
         for (AssessmentSubjects assessmentSubjects : subjects) {
-            List<AssessmentPaperPattern> paperPatterns = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubIdNoCertificates(assessmentSubjects.getSubjectid());
+            List<AssessmentPaperPattern> paperPatterns = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubId(assessmentSubjects.getSubjectid());
             List<String> examIds = new ArrayList<>();
             for (int i = 0; i < paperPatterns.size(); i++) {
                 if (!examIds.contains(paperPatterns.get(i).getExamid()))
@@ -124,31 +124,39 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                     public void onResponse(JSONArray response) {
                         try {
                             paperList = new ArrayList<>();
-                            Gson gson = new Gson();
+                           /* Gson gson = new Gson();
                             Type listType = new TypeToken<List<AssessmentPaperForPush>>() {
                             }.getType();
                             paperList = gson.fromJson(response.toString(), listType);
-                           /* for (int i = 0; i < response.length(); i++) {
+                          */  for (int i = 0; i < response.length(); i++) {
                                 AssessmentPaperForPush paper = new AssessmentPaperForPush();
+                                paper.setLanguageId(response.getJSONObject(i).getString("languageid"));
+                                paper.setSubjectId(response.getJSONObject(i).getString("subjectid"));
+                                paper.setExamId(response.getJSONObject(i).getString("examid"));
+                                paper.setPaperId(response.getJSONObject(i).getString("paperId"));
                                 paper.setPaperStartTime(response.getJSONObject(i).getString("paperstarttime"));
                                 paper.setPaperEndTime(response.getJSONObject(i).getString("paperendtime"));
-                                paper.setLanguageId(response.getJSONObject(i).getString("languageid"));
-                                paper.setExamId(response.getJSONObject(i).getString("examid"));
-                                paper.setSubjectId(response.getJSONObject(i).getString("subjectid"));
-                                paper.setPaperId(response.getJSONObject(i).getString("paperId"));
                                 paper.setOutOfMarks(response.getJSONObject(i).getString("TotalMarks"));
                                 paper.setTotalMarks(response.getJSONObject(i).getString("ScoredMarks"));
+                                paper.setStudentId(response.getJSONObject(i).getString("studentid"));
                                 paper.setCorrectCnt(response.getJSONObject(i).getInt("correctCount"));
                                 paper.setWrongCnt(response.getJSONObject(i).getInt("wrongCount"));
-                                paper.setStudentId(response.getJSONObject(i).getString("studentid"));
                                 paper.setExamName(response.getJSONObject(i).getString("examname"));
                                 paper.setExamTime(response.getJSONObject(i).getString("examduration"));
                                 paper.setQuestion1Rating(response.getJSONObject(i).getString("question1Rating"));
                                 paper.setQuestion2Rating(response.getJSONObject(i).getString("question2Rating"));
                                 paper.setQuestion3Rating(response.getJSONObject(i).getString("question3Rating"));
+                                paper.setQuestion4Rating(response.getJSONObject(i).getString("question4Rating"));
+                                paper.setQuestion5Rating(response.getJSONObject(i).getString("question5Rating"));
+                                paper.setQuestion6Rating(response.getJSONObject(i).getString("question6Rating"));
+                                paper.setQuestion7Rating(response.getJSONObject(i).getString("question7Rating"));
+                                paper.setQuestion8Rating(response.getJSONObject(i).getString("question8Rating"));
+                                paper.setQuestion9Rating(response.getJSONObject(i).getString("question9Rating"));
+                                paper.setQuestion10Rating(response.getJSONObject(i).getString("question10Rating"));
+//                                paper.setPaperEndTime(response.getJSONObject(i).getString("exammode"));
                                 paperList.add(paper);
 
-                            }*/
+                            }
                             if (paperList.size() > 0) {
                                 List<AssessmentLanguages> languages = AppDatabase.getDatabaseInstance(context).getLanguageDao().getAllLangs();
                                 if (languages.size() <= 0) getLanguageData();
@@ -240,7 +248,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                 }
             }
 
-            BackupDatabase.backup(context);
+                BackupDatabase.backup(context);
             progressDialog.dismiss();
             subjectView.setSubjectToSpinner();
         }

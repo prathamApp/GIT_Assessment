@@ -16,11 +16,27 @@
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.3"
             android:text="why the sound is longitudinal?"
             app:autoSizeMaxTextSize="@dimen/_20sdp"
             app:autoSizeMinTextSize="@dimen/_15sdp"
             app:autoSizeTextType="uniform" />
+
+        <Button
+            android:id="@+id/btn_view_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight=".1"
+            android:background="@drawable/correct_bg"
+            android:elevation="@dimen/_2sdp"
+            android:padding="@dimen/_3sdp"
+            android:text="View hint"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10sdp"
+            android:visibility="gone" />
+
 
         <ImageView
             android:id="@+id/iv_question_image"

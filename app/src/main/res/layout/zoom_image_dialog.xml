@@ -53,6 +53,54 @@
         android:src="@drawable/ic_play"
         android:visibility="gone" />
 
+    <RelativeLayout
+        android:id="@+id/rl_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_ok_img"
+        android:background="@drawable/answer_bg">
+
+        <TextView
+            android:id="@+id/tv_para_label"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/_5sdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="Paragraph"
+            android:padding="@dimen/_3sdp"
+            android:textAlignment="center"
+            android:textSize="@dimen/_20sdp" />
+
+        <ScrollView
+            android:id="@+id/sv_para"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tv_para_label"
+            android:layout_margin="@dimen/_5sdp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/quicksand_light"
+                    android:padding="@dimen/_5sdp"
+                    android:textColor="@color/black"
+                    android:text="गाँव के एक कोने में रज्जब चाचा का | "
+                    android:textAlignment="textStart"
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="visible" />
+            </RelativeLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
     <ImageButton
         android:id="@+id/btn_ok_img"
         android:layout_width="@dimen/_60sdp"

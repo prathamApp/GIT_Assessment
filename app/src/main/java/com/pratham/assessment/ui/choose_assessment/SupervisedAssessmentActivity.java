@@ -23,7 +23,6 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
-import com.pratham.assessment.ui.choose_assessment.ece.ECEActivity;
 import com.pratham.assessment.ui.choose_assessment.ece.ECEActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -212,6 +211,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
             finish();
         }*/ else {
             Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity_.class);
+           /* Intent intent = new Intent(SupervisedAssessmentActivity.this, DownloadQuestionsActivity_.class);*/
             startActivity(intent);
             finish();
             /*Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);

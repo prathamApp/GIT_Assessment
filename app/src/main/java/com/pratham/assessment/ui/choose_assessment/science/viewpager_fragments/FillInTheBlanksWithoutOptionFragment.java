@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.services.stt_service.ContinuousSpeechService;
 import com.pratham.assessment.services.stt_service.STT_Result;
@@ -57,6 +59,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     EditText etAnswer;
     @ViewById(R.id.ib_mic)
     ImageButton ib_mic;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
 
     ContinuousSpeechService speechService;
 
@@ -140,7 +144,13 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     }
 
     public void setFillInTheBlanksQuestion() {
-       if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
+     /*   String para = "";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
+        if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
             if (!Assessment_Constants.SELECTED_LANGUAGE.equals("1") && !Assessment_Constants.SELECTED_LANGUAGE.equals("2")) {
                 ib_mic.setVisibility(View.INVISIBLE);
             }
@@ -195,13 +205,13 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
             questionImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
                 }
             });
             questionGif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                    showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
                 }
             });
 
@@ -258,7 +268,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     public void micPressed(int micPressed) {
         if (ib_mic != null) {
             if (micPressed == 0) {
-                    ib_mic.setImageResource(R.drawable.ic_mic_24dp);
+                ib_mic.setImageResource(R.drawable.ic_mic_24dp);
             } else if (micPressed == 1) {
                 ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);
             }
@@ -291,21 +301,20 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
 
     }
 
-    @Override
+/*    @Override
     public void onResume() {
         super.onResume();
         speechService.resetSpeechRecognizer();
-       /* if (speech != null) {
+       *//* if (speech != null) {
             micPressed(0);
             voiceStart = false;
-        }*/
-    }
+        }*//*
+    }*/
 
     @Override
     public void Stt_onResult(ArrayList<String> matches) {
         micPressed(0);
 //        ib_mic.stopRecording();
-
         System.out.println("LogTag" + " onResults");
 //        ArrayList<String> matches = results;
 
@@ -407,4 +416,50 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         micPressed(0);
     }*/
 
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        speechService.resetSpeechRecognizer();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            } else btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
+    }
 }

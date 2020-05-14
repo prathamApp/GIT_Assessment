@@ -10,6 +10,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+
+
+
+
+
+
 @Entity
 public class ScienceQuestion implements Serializable {
 
@@ -77,6 +86,10 @@ public class ScienceQuestion implements Serializable {
     private boolean isAttempted;
 
     private boolean isCorrect;
+
+    // new 27-04-2020
+    public boolean IsParaQuestion;
+    private String RefParaID;
 
     public String getUserAnswer() {
         if (userAnswer == null)
@@ -341,5 +354,21 @@ public class ScienceQuestion implements Serializable {
 
     public void setMediaDownloaded(boolean mediaDownloaded) {
         isMediaDownloaded = mediaDownloaded;
+    }
+
+    public boolean isParaQuestion() {
+        return IsParaQuestion;
+    }
+
+    public void setIsParaQuestion(boolean paraQuestion) {
+        IsParaQuestion = paraQuestion;
+    }
+
+    public String getRefParaID() {
+        return RefParaID;
+    }
+
+    public void setRefParaID(String refParaID) {
+        RefParaID = refParaID;
     }
 }

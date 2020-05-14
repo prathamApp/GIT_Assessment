@@ -595,7 +595,11 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 paper.setQuestion3Rating(response.getJSONObject(i).getString("question3Rating"));
                                 paper.setQuestion4Rating(response.getJSONObject(i).getString("question4Rating"));
                                 paper.setQuestion5Rating(response.getJSONObject(i).getString("question5Rating"));
-                                paper.setFullName(response.getJSONObject(i).getString("FullName"));
+                                paper.setQuestion6Rating(response.getJSONObject(i).getString("question6Rating"));
+                                paper.setQuestion7Rating(response.getJSONObject(i).getString("question7Rating"));
+                                paper.setQuestion8Rating(response.getJSONObject(i).getString("question8Rating"));
+                                paper.setQuestion9Rating(response.getJSONObject(i).getString("question9Rating"));
+                                paper.setQuestion10Rating(response.getJSONObject(i).getString("question10Rating"));paper.setFullName(response.getJSONObject(i).getString("FullName"));
                                 paper.setGender(response.getJSONObject(i).getString("Gender"));
                                 paper.setAge(response.getJSONObject(i).getInt("Age"));
                                 newStudentCertificates.add(paper);
@@ -665,7 +669,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         student.setFullName(assessmentPaperForPush.getFullName());
         student.setAge(assessmentPaperForPush.getAge());
         student.setGender(assessmentPaperForPush.getGender());
-        student.setAvatarName(Assessment_Utility.getRandomAvatarNames(context));
+        student.setAvatarName(Assessment_Utility.getRandomAvatarName(context));
         student.setGroupId("PS");
         student.setDeviceId(Assessment_Utility.getDeviceId(this));
         AppDatabase.getDatabaseInstance(context).getStudentDao().insert(student);

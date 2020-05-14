@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pratham.assessment.ui.choose_assessment.science.camera;
+package com.pratham.assessment.services.camera;
 
 import android.annotation.TargetApi;
 import android.hardware.Camera;

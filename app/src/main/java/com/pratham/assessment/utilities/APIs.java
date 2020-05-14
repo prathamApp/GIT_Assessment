@@ -201,6 +201,7 @@ public class APIs {
     public static String AssessmentPaperPatternAPI="http://www.apiassessment.openiscool.org/api/exampattern/GetExamPattern?examid=";
     public static String pullCertificateByStudIdAPI ="http://apiassessment.openiscool.org/api/certificate/GetCertificate?studentid=";
     public static String pullCertificateByDeviceIdAPI ="http://apiassessment.openiscool.org/api/certificate/GetCertificateByDeviceID?deviceid=";
+    public static String pullStudentByEnrollmentNoAPI ="http://www.devtab.openiscool.org/api/StudentEnrollment?enrollmentno=";
 
 
 

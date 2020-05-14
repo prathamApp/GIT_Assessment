@@ -8,8 +8,8 @@ android {
         applicationId "com.pratham.assessment"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 14
-        versionName "1.14"
+        versionCode 16
+        versionName "1.16"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -109,6 +109,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 
+//    implementation 'com.github.amarKargal:Assessment-Library:0.1.4'
+
     //lottie
     implementation 'com.airbnb.android:lottie:2.7.0'
 
@@ -118,7 +120,7 @@ dependencies {
     //flow layout
     // flow layout
     implementation 'com.nex3z:flow-layout:1.2.4'
-
+//    implementation project(path: ':assessment_lib')
     //db encryption
 //    implementation "com.commonsware.cwac:saferoom:1.2.1"
 

@@ -1,8 +1,11 @@
 package com.pratham.assessment.ui.choose_assessment.science.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +15,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
+import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
@@ -73,29 +79,49 @@ public class MatchPairAdapter extends RecyclerView.Adapter<MatchPairAdapter.MyVi
     }*/
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int i) {
         final ScienceQuestionChoice scienceQuestionChoice = pairList.get(i);
         if (!scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
-//            myViewHolder.imageView.setVisibility(View.VISIBLE);
-            myViewHolder.rl_img.setVisibility(View.VISIBLE);
-            myViewHolder.text.setVisibility(View.GONE);
+            final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getChoiceurl();
 
-            Glide.with(context).asBitmap().
-                    load(/*Assessment_Constants.loadOnlineImagePath + */scienceQuestionChoice.getChoiceurl()).apply(new RequestOptions()
+            String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+            final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+
+//                holder.iv_choice_image.setVisibility(View.VISIBLE);
+            holder.rl_img.setVisibility(View.VISIBLE);
+            holder.text.setVisibility(View.GONE);
+            holder.text.setTextColor(Color.WHITE);
+           /* Glide.with(context).asBitmap().
+                    load(path).apply(new RequestOptions()
                     .fitCenter()
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(Target.SIZE_ORIGINAL))
-                    .into(myViewHolder.imageView);
+                    .into(holder.imageView);*/
 
-            myViewHolder.iv_zoom_eye.setOnClickListener(new View.OnClickListener() {
+
+            Glide.with(context)
+                    .load(path)
+//                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .placeholder(Drawable.createFromPath(localPath)))
+                    .into(holder.imageView);
+
+//                holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
+            holder.iv_zoom_eye.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Assessment_Utility.showZoomDialog(context,scienceQuestionChoice.getChoiceurl(),"");
+                    Log.d("QQQ", "choice clicked....");
+                      /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+                        zoomImageDialog.show();*/
+                    Assessment_Utility.showZoomDialog(context, path, localPath,"");
                 }
             });
         } else {
-            myViewHolder.rl_img.setVisibility(View.GONE);
-            myViewHolder.text.setText(scienceQuestionChoice.getChoicename());
+            holder.rl_img.setVisibility(View.GONE);
+            holder.text.setText(scienceQuestionChoice.getChoicename());
         }
 
     }

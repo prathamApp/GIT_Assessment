@@ -109,7 +109,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                                 fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getMatchingurl());
                                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
                             }
-                            Assessment_Utility.showZoomDialog(context, path, localPath);
+                            Assessment_Utility.showZoomDialog(context, path, localPath,"");
                         }
                     });
                 } else {

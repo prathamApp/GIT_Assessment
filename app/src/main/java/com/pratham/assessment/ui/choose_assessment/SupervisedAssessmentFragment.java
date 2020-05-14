@@ -24,9 +24,7 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
-import com.pratham.assessment.ui.choose_assessment.ece.ECEActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
@@ -65,6 +63,7 @@ public class SupervisedAssessmentFragment extends Fragment {
         supervisorId = "" + AssessmentApplication.getUniqueID();
         context = getActivity();
         assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+//        assessmentAnswerListener = (DownloadQuestionsActivity) getActivity();
 //        subId = getIntent().getStringExtra("subId");
         if (Assessment_Constants.SELECTED_SUBJECT.equals("ece")) {
             goToAssessment();
@@ -219,7 +218,7 @@ public class SupervisedAssessmentFragment extends Fragment {
             intent.putExtra("resId", "9962");
             intent.putExtra("crlId", supervisorId);
             startActivity(intent);*/
-//            finish();  //todo remove fragment
+//            finish();
             assessmentAnswerListener.removeSupervisorFragment();
             getFragmentManager().popBackStack();
         }/* else if (subId.equalsIgnoreCase("1302")) {
@@ -232,7 +231,7 @@ public class SupervisedAssessmentFragment extends Fragment {
         }*/ else {
           /*  Intent intent = new Intent(context, ScienceAssessmentActivity_.class);
             startActivity(intent);*/
-            //finish();            //todo remove fragment
+            //finish();
             assessmentAnswerListener.removeSupervisorFragment();
             getFragmentManager().popBackStack();
 

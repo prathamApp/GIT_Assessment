@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
@@ -25,6 +27,7 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragL
 import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -50,6 +53,9 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     RecyclerView recyclerView1;
     @ViewById(R.id.rl_ans_options2)
     RecyclerView recyclerView2;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
+
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
 
@@ -105,6 +111,12 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     }*/
 
     public void setMatchPairQuestion() {
+      /*    String para="";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
         setOdiaFont(getActivity(), question);
         question.setText(scienceQuestion.getQname());
         final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
@@ -161,13 +173,13 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
         questionImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath,"");
             }
         });
         questionGif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath,"");
             }
         });
 
@@ -239,5 +251,49 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     public void onItemDragged(List<ScienceQuestionChoice> draggedList) {
         matchPairDragDropAdapter.notifyDataSetChanged();
     }
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            }else  btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
+    }
 }

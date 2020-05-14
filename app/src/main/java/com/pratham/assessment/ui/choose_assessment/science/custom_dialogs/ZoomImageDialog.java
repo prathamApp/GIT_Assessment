@@ -9,6 +9,9 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -46,6 +49,13 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
     ImageView audio_view;
     //    private Context context;
     private String path;
+    @ViewById(R.id.rl_text_view)
+    RelativeLayout rl_para;
+    @ViewById(R.id.tv_text_view)
+    TextView text;
+    @ViewById(R.id.sv_para)
+    ScrollView sv_para;
+    String para = "";
     private String localPath;
     boolean isAudioPlaying = false;
 
@@ -68,10 +78,21 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
 
     @AfterViews
     public void init() {
+        rl_para.setVisibility(View.GONE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         path = getIntent().getStringExtra("onlinePath");
         localPath = getIntent().getStringExtra("localPath");
+        para = getIntent().getStringExtra("paragraph");
+        if (para != null && !para.equalsIgnoreCase("")) {
+            rl_para.setVisibility(View.VISIBLE);
+            text.setText(para);
+            text.setVisibility(View.VISIBLE);
+            zoomImg.setVisibility(View.GONE);
+            gifView.setVisibility(View.GONE);
+            videoView.setVisibility(View.GONE);
+            audio_view.setVisibility(View.GONE);
+        }
         String extension = "";
         if (!localPath.equalsIgnoreCase(""))
             extension = getFileExtension(localPath);
@@ -79,6 +100,7 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
             extension = getFileExtension(path);
 
         if (!extension.equalsIgnoreCase("") && extension.equalsIgnoreCase("mp4")) {
+            rl_para.setVisibility(View.GONE);
 
             zoomImg.setVisibility(View.GONE);
             gifView.setVisibility(View.GONE);
@@ -104,7 +126,8 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
             videoView.start();
 
         } else {
-            if (path != null) {
+            if (path != null && !path.trim().equalsIgnoreCase("")) {
+                rl_para.setVisibility(View.GONE);
                 String[] imgPath = path.split("\\.");
                 int len;
                 if (imgPath.length > 0)
@@ -132,6 +155,7 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
                 } else if (imgPath[len].equalsIgnoreCase("jpg") || imgPath[len].equalsIgnoreCase("png")) {
                     zoomImg.setVisibility(View.VISIBLE);
 //                    Glide.get(context).clearDiskCache();
+                    rl_para.setVisibility(View.GONE);
 
                     Glide.with(this)
                             .load(path)
@@ -144,6 +168,7 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
                     gifView.setVisibility(View.GONE);
 
                 } else if (imgPath[len].equalsIgnoreCase("mp3")) {
+                    rl_para.setVisibility(View.GONE);
                     zoomImg.setVisibility(View.GONE);
                     gifView.setVisibility(View.GONE);
                     audio_view.setVisibility(View.VISIBLE);

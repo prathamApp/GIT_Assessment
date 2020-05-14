@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +33,7 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -62,6 +64,9 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
     RadioGroup radioGroupMcq;
     @ViewById(R.id.grid_mcq)
     GridLayout gridMcq;
+    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;
+
     private AssessmentAnswerListener assessmentAnswerListener;
     private List<ScienceQuestionChoice> options;
     int clickedOption = 0;
@@ -128,6 +133,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
     }*/
 
     private void setMcqsQuestion() {
+
         options = new ArrayList<>();
         question.setText(scienceQuestion.getQname());
         setOdiaFont(getActivity(), question);
@@ -186,7 +192,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                 iv_view_question_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath);
+                        showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
                   /*  MaryPopup marypopup = MaryPopup.with(getActivity())
                             .cancellable(true)
                             .blackOverlayColor(Color.parseColor("#DD444444"))
@@ -437,7 +443,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         public void onClick(View v) {
                             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(finalR).getChoiceurl());
                             String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-                            showZoomDialog(getActivity(), options.get(finalR).getChoiceurl(), localPath);
+                            showZoomDialog(getActivity(), options.get(finalR).getChoiceurl(), localPath, "");
 
                         }
                     });
@@ -532,7 +538,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                             @Override
                             public void onClick(View v) {
                                 setOnclickOnItem(v, options.get(finalR1));
-                                    tick.setVisibility(View.VISIBLE);
+                                tick.setVisibility(View.VISIBLE);
 
                                 rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
 //                                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -549,7 +555,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                             public void onClick(View v) {
                                 String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(finalR1).getChoiceurl());
                                 String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-                                showZoomDialog(getActivity(), options.get(finalR1).getChoiceurl(), localPath);
+                                showZoomDialog(getActivity(), options.get(finalR1).getChoiceurl(), localPath, "");
 
                             }
                         });
@@ -802,6 +808,87 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             ((ImageView) currentView).setImageResource(R.drawable.ic_play);
             isOptionPlaying = false;
 
+        }
+    }
+
+   /* @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isResumed()) {
+//            if (scienceQuestion != null) {
+                String para = "";
+                if (isVisibleToUser) {
+                    if (scienceQuestion.isParaQuestion()) {
+                        para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                    }
+                    assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+                } else {
+                    assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+//                }
+            }
+        }
+    }*/
+   /* @Override
+    public void onResume() {
+        super.onResume();
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            }
+            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+    }*/
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+        String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            }else  btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }
+
+
+    }
+
+    @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
         }
     }
 }

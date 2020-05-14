@@ -146,7 +146,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     public void onClick(View v) {
                        /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath);
+                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
 
                     }
                 });
@@ -161,7 +161,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     public void onClick(View v) {
                         /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath);
+                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
 
                     }
                 });
@@ -236,7 +236,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 //                        }
                         /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, corrImg, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, corrImg, localPath);
+                        Assessment_Utility.showZoomDialog(context, corrImg, localPath,"");
 
                     }
                 }
@@ -253,7 +253,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 if (img.equalsIgnoreCase("")) {
                    /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, result.getUserAnswer(), result.getUserAnswer());
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer());
+                    Assessment_Utility.showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(),"");
 
                 } else {
                     String fileName = getFileName(result.getqId(), img);
@@ -261,7 +261,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                     /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, img, localPath);
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, img, localPath);
+                    Assessment_Utility.showZoomDialog(context, img, localPath,"");
 
                 }
             }
@@ -580,7 +580,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         public void onClick(View view) {
 //                            myViewHolder.image_you_answered.setVisibility(View.GONE);
 //                            myViewHolder.answerVideo.setVisibility(View.VISIBLE);
-                            showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer());
+                            showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(),"");
 //                            playMedia(result.getUserAnswer(), result.getUserAnswer(), myViewHolder.answerVideo, "mp4");
                         }
                     });
@@ -711,7 +711,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 public void onClick(View view) {
                   /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, path, localPath);
+                    Assessment_Utility.showZoomDialog(context, path, localPath,"");
 
                 }
             });
@@ -727,7 +727,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 public void onClick(View view) {
                   /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, path, localPath);
+                    Assessment_Utility.showZoomDialog(context, path, localPath,"");
                     /**/
                 }
             });

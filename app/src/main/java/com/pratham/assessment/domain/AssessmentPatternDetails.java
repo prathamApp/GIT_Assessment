@@ -18,6 +18,10 @@ public class AssessmentPatternDetails {
 
     private String qlevel;
 
+    private String paralevel;
+
+    private String qlevelmarks;
+
 
 
     private String topicname;
@@ -111,5 +115,20 @@ public class AssessmentPatternDetails {
         this.qtid = qtid;
     }
 
+    public String getParalevel() {
+        return paralevel;
+    }
+
+    public void setParalevel(String paralevel) {
+        this.paralevel = paralevel;
+    }
+
+    public String getQlevelmarks() {
+        return qlevelmarks;
+    }
+
+    public void setQlevelmarks(String qlevelmarks) {
+        this.qlevelmarks = qlevelmarks;
+    }
 }
 

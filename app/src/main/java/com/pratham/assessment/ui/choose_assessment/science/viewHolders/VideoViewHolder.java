@@ -122,7 +122,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, scienceQuestion.getQtid());
         zoomImageDialog.show();*/
-        Assessment_Utility.showZoomDialog(context, path, scienceQuestion.getQtid());
+        Assessment_Utility.showZoomDialog(context, path, scienceQuestion.getQtid(),"");
 
     }
 
@@ -130,7 +130,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     public void onVideoClicked() {
        /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, scienceQuestion.getQtid());
         zoomImageDialog.show();*/
-        Assessment_Utility.showZoomDialog(context, path, scienceQuestion.getQtid());
+        Assessment_Utility.showZoomDialog(context, path, scienceQuestion.getQtid(),"");
 
     }
 

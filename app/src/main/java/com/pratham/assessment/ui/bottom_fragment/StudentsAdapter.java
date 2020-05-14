@@ -85,14 +85,14 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
                 holder.avatar.setImageResource(R.drawable.g3);
                 break;
         }
-       /* Glide.with(mContext).load(*//*AssessmentApplication.pradigiPath*//*"" + "/.LLA/English/LLA_Thumbs/" + studentAvatar.getAvatarName()).into(holder.avatar);
-*/
+        /* Glide.with(mContext).load(*//*AssessmentApplication.pradigiPath*//*"" + "/.LLA/English/LLA_Thumbs/" + studentAvatar.getAvatarName()).into(holder.avatar);
+         */
 
         holder.rl_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 studentAvatarList.get(position).getStudentID();
-                studentClickListener.onStudentClick(studentAvatarList.get(position).getFullName(),studentAvatarList.get(position).getStudentID());
+                studentClickListener.onStudentClick(studentAvatarList.get(position).getFullName(), studentAvatarList.get(position).getStudentID(), studentAvatarList.get(position).getGroupId());
             }
         });
     }

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -24,6 +25,7 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.services.stt_service_new.ContinuousSpeechService_New;
 import com.pratham.assessment.services.stt_service_new.STT_Result_New;
@@ -49,6 +51,7 @@ import java.util.StringTokenizer;
 import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(resName = "layout_text_paragraph_item")
 public class TextParagraphFragment extends Fragment implements STT_Result_New.sttView {
@@ -66,6 +69,9 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     FlowLayout wordFlowLayout;
     @ViewById(R.id.myScrollView)
     ScrollView myScrollView;
+/*    @ViewById(R.id.btn_view_hint)
+    Button btn_view_hint;*/
+
     AssessmentAnswerListener assessmentAnswerListener;
     Context context;
 
@@ -149,6 +155,12 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 */
 
     public void setTextPara() {
+     /*   String para = "";
+        if (scienceQuestion.isParaQuestion()) {
+            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+        }
+        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+*/
         setWords();
         setOdiaFont(getActivity(), question);
 //        question.setText(scienceQuestion.getQname());
@@ -450,7 +462,6 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
             }
         }
         setCorrectViewColor();
-        //todo set marks according to total marks of paper pattern
 //        if (getPercentage() > 35) scienceQuestion.setIsCorrect(true);
 
         assessmentAnswerListener.setAnswerInActivity("" + calculateMarks(), sttResult.toString(), scienceQuestion.getQid(), null);
@@ -727,4 +738,49 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
             view.getParent().requestChildFocus(view, view);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+            return;
+        }
+
+        //INSERT CUSTOM CODE HERE
+      /*  String para = "";
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                btn_view_hint.setVisibility(View.VISIBLE);
+//                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+            } else btn_view_hint.setVisibility(View.GONE);
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        } else {
+            btn_view_hint.setVisibility(View.GONE);
+
+//            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
+
+        }*/
+
+
+    }
+
+   /* @Click(R.id.btn_view_hint)
+    public void showPara() {
+        if (scienceQuestion != null) {
+            if (scienceQuestion.isParaQuestion()) {
+                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                showZoomDialog(getActivity(), "", "", para);
+            }
+        }
+    }*/
 }
