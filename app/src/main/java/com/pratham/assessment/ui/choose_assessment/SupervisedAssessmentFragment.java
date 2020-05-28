@@ -55,6 +55,7 @@ public class SupervisedAssessmentFragment extends Fragment {
     //    String subId = "";
     private static final int CAMERA_REQUEST = 1888;
     AssessmentAnswerListener assessmentAnswerListener;
+    String paperId = "";
 
     @AfterViews
     public void init() {
@@ -63,6 +64,7 @@ public class SupervisedAssessmentFragment extends Fragment {
         supervisorId = "" + AssessmentApplication.getUniqueID();
         context = getActivity();
         assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+        paperId = getArguments().getString("paperId");
 //        assessmentAnswerListener = (DownloadQuestionsActivity) getActivity();
 //        subId = getIntent().getStringExtra("subId");
         if (Assessment_Constants.SELECTED_SUBJECT.equals("ece")) {
@@ -97,7 +99,9 @@ public class SupervisedAssessmentFragment extends Fragment {
 
     @Click(R.id.btn_camera)
     public void openCamera() {
-        imageName = supervisorId + ".jpg";
+        String fileName = paperId + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR + ".jpg";
+
+        imageName = fileName;
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(takePicture, CAMERA_REQUEST);
     }
@@ -143,7 +147,6 @@ public class SupervisedAssessmentFragment extends Fragment {
         new AsyncTask<Object, Void, Object>() {
 
 
-
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
@@ -158,7 +161,10 @@ public class SupervisedAssessmentFragment extends Fragment {
 
 //                    supervisorData.setAssessmentSessionId(assessmentSession);
                     supervisorData.setAssessmentSessionId(currentSession);
+
+
                     supervisorData.setSupervisorPhoto(supervisorPhoto);
+
 
                     AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().insert(supervisorData);
                     BackupDatabase.backup(context);

@@ -122,17 +122,17 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
 
         Menu menu = navigation.getMenu();
-        MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
+//        MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
         MenuItem nav_push = menu.findItem(R.id.menu_push_data);
         if (!AssessmentApplication.isTablet) {
-            nav_video.setVisible(true);
+//            nav_video.setVisible(true);
             nav_push.setVisible(true);
         } else {
-            nav_video.setVisible(false);
+//            nav_video.setVisible(false);
             nav_push.setVisible(false);
         }
 
-        if (!AssessmentApplication.isTablet) {
+       /* if (!AssessmentApplication.isTablet) {
             if (Assessment_Constants.VIDEOMONITORING) {
                 videoMonitoring = true;
                 nav_video.setTitle("Video monitoring(ON)");
@@ -143,7 +143,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 nav_video.setTitle("Video monitoring(OFF)");
                 Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : OFF", Toast.LENGTH_SHORT).show();
             }
-        }
+        }*/
 
 
       /*  toggle_btn.setOnSwipedOnListener(new Function0<Unit>() {
@@ -225,7 +225,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         break;
-                    case R.id.menu_video_monitoring:
+/*                    case R.id.menu_video_monitoring:
                         Menu menu = navigation.getMenu();
                         MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
                         if (!videoMonitoring) {
@@ -240,7 +240,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                             Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : OFF", Toast.LENGTH_SHORT).show();
 
                         }
-                        break;
+                        break;*/
                     case R.id.menu_push_data:
                         PUSH_DATA_FROM_DRAWER = true;
                         pushDataToServer.setValue(ChooseAssessmentActivity.this, false);

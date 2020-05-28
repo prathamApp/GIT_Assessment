@@ -21,6 +21,7 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifViewZoom;
 import com.pratham.assessment.custom.zoom_image.ZoomageView;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 import com.pratham.assessment.utilities.AudioUtil;
 
@@ -84,6 +85,7 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
         path = getIntent().getStringExtra("onlinePath");
         localPath = getIntent().getStringExtra("localPath");
         para = getIntent().getStringExtra("paragraph");
+        ScienceAssessmentActivity.dialogOpen = true;
         if (para != null && !para.equalsIgnoreCase("")) {
             rl_para.setVisibility(View.VISIBLE);
             text.setText(para);
@@ -269,8 +271,18 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
         }
     }
 */
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ScienceAssessmentActivity.dialogOpen = false;
+
+    }
+
     @Click(R.id.btn_ok_img)
     public void closeDialog() {
+        ScienceAssessmentActivity.dialogOpen = false;
+
         if (isAudioPlaying) {
             stopPlayer();
             AudioUtil.stopPlayingAudio();
@@ -303,6 +315,12 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
             AudioUtil.stopPlayingAudio();
             audio_view.setImageResource(R.drawable.ic_play);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ScienceAssessmentActivity.dialogOpen = false;
     }
 }
 

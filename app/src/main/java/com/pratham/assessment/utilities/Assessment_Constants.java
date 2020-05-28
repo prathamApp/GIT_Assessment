@@ -93,6 +93,8 @@ public class Assessment_Constants {
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO = "answerAudio";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE = "answerImage";
+    public static String DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA = "answerMedia";
+    public static String DOWNLOAD_MEDIA_TYPE_SUPERVISOR = "supervisorImage";
 
     public static final String KOLIBRI_BLOCK = "kolibri_block";
     public static final String SERVER_BLOCK = "server_block";
@@ -155,7 +157,6 @@ public static final String STT_REGEX_2 = "[\"\\-+\\.'^?!@#%-_;&*,:<>()]";
     public static final String PARAGRAPH_BASED_QUESTION = "14";
 
 
-    public static final boolean isPracticeModeOn = true;
     public static String StudentPhotoPath = "";
 
 

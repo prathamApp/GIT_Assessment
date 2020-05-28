@@ -5,5 +5,5 @@ package com.pratham.assessment.ui.bottom_fragment;
  */
 
 public interface StudentClickListener {
-    public void onStudentClick(String StudentName, String StudentId, String groupId);
+     void onStudentClick(String StudentName, String StudentId, String groupId);
 }

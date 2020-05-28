@@ -266,7 +266,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     @Click(R.id.iv_start_audio)
     public void startAudio() {
         try {
-            String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + ".mp3";
+            String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + ".mp3";
 
 //            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
             String path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
@@ -297,7 +297,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     @Click(R.id.iv_answer_audio)
     public void onAnswerPlayClick() {
         try {
-            String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + ".mp3";
+            String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + ".mp3";
             String path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
             if (isAnsPlaying) {
                 isAnsPlaying = false;
@@ -331,7 +331,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     public void onPause() {
         super.onPause();
 //        if(audioPlayerInterface!=null)
-        String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + ".mp3";
+        String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + ".mp3";
 
 //            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
         String path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
@@ -351,6 +351,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             AudioUtil.stopPlayingAudio();
         stopPlayer();
     }
+
     @Override
     public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
@@ -374,7 +375,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-            }else  btn_view_hint.setVisibility(View.GONE);
+            } else btn_view_hint.setVisibility(View.GONE);
 //            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
 
         } else {

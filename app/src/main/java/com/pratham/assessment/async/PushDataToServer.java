@@ -62,7 +62,9 @@ import static android.support.constraint.Constraints.TAG;
 import static com.pratham.assessment.AssessmentApplication.isTablet;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
+import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR;
 import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
 import static com.pratham.assessment.utilities.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
@@ -91,9 +93,13 @@ public class PushDataToServer {
     String programID = "";
 
     boolean dataPushed = false;
+    boolean supervisorImagesPushed = false;
+    boolean answerMediaPushed = false;
+    boolean videoMonImagesPushed = false;
     int mediaCnt = 0;
     int videoRecCnt = 0;
     List<DownloadMedia> downloadMediaList = new ArrayList<>();
+    List<DownloadMedia> supervisorMediaList = new ArrayList<>();
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
     private int pushCnt = 0;
     ProgressDialog progressDialog;
@@ -299,6 +305,19 @@ public class PushDataToServer {
 
     }
 
+    private void pushSupervisorImages() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if (supervisorMediaList.size() > 0) {
+                    pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_SUPERVISOR, supervisorMediaList);
+                } else supervisorImagesPushed = true;
+                return null;
+            }
+        }.execute();
+    }
+
+
     //    @Background
     private void createMediaFileToPush() {
         new AsyncTask<Void, Void, Void>() {
@@ -320,7 +339,8 @@ public class PushDataToServer {
                 }*/
 
                 if (downloadMediaList.size() > 0)
-                    pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
+                    pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, downloadMediaList);
+                else answerMediaPushed = true;
                 return null;
             }
         }.execute();
@@ -350,18 +370,21 @@ public class PushDataToServer {
                 try {
                     File file = new File(filePath);
                     if (file.exists())*/
-                    pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+                    pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, videoRecordingList);
                /* } catch (Exception e) {
                     e.printStackTrace();
                 }
             }*/
-                } else PushDataToServer.this.onPostExecute();
+                } else {
+                    videoMonImagesPushed = true;
+                    PushDataToServer.this.onPostExecute();
+                }
                 return null;
             }
         }.execute();
     }
 
-    private void pushMediaToServer(String url, String type) {
+    private void pushMediaToServer(String url, String type, List<DownloadMedia> pushList) {
 //        if (!type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
         try {
 
@@ -372,27 +395,29 @@ public class PushDataToServer {
 
             MultipartBody.Builder builderNew = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
-            if (!type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
-
-                for (int i = 0; i < downloadMediaList.size(); i++) {
-                    String fileName = downloadMediaList.get(i).getqId() + "_" + downloadMediaList.get(i).getPaperId();
-                    String extension = getFileExtension(downloadMediaList.get(i).getPhotoUrl());
-                    String fileWithExt = fileName + "." + extension;
-                    File f = new File(downloadMediaList.get(i).getPhotoUrl());
-                    if (f.exists()) {
-                        MediaType mediaType = MEDIA_TYPE_PNG;
-                        if (extension.equalsIgnoreCase("png"))
-                            mediaType = MEDIA_TYPE_PNG;
-                        else if (extension.equalsIgnoreCase("jpg"))
-                            mediaType = MEDIA_TYPE_JPG;
-                        else if (extension.equalsIgnoreCase("mp4"))
-                            mediaType = MEDIA_TYPE_MP4;
-                        else if (extension.equalsIgnoreCase("mp3"))
-                            mediaType = MEDIA_TYPE_MP3;
-                        builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(mediaType, f));
-                    }
+//            if (!type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
+            String fileName;
+            for (int i = 0; i < pushList.size(); i++) {
+                String file[] = pushList.get(i).getPhotoUrl().split("/");
+                fileName = file[file.length - 1];
+//                        fileName = downloadMediaList.get(i).getqId() + "_" + downloadMediaList.get(i).getPaperId() + "_" + type;
+                String extension = getFileExtension(pushList.get(i).getPhotoUrl());
+//                    String fileWithExt = fileName + "." + extension;
+                File f = new File(pushList.get(i).getPhotoUrl());
+                if (f.exists()) {
+                    MediaType mediaType = MEDIA_TYPE_PNG;
+                    if (extension.equalsIgnoreCase("png"))
+                        mediaType = MEDIA_TYPE_PNG;
+                    else if (extension.equalsIgnoreCase("jpg"))
+                        mediaType = MEDIA_TYPE_JPG;
+                    else if (extension.equalsIgnoreCase("mp4"))
+                        mediaType = MEDIA_TYPE_MP4;
+                    else if (extension.equalsIgnoreCase("mp3"))
+                        mediaType = MEDIA_TYPE_MP3;
+                    builderNew.addFormDataPart(fileName, fileName, RequestBody.create(mediaType, f));
                 }
-            } else {
+            }
+           /* } else {
                 for (int i = 0; i < videoRecordingList.size(); i++) {
 //                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId();
                     String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId() + "_" + Assessment_Utility.getCurrentDateTime() + "_" + i;
@@ -404,7 +429,7 @@ public class PushDataToServer {
                         builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(MEDIA_TYPE_JPG, f));
                     }
                 }
-            }
+            }*/
             MultipartBody requestBody = builderNew.build();
             final Request request = new Request.Builder()
                     .url(url)
@@ -418,16 +443,21 @@ public class PushDataToServer {
             OkHttpClient client = builder.build();
             Response response = client.newCall(request).execute();
             Log.d("response", type + response.body().string());
-            if (response.isSuccessful())
+            if (response.isSuccessful()) {
                 setMediaPushFlag(type);
-            else Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
-            onPostExecute();
-
+            } else {
+                if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING))
+                    onPostExecute();
+                Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
+            }
 //            return new JSONObject(response.body().string());
 
         } catch (UnknownHostException | UnsupportedEncodingException e) {
             Log.e(TAG, "Error: " + e.getLocalizedMessage());
+            onPostExecute();
+
         } catch (Exception e) {
+            onPostExecute();
             Log.e(TAG, "Other Error: " + e.getLocalizedMessage());
         }
  /*       } else {
@@ -561,7 +591,7 @@ public class PushDataToServer {
             }
             if (isTablet || PUSH_DATA_FROM_DRAWER) {
                 String msg = "";
-                if (dataPushed) {
+                if (dataPushed && answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
                     msg = "Data pushed Successfully.";
                 } else {
                     msg = "Data push failed.";
@@ -916,7 +946,7 @@ public class PushDataToServer {
                 String fileName = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/" + supervisorDataTemp.getSupervisorPhoto();
                 downloadMedia.setPhotoUrl(fileName);
                 downloadMedia.setMediaType("supervisorData");
-                downloadMediaList.add(downloadMedia);
+                supervisorMediaList.add(downloadMedia);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1073,6 +1103,7 @@ public class PushDataToServer {
                         public void onResponse(String response) {
                             Log.d("PUSH_STATUS", "Data pushed successfully");
                             Drawable icon = context.getResources().getDrawable(R.drawable.ic_check);
+                            pushSupervisorImages();
                             createMediaFileToPush();
                             CreateFilesForVideoMonitoring();
                             //todo push on main thread
@@ -1207,7 +1238,20 @@ public class PushDataToServer {
 
 
     private void setMediaPushFlag(String type) {
-        AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(type);
+        if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_SUPERVISOR)) {
+            AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
+            supervisorImagesPushed = true;
+        } else {
+            if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
+                videoMonImagesPushed = true;
+                onPostExecute();
+            } else if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA)) {
+                answerMediaPushed = true;
+                AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
+                AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
+                AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
+            }
+        }
         BackupDatabase.backup(context);
     }
 
@@ -1218,7 +1262,6 @@ public class PushDataToServer {
         AppDatabase.getDatabaseInstance(context).getAttendanceDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getScoreDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentDao().setSentFlag();
-        AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
         if (!isTablet)
             AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().setSentFlag();

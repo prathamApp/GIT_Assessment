@@ -357,9 +357,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         List<ScienceQuestionChoice> correctAns = new ArrayList<>();
 
                         for (int i = 0; i < scienceQuestionChoice.size(); i++) {
-                            if (scienceQuestionChoice.get(i).getCorrect().equalsIgnoreCase("true"))
-                                correctAns.add(scienceQuestionChoice.get(i));
-                        }
+                        if (scienceQuestionChoice.get(i).getCorrect().equalsIgnoreCase("true"))
+                            correctAns.add(scienceQuestionChoice.get(i));
+                    }
                         ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, correctAns, MULTIPLE_SELECT);
                         showAnswerDialog.show();
                     }

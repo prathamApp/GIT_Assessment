@@ -74,6 +74,22 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
+
+            <TextView
+                android:id="@+id/tv_img_capture_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_time"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Note:  Pictures of the appearing student \nwill be captured during the exam."
+                android:textAlignment="center"
+                android:visibility="gone"
+                android:textColor="@color/colorBtnRedDark"
+                android:textSize="@dimen/_12sdp" />
+
+
         </RelativeLayout>
 
         <com.pratham.assessment.custom.swipeButton.ProSwipeButton

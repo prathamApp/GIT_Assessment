@@ -13,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -74,6 +73,7 @@ import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Student;
+import com.pratham.assessment.services.camera.VideoMonitoringService;
 import com.pratham.assessment.services.image_capture.APictureCapturingService;
 import com.pratham.assessment.services.image_capture.PictureCapturingListener;
 import com.pratham.assessment.services.image_capture.PictureCapturingServiceImpl;
@@ -81,7 +81,6 @@ import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment_;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
-import com.pratham.assessment.services.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.AssessmentTimeUpDialog;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
@@ -101,17 +100,13 @@ import org.json.JSONArray;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.ARRANGE_SEQUENCE;
@@ -212,11 +207,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     TickerView tickerView;
     @ViewById(R.id.txt_question_cnt)
     TextView txt_question_cnt;
+    @ViewById(R.id.tv_img_capture_warning)
+    TextView tv_img_capture_warning;
 
     int imgCaptureCnt = 0;
     String imgFileName = "";
     int captureInterval = 0;
 
+    public static boolean dialogOpen = false;
     /*  @ViewById(R.id.iv_question_mark)
       ImageView iv_question_mark;
   */
@@ -979,7 +977,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     }
 
                     List<ScienceQuestion> paraQuestionList;
-//                        for (int i = 0; i < para.size(); i++) {
                     if (para != null) {
                         if (para.getQtid().equalsIgnoreCase(PARAGRAPH_BASED_QUESTION)) {
 
@@ -987,9 +984,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     .getScienceQuestionDao().getParaQuestionByQidAndLevel(para.getQid(), assessmentPatternDetails.get(j).getQlevel());
 
                             if (paraQuestionList.size() > 0) {
-                                int totalMarksForPara = 0, marksForeachParaQuestion = 0;
-//                                    int totalQuestions = paraQuestionList.size();
-
                                 for (int k = 0; k < assessmentPatternDetails.size(); k++) {
                                     if (assessmentPatternDetails.get(k).getQtid()
                                             .equalsIgnoreCase(para.getQtid()) &&
@@ -1001,13 +995,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                             if (paraQuestionList.get(p).getQlevel().equalsIgnoreCase(assessmentPatternDetails.get(k).getQlevel()))
                                                 paraQuestionList.get(p).setOutofmarks(assessmentPatternDetails.get(k).getMarksperquestion() + "");
                                         }
-//                                            scienceQuestionList.get(i).setOutofmarks(marksForeachParaQuestion + "");
                                     }
-
                                 }
-
                                 scienceQuestionList.addAll(paraQuestionList);
-//                                    }
                             }
                         }
                     }
@@ -1038,20 +1028,25 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     frame_supervisor.setVisibility(View.VISIBLE);
                     rl_exam_info.setVisibility(View.GONE);
                     Assessment_Constants.supervisedAssessment = true;
+                    VIDEOMONITORING = true;
                     Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.SUPERVISED;
                     FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, true);
                     if (mediaDownloadCnt >= downloadMediaList.size()) {
                         if (mediaProgressDialog != null && isActivityRunning)
                             mediaProgressDialog.dismiss();
-                        Assessment_Utility.showFragment(this, new SupervisedAssessmentFragment_(), R.id.frame_supervisor, null, SupervisedAssessmentFragment.class.getSimpleName());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("paperId", assessmentSession);
+                        Assessment_Utility.showFragment(this, new SupervisedAssessmentFragment_(), R.id.frame_supervisor, bundle, SupervisedAssessmentFragment.class.getSimpleName());
                     }
                 } else {
                     setExamInfo();
                     Assessment_Constants.supervisedAssessment = false;
+                    VIDEOMONITORING = false;
                     Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.PRACTICE;
                     FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, false);
                 }
             } else {
+                VIDEOMONITORING = false;
                 setExamInfo();
                 Assessment_Constants.supervisedAssessment = false;
                 Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.PRACTICE;
@@ -1092,6 +1087,12 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     }
 
     private void setExamInfo() {
+        if (assessmentPaperPatterns.getExammode() != null) {
+            if (assessmentPaperPatterns.getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED)) {
+                tv_img_capture_warning.setVisibility(View.VISIBLE);
+            } else tv_img_capture_warning.setVisibility(View.GONE);
+        } else tv_img_capture_warning.setVisibility(View.GONE);
+
         tv_exam_name.setText("Exam : " + assessmentPaperPatterns.getExamname());
         tv_time.setText("Time : " + assessmentPaperPatterns.getExamduration() + " mins.");
         tv_marks.setText("Marks : " + assessmentPaperPatterns.getOutofmarks());
@@ -1152,10 +1153,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 @Override
                 public void run() {
 //                    startCameraService();
-                    if (!Assessment_Utility.isCameraBusy() && isActivityRunning) {
+                   /* if (!Assessment_Utility.isCameraBusy() && isActivityRunning) {
                         showToast("Starting capture!");
 
-                        imgFileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + ".jpg";
+                        imgFileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + "_" + DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + ".jpg";
                         imgFileName = imgFileName.replaceAll("[\\\\/:*?\"<>|]", "_");
                         String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + imgFileName;
 //        VideoMonitoringService.releaseMediaRecorder();
@@ -1163,7 +1164,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         pictureService.startCapturing(ScienceAssessmentActivity.this, imgFileName);
 //                        imgCaptureCnt++;
 //                        captureInterval = captureInterval - captureTime;
-                    }
+                    }*/
                 }
             }, 1000);
         }
@@ -1421,19 +1422,23 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         int captureTime = ExamTime / 3;
 
        /* Date now = new Date();
-        long timeRangeMs = TimeUnit.MINUTES.toMillis(ExamTime); // examtime hours in ms
+        long timeRangeMs = ExamTime *60*60;// examtime hours in ms
         ArrayList<String> timeIntervals = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 12; i++) {
             long random = getRandomTime(timeRangeMs);
-            Time randDate = new Time(ExamTime - random);
-
-            while (timeIntervals.contains(randDate.toString())){
-                 random = getRandomTime(timeRangeMs);
-                 randDate = new Time(now.getTime() - random);
+            Time randDate = new Time(random);
+            int min = randDate.getMinutes();
+            String[] minSecArr = randDate.toString().split(":");
+            String minSec = minSecArr[0] + ":" + minSecArr[1];
+            Log.d("mmm", "setProgressBarAndTimer: " + minSec);
+            while (timeIntervals.contains(minSec)) {
+                random = getRandomTime(timeRangeMs);
+                randDate = new Time(random);
+                minSecArr = randDate.toString().split(":");
+                minSec = minSecArr[0] + ":" + minSecArr[1];
             }
-            timeIntervals.add(randDate.toString());
-*/
-
+            timeIntervals.add(minSec);
+        }*/
       /*  new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1495,39 +1500,56 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 }
             }
         }, 0, period);*/
-
-
+        List<String> randomTimeStamp = new ArrayList<>();
+        if (VIDEOMONITORING) {
+            randomTimeStamp = getRandomTimeStamp(TimeUnit.MINUTES.toMillis(ExamTime));
+            Log.d("onTick", "randomTimeStamp: " + randomTimeStamp.toString());
+        }
+        List<String> finalRandomTimeStamp = randomTimeStamp;
         mCountDownTimer = new CountDownTimer(timer, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 try {
                     if (VIDEOMONITORING) {
-                        int min = (int) TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
-                        int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
-                        Log.d("tk", "onTick: " + min + ":" + sec);
+                        Log.d("onTick", "randomTimeStamp: " + finalRandomTimeStamp.toString());
 
-                        if (imgCaptureCnt == 0) {
+                        String imgCaptureTime = String.format("%02d:%02d",
+                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
 
-                            captureInterval = ExamTime - captureTime;
-                        }
-                        if (imgCaptureCnt < 3) {
-                            if (captureInterval == min) {
-                                if (!Assessment_Utility.isCameraBusy() && isActivityRunning) {
-                                    showToast("Starting capture!");
+                        if (finalRandomTimeStamp.contains(imgCaptureTime)) {
 
-                                    imgFileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + ".jpg";
-                                    imgFileName = imgFileName.replaceAll("[\\\\/:*?\"<>|]", "_");
-                                    String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + imgFileName;
+                            Log.d("tk", "onTick: " + imgCaptureTime);
+
+                           /* if (imgCaptureCnt == 0) {
+
+                                captureInterval = ExamTime - captureTime;
+                            }*/
+//                            if (imgCaptureCnt < 3) {
+//                                if (captureInterval == min) {
+                            if (!Assessment_Utility.isCameraBusy() && (isActivityRunning || dialogOpen)) {
+                                showToast("Starting capture!");
+
+                                imgFileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + "_" + DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + ".jpg";
+                                imgFileName = imgFileName.replaceAll("[\\\\/:*?\"<>|]", "_");
 //        VideoMonitoringService.releaseMediaRecorder();
-                                    String finalFileName = imgFileName;
+                                if (pictureService != null)
                                     pictureService.startCapturing(ScienceAssessmentActivity.this, imgFileName);
-                                    imgCaptureCnt++;
-                                    captureInterval = captureInterval - captureTime;
-                                }
-                            }
-                        }
+                                else {
+                                    pictureService = PictureCapturingServiceImpl.getInstance(ScienceAssessmentActivity.this);
+                                    pictureService.startCapturing(ScienceAssessmentActivity.this, imgFileName);
 
+                                }
+                                Log.d("tk", "onTick: " + imgCaptureTime + "captured");
+
+                            } else
+                                Log.d("tk", "onTick: " + imgCaptureTime + "camera busy.. Not captured");
+
+//                                }
+//                            }
+
+                        }
                     }
                     tickerView.setText(String.format("%02d:%02d",
                             TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
@@ -1571,8 +1593,20 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         mCountDownTimer.start();
     }
 
-    private long getRandomTime(long timeRangeMs) {
-        return ThreadLocalRandom.current().nextLong(timeRangeMs);
+
+    private List<String> getRandomTimeStamp(long milliseconds) {
+        List list = new ArrayList<Float>();
+        while (list.size() < 12) {
+            int x = (int) (Math.random() * milliseconds);
+            if (!list.contains(x)) {
+                String time = String.format("%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(x),
+                        TimeUnit.MILLISECONDS.toSeconds(x) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(x)));
+                list.add(time);
+            }
+        }
+        return list;
     }
 
 
@@ -2244,7 +2278,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         pushDataToServer.doInBackground();
     }
 
-    private AssessmentPaperForPush createPaperToSave(List<ScienceQuestion> scienceQuestionList) {
+    private AssessmentPaperForPush createPaperToSave
+            (List<ScienceQuestion> scienceQuestionList) {
         AssessmentPaperForPush paper = new AssessmentPaperForPush();
         paper.setPaperStartTime(examStartTime);
         paper.setPaperEndTime(examEndTime);
