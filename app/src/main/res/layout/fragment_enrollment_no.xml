@@ -1,0 +1,435 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/form_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.pratham.assessment.custom.customFont.SansTextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_weight="4"
+        android:background="@color/black"
+        android:gravity="center"
+        android:text="Create Profile"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18sdp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_title"
+
+        >
+
+
+        <RelativeLayout
+            android:id="@+id/ll_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_2sdp">
+
+            <RelativeLayout
+                android:id="@+id/rl_enroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_15sdp"
+                android:padding="@dimen/_2sdp">
+
+                <com.pratham.assessment.custom.customFont.SansEditText
+                    android:id="@+id/et_enrollment_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginBottom="@dimen/_7sdp"
+                    android:background="@drawable/ripple_rectangle_result"
+                    android:clickable="true"
+                    android:focusableInTouchMode="true"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:hint="Enter enrollment number"
+                    android:paddingVertical="@dimen/_1sdp"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:singleLine="true"
+                    android:textColor="@color/colorBlack"
+                    android:textColorHint="@color/light_gray"
+                    android:textSize="@dimen/_18sdp"
+                    />
+
+                <com.pratham.assessment.custom.customFont.SansButton
+                    android:id="@+id/btn_check_enrollment_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/et_enrollment_no"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/correct_bg"
+                    android:elevation="5dp"
+                    android:padding="@dimen/_10sdp"
+                    android:text="Check Enrollment Number"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_enroll_no_details_outer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_enroll">
+
+                <ScrollView
+                    android:id="@+id/sv_enroll_no_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/rl_enroll_no_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Student Name : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_name"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_below="@+id/ll_enrolled_name"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Age : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_age"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_class"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_below="@+id/ll_enrolled_age"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Class : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_class"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_gender"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_below="@+id/ll_enrolled_class"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Gender : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_gender"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_grp_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_below="@+id/ll_enrolled_gender"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Group Id : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_grp_id"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_grp_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_below="@+id/ll_enrolled_grp_id"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Group name : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_grp_name"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_village_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_below="@+id/ll_enrolled_grp_name"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Village Id : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_village_id"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_enrolled_village_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_below="@+id/ll_enrolled_village_id"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/main_card_bg"
+                            android:orientation="horizontal">
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text="Village name : "
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_17sdp"
+                                android:textStyle="bold" />
+
+                            <com.pratham.assessment.custom.customFont.SansTextView
+                                android:id="@+id/tv_enrolled_student_village_name"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_11sdp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+                </ScrollView>
+
+                <RelativeLayout
+                    android:id="@+id/addBtn_l"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_60sdp"
+                    android:layout_alignParentBottom="true">
+
+                    <com.pratham.assessment.custom.customFont.SansButton
+                        android:id="@+id/btn_add_new_student_enroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:background="@drawable/correct_bg"
+                        android:elevation="5dp"
+                        android:padding="@dimen/_10sdp"
+                        android:text="Save Profile"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_15sdp" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_enroll_no_not_found"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_enroll"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/_15sdp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_student_not_found"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:src="@drawable/not_found" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_student_not_found"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:text="Student not found.\n Check enrollment number again."
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
