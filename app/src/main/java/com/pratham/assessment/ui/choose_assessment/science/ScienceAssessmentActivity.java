@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,7 +74,7 @@ import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Student;
-import com.pratham.assessment.services.camera.VideoMonitoringService;
+import com.pratham.assessment.interfaces.DataPushListener;
 import com.pratham.assessment.services.image_capture.APictureCapturingService;
 import com.pratham.assessment.services.image_capture.PictureCapturingListener;
 import com.pratham.assessment.services.image_capture.PictureCapturingServiceImpl;
@@ -81,6 +82,7 @@ import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment_;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
+import com.pratham.assessment.services.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.AssessmentTimeUpDialog;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
@@ -91,6 +93,7 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import com.robinhood.ticker.TickerView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -100,13 +103,19 @@ import org.json.JSONArray;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.ARRANGE_SEQUENCE;
@@ -134,7 +143,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;*/
 
 @EActivity(R.layout.activity_science_assessment)
-public class ScienceAssessmentActivity extends BaseActivity implements PictureCapturingListener, DiscreteScrollView.OnItemChangedListener, AssessmentAnswerListener, QuestionTrackerListener {
+public class ScienceAssessmentActivity extends BaseActivity implements PictureCapturingListener, DiscreteScrollView.OnItemChangedListener, AssessmentAnswerListener, QuestionTrackerListener, DataPushListener {
 
 
     public static ViewpagerAdapter viewpagerAdapter;
@@ -738,6 +747,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     if (choiceList.get(j).getCorrect().equalsIgnoreCase("true")) {
                                         if (choiceList.get(j).getChoiceurl().equalsIgnoreCase(""))
                                             scienceQuestionList.get(i).setAnswer(choiceList.get(j).getChoicename());
+                                    }
+                                }
+                                if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(TRUE_FALSE)) {
+                                    if (choiceList.get(j).getCorrect().equalsIgnoreCase("true")) {
+                                        scienceQuestionList.get(i).setAnswer(choiceList.get(j).getChoicename().toLowerCase());
                                     }
                                 }
                             }
@@ -1788,9 +1802,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             }
                             scienceQuestionList.get(i).setUserAnswer(ans);
                         } else {
-                            scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename());
-                            scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
+                            if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(TRUE_FALSE)) {
+                                scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename().toLowerCase());
+                                scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
+                            } else {
+                                scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename());
+                                scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
 //                        scienceQuestionList.get(i).setMarksPerQuestion(marksPerQuestion);
+                            }
                         }
                     } else {
                         scienceQuestionList.get(i).setUserAnswer("");
@@ -1947,7 +1966,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         switch (questionType) {
             case FILL_IN_THE_BLANK_WITH_OPTION:
             case MULTIPLE_CHOICE:
-
+            case TRUE_FALSE:
                 if (scienceQuestion.getIsAttempted()) {
                     if (scienceQuestion.getMatchingNameList().get(0).getCorrect().equalsIgnoreCase("true") || scienceQuestion.getUserAnswerId().equalsIgnoreCase(ansId)) {
                         scienceQuestionList.get(queCnt).setIsCorrect(true);
@@ -2009,7 +2028,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     }
                 }
                 break;
-            case TRUE_FALSE:
+           /* case TRUE_FALSE:
                 if (scienceQuestion.getIsAttempted())
                     if (scienceQuestion.getAnswer().equalsIgnoreCase(answer.trim())) {
                         scienceQuestionList.get(queCnt).setIsCorrect(true);
@@ -2020,7 +2039,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         scienceQuestionList.get(queCnt).
                                 setMarksPerQuestion("0");
                     }
-                break;
+                break;*/
             case ARRANGE_SEQUENCE:
             case MATCHING_PAIR:
                 if (scienceQuestion.getIsAttempted()) {
@@ -2197,7 +2216,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     public void onSaveAssessmentClick() {
 
         insertInDB(scienceQuestionList, " Exam completed");
-        AssessmentPaperForPush paper = createPaperToSave(scienceQuestionList);
+//        AssessmentPaperForPush paper = createPaperToSave(scienceQuestionList);
       /*  stopService(new Intent(this, BkgdVideoRecordingService.class));
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
@@ -2264,7 +2283,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         AppDatabase.getDatabaseInstance(this).getScoreDao().insertAllScores(scores);
         AppDatabase.getDatabaseInstance(this).getAssessmentPaperForPushDao().insertPaperForPush(paper);
 */
-        generateResultData(paper);
         if (!AssessmentApplication.isTablet)
             pushDataForNIOS();
 
@@ -2273,7 +2291,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     }
 
-    private void pushDataForNIOS() {
+    @Background
+    public void pushDataForNIOS() {
         pushDataToServer.setValue(this, false);
         pushDataToServer.doInBackground();
     }
@@ -2734,5 +2753,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             requestPermissions(neededPermissions.toArray(new String[]{}),
                     MY_PERMISSIONS_REQUEST_ACCESS_CODE);
         }
+    }
+
+    @Override
+    public void onResponseGet() {
+        AssessmentPaperForPush paper = createPaperToSave(scienceQuestionList);
+        generateResultData(paper);
     }
 }

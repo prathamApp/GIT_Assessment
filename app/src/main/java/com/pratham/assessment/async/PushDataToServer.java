@@ -4,12 +4,20 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -18,6 +26,7 @@ import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.custom.custom_dialogs.PushDataDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Assessment;
@@ -32,6 +41,7 @@ import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -48,6 +58,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -96,15 +107,18 @@ public class PushDataToServer {
     boolean supervisorImagesPushed = false;
     boolean answerMediaPushed = false;
     boolean videoMonImagesPushed = false;
-    int mediaCnt = 0;
-    int videoRecCnt = 0;
     List<DownloadMedia> downloadMediaList = new ArrayList<>();
     List<DownloadMedia> supervisorMediaList = new ArrayList<>();
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
-    private int pushCnt = 0;
-    ProgressDialog progressDialog;
+    private int pushCnt = 0, mediaCnt = 0, videoMonCnt = 0, supervisorCnt = 0, answerMediaCnt = 0;
+//    ProgressDialog progressDialog;
     JSONObject requestJsonObjectScience;
     AlertDialog.Builder alertDialog;
+    LottieAnimationView push_lottie;
+    TextView txt_push_dialog_msg;
+    TextView txt_push_cnt;
+    RelativeLayout rl_btn;
+    Button ok_btn;
 
     public PushDataToServer(Context context) {
         this.context = context;
@@ -125,16 +139,38 @@ public class PushDataToServer {
         studentData = new JSONArray();
         assessmentData = new JSONArray();
         assessmentScienceData = new JSONArray();
-        progressDialog = new ProgressDialog(context);
+//        progressDialog = new ProgressDialog(context);
     }
 
     @UiThread
     protected void onPreExecute() {
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Pushing data..");
-        if (isTablet || PUSH_DATA_FROM_DRAWER)
-            progressDialog.show();
+     /*   progressDialog.setCancelable(false);
+        progressDialog.setMessage("Pushing data..");*/
+        if (isTablet || !autoPush)
+//            progressDialog.show();
+        {
+            PushDataDialog pushDialog = new PushDataDialog(context);
+//            pushDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            pushDialog.setContentView(R.layout.app_push_data_dialog);
+            Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            pushDialog.setCancelable(false);
+            pushDialog.setCanceledOnTouchOutside(false);
+            pushDialog.show();
 
+            push_lottie = pushDialog.findViewById(R.id.push_lottie);
+            txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
+            txt_push_cnt = pushDialog.findViewById(R.id.txt_push_cnt);
+            rl_btn = pushDialog.findViewById(R.id.rl_btn);
+            ok_btn = pushDialog.findViewById(R.id.ok_btn);
+            ok_btn.setOnClickListener(view -> {
+                pushDialog.dismiss();
+                if (context instanceof MainActivity)
+                    ((MainActivity) context).onResponseGet();
+                if (context instanceof ScienceAssessmentActivity)
+                    ((ScienceAssessmentActivity) context).onResponseGet();
+
+            });
+        }
     }
 
     @Background
@@ -299,8 +335,8 @@ public class PushDataToServer {
             }*/
         } else {
             onPostExecute();
-            if (progressDialog != null)
-                progressDialog.dismiss();
+         /*   if (progressDialog != null)
+                progressDialog.dismiss();*/
         }
 
     }
@@ -448,7 +484,7 @@ public class PushDataToServer {
             } else {
                 if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING))
                     onPostExecute();
-                Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
             }
 //            return new JSONObject(response.body().string());
 
@@ -579,45 +615,6 @@ public class PushDataToServer {
                 });*/
     }
 
-
-    @UiThread
-    protected void onPostExecute() {
-        // super.onPostExecute(o);
-        try {
-
-            if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                if (isTablet || PUSH_DATA_FROM_DRAWER)
-                    Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
-            }
-            if (isTablet || PUSH_DATA_FROM_DRAWER) {
-                String msg = "";
-                if (dataPushed && answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
-                    msg = "Data pushed Successfully.";
-                } else {
-                    msg = "Data push failed.";
-                }
-                alertDialog = new AlertDialog.Builder(context)
-                        .setMessage(msg)
-                        .setCancelable(false)
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                if (context instanceof MainActivity)
-                                    ((MainActivity) context).onResponseGet();
-
-                            }
-                        });
-                alertDialog.create().show();
-            }
-            if (progressDialog.isShowing())
-                progressDialog.dismiss();
-            PUSH_DATA_FROM_DRAWER = false;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     private boolean checkEmptyness(String requestString) {
         try {
@@ -1239,17 +1236,21 @@ public class PushDataToServer {
 
     private void setMediaPushFlag(String type) {
         if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_SUPERVISOR)) {
-            AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
+            int cnt = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
             supervisorImagesPushed = true;
+            supervisorCnt += cnt;
         } else {
             if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
+                int vmCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
                 videoMonImagesPushed = true;
+                videoMonCnt += vmCnt;
                 onPostExecute();
             } else if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA)) {
                 answerMediaPushed = true;
-                AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
-                AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
-                AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
+                int audioCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
+                int imgCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
+                int videoCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
+                answerMediaCnt += audioCnt + imgCnt + videoCnt;
             }
         }
         BackupDatabase.backup(context);
@@ -1267,6 +1268,58 @@ public class PushDataToServer {
         AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().setSentFlag();
 //        AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();
         BackupDatabase.backup(context);
+
+    }
+
+    @UiThread
+    protected void onPostExecute() {
+        // super.onPostExecute(o);
+        try {
+            ok_btn.setVisibility(View.VISIBLE);
+            if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                if (isTablet || !autoPush)
+                    txt_push_dialog_msg.setText("No internet connection");
+//                    Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
+            } else {
+                if (isTablet || !autoPush) {
+                    push_lottie.setAnimation("success.json");
+                    push_lottie.playAnimation();
+                    String msg1 = "", msg2 = "";
+                    msg1 = "Papers pushed: " + pushCnt;
+//                    if (answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
+                    mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
+//                    msg2 = "Media pushed: " + " " + supervisorCnt + " " + answerMediaCnt + " " + videoMonCnt;
+                    msg2 = "Images/Videos/Audios pushed: " + mediaCnt;
+                    txt_push_dialog_msg.setText(msg1);
+                    txt_push_cnt.setVisibility(View.VISIBLE);
+                    txt_push_cnt.setText(msg2);
+
+//                    } else {
+//                        msg = "Data push failed.";
+//                    }
+/*                    alertDialog = new AlertDialog.Builder(context)
+                            .setMessage(msg)
+                            .setCancelable(false)
+                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    if (context instanceof MainActivity)
+                                        ((MainActivity) context).onResponseGet();
+                                    if (context instanceof ScienceAssessmentActivity)
+                                        ((ScienceAssessmentActivity) context).onResponseGet();
+
+                                }
+                            });
+                    alertDialog.create().show();*/
+                }
+            }
+           /* if (progressDialog.isShowing())
+                progressDialog.dismiss();*/
+            PUSH_DATA_FROM_DRAWER = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

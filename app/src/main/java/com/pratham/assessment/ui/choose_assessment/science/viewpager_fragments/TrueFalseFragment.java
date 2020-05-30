@@ -16,6 +16,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
+import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -28,6 +29,8 @@ import org.androidannotations.annotations.ViewById;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
@@ -49,6 +52,7 @@ public class TrueFalseFragment extends Fragment {
     Button radioButtonFalse;
     @ViewById(R.id.btn_view_hint)
     Button btn_view_hint;
+    private List<ScienceQuestionChoice> options;
 
     AssessmentAnswerListener assessmentAnswerListener;
 
@@ -117,6 +121,8 @@ public class TrueFalseFragment extends Fragment {
         }
         assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
 */
+        options = new ArrayList<>();
+
         setOdiaFont(getActivity(), question);
         question.setText(scienceQuestion.getQname());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
@@ -168,13 +174,24 @@ public class TrueFalseFragment extends Fragment {
                 questionImage.setImageBitmap(bitmap);
             }*/
         } else questionImage.setVisibility(View.GONE);
-
-
+        options.clear();
+        options = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+        if (options.get(0).getChoicename() != null && !options.get(0).getChoicename().equalsIgnoreCase(""))
+            radioButtonTrue.setText(options.get(0).getChoicename());
+        if (options.get(1).getChoicename() != null && !options.get(1).getChoicename().equalsIgnoreCase(""))
+            radioButtonFalse.setText(options.get(1).getChoicename());
         radioButtonTrue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                questionTypeListener.setAnswer("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
-                assessmentAnswerListener.setAnswerInActivity("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
+
+                List<ScienceQuestionChoice> ans = new ArrayList<>();
+                if (options != null)
+                    ans.add(options.get(0));
+                scienceQuestion.setMatchingNameList(ans);
+//                assessmentAnswerListener.setAnswerInActivity("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
+                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), ans);
+
                 radioButtonTrue.setSelected(true);
                 radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
                 radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
@@ -187,8 +204,13 @@ public class TrueFalseFragment extends Fragment {
         radioButtonFalse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assessmentAnswerListener.setAnswerInActivity("", radioButtonFalse.getText().toString(), scienceQuestion.getQid(), null);
-//                questionTypeListener.setAnswer("", radioButtonFalse.getText().toString(), scienceQuestion.getQid(), null);
+                List<ScienceQuestionChoice> ans = new ArrayList<>();
+                if (options != null)
+                    ans.add(options.get(1));
+                scienceQuestion.setMatchingNameList(ans);
+//                assessmentAnswerListener.setAnswerInActivity("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
+                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), ans);
+
                 radioButtonFalse.setSelected(true);
                 radioButtonFalse.setTextColor(Assessment_Utility.selectedColor);
                 radioButtonTrue.setSelected(false);

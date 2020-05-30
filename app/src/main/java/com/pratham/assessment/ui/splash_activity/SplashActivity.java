@@ -263,7 +263,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         if (!AssessmentApplication.isTablet) {
 //            splashPresenter.pushData();
             //new PushDataToServer(this, false).execute();
-            pushDataToServer.setValue(this, false);
+            pushDataToServer.setValue(this, true);
             pushDataToServer.doInBackground();
         }
     }

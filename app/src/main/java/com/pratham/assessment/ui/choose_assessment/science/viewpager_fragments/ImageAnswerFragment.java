@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -74,6 +75,7 @@ public class ImageAnswerFragment extends Fragment {
     public static final int PICK_IMAGE_FROM_GALLERY = 1;
     String path;
     String fileName;
+    Uri capturedImageUri;
 
     public ImageAnswerFragment() {
         // Required empty public constructor
@@ -224,7 +226,7 @@ public class ImageAnswerFragment extends Fragment {
             }*/
         } else questionImage.setVisibility(View.GONE);
 
-        fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid()+ "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + ".jpg";
+        fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + ".jpg";
 
 //            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
         path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH;
@@ -308,10 +310,7 @@ public class ImageAnswerFragment extends Fragment {
                 try {
 
                     chooseImageDialog.cancel();
-                    /*if (Assessment_Constants.VIDEOMONITORING) {
-//                        assessmentAnswerListener.pauseVideoMonitoring();
-                        VideoMonitoringService.releaseMediaRecorder();
-                    }*/
+
                     if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                         String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
 
@@ -319,17 +318,37 @@ public class ImageAnswerFragment extends Fragment {
                             Toast.makeText(context, "Give Camera permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
                         } else {
 //                        imageName = Assessment_Utility.getFileName(scienceQuestion.getQid())
-                            scienceQuestion.setUserAnswer(fileName);
+                            scienceQuestion.setUserAnswer(path + "/" + fileName);
 //                        selectedImage = selectedImageTemp;
-                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(takePicture, CAPTURE_IMAGE);
+                          /*  Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, CAPTURE_IMAGE);*/
+
+                            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            File imagesFolder = new File(path);
+                            if (!imagesFolder.exists()) imagesFolder.mkdirs();
+                            File image = new File(imagesFolder, fileName);
+//                            capturedImageUri = Uri.fromFile(image);
+                            capturedImageUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", image);
+                            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
+                            startActivityForResult(cameraIntent, CAPTURE_IMAGE);
                         }
                     } else {
 //                    imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
-                        scienceQuestion.setUserAnswer(fileName);
+                       /* scienceQuestion.setUserAnswer(fileName);
 //                    selectedImage = selectedImageTemp;
                         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(takePicture, CAPTURE_IMAGE);
+                        startActivityForResult(takePicture, CAPTURE_IMAGE);*/
+                        scienceQuestion.setUserAnswer(path + "/" + fileName);
+                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        File imagesFolder = new File(path);
+                        if (!imagesFolder.exists()) imagesFolder.mkdirs();
+                        File image = new File(imagesFolder, fileName);
+//                        capturedImageUri = Uri.fromFile(image);
+                        capturedImageUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", image);
+                        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
+                        startActivityForResult(cameraIntent, CAPTURE_IMAGE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -397,13 +416,15 @@ public class ImageAnswerFragment extends Fragment {
                 else
                     assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
             } else if (resultCode == -1 && requestCode == CAPTURE_IMAGE) {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
+//                Bitmap photo = (Bitmap) data.getExtras().get("data");
+//                Uri selectedImage = data.getData();
+                setImage(capturedImageUri);
 //                if (currentFragment instanceof ImageAnswerFragment)
 //                    ((ImageAnswerFragment) currentFragment).setImage(photo);
 //                selectedImage.setImageBitmap(photo);
                 // String selectedImagePath = getPath(photo);
-                setImage(photo);
-                createDirectoryAndSaveFile(photo, fileName);
+//                setImage();
+//                createDirectoryAndSaveFile(photo, fileName);
                 if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
                     assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
                 else

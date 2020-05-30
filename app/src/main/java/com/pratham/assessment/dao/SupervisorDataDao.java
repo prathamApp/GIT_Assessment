@@ -30,5 +30,5 @@ public interface SupervisorDataDao {
     public List<SupervisorData> getSupervisorBySession(String assessmentSessionId);
 
     @Query("update SupervisorData set sentFlag=1 where sentFlag=0")
-    public void setSentFlag();
+    public int setSentFlag();
 }

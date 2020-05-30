@@ -105,10 +105,10 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
 
         muteFlg = false;
-        Catcho.Builder(this)
+       /* Catcho.Builder(this)
                 .activity(CatchoActivity_.class)
                 .recipients("ankita.lakhamade27@gmail.com")
-                .build();
+                .build();*/
 
         Log.d("@path@@", AssessmentApplication.assessPath);
 //        overrideDefaultTypefacenots();
@@ -390,7 +390,6 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
         push_lottie = pushDialog.findViewById(R.id.push_lottie);
         txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
-        txt_push_error = pushDialog.findViewById(R.id.txt_push_error);
         txt_push_error = pushDialog.findViewById(R.id.txt_push_error);
         rl_btn = pushDialog.findViewById(R.id.rl_btn);
         ok_btn = pushDialog.findViewById(R.id.ok_btn);

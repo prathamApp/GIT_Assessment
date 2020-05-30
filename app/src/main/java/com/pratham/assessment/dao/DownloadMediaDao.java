@@ -53,5 +53,5 @@ public interface DownloadMediaDao {
     List<DownloadMedia> getMediaByTypeForPush(String type);
 
     @Query("update DownloadMedia set sentFlag=1 where sentFlag=0 AND mediaType=:type")
-    public void setSentFlag(String type);
+    public int setSentFlag(String type);
 }
