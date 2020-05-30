@@ -2755,6 +2755,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         }
     }
 
+
+
     @Override
     public void onResponseGet() {
         AssessmentPaperForPush paper = createPaperToSave(scienceQuestionList);

@@ -163,12 +163,12 @@ public class PushDataToServer {
             rl_btn = pushDialog.findViewById(R.id.rl_btn);
             ok_btn = pushDialog.findViewById(R.id.ok_btn);
             ok_btn.setOnClickListener(view -> {
+
                 pushDialog.dismiss();
                 if (context instanceof MainActivity)
                     ((MainActivity) context).onResponseGet();
                 if (context instanceof ScienceAssessmentActivity)
                     ((ScienceAssessmentActivity) context).onResponseGet();
-
             });
         }
     }
