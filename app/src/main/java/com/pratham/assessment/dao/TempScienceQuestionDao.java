@@ -17,7 +17,6 @@ public interface TempScienceQuestionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insert(TempScienceQuestion question);
 
-
     @Query("SELECT * FROM TempScienceQuestion where StudentID=:currentStudentID and subjectid=:subjectId and examid=:selectedExamId and languageid=:selectedLang")
     public List<TempScienceQuestion> getAlreadyAttemptedPaper(String currentStudentID, String subjectId, String selectedExamId, String selectedLang);
 
