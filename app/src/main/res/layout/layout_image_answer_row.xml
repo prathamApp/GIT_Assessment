@@ -20,26 +20,26 @@
             app:autoSizeMaxTextSize="@dimen/_20sdp"
             app:autoSizeMinTextSize="@dimen/_15sdp"
             app:autoSizeTextType="uniform" />
+
         <Button
             android:id="@+id/btn_view_hint"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight=".1"
-            android:layout_margin="@dimen/_2sdp"
-            android:background="@drawable/correct_bg"
-            android:text="View hint"
-            android:elevation="@dimen/_2sdp"
-            android:textSize="@dimen/_10sdp"
-            android:padding="@dimen/_3sdp"
             android:layout_gravity="center"
-            android:textColor="@color/black" />
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight=".1"
+            android:background="@drawable/correct_bg"
+            android:elevation="@dimen/_2sdp"
+            android:padding="@dimen/_3sdp"
+            android:text="View hint"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10sdp" />
 
         <ImageView
             android:id="@+id/iv_question_image"
             style="@style/CustomQuestionImageStyle"
             android:layout_gravity="center"
-            android:layout_weight="0.5"
-            />
+            android:layout_weight="0.5" />
 
         <com.pratham.assessment.custom.gif_viewer.GifView
             android:id="@+id/iv_question_gif"
@@ -55,22 +55,38 @@
             android:layout_weight="0.8"
             android:visibility="gone" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/_2sdp"
             android:layout_weight="0.5">
 
             <Button
                 android:id="@+id/btn_capture_img"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
+                android:gravity="center"
                 android:padding="@dimen/_7sdp"
                 android:text="Capture image"
                 android:textSize="@dimen/_13sdp" />
-        </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_show_captured_img"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_effect"
+                android:gravity="center"
+                android:visibility="gone"
+                android:padding="@dimen/_7sdp"
+                android:text="show images"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

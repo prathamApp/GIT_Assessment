@@ -92,12 +92,12 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             addAvatarsInList();
             studentList = new ArrayList<>();
             gson = new Gson();
-            adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
+         /*   adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
 
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
             rl_students.setLayoutManager(mLayoutManager);
             rl_students.setAdapter(adapter);
-
+*/
 //        btn_download_all_data.setVisibility(View.GONE);
 
       /*  if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork())
@@ -145,6 +145,11 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
     }*/
 
     private void setStudentsToRecycler() {
+        adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        rl_students.setLayoutManager(mLayoutManager);
+        rl_students.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
@@ -680,10 +685,15 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         try {
 
             new AsyncTask<Void, Integer, Void>() {
+                ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setMessage("Loading... Please wait...");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
                 }
 
                 @Override
@@ -697,6 +707,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                             studentAvatar.setStudentID(studentDBList.get(i).getStudentID());
                             studentAvatar.setFullName(studentDBList.get(i).getFullName());
                             studentAvatar.setGroupId(studentDBList.get(i).getGroupId());
+                            studentAvatar.setStudentUID(studentDBList.get(i).getStudentUID());
+                            studentAvatar.setIsniosstudent(studentDBList.get(i).getIsniosstudent());
                             if (studentDBList.get(i).getAvatarName() != null)
                                 studentAvatar.setAvatarName(studentDBList.get(i).getAvatarName());
                             else
@@ -714,12 +726,13 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
-
+                    if (progressDialog != null && progressDialog.isShowing())
+                        progressDialog.dismiss();
                     setStudentsToRecycler();
                     BackupDatabase.backup(getActivity());
                 }
 
-            }.execute();
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -799,7 +812,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 
     @Override
-    public void onStudentClick(final String studentName, final String studentId, String groupId) {
+    public void onStudentClick(final String studentName, final String studentId, String groupId, String isniosstudent) {
 
         new AsyncTask<Object, Void, Object>() {
 
@@ -823,8 +836,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                     if (groupId != null && !groupId.equalsIgnoreCase(""))
                         attendance.setGroupID(groupId);
                     else attendance.setGroupID("PS");
-                    attendance.setSentFlag(0);
 
+                    attendance.setSentFlag(0);
                     Assessment_Constants.currentStudentID = studentId;
                     FastSave.getInstance().saveString("currentStudentID", studentId);
 
@@ -842,6 +855,11 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                     startSesion.setToDate("NA");
                     startSesion.setSentFlag(0);
                     AppDatabase.getDatabaseInstance(getActivity()).getSessionDao().insert(startSesion);
+                    if (isniosstudent != null && !isniosstudent.equalsIgnoreCase(""))
+                        if (isniosstudent.equalsIgnoreCase("1"))
+                            FastSave.getInstance().saveBoolean("enrollmentNoLogin", true);
+                        else FastSave.getInstance().saveBoolean("enrollmentNoLogin", false);
+
 //                    getStudentData(Assessment_Constants.STUDENT_PROGRESS_INTERNET, Assessment_Constants.STUDENT_PROGRESS_API, Assessment_Constants.currentStudentID);
 
                   /*  try {
@@ -870,7 +888,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 //                startActivity(new Intent(getActivity(), ChooseLevelActivity.class));
             }
-        }.execute();
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

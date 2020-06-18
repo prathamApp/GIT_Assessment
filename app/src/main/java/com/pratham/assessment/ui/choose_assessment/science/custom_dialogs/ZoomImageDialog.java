@@ -163,9 +163,9 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
                             .load(path)
 //                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .apply(new RequestOptions()
-                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .skipMemoryCache(true)
-                                    .placeholder(Drawable.createFromPath(localPath)))
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .placeholder(Drawable.createFromPath(localPath)))
                             .into(zoomImg);
                     gifView.setVisibility(View.GONE);
 

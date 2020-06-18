@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 
 import com.pratham.assessment.domain.AssessmentSubjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao

@@ -8,9 +8,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,9 +28,13 @@ import com.pratham.assessment.custom.custom_dialogs.ChooseImageDialog;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
+import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.services.camera.VideoMonitoringService;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.UpdateImageListListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
@@ -43,6 +49,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
@@ -61,6 +71,11 @@ public class ImageAnswerFragment extends Fragment {
     @ViewById(R.id.btn_view_hint)
     Button btn_view_hint;
 
+    @ViewById(R.id.btn_show_captured_img)
+    Button view_captured_img;
+
+    List<ScienceQuestionChoice> answers;
+
     ChooseImageDialog chooseImageDialog;
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
@@ -73,9 +88,13 @@ public class ImageAnswerFragment extends Fragment {
     String imageName = "";
     public static final int CAPTURE_IMAGE = 0;
     public static final int PICK_IMAGE_FROM_GALLERY = 1;
+    public static final int SHOW_DIALOG = 2;
     String path;
     String fileName;
     Uri capturedImageUri;
+    int capturedImageCnt = 0;
+    public List imageList;
+    boolean isCaptured = false;
 
     public ImageAnswerFragment() {
         // Required empty public constructor
@@ -92,7 +111,7 @@ public class ImageAnswerFragment extends Fragment {
             scienceAssessmentActivity = (ScienceAssessmentActivity) getActivity();
         }
         setImageQuestion();
-
+        answers = new ArrayList<>();
     }
 
 
@@ -145,19 +164,29 @@ public class ImageAnswerFragment extends Fragment {
 
         /*etAnswer.setTextColor(Assessment_Utility.selectedColor);
         etAnswer.setText(scienceQuestion.getUserAnswer());*/
+        imageList = new ArrayList();
         chooseImageDialog = new ChooseImageDialog(getActivity());
 
         if (scienceQuestion.getIsAttempted() && !scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
+
+//            List imgs = Arrays.asList(scienceQuestion.getUserAnswer().split(","));
+            if (scienceQuestion.getMatchingNameList().size() > 0) {
+                for (int i = 0; i < scienceQuestion.getMatchingNameList().size(); i++) {
+                    imageList.add(scienceQuestion.getMatchingNameList().get(i).getQcid());
+
+                }
+            }
+            view_captured_img.setVisibility(View.VISIBLE);
 //            setImage(Uri.parse(scienceQuestion.getUserAnswer()));
-            Glide.with(context)
+     /*       Glide.with(context)
                     .load(scienceQuestion.getUserAnswer())
 //                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                     .apply(new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
                             .placeholder(Drawable.createFromPath(scienceQuestion.getUserAnswer())))
-                    .into(captured_img);
-            captured_img.setVisibility(View.VISIBLE);
+                    .into(captured_img);*/
+//            captured_img.setVisibility(View.VISIBLE);
         }
         setOdiaFont(getActivity(), question);
 
@@ -226,7 +255,7 @@ public class ImageAnswerFragment extends Fragment {
             }*/
         } else questionImage.setVisibility(View.GONE);
 
-        fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + ".jpg";
+//        fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
 
 //            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
         path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH;
@@ -262,6 +291,16 @@ public class ImageAnswerFragment extends Fragment {
 
     }
 
+
+    @Click(R.id.btn_show_captured_img)
+    public void onViewCaptured() {
+        if (imageList.size() > 0) {
+            showImageThumbnailDialog(imageList, false);
+        } else {
+            Toast.makeText(getActivity(), "No images", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Click(R.id.btn_capture_img)
     public void onCaptureClick() {
 //        assessmentAnswerListener.setImageCaptureResult(scienceQuestion);
@@ -282,20 +321,20 @@ public class ImageAnswerFragment extends Fragment {
     }
 
 
-    public void setImage(Uri uri) {
+   /* public void setImage(Uri uri) {
         captured_img.setVisibility(View.VISIBLE);
         Glide.with(context)
                 .load(uri)
                 .into(captured_img);
 //        captured_img.setImageURI(uri);
 
-    }
+    }*/
 
-    public void setImage(Bitmap bitmap) {
+  /*  public void setImage(Bitmap bitmap) {
         captured_img.setVisibility(View.VISIBLE);
         captured_img.setImageBitmap(bitmap);
 
-    }
+    }*/
 
     public void setImageCaptureResult() {
         final ChooseImageDialog chooseImageDialog = new ChooseImageDialog(context);
@@ -308,8 +347,9 @@ public class ImageAnswerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-
+                    isCaptured = true;
                     chooseImageDialog.cancel();
+                    fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
 
                     if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                         String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
@@ -362,6 +402,7 @@ public class ImageAnswerFragment extends Fragment {
         chooseImageDialog.btn_choose_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isCaptured = false;
                 chooseImageDialog.cancel();
              /*   if (Assessment_Constants.VIDEOMONITORING) {
                     assessmentAnswerListener.pauseVideoMonitoring();
@@ -375,7 +416,7 @@ public class ImageAnswerFragment extends Fragment {
                         Toast.makeText(context, "Give Storage permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
                     } else {
 //                        imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
-                        scienceQuestion.setUserAnswer(fileName);
+//                        scienceQuestion.setUserAnswer(fileName);
 //                        selectedImage = selectedImageTemp;
                         Intent intent = new Intent();
                         intent.setType("image/*");
@@ -384,7 +425,7 @@ public class ImageAnswerFragment extends Fragment {
                     }
                 } else {
 //                    imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
-                    scienceQuestion.setUserAnswer(fileName);
+//                    scienceQuestion.setUserAnswer(fileName);
 //                    selectedImage = selectedImageTemp;
                     Intent intent = new Intent();
                     intent.setType("image/*");
@@ -403,58 +444,152 @@ public class ImageAnswerFragment extends Fragment {
         try {
             if (resultCode == -1 && requestCode == PICK_IMAGE_FROM_GALLERY) {
                 Uri selectedImage = data.getData();
-                setImage(selectedImage);
+//                setImage(selectedImage);
+                imageList.add(selectedImage);
+                showImageThumbnailDialog(imageList, true);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedImage);
 //                createDirectoryAndSaveFile(bitmap, imageFileName);
                 String path;
 
                 path = RealPathUtil.getUriRealPathAboveKitkat(context, selectedImage);
+                if (path.equalsIgnoreCase("")) {
+                    path = RealPathUtil.getRealPathFromURI_API19(context, selectedImage);
+                }
                 scienceQuestion.setUserAnswer(path);
 
-                if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
+                if (imageList.size() > 0) {
+                    view_captured_img.setVisibility(View.VISIBLE);
+//                    for (int i = 0; i < imageList.size(); i++) {
+                   /* ScienceQuestionChoice answer = new ScienceQuestionChoice();
+                    path = RealPathUtil.getUriRealPathAboveKitkat(context, (Uri) selectedImage);
+                    answer.setQcid(path);
+                    answers.add(answer);*/
+//                    }
+                }
+
+            /*    if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
                     assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
-                else
-                    assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
+                else*/
+//                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+
+
             } else if (resultCode == -1 && requestCode == CAPTURE_IMAGE) {
 //                Bitmap photo = (Bitmap) data.getExtras().get("data");
 //                Uri selectedImage = data.getData();
-                setImage(capturedImageUri);
+                fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
+
+                String file = path + "/" + fileName;
+                imageList.add(file);
+                showImageThumbnailDialog(imageList, true);
+//                setImage(capturedImageUri);
 //                if (currentFragment instanceof ImageAnswerFragment)
 //                    ((ImageAnswerFragment) currentFragment).setImage(photo);
 //                selectedImage.setImageBitmap(photo);
                 // String selectedImagePath = getPath(photo);
 //                setImage();
 //                createDirectoryAndSaveFile(photo, fileName);
-                if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
-                    assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
-                else
-                    assessmentAnswerListener.setAnswerInActivity("", path + "/" + fileName, scienceQuestion.getQid(), null);
-            }
+                if (imageList.size() > 0) {
+                    view_captured_img.setVisibility(View.VISIBLE);
+                    view_captured_img.setVisibility(View.VISIBLE);
+//                    for (int i = 0; i < imageList.size(); i++) {
+                    /*ScienceQuestionChoice answer = new ScienceQuestionChoice();
+                    fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
 
+                    answer.setQcid(path + "/" + fileName);
+                    answers.add(answer);*/
+//                    }
+                }
+//                path + "/" + fileName
+           /*     if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
+                    assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
+                else*/
+//                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+                capturedImageCnt++;
+            } else if (resultCode == 2 && requestCode == SHOW_DIALOG) {
+                try {
+                    List<ScienceQuestionChoice> answers = new ArrayList<>();
+
+                    List imageList = data.getParcelableArrayListExtra("imageList");
+//                    for (int j = 0; j < imageList.size(); j++) {
+//                        for (int k = 0; k < newImageList.size(); k++) {
+                  /*  Iterator<List> iterator = imageList.iterator();
+                    while (iterator.hasNext()) {
+//                        ScienceQuestion scienceQuestion = (ScienceQuestion) iterator.next();
+                        if (!newImageList.contains(iterator.next()))
+                            iterator.remove();
+                    }
+*/
+
+//                        }
+//                    }
+                    if (imageList.size() > 0) {
+                        for (int i = 0; i < imageList.size(); i++) {
+                            ScienceQuestionChoice answer = new ScienceQuestionChoice();
+                            if (imageList.get(i) instanceof String) {
+//                                fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
+                                answer.setQcid((String) imageList.get(i));
+                            }
+//                            if (imageList.get(i) instanceof Uri) {
+                            else {
+                                String path;
+                                path = RealPathUtil.getUriRealPathAboveKitkat(context, (Uri) imageList.get(i));
+                                if (path.equalsIgnoreCase("")) {
+                                    path = RealPathUtil.getRealPathFromURI_API19(context, (Uri) imageList.get(i));
+                                }
+                                answer.setQcid(path);
+//                                answer.setQcid(path);
+                            }
+
+//                            }
+                            answers.add(answer);
+
+                        }
+
+                        Log.d("TAG", "onActivityResult: " + imageList.size());
+
+                        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+
+                    }
+                    this.imageList = imageList;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 //            assessmentAnswerListener.resumeVideoMonitoring();
            /* if (Assessment_Constants.VIDEOMONITORING)
                 scienceAssessmentActivity.startCameraService();*/
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) {
-        try {
-            File direct = new File(path);
-            if (!direct.exists()) direct.mkdir();
-            scienceQuestion.setUserAnswer(path + "/" + fileName);
+    private void showImageThumbnailDialog(List imageList, boolean showButton) {
+//        ImageListDialog imageListDialog = new ImageListDialog(getActivity(), imageList);
+//        imageListDialog.show();
+        Intent intent = new Intent(context, ImageListDialog_.class);
+        intent.putParcelableArrayListExtra("imageList", (ArrayList<? extends Parcelable>) imageList);
+        intent.putExtra("showDeleteButton", showButton);
+        startActivityForResult(intent, SHOW_DIALOG);
+    }
 
-            File file = new File(path + "/" + fileName);
+    /*   private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) {
+           try {vide
+               File direct = new File(path);
+               if (!direct.exists()) direct.mkdir();
+               scienceQuestion.setUserAnswer(path + "/" + fileName);
+
+               File file = new File(path + "/" + fileName);
 
 
-//           File  file1 = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
+   //           File  file1 = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
 
-//            if (!direct.exists()) direct.mkdir();
+   //            if (!direct.exists()) direct.mkdir();
 
-//            File fileName = new File(direct, fileName);
-           /* if (fileName.exists())
-                fileName.delete();*/
+   //            File fileName = new File(direct, fileName);
+              *//* if (fileName.exists())
+                fileName.delete();*//*
 
 
             FileOutputStream out = new FileOutputStream(file);
@@ -466,7 +601,7 @@ public class ImageAnswerFragment extends Fragment {
         }
 
     }
-
+*/
     private String getRealPathFromURI(Uri contentURI) {
 
         String thePath = "no-path-found";
@@ -513,6 +648,32 @@ public class ImageAnswerFragment extends Fragment {
 
         }
 
+      /*  if (answers != null && answers.size() > 0) {
+            assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+        }*/
+//        if(imageList.size()>0){
+
+      /*  if (imageList.size() > 0) {
+            for (int i = 0; i < imageList.size(); i++) {
+                ScienceQuestionChoice answer = new ScienceQuestionChoice();
+                if (isCaptured) {
+                    fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
+                    answer.setQcid(path + "/" + fileName);
+                } else {
+                    path = RealPathUtil.getUriRealPathAboveKitkat(context, (Uri) imageList.get(i));
+                  *//*  ScienceQuestionChoice answer = new ScienceQuestionChoice();
+                    fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
+                    answer.setQcid(path + "/" + fileName);*//*
+//                    answers.add(answer);
+                    answer.setQcid(path);
+                }
+                answers.add(answer);
+            }
+
+            assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+//            }
+        }*/
+
 
     }
 
@@ -525,4 +686,10 @@ public class ImageAnswerFragment extends Fragment {
             }
         }
     }
+
+
+   /* public static void updateList(List imgList) {
+        imageList = imgList;
+
+    }*/
 }

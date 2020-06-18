@@ -382,6 +382,7 @@ public class QRScanActivity extends BaseActivity implements ZXingScannerView.Res
                     student.setStudentID("" + stdId);
                     student.setFullName("" + stdFirstName);
                     student.setNewFlag(1);
+                    student.setStudentUID("QR");
                     student.setDeviceId(Assessment_Utility.getDeviceId(QRScanActivity.this));
                     String studentName = appDatabase.getStudentDao().checkStudent("" + stdId);
 

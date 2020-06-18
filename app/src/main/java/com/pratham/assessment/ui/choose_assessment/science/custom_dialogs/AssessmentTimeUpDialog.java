@@ -46,7 +46,7 @@ public class AssessmentTimeUpDialog extends Dialog {
 
     @OnClick(R.id.btn_ok_time_up)
     public void closeDialog() {
-        ((Activity) context).finish();
+//        ((Activity) context).finish();
         dismiss();
         questionTrackerListener.onSaveAssessmentClick();
     }

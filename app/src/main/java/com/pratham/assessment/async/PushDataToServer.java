@@ -345,6 +345,7 @@ public class PushDataToServer {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                supervisorMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_SUPERVISOR));
                 if (supervisorMediaList.size() > 0) {
                     pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_SUPERVISOR, supervisorMediaList);
                 } else supervisorImagesPushed = true;
@@ -787,6 +788,7 @@ public class PushDataToServer {
                 _studentObj.put("Age", studentList.get(i).getAge());
                 _studentObj.put("villageName", studentList.get(i).getVillageName());
                 _studentObj.put("newFlag", studentList.get(i).getNewFlag());
+                _studentObj.put("isniosstudent", studentList.get(i).getIsniosstudent());
                 _studentObj.put("DeviceId", Assessment_Utility.getDeviceId(context));
                 studentData.put(_studentObj);
             }
@@ -880,6 +882,7 @@ public class PushDataToServer {
                     _obj_paper.put("question8Rating", _paper.getQuestion8Rating());
                     _obj_paper.put("question9Rating", _paper.getQuestion9Rating());
                     _obj_paper.put("question10Rating", _paper.getQuestion10Rating());
+                    _obj_paper.put("isniosstudent", _paper.getIsniosstudent());
 //                    DownloadMedia video = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeAndPaperId(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, _paper.getPaperId());
 
                     /*  DownloadMedia video = new DownloadMedia();
@@ -936,14 +939,14 @@ public class PushDataToServer {
                 _supervisorDataObj.put("supervisorName", supervisorDataTemp.getSupervisorName());
                 _supervisorDataObj.put("supervisorPhoto", supervisorDataTemp.getSupervisorPhoto());
                 supervisorData.put(_supervisorDataObj);
-                DownloadMedia downloadMedia = new DownloadMedia();
-                downloadMedia.setPaperId(supervisorDataTemp.getSupervisorId());
-                downloadMedia.setQtId(supervisorDataTemp.getAssessmentSessionId());
-                downloadMedia.setqId(supervisorDataTemp.getSupervisorName());
-                String fileName = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/" + supervisorDataTemp.getSupervisorPhoto();
-                downloadMedia.setPhotoUrl(fileName);
-                downloadMedia.setMediaType("supervisorData");
-                supervisorMediaList.add(downloadMedia);
+//                DownloadMedia downloadMedia = new DownloadMedia();
+//                downloadMedia.setPaperId(supervisorDataTemp.getSupervisorId());
+//                downloadMedia.setQtId(supervisorDataTemp.getAssessmentSessionId());
+//                downloadMedia.setqId(supervisorDataTemp.getSupervisorName());
+//                String fileName = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/" + supervisorDataTemp.getSupervisorPhoto();
+//                downloadMedia.setPhotoUrl(fileName);
+//                downloadMedia.setMediaType("supervisorData");
+//                supervisorMediaList.add(downloadMedia);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1154,6 +1157,7 @@ public class PushDataToServer {
                                             });
                                     alertDialog.create().show();*/
                                 }
+                                onPostExecute();
                             }
                         }
                     });
@@ -1237,8 +1241,9 @@ public class PushDataToServer {
     private void setMediaPushFlag(String type) {
         if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_SUPERVISOR)) {
             int cnt = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
+            int sCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_SUPERVISOR);
             supervisorImagesPushed = true;
-            supervisorCnt += cnt;
+            supervisorCnt += sCnt;
         } else {
             if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
                 int vmCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
@@ -1281,7 +1286,11 @@ public class PushDataToServer {
                     txt_push_dialog_msg.setText("No internet connection");
 //                    Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
             } else {
-                if (isTablet || !autoPush) {
+                if(!dataPushed) {
+                    push_lottie.setAnimation("error_cross.json");
+                    push_lottie.playAnimation();
+                    txt_push_dialog_msg.setText("Data push failed");
+                }else if (isTablet || !autoPush) {
                     push_lottie.setAnimation("success.json");
                     push_lottie.playAnimation();
                     String msg1 = "", msg2 = "";
@@ -1289,7 +1298,7 @@ public class PushDataToServer {
 //                    if (answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
                     mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
 //                    msg2 = "Media pushed: " + " " + supervisorCnt + " " + answerMediaCnt + " " + videoMonCnt;
-                    msg2 = "Images/Videos/Audios pushed: " + mediaCnt;
+                    msg2 = "Media pushed: " + mediaCnt;
                     txt_push_dialog_msg.setText(msg1);
                     txt_push_cnt.setVisibility(View.VISIBLE);
                     txt_push_cnt.setText(msg2);

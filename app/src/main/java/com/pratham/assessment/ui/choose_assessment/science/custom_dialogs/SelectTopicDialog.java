@@ -6,9 +6,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Html;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -21,10 +18,7 @@ import android.widget.TextView;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
-import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.TopicSelectListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +56,7 @@ public class SelectTopicDialog extends Dialog {
 
     Context context;
     List<AssessmentPaperPattern> toipcsModalList;
-//    List<AssessmentLanguages> assessmentLanguagesList;
+    //    List<AssessmentLanguages> assessmentLanguagesList;
     //    List<AssessmentSubjects> assessmentSubjectsList;
     String subjectId;
     List<CheckBox> checkBoxes = new ArrayList<>();

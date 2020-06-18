@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 @Entity
-public class AssessmentTest {
+public class  AssessmentTest {
 
     private String examname;
 

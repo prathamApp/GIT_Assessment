@@ -153,6 +153,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                                 paper.setQuestion8Rating(response.getJSONObject(i).getString("question8Rating"));
                                 paper.setQuestion9Rating(response.getJSONObject(i).getString("question9Rating"));
                                 paper.setQuestion10Rating(response.getJSONObject(i).getString("question10Rating"));
+                                paper.setIsniosstudent(response.getJSONObject(i).getString("isniosstudent"));
 //                                paper.setPaperEndTime(response.getJSONObject(i).getString("exammode"));
                                 paperList.add(paper);
 
@@ -242,6 +243,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                         paper.setFullName(student.getFullName());
                         paper.setGender(student.getGender());
                         paper.setAge(student.getAge());
+                        paper.setIsniosstudent(student.getIsniosstudent());
                     }
                     AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().insertPaperForPush(paper);
 

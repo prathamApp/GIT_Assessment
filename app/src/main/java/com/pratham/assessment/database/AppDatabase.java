@@ -21,6 +21,8 @@ import com.pratham.assessment.dao.DownloadMediaDao;
 import com.pratham.assessment.dao.GroupDao;
 import com.pratham.assessment.dao.LanguageDao;
 import com.pratham.assessment.dao.LogDao;
+import com.pratham.assessment.dao.NIOSExamDao;
+import com.pratham.assessment.dao.NIOSExamTopicDao;
 import com.pratham.assessment.dao.ScienceQuestionChoiceDao;
 import com.pratham.assessment.dao.ScienceQuestionDao;
 import com.pratham.assessment.dao.ScoreDao;
@@ -29,6 +31,7 @@ import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.dao.StudentDao;
 import com.pratham.assessment.dao.SubjectDao;
 import com.pratham.assessment.dao.SupervisorDataDao;
+import com.pratham.assessment.dao.TempScienceQuestionDao;
 import com.pratham.assessment.dao.VillageDao;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.AssessmentLanguages;
@@ -44,6 +47,8 @@ import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.DownloadMedia;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Modal_Log;
+import com.pratham.assessment.domain.NIOSExam;
+import com.pratham.assessment.domain.NIOSExamTopics;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.Score;
@@ -51,6 +56,7 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Status;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
+import com.pratham.assessment.domain.TempScienceQuestion;
 import com.pratham.assessment.domain.Village;
 
 
@@ -60,7 +66,7 @@ import com.pratham.assessment.domain.Village;
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
-        SupervisorData.class, DownloadMedia.class}, version = 7/*,exportSchema = false*/)
+        SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class, NIOSExam.class, NIOSExamTopics.class}, version = 9/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -110,6 +116,12 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract DownloadMediaDao getDownloadMediaDao();
 
+    public abstract TempScienceQuestionDao getTempScienceQuestionDao();
+
+    public abstract NIOSExamDao getNiosExamDao();
+
+    public abstract NIOSExamTopicDao getNiosExamTopicDao();
+
 
 
    /* public static AppDatabase getDatabaseInstance(Context context) {
@@ -127,7 +139,8 @@ public abstract class AppDatabase extends RoomDatabase {
         try {
             if (appDatabase == null) {
                 appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
-                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
+                                MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
                         .allowMainThreadQueries().build();
 
             }
@@ -248,6 +261,83 @@ public abstract class AppDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE AssessmentPatternDetails add COLUMN paralevel text");
                 database.execSQL("ALTER TABLE AssessmentPatternDetails add COLUMN qlevelmarks text");
                 Log.d("$$$", "after MIGRATION_6_7");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+    static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_7_8");
+            try {
+
+                database.execSQL("CREATE TABLE `TempScienceQuestion` (\n" +
+                        "\t`ansdesc`\tTEXT,\n" +
+                        "\t`updatedby`\tTEXT,\n" +
+                        "\t`qlevel`\tTEXT,\n" +
+                        "\t`addedby`\tTEXT,\n" +
+                        "\t`languageid`\tTEXT,\n" +
+                        "\t`active`\tTEXT,\n" +
+                        "\t`lessonid`\tTEXT,\n" +
+                        "\t`qtid`\tTEXT,\n" +
+                        "\t`qid`\tTEXT NOT NULL ,\n" +
+                        "\t`subjectid`\tTEXT,\n" +
+                        "\t`addedtime`\tTEXT,\n" +
+                        "\t`updatedtime`\tTEXT,\n" +
+                        "\t`photourl`\tTEXT,\n" +
+                        "\t`examtime`\tTEXT,\n" +
+                        "\t`topicid`\tTEXT,\n" +
+                        "\t`answer`\tTEXT,\n" +
+                        "\t`outofmarks`\tTEXT,\n" +
+                        "\t`qname`\tTEXT,\n" +
+                        "\t`hint`\tTEXT,\n" +
+                        "\t`examid`\tTEXT,\n" +
+                        "\t`pdid`\tTEXT,\n" +
+                        "\t`startTime`\tTEXT,\n" +
+                        "\t`endTime`\tTEXT,\n" +
+                        "\t`marksPerQuestion`\tTEXT,\n" +
+                        "\t`userAnswerId`\tTEXT,\n" +
+                        "\t`userAnswer`\tTEXT,\n" +
+                        "\t`isAttempted`\tINTEGER NOT NULL,\n" +
+                        "\t`isCorrect`\tINTEGER NOT NULL,\n" +
+                        "\t`IsParaQuestion`\tINTEGER NOT NULL,\n" +
+                        "\t`RefParaID`\tTEXT,\n" +
+                        "\t`SessionID`\tTEXT,\n" +
+                        "\t`StudentID`\tTEXT,\n" +
+                        "\t`DeviceID`\tTEXT,\n" +
+                        "\t`ScoredMarks`\tINTEGER NOT NULL,\n" +
+                        "\t`paperTotalMarks`\tINTEGER NOT NULL,\n" +
+                        "\t`paperStartDateTime`\tTEXT,\n" +
+                        "\t`paperEndDateTime`\tTEXT,\n" +
+                        "\t`Level`\tINTEGER NOT NULL,\n" +
+                        "\t`Label`\tTEXT,\n" +
+                        "\t`sentFlag`\tINTEGER NOT NULL,\n" +
+                        "\t`paperId`\tTEXT NOT NULL ,\n" +
+                        "\tPRIMARY KEY(`qid`,`paperId`)\n" +
+                        ")");
+
+                Log.d("$$$", "after MIGRATION_7_8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+    static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_8_9");
+            try {
+                database.execSQL("ALTER TABLE Student add COLUMN isniosstudent text");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add COLUMN isniosstudent text");
+                database.execSQL("CREATE TABLE `NIOSExam` (`studentid` TEXT, `subjectname` TEXT, `examname` TEXT, `examid` TEXT  NOT NULL, `languageid` TEXT, `subjectid` TEXT, `languagename` TEXT, PRIMARY KEY(`examid`))");
+                database.execSQL("CREATE TABLE `NIOSExamTopics` (`subjectname` TEXT, `topicid` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT, `topicname` TEXT, `subjectid` TEXT, `languagename` TEXT, PRIMARY KEY(`examid`))");
+                Log.d("$$$", "after MIGRATION_8_9");
             } catch (Exception e) {
                 e.printStackTrace();
             }

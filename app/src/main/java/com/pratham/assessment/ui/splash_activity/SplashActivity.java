@@ -396,7 +396,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 dialog.dismiss();
 //                showBottomFragment();
                 BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
-                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                    bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                }
             }
         });
 
@@ -546,14 +548,19 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                         pullOldStudentsCertificates();
                     else {
                         BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
-                        bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                        if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                            bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                        }
                     }
                 }
             } else {
-                if (isActivityRunning)
+                if (isActivityRunning) {
                     Toast.makeText(context, "Connect to internet to download students of this device..", Toast.LENGTH_LONG).show();
-                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
-                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                    BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                    if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                        bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -599,28 +606,39 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 paper.setQuestion7Rating(response.getJSONObject(i).getString("question7Rating"));
                                 paper.setQuestion8Rating(response.getJSONObject(i).getString("question8Rating"));
                                 paper.setQuestion9Rating(response.getJSONObject(i).getString("question9Rating"));
-                                paper.setQuestion10Rating(response.getJSONObject(i).getString("question10Rating"));paper.setFullName(response.getJSONObject(i).getString("FullName"));
+                                paper.setQuestion10Rating(response.getJSONObject(i).getString("question10Rating"));
+                                paper.setFullName(response.getJSONObject(i).getString("FullName"));
                                 paper.setGender(response.getJSONObject(i).getString("Gender"));
                                 paper.setAge(response.getJSONObject(i).getInt("Age"));
+                                paper.setIsniosstudent(response.getJSONObject(i).getString("isniosstudent"));
                                 newStudentCertificates.add(paper);
                             }
                             if (newStudentCertificates.size() > 0) {
                                 savePaperToDB();
 
                             } else {
-                                Toast.makeText(context, "No students to pull..", Toast.LENGTH_SHORT).show();
+                                if (isActivityRunning) {
+
+                                    Toast.makeText(context, "No students to pull..", Toast.LENGTH_SHORT).show();
 //                                subjectView.setSubjectToSpinner();
-                                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
-                                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
-                                if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
-                                    progressDialog.dismiss();
+                                    BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                                    if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                                        bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                                    }
+                                    if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
+                                        progressDialog.dismiss();
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
                                 progressDialog.dismiss();
-                            BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
-                            bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                            if (isActivityRunning) {
+                                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                                if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                                    bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                                }
+                            }
 
                         }
                     }
@@ -670,6 +688,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         student.setAge(assessmentPaperForPush.getAge());
         student.setGender(assessmentPaperForPush.getGender());
         student.setAvatarName(Assessment_Utility.getRandomAvatarName(context));
+        student.setIsniosstudent(assessmentPaperForPush.getIsniosstudent());
         student.setGroupId("PS");
         student.setDeviceId(Assessment_Utility.getDeviceId(this));
         AppDatabase.getDatabaseInstance(context).getStudentDao().insert(student);

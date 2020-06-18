@@ -243,7 +243,7 @@ public class TrueFalseFragment extends Fragment {
             }
         });*/
 
-        if (scienceQuestion.getUserAnswer().equalsIgnoreCase("true")) {
+        if (scienceQuestion.getUserAnswer().equalsIgnoreCase(options.get(0).getChoicename())) {
             radioButtonTrue.setSelected(true);
             radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
             radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
@@ -252,7 +252,7 @@ public class TrueFalseFragment extends Fragment {
             radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
 
 
-        } else if (scienceQuestion.getUserAnswer().equalsIgnoreCase("false")) {
+        } else if (scienceQuestion.getUserAnswer().equalsIgnoreCase(options.get(1).getChoicename())) {
             radioButtonFalse.setSelected(true);
             radioButtonFalse.setTextColor(Assessment_Utility.selectedColor);
             radioButtonTrue.setSelected(false);

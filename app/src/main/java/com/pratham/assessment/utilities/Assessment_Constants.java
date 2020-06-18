@@ -81,6 +81,7 @@ public class Assessment_Constants {
     public static String SELECTED_SUBJECT = "";
     public static String SELECTED_SUBJECT_ID = "";
     public static String SELECTED_EXAM_ID = "";
+    public static String EXAMID = "EXAMID";
     public static String ASSESSMENT_TYPE = PRACTICE;
     public static boolean VIDEOMONITORING = false;
     public static boolean PUSH_DATA_FROM_DRAWER = false;

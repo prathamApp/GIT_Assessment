@@ -23,17 +23,11 @@ import java.util.List;
 public class ScienceQuestion implements Serializable {
 
     private String ansdesc;
-
     private String updatedby;
-
     private String qlevel;
-
     private String addedby;
-
     private String languageid;
-
     private String active;
-
     private String lessonid;
     @Embedded
     private ArrayList<ScienceQuestionChoice> lstquestionchoice;
@@ -44,49 +38,28 @@ public class ScienceQuestion implements Serializable {
     @NonNull
     @PrimaryKey
     private String qid;
-
     private String subjectid;
-
     private String addedtime;
-
     private String updatedtime;
-
     private String photourl;
-
     private String examtime;
-
     private String topicid;
-
     private String answer;
-
     private String outofmarks;
-
     private String qname;
-
     private String hint;
-
     private String examid;
-
     private String pdid;
     private String startTime;
     @Ignore
     boolean isMediaDownloaded;
-
     private String endTime;
-
-
     private String marksPerQuestion = "0";
-
     private String paperid;
-
     private String userAnswerId = "";
-
     private String userAnswer = "";
-
     private boolean isAttempted;
-
     private boolean isCorrect;
-
     // new 27-04-2020
     public boolean IsParaQuestion;
     private String RefParaID;

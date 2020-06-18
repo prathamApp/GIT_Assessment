@@ -246,6 +246,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                         detail.setQuestion10Rating(content_cursor.getString(content_cursor.getColumnIndex("question10Rating")));
                                         detail.setFullName(content_cursor.getString(content_cursor.getColumnIndex("FullName")));
                                         detail.setGender(content_cursor.getString(content_cursor.getColumnIndex("Gender")));
+                                        detail.setIsniosstudent(content_cursor.getString(content_cursor.getColumnIndex("isniosstudent")));
                                         detail.setAge(content_cursor.getInt(content_cursor.getColumnIndex("Age")));
                                         detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
                                         contents.add(detail);
@@ -324,6 +325,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                             detail.setVillageName(content_cursor.getString(content_cursor.getColumnIndex("villageName")));
                                             detail.setNewFlag(content_cursor.getInt(content_cursor.getColumnIndex("newFlag")));
                                             detail.setDeviceId(content_cursor.getString(content_cursor.getColumnIndex("DeviceId")));
+                                            detail.setIsniosstudent(content_cursor.getString(content_cursor.getColumnIndex("isniosstudent")));
                                             contents.add(detail);
                                             content_cursor.moveToNext();
                                         }

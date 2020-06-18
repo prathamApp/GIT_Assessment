@@ -98,6 +98,9 @@
             android:name=".ui.choose_assessment.science.custom_dialogs.ZoomImageDialog_"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.choose_assessment.science.custom_dialogs.ImageListDialog_"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".custom.ProcessPhoenix"
             android:process=":phoenix"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

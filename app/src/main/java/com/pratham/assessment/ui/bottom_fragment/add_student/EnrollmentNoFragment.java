@@ -21,6 +21,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Student;
@@ -136,6 +137,8 @@ public class EnrollmentNoFragment extends DialogFragment {
         else
             newEnrolledStudent.setAvatarName(Assessment_Utility.getRandomAvatarName(getActivity()));
         newEnrolledStudent.setDeviceId(Assessment_Utility.getDeviceId(getActivity()));
+        newEnrolledStudent.setStudentUID("NIOS");
+        newEnrolledStudent.setIsniosstudent("1");
         Student student = AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().getStudent(newEnrolledStudent.getStudentID());
         if (student != null) {
             Toast.makeText(getActivity(), "Profile is already saved..", Toast.LENGTH_SHORT).show();
@@ -144,10 +147,8 @@ public class EnrollmentNoFragment extends DialogFragment {
             BackupDatabase.backup(getActivity());
             Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
             splashInterface.onChildAdded();
-
             dismiss();
         }
-
     }
 
 
@@ -220,7 +221,7 @@ public class EnrollmentNoFragment extends DialogFragment {
                 rl_enroll_no_not_found.setVisibility(View.VISIBLE);
             }
         } else {
-            if(!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()){
+            if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 Toast.makeText(getActivity(), "Check internet connection..", Toast.LENGTH_SHORT).show();
             }
             rl_enroll_no_details.setVisibility(View.GONE);

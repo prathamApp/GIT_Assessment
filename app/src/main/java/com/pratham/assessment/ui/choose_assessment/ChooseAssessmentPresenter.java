@@ -3,17 +3,26 @@ package com.pratham.assessment.ui.choose_assessment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
+import com.pratham.assessment.domain.AssessmentTest;
+import com.pratham.assessment.domain.AssessmentTestModal;
+import com.pratham.assessment.domain.NIOSExam;
+import com.pratham.assessment.domain.NIOSExamTopics;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 
@@ -21,6 +30,7 @@ import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +41,12 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
     Context context;
     ChooseAssessmentContract.ChooseAssessmentView assessView;
-    List<AssessmentSubjects> contentTableList = new ArrayList<>(), downloadedContentTableList;
+    ArrayList<AssessmentSubjects> contentTableList = new ArrayList<>();
+    ArrayList<NIOSExam> NIOSSubjectList = new ArrayList<>();
     ArrayList<String> nodeIds;
-
+    ArrayList<AssessmentSubjects> downloadedContentTableList;
+    /*List<AssessmentTestModal> assessmentTestModals;
+    List<AssessmentTest> assessmentTests = new ArrayList<>();*/
 
     public ChooseAssessmentPresenter(Context context) {
         this.context = context;
@@ -169,9 +182,18 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     private void getListData() {
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             getLanguageData();
-            getSubjectData();
+            if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                getNIOSSubjects();
+            else
+                getSubjectData();
         } else {
-            downloadedContentTableList = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
+            /*if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                downloadedContentTableList=
+              else*/
+            if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                getOfflineNIOSSubjects();
+            else
+                downloadedContentTableList = (ArrayList<AssessmentSubjects>) AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
             assessView.clearContentList();
      /*   }
         if (downloadedContentTableList.size() <= 0) {
@@ -226,6 +248,136 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
             }
         }.execute();*/
+    }
+
+    private void getOfflineNIOSSubjects() {
+        String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+        downloadedContentTableList = new ArrayList<>();
+        List<NIOSExam> AllExams = AppDatabase.getDatabaseInstance(context).getNiosExamDao().getAllSubjectsByStudId(currentStudentID);
+        if (AllExams != null && AllExams.size() > 0)
+            for (int i = 0; i < AllExams.size(); i++) {
+                List<NIOSExamTopics> NIOSTopics = AppDatabase.getDatabaseInstance(context).getNiosExamTopicDao().getTopicIdByExamId(AllExams.get(i).getExamid());
+                if (NIOSTopics != null && NIOSTopics.size() > 0)
+                    for (int j = 0; j < NIOSTopics.size(); j++) {
+                        AssessmentSubjects subjects = new AssessmentSubjects();
+                        subjects.setLanguageid(NIOSTopics.get(j).getLanguageid());
+                        subjects.setSubjectid(NIOSTopics.get(j).getSubjectid());
+                        subjects.setSubjectname(NIOSTopics.get(j).getSubjectname());
+                        if (!containsId(downloadedContentTableList, subjects.getSubjectid()))
+                            downloadedContentTableList.add(subjects);
+                    }
+            }
+    }
+
+    private void getNIOSSubjects() {
+        NIOSSubjectList.clear();
+        contentTableList.clear();
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Loading subjects");
+        AndroidNetworking.get(APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance().getString("currentStudentID", ""))
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onResponse(String response) {
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<List<NIOSExam>>() {
+                        }.getType();
+                        NIOSSubjectList = gson.fromJson(response, listType);
+//                            assessmentTests.clear();
+//                        contentTableList = new ArrayList<>();
+                        JSONArray jsonArray = null;
+                        try {
+
+                           /* jsonArray = new JSONArray(response);
+                            for (int j = 0; j < jsonArray.length(); j++) {
+                                Log.d("onResponse", "onResponse: " + jsonArray.length());
+                                JSONObject outer = jsonArray.getJSONObject(j);
+//                                    for (int i = 0; i < outer.length(); i++) {
+                                Log.d("onResponse", "onResponse outer: " + outer.length());
+                                AssessmentTestModal testModal = new AssessmentTestModal();
+                                AssessmentSubjects subjects = new AssessmentSubjects();
+                                JSONArray lststudentexamtopic = outer.getJSONArray("lststudentexamtopic");
+                                JSONObject jsonObject = new JSONObject(lststudentexamtopic.getJSONObject(0).toString());
+                                subjects.setSubjectid(jsonObject.getString("subjectid"));
+                                subjects.setSubjectname(jsonObject.getString("subjectname"));
+                                subjects.setLanguageid(jsonObject.getString("languageid"));
+
+                                if (!containsName(contentTableList, subjects.getSubjectid()))
+                                    contentTableList.add(subjects);
+//                                    }
+                            }*/
+
+
+                             /*   AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
+                                AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
+*/
+
+
+
+                           /* for (int i = 0; i < assessmentTestModals.size(); i++) {
+                                assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
+                                for (int j = 0; j < assessmentTests.size(); j++) {
+                                    assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
+                                    assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
+                                    assessmentTests.get(j).setLanguageId(Assessment_Constants.SELECTED_LANGUAGE);
+                                }
+                            }*/
+                            if (NIOSSubjectList.size() > 0) {
+                                AppDatabase.getDatabaseInstance(context).getNiosExamDao().deleteByStudId(Assessment_Constants.SELECTED_LANGUAGE);
+                                AppDatabase.getDatabaseInstance(context).getNiosExamDao().insertAllExams(NIOSSubjectList);
+                                List<NIOSExamTopics> NIOSTopics;
+                                for (int i = 0; i < NIOSSubjectList.size(); i++) {
+                                    NIOSTopics = NIOSSubjectList.get(i).getLststudentexamtopic();
+                                    if (NIOSTopics.size() > 0) {
+                                        for (int j = 0; j < NIOSTopics.size(); j++) {
+                                            AssessmentSubjects subjects = new AssessmentSubjects();
+                                            subjects.setLanguageid(NIOSTopics.get(j).getLanguageid());
+                                            subjects.setSubjectid(NIOSTopics.get(j).getSubjectid());
+                                            subjects.setSubjectname(NIOSTopics.get(j).getSubjectname());
+                                            if (!containsId(contentTableList, subjects.getSubjectid()))
+                                                contentTableList.add(subjects);
+                                            AppDatabase.getDatabaseInstance(context).getNiosExamTopicDao().insertAllTopics(NIOSTopics);
+                                        }
+                                    }
+                                }
+
+                                if (progressDialog != null && progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
+                                }
+                                BackupDatabase.backup(context);
+//                            contentTableList.addAll(downloadedContentTableList);
+
+                                assessView.addContentToViewList(contentTableList);
+                                assessView.notifyAdapter();
+                                //getTopicData();
+                            } else
+                                Toast.makeText(context, "No Exams..", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+//                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    }
+                });
+
+
+    }
+
+
+    public boolean containsId(final ArrayList<AssessmentSubjects> list, final String id) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getSubjectid().equalsIgnoreCase(id))
+                return true;
+        }
+        return false;
     }
 
     private void getSubjectData() {

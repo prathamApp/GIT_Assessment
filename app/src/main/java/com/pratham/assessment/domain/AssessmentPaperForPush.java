@@ -43,6 +43,7 @@ public class AssessmentPaperForPush implements Serializable {
     private int Age;
 
     private int sentFlag;
+    private String isniosstudent;
 
     private String SessionID;
     @Embedded
@@ -289,5 +290,13 @@ public class AssessmentPaperForPush implements Serializable {
 
     public void setQuestion10Rating(String question10Rating) {
         this.question10Rating = question10Rating;
+    }
+
+    public String getIsniosstudent() {
+        return isniosstudent;
+    }
+
+    public void setIsniosstudent(String isniosstudent) {
+        this.isniosstudent = isniosstudent;
     }
 }

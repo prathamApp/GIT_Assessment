@@ -97,7 +97,7 @@ public class BottomQuestionFragment extends BottomSheetDialogFragment {
 
     @OnClick(R.id.btn_save)
     public void addStudent() {
-        getActivity().finish();
+//        getActivity().finish();
         questionTrackerListener.onSaveAssessmentClick();
 //        SplashActivity.fragmentAddStudentOpenFlg = true;
 //        AddStudentFragment addStudentFragment = AddStudentFragment.newInstance(this);

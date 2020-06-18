@@ -1,7 +1,9 @@
 package com.pratham.assessment.ui.choose_assessment.result;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -22,12 +24,15 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.ARRANGE_SEQUENCE;
@@ -146,7 +151,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     public void onClick(View v) {
                        /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
+                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
 
                     }
                 });
@@ -161,7 +166,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     public void onClick(View v) {
                         /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
+                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
 
                     }
                 });
@@ -236,7 +241,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 //                        }
                         /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, corrImg, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, corrImg, localPath,"");
+                        Assessment_Utility.showZoomDialog(context, corrImg, localPath, "");
 
                     }
                 }
@@ -253,7 +258,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 if (img.equalsIgnoreCase("")) {
                    /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, result.getUserAnswer(), result.getUserAnswer());
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(),"");
+                    Assessment_Utility.showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(), "");
 
                 } else {
                     String fileName = getFileName(result.getqId(), img);
@@ -261,7 +266,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                     /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, img, localPath);
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, img, localPath,"");
+                    Assessment_Utility.showZoomDialog(context, img, localPath, "");
 
                 }
             }
@@ -357,9 +362,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         List<ScienceQuestionChoice> correctAns = new ArrayList<>();
 
                         for (int i = 0; i < scienceQuestionChoice.size(); i++) {
-                        if (scienceQuestionChoice.get(i).getCorrect().equalsIgnoreCase("true"))
-                            correctAns.add(scienceQuestionChoice.get(i));
-                    }
+                            if (scienceQuestionChoice.get(i).getCorrect().equalsIgnoreCase("true"))
+                                correctAns.add(scienceQuestionChoice.get(i));
+                        }
                         ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, correctAns, MULTIPLE_SELECT);
                         showAnswerDialog.show();
                     }
@@ -562,6 +567,21 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 //                    myViewHolder.correctAnswer.setVisibility(View.GONE);
                     myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                 }
+
+                myViewHolder.btnUserAnswer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (result.getUserAnswer() != null && !result.getUserAnswer().equalsIgnoreCase("")) {
+                           List imageList = new ArrayList();
+                           List imgs = Arrays.asList(result.getUserAnswer().split(","));
+                           imageList.addAll(imgs);
+                            Intent intent = new Intent(context, ImageListDialog_.class);
+                            intent.putParcelableArrayListExtra("imageList", (ArrayList<? extends Parcelable>) imageList);
+                            intent.putExtra("showDeleteButton", false);
+                            context.startActivity(intent);
+                        }
+                    }
+                });
                 break;
             case VIDEO:
                 if (result.getQuestion().equalsIgnoreCase(""))
@@ -580,7 +600,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         public void onClick(View view) {
 //                            myViewHolder.image_you_answered.setVisibility(View.GONE);
 //                            myViewHolder.answerVideo.setVisibility(View.VISIBLE);
-                            showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(),"");
+                            showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(), "");
 //                            playMedia(result.getUserAnswer(), result.getUserAnswer(), myViewHolder.answerVideo, "mp4");
                         }
                     });
@@ -711,7 +731,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 public void onClick(View view) {
                   /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, path, localPath,"");
+                    Assessment_Utility.showZoomDialog(context, path, localPath, "");
 
                 }
             });
@@ -727,7 +747,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 public void onClick(View view) {
                   /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                     zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, path, localPath,"");
+                    Assessment_Utility.showZoomDialog(context, path, localPath, "");
                     /**/
                 }
             });

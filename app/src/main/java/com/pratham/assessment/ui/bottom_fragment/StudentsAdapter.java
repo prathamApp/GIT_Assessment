@@ -92,7 +92,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
             @Override
             public void onClick(View view) {
                 studentAvatarList.get(position).getStudentID();
-                studentClickListener.onStudentClick(studentAvatarList.get(position).getFullName(), studentAvatarList.get(position).getStudentID(), studentAvatarList.get(position).getGroupId());
+                studentClickListener.onStudentClick(studentAvatarList.get(position).getFullName(), studentAvatarList.get(position).getStudentID(), studentAvatarList.get(position).getGroupId(),studentAvatarList.get(position).getIsniosstudent());
             }
         });
     }

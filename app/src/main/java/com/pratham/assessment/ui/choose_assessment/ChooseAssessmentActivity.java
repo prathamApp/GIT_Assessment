@@ -44,7 +44,6 @@ import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
-import com.pratham.assessment.ui.choose_assessment.science.DownloadQuestionsActivity;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.splash_activity.SplashActivity_;
@@ -65,6 +64,7 @@ import java.util.List;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
+import static com.pratham.assessment.utilities.Assessment_Constants.EXAMID;
 import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
 import static com.pratham.assessment.utilities.Assessment_Constants.VIDEOMONITORING;
@@ -601,6 +601,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     public void topicClicked(int pos, AssessmentTest test) {
 //        Toast.makeText(this, "" + test.getExamname(), Toast.LENGTH_SHORT).show();
         Assessment_Constants.SELECTED_EXAM_ID = test.getExamid();
+        FastSave.getInstance().saveString(EXAMID,test.getExamid());
        /* List<AssessmentTest> tests = AppDatabase.getDatabaseInstance(this).getTestDao().getTopicByExamId(Assessment_Constants.SELECTED_EXAM_ID);
         if (tests.size() <= 0) {
             downloadPaperPattern();

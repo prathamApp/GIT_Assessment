@@ -39,6 +39,7 @@ public class Student implements Comparable, Parcelable {
     private String villageName;
     private int newFlag;
     public String avatarName;
+    public String isniosstudent;
 
 
     @Ignore
@@ -240,6 +241,13 @@ public class Student implements Comparable, Parcelable {
         isChecked = checked;
     }
 
+    public String getIsniosstudent() {
+        return isniosstudent;
+    }
+
+    public void setIsniosstudent(String isniosstudent) {
+        this.isniosstudent = isniosstudent;
+    }
 
     @Override
     public int describeContents() {

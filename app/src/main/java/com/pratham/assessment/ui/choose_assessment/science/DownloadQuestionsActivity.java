@@ -69,6 +69,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import static com.pratham.assessment.utilities.Assessment_Constants.EXAMID;
 import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_CHOICE;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 
@@ -229,12 +230,14 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
 
     private void downloadPaperPattern(/*final String examId, final String langId,
                                       final String subId*/) {
+        String examId = FastSave.getInstance().getString(EXAMID, "");
         progressDialog.show();
         progressDialog.setMessage("Downloading paper pattern...");
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
 //        progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + Assessment_Constants.SELECTED_EXAM_ID)
+//        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + Assessment_Constants.SELECTED_EXAM_ID)
+        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + examId)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
@@ -260,7 +263,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                         progressDialog.dismiss();
 //                            for (int i = 0; i < examIDList.size(); i++) {
                         List<String> topicsList = AppDatabase.getDatabaseInstance(context)
-                                .getAssessmentPatternDetailsDao().getTopicsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
+                                .getAssessmentPatternDetailsDao().getTopicsByExamId(examId);
                         for (int j = 0; j < topicsList.size(); j++) {
                             if (!topicIdList.contains(topicsList.get(j)))
                                 topicIdList.add(topicsList.get(j));
@@ -283,7 +286,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                     @Override
                     public void onError(ANError anError) {
                         downloadFailedExamList.add(AppDatabase.getDatabaseInstance
-                                (context).getTestDao().getExamNameById(Assessment_Constants.SELECTED_EXAM_ID));
+                                (context).getTestDao().getExamNameById(examId));
                         paperPatternCnt++;
                       /*  if (paperPatternCnt < examIDList.size()) {
 
@@ -633,6 +636,8 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
     private void createPaperPatten() {
 
         try {
+            String examId = FastSave.getInstance().getString(EXAMID, "");
+            Assessment_Constants.SELECTED_EXAM_ID = examId;
             assessmentPaperPatterns = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
             assessmentPatternDetails = AppDatabase.getDatabaseInstance(context).getAssessmentPatternDetailsDao().getAssessmentPatternDetailsByExamId(Assessment_Constants.SELECTED_EXAM_ID);
             // topicIdList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.context).getAssessmentPatternDetailsDao().getDistinctTopicIds();
@@ -715,8 +720,8 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                 }
             } else {*/
 //                setExamInfo();
-                Toast.makeText(context, "Questions downloaded successfully", Toast.LENGTH_SHORT).show();
-                Log.d("QQQQ", "" + scienceQuestionList.size());
+            Toast.makeText(context, "Questions downloaded successfully", Toast.LENGTH_SHORT).show();
+            Log.d("QQQQ", "" + scienceQuestionList.size());
                /* Assessment_Constants.supervisedAssessment = false;
                 Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.PRACTICE;
                 FastSave.getInstance().saveBoolean(Assessment_Constants.SUPERVISED, false);

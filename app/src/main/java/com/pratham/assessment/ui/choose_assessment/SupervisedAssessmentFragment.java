@@ -3,9 +3,11 @@ package com.pratham.assessment.ui.choose_assessment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,12 +18,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
+import com.pratham.assessment.domain.DownloadMedia;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
@@ -56,6 +62,11 @@ public class SupervisedAssessmentFragment extends Fragment {
     private static final int CAMERA_REQUEST = 1888;
     AssessmentAnswerListener assessmentAnswerListener;
     String paperId = "";
+    Uri capturedImageUri;
+    String path;
+    String fileName;
+    String currentSession;
+    String sName;
 
     @AfterViews
     public void init() {
@@ -63,6 +74,8 @@ public class SupervisedAssessmentFragment extends Fragment {
 //        supervisorId = getIntent().getStringExtra("crlId");
         supervisorId = "" + AssessmentApplication.getUniqueID();
         context = getActivity();
+        currentSession = FastSave.getInstance().getString("currentSession", "");
+
         assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
         paperId = getArguments().getString("paperId");
 //        assessmentAnswerListener = (DownloadQuestionsActivity) getActivity();
@@ -99,11 +112,19 @@ public class SupervisedAssessmentFragment extends Fragment {
 
     @Click(R.id.btn_camera)
     public void openCamera() {
-        String fileName = paperId + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR + ".jpg";
+        fileName = paperId + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR + ".jpg";
+        path = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/";
 
         imageName = fileName;
-        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(takePicture, CAMERA_REQUEST);
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagesFolder = new File(path);
+        if (!imagesFolder.exists()) imagesFolder.mkdirs();
+        File image = new File(imagesFolder, fileName);
+//                            capturedImageUri = Uri.fromFile(image);
+        capturedImageUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", image);
+        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
 
@@ -111,21 +132,44 @@ public class SupervisedAssessmentFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("codes", String.valueOf(requestCode) + resultCode);
         try {
-            if (requestCode == CAMERA_REQUEST) {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                iv_image.setVisibility(View.VISIBLE);
+            if (requestCode == CAMERA_REQUEST && resultCode == -1) {
+              /*  Bitmap photo = (Bitmap) data.getExtras().get("data");
+                if (photo != null) {*/
+                File f = new File(path + fileName);
+                if (f.exists())
+                    iv_image.setVisibility(View.VISIBLE);
+               /* Bitmap photo = (Bitmap) data.getExtras().get("data");
                 iv_image.setImageBitmap(photo);
                 iv_image.setScaleType(ImageView.ScaleType.FIT_XY);
-                createDirectoryAndSaveFile(photo, imageName);
+                createDirectoryAndSaveFile(photo, imageName);*/
+                Glide.with(context)
+                        .load(capturedImageUri)
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true))
+                        .into(iv_image);
+                DownloadMedia downloadMedia = new DownloadMedia();
+                downloadMedia.setPaperId(supervisorId);
+                downloadMedia.setQtId(currentSession);
+                downloadMedia.setqId(sName);
+                String fileName = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/" + imageName;
+                downloadMedia.setPhotoUrl(fileName);
+                downloadMedia.setMediaType(Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR);
+                int cnt = AppDatabase.getDatabaseInstance(getActivity()).getDownloadMediaDao().deleteByPaperIdAndQtid(supervisorId, currentSession);
+                AppDatabase.getDatabaseInstance(getActivity()).getDownloadMediaDao().insert(downloadMedia);
+                isPhotoSaved = true;
+//                }
             }
+//        captured_img.setImageURI(uri);
         } catch (Exception e) {
+            isPhotoSaved = false;
             e.printStackTrace();
         }
     }
 
     @Click(R.id.submitBtn)
     public void submitSupervisorData() {
-        String sName = "" + supervisor_name.getText();
+        sName = "" + supervisor_name.getText();
         if (isPhotoSaved) {
             if (sName.length() != 0) {
                 Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.SUPERVISED;
@@ -157,7 +201,6 @@ public class SupervisedAssessmentFragment extends Fragment {
                     SupervisorData supervisorData = new SupervisorData();
                     supervisorData.setSupervisorId(supervisorID);
                     supervisorData.setSupervisorName(sName);
-                    String currentSession = FastSave.getInstance().getString("currentSession", "");
 
 //                    supervisorData.setAssessmentSessionId(assessmentSession);
                     supervisorData.setAssessmentSessionId(currentSession);
@@ -266,7 +309,6 @@ public class SupervisedAssessmentFragment extends Fragment {
 
             FileOutputStream out = new FileOutputStream(file);
             imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            isPhotoSaved = true;
             out.flush();
             out.close();
         } catch (Exception e) {
