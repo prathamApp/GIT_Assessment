@@ -283,7 +283,6 @@ public class VideoFragment extends Fragment {
 
     private void showCapturedVideo() {
         try {
-
             showAnswerVideo();
           /*  videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
             filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
@@ -293,7 +292,6 @@ public class VideoFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
