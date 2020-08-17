@@ -66,7 +66,7 @@ import com.pratham.assessment.domain.Village;
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
-        SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class, NIOSExam.class, NIOSExamTopics.class}, version = 9/*,exportSchema = false*/)
+        SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class, NIOSExam.class, NIOSExamTopics.class}, version = 11/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -140,7 +140,8 @@ public abstract class AppDatabase extends RoomDatabase {
             if (appDatabase == null) {
                 appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
                         .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
-                                MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+                                MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8,
+                                MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
                         .allowMainThreadQueries().build();
 
             }
@@ -345,4 +346,95 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_9_10 = new Migration(9, 10) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_9_10");
+            try {
+                database.execSQL("ALTER TABLE AssessmentTest add COLUMN examtype text");
+                Log.d("$$$", "after MIGRATION_9_10");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    static final Migration MIGRATION_11_12 = new Migration(11, 12) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_11_11");
+            try {
+
+                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExam_NEW` (`studentid` TEXT NOT NULL," +
+                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
+                        " `subjectid` TEXT, `languagename` TEXT," +
+                        " PRIMARY KEY(`studentid`,`examid`))");
+                database.execSQL("INSERT INTO NIOSExam_NEW (studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename) SELECT studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename FROM NIOSExam");
+                database.execSQL("DROP TABLE NIOSExam");
+                database.execSQL("ALTER TABLE NIOSExam_NEW RENAME TO NIOSExam");
+
+
+              /*  database.execSQL("ALTER TABLE NIOSExamTopics add COLUMN studentid TEXT NOT NULL");
+
+                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExamTopics_NEW` (`studentid` TEXT NOT NULL," +
+                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
+                        " `subjectid` TEXT, `languagename` TEXT," + " `topicid` TEXT, `topicname` TEXT," +
+                        " PRIMARY KEY(`studentid`,`examid`))");
+                database.execSQL("INSERT INTO NIOSExamTopics_NEW (studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename,topicid,topicname) SELECT studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename,topicid,topicname FROM NIOSExamTopics");
+                database.execSQL("DROP TABLE NIOSExamTopics");
+                database.execSQL("ALTER TABLE NIOSExamTopics_NEW RENAME TO NIOSExamTopics");
+
+*/
+                Log.d("$$$", "after MIGRATION_10_11");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+    static final Migration MIGRATION_10_11 = new Migration(10, 11) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_10_11");
+            try {
+
+                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExam_NEW` (`studentid` TEXT NOT NULL," +
+                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
+                        " `subjectid` TEXT, `languagename` TEXT," +
+                        " PRIMARY KEY(`studentid`,`examid`))");
+                database.execSQL("INSERT INTO NIOSExam_NEW (studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename) SELECT studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename FROM NIOSExam");
+                database.execSQL("DROP TABLE NIOSExam");
+                database.execSQL("ALTER TABLE NIOSExam_NEW RENAME TO NIOSExam");
+
+
+             /*   database.execSQL("ALTER TABLE NIOSExamTopics add COLUMN studentid TEXT NOT NULL");
+
+                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExamTopics_NEW` (`studentid` TEXT NOT NULL," +
+                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
+                        " `subjectid` TEXT, `languagename` TEXT," + " `topicid` TEXT, `topicname` TEXT," +
+                        " PRIMARY KEY(`studentid`,`examid`))");
+                database.execSQL("INSERT INTO NIOSExamTopics_NEW (studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename,topicid,topicname) SELECT studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename,topicid,topicname FROM NIOSExamTopics");
+                database.execSQL("DROP TABLE NIOSExamTopics");
+                database.execSQL("ALTER TABLE NIOSExamTopics_NEW RENAME TO NIOSExamTopics");
+
+
+                Log.d("$$$", "after MIGRATION_10_11");*/
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
 }

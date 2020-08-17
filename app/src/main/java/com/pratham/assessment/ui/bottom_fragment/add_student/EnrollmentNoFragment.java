@@ -129,13 +129,14 @@ public class EnrollmentNoFragment extends DialogFragment {
     @OnClick(R.id.btn_add_new_student_enroll)
     public void onAddNewClick() {
         //ButtonClickSound.start();
-
-        if (newEnrolledStudent.getGender().trim().equalsIgnoreCase("male"))
-            newEnrolledStudent.setAvatarName(Assessment_Utility.getRandomMaleAvatarName(getActivity()));
-        else if (newEnrolledStudent.getGender().trim().equalsIgnoreCase("female"))
-            newEnrolledStudent.setAvatarName(Assessment_Utility.getRandomFemaleAvatarName(getActivity()));
-        else
-            newEnrolledStudent.setAvatarName(Assessment_Utility.getRandomAvatarName(getActivity()));
+        if (newEnrolledStudent.getGender() != null) {
+            if (newEnrolledStudent.getGender().trim().equalsIgnoreCase("male"))
+                newEnrolledStudent.setAvatarName(Assessment_Utility.getRandomMaleAvatarName(getActivity()));
+            else if (newEnrolledStudent.getGender().trim().equalsIgnoreCase("female"))
+                newEnrolledStudent.setAvatarName(Assessment_Utility.getRandomFemaleAvatarName(getActivity()));
+            else
+                newEnrolledStudent.setAvatarName(Assessment_Utility.getRandomAvatarName(getActivity()));
+        }
         newEnrolledStudent.setDeviceId(Assessment_Utility.getDeviceId(getActivity()));
         newEnrolledStudent.setStudentUID("NIOS");
         newEnrolledStudent.setIsniosstudent("1");

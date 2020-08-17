@@ -16,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,8 +96,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @ViewById(R.id.menu_icon)
     ImageButton menu_icon;
 
-    @ViewById(R.id.toggle_btn)
-    public SwipeableButton toggle_btn;
+   /* @ViewById(R.id.toggle_btn)
+    public SwipeableButton toggle_btn;*/
 
     private RecyclerView recyclerView;
     List<AssessmentSubjects> contentTableList;
@@ -131,6 +132,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 //            nav_video.setVisible(false);
             nav_push.setVisible(false);
         }
+
+        MenuItem nav_certificate = menu.findItem(R.id.menu_certificate);
+        if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false)) {
+            nav_certificate.setVisible(false);
+        } else nav_certificate.setVisible(true);
+
 
        /* if (!AssessmentApplication.isTablet) {
             if (Assessment_Constants.VIDEOMONITORING) {
@@ -460,7 +467,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
          }*/
     }
 
-    @Click({R.id.btn_Profile, R.id.rl_Profile})
+    /*@Click({R.id.btn_Profile, R.id.rl_Profile})
     public void gotoProfileActivity() {
 //        ButtonClickSound.start();
 
@@ -468,7 +475,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 //        startActivity(new Intent(this, ResultActivity.class));
 //        startActivity(new Intent(this, ProfileActivity.class));
         startActivity(new Intent(this, AssessmentCertificateActivity.class));
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -601,7 +608,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     public void topicClicked(int pos, AssessmentTest test) {
 //        Toast.makeText(this, "" + test.getExamname(), Toast.LENGTH_SHORT).show();
         Assessment_Constants.SELECTED_EXAM_ID = test.getExamid();
-        FastSave.getInstance().saveString(EXAMID,test.getExamid());
+        FastSave.getInstance().saveString(EXAMID, test.getExamid());
        /* List<AssessmentTest> tests = AppDatabase.getDatabaseInstance(this).getTestDao().getTopicByExamId(Assessment_Constants.SELECTED_EXAM_ID);
         if (tests.size() <= 0) {
             downloadPaperPattern();
@@ -685,33 +692,33 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     }
 
 
-   /* private void getExamData() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading Exams");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentExamAPI + Assessment_Constants.SELECTED_SUBJECT_ID)
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<List<AssessmentTestModal>>() {
-                        }.getType();
-                        List<AssessmentTestModal> assessmentTestModals = gson.fromJson(response, listType);
-                        List<AssessmentTest> assessmentTests = new ArrayList<>();
-                        for (int i = 0; i < assessmentTestModals.size(); i++) {
-                            assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
-                            for (int j = 0; j < assessmentTests.size(); j++) {
-                                assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
-                                assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
-                            }
-                        }
-                        if (!assessmentTests.isEmpty()) {
-                            AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getTestDao().insertAllTest(assessmentTests);
-                            progressDialog.dismiss();
-                            Toast.makeText(ChooseAssessmentActivity.this, "Exams updated", Toast.LENGTH_SHORT).show();
-                           *//* flowLayout.removeAllViews();
+    /* private void getExamData() {
+         final ProgressDialog progressDialog = new ProgressDialog(this);
+         progressDialog.setMessage("Loading Exams");
+         progressDialog.setCancelable(false);
+         progressDialog.show();
+         AndroidNetworking.get(APIs.AssessmentExamAPI + Assessment_Constants.SELECTED_SUBJECT_ID)
+                 .build()
+                 .getAsString(new StringRequestListener() {
+                     @Override
+                     public void onResponse(String response) {
+                         Gson gson = new Gson();
+                         Type listType = new TypeToken<List<AssessmentTestModal>>() {
+                         }.getType();
+                         List<AssessmentTestModal> assessmentTestModals = gson.fromJson(response, listType);
+                         List<AssessmentTest> assessmentTests = new ArrayList<>();
+                         for (int i = 0; i < assessmentTestModals.size(); i++) {
+                             assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
+                             for (int j = 0; j < assessmentTests.size(); j++) {
+                                 assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
+                                 assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
+                             }
+                         }
+                         if (!assessmentTests.isEmpty()) {
+                             AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getTestDao().insertAllTest(assessmentTests);
+                             progressDialog.dismiss();
+                             Toast.makeText(ChooseAssessmentActivity.this, "Exams updated", Toast.LENGTH_SHORT).show();
+                            *//* flowLayout.removeAllViews();
                             setTopicsToCheckBox(assessmentTests);*//*
                         } else {
                             progressDialog.dismiss();
@@ -732,4 +739,6 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                 });
 
     }*/
+
+
 }

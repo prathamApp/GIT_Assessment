@@ -1,8 +1,11 @@
 package com.pratham.assessment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,6 +31,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.ActivityResult;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 import com.pratham.assessment.async.CopyDbToOTG;
 import com.pratham.assessment.custom.custom_dialogs.CustomLodingDialog;
 import com.pratham.assessment.custom.font.FontChanger;
@@ -37,6 +50,7 @@ import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
+import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -89,6 +103,10 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     RelativeLayout rl_btn;
     Button ok_btn, eject_btn;
 
+    private AppUpdateManager appUpdateManager;
+    private Task<AppUpdateInfo> appUpdateInfoTask;
+    private int APP_UPDATE_TYPE_SUPPORTED = AppUpdateType.FLEXIBLE;
+    private int REQUEST_UPDATE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +121,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         ttsService.setSpeechRate(0.7f);
         ttsService.setLanguage(new Locale("en", "IN"));
 
-
+//        checkForUpdate();
         muteFlg = false;
         Catcho.Builder(this)
                 .activity(CatchoActivity_.class)
@@ -113,13 +131,14 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         Log.d("@path@@", AssessmentApplication.assessPath);
 //        overrideDefaultTypefacenots();
     }
-/*    private void overrideDefaultTypefaces() {
-        FontChanger.overrideDefaultFont(this, "DEFAULT", "fonts/lohit_oriya.ttf");
-        FontChanger.overrideDefaultFont(this, "MONOSPACE", "fonts/lohit_oriya.ttf");
-        FontChanger.overrideDefaultFont(this, "SERIF", "fonts/lohit_oriya.ttf");
-        FontChanger.overrideDefaultFont(this, "SANS_SERIF", "fonts/lohit_oriya.ttf");
-        FontChanger.overrideDefaultFont(this, "quicksand_bold", "fonts/lohit_oriya.ttf");
-    }*/
+
+    /*    private void overrideDefaultTypefaces() {
+            FontChanger.overrideDefaultFont(this, "DEFAULT", "fonts/lohit_oriya.ttf");
+            FontChanger.overrideDefaultFont(this, "MONOSPACE", "fonts/lohit_oriya.ttf");
+            FontChanger.overrideDefaultFont(this, "SERIF", "fonts/lohit_oriya.ttf");
+            FontChanger.overrideDefaultFont(this, "SANS_SERIF", "fonts/lohit_oriya.ttf");
+            FontChanger.overrideDefaultFont(this, "quicksand_bold", "fonts/lohit_oriya.ttf");
+        }*/
     public static void setMute(int m) {
 
 
@@ -481,6 +500,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     protected void onResume() {
         super.onResume();
         ActivityResumed();
+        hideSystemUI();
         BackupDatabase.backup(this);
     }
 
@@ -520,5 +540,137 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 }
             }
         }
+        if (requestCode == REQUEST_UPDATE) {
+            Log.e("########## 4 ->", "Activity Result");
+            switch (requestCode) {
+                case RESULT_OK:
+                    if (APP_UPDATE_TYPE_SUPPORTED == AppUpdateType.FLEXIBLE) {
+                        Log.e("#", "App Updated Successfully");
+                    } else {
+                        Log.e("#", "Update Started");
+                    }
+                case RESULT_CANCELED:
+                    Log.e("#", "Update Cancelled");
+                case ActivityResult.RESULT_IN_APP_UPDATE_FAILED:
+                    Log.e("#", "Update Failed");
+
+            }
+        }
     }
+
+    private void hideSystemUI() {
+// Set the IMMERSIVE flag.
+// Set the content to appear under the system bars so that the content
+// doesn't resize when the system bars hide and show.
+        View decorView = getWindow().getDecorView();
+
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    //Flexible Update
+ /*   public void checkForUpdate() {
+*//*
+        if (BuildConfig.DEBUG) {
+            appUpdateManager = new FakeAppUpdateManager(this);
+            ((FakeAppUpdateManager) appUpdateManager).setUpdateAvailable(0);
+            Log.e("##########  ->", "Fake");
+        } else {
+*//*
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+        Log.e("##########  ->", "Original");
+//        }
+        // Before starting an update, register a listener for updates.
+        appUpdateManager.registerListener(installStateUpdatedListener);
+
+        appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+        Log.e("########## 1 ->", String.valueOf(appUpdateInfoTask));
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            Log.e("########## 2 ->", "SuccessListener");
+            if ((appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE ||
+                    appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) &&
+                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+
+                //send message if update is available
+                EventMessage updateAvailable = new EventMessage();
+                updateAvailable.setMessage("New update available");
+
+                EventBus.getDefault().post(updateAvailable);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Upgrade to new better version !");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Click button action
+                        dialog.dismiss();
+                        if (Assessment_Utility.isDataConnectionAvailable(BaseActivity.this)) {
+                          startUpdate();
+                        } else {
+                            Assessment_Utility.showAlertDialogue(BaseActivity.this, "No internet connection! Try updating later.");
+                        }
+                    }
+                });
+                builder.show();
+
+
+            } else {
+                Log.e("########## 5 ->", "No Update available");
+            }
+        });
+    }*/
+
+    //Listener for checking Install Status
+  /*  InstallStateUpdatedListener installStateUpdatedListener = new
+            InstallStateUpdatedListener() {
+                @Override
+                public void onStateUpdate(InstallState state) {
+                    if (state.installStatus() == InstallStatus.DOWNLOADED) {
+                        //CHECK THIS if AppUpdateType.FLEXIBLE, otherwise you can skip
+                        //send message if update is downloaded
+                        Log.e("#", "InstallStateUpdated: state: " + state.installStatus());
+                        appUpdateManager.completeUpdate();
+                    } else if (state.installStatus() == InstallStatus.INSTALLED) {
+                        Log.e("#", "InstallStateInstalled: state: " + state.installStatus());
+                        if (appUpdateManager != null) {
+                            appUpdateManager.unregisterListener(installStateUpdatedListener);
+                        }
+
+                    } else {
+                        Log.e("#", "InstallStateUpdatedListener: state: " + state.installStatus());
+                    }
+                }
+            };
+*/
+  /*  public void startUpdate() {
+        // Start an update.
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfoTask.getResult(),
+                    AppUpdateType.FLEXIBLE,
+                    this,
+                    REQUEST_UPDATE);
+            Log.e("########## 3 ->", "All Condition true");
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        }
+*//*        if (BuildConfig.DEBUG) {
+            FakeAppUpdateManager fakeAppUpdate = (FakeAppUpdateManager) appUpdateManager;
+            if (fakeAppUpdate.isConfirmationDialogVisible()) {
+                fakeAppUpdate.userAcceptsUpdate();
+                fakeAppUpdate.downloadStarts();
+                fakeAppUpdate.downloadCompletes();
+                fakeAppUpdate.completeUpdate();
+                fakeAppUpdate.installCompletes();
+            }
+        }*//*
+
+    }*/
+
 }

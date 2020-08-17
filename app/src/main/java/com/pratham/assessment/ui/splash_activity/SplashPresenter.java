@@ -108,12 +108,12 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
     @Override
     public void versionObtained(String latestVersion) {
-        if (latestVersion != null) {
+       /* if (latestVersion != null) {
             sharedPreferences.edit().putString(CURRENT_VERSION, latestVersion).apply();
             checkVersion();
         } else {
             splashView.startApp();
-        }
+        }*/
     }
 
     @Override

@@ -111,7 +111,8 @@ public class PushDataToServer {
     List<DownloadMedia> supervisorMediaList = new ArrayList<>();
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
     private int pushCnt = 0, mediaCnt = 0, videoMonCnt = 0, supervisorCnt = 0, answerMediaCnt = 0;
-//    ProgressDialog progressDialog;
+    private int totalVideoMonCnt = 0, totalSupervisorCnt = 0, totalAnswerMediaCnt = 0;
+    //    ProgressDialog progressDialog;
     JSONObject requestJsonObjectScience;
     AlertDialog.Builder alertDialog;
     LottieAnimationView push_lottie;
@@ -347,6 +348,7 @@ public class PushDataToServer {
             protected Void doInBackground(Void... voids) {
                 supervisorMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_SUPERVISOR));
                 if (supervisorMediaList.size() > 0) {
+                    totalSupervisorCnt = supervisorMediaList.size();
                     pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_SUPERVISOR, supervisorMediaList);
                 } else supervisorImagesPushed = true;
                 return null;
@@ -375,9 +377,10 @@ public class PushDataToServer {
                         downloadMediaList.add(temp1.get(i));
                 }*/
 
-                if (downloadMediaList.size() > 0)
+                if (downloadMediaList.size() > 0) {
+                    totalAnswerMediaCnt = downloadMediaList.size();
                     pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, downloadMediaList);
-                else answerMediaPushed = true;
+                } else answerMediaPushed = true;
                 return null;
             }
         }.execute();
@@ -407,6 +410,7 @@ public class PushDataToServer {
                 try {
                     File file = new File(filePath);
                     if (file.exists())*/
+                    totalVideoMonCnt = videoRecordingList.size();
                     pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, videoRecordingList);
                /* } catch (Exception e) {
                     e.printStackTrace();
@@ -428,6 +432,7 @@ public class PushDataToServer {
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
             final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
             final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/mp4");
+            final MediaType MEDIA_TYPE_3GP = MediaType.parse("video/3gp");
             final MediaType MEDIA_TYPE_MP3 = MediaType.parse("audio/mp3");
 
             MultipartBody.Builder builderNew = new MultipartBody.Builder().setType(MultipartBody.FORM);
@@ -447,6 +452,8 @@ public class PushDataToServer {
                         mediaType = MEDIA_TYPE_PNG;
                     else if (extension.equalsIgnoreCase("jpg"))
                         mediaType = MEDIA_TYPE_JPG;
+                    else if (extension.equalsIgnoreCase("3gp"))
+                        mediaType = MEDIA_TYPE_3GP;
                     else if (extension.equalsIgnoreCase("mp4"))
                         mediaType = MEDIA_TYPE_MP4;
                     else if (extension.equalsIgnoreCase("mp3"))
@@ -1110,7 +1117,7 @@ public class PushDataToServer {
                             dataPushed = true;
 
                             if (!autoPush) {
-                                String msg = "Data pushed successfully. " + pushCnt + " paper(s) pushed.";
+//                                String msg = "Data pushed successfully. " + pushCnt + " paper(s) pushed.";
                               /*  if (!dataPushed) {
                                     icon = context.getResources().getDrawable(R.drawable.ic_warning);
                                     msg = "Science data pushed successfully. ECE data push failed";
@@ -1286,19 +1293,19 @@ public class PushDataToServer {
                     txt_push_dialog_msg.setText("No internet connection");
 //                    Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
             } else {
-                if(!dataPushed) {
+                if (!dataPushed) {
                     push_lottie.setAnimation("error_cross.json");
                     push_lottie.playAnimation();
                     txt_push_dialog_msg.setText("Data push failed");
-                }else if (isTablet || !autoPush) {
+                } else if (isTablet || !autoPush) {
                     push_lottie.setAnimation("success.json");
                     push_lottie.playAnimation();
                     String msg1 = "", msg2 = "";
                     msg1 = "Papers pushed: " + pushCnt;
 //                    if (answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
                     mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
-//                    msg2 = "Media pushed: " + " " + supervisorCnt + " " + answerMediaCnt + " " + videoMonCnt;
-                    msg2 = "Media pushed: " + mediaCnt;
+                    int totalMediaCnt = totalSupervisorCnt + totalAnswerMediaCnt + totalVideoMonCnt;
+                    msg2 = "Media pushed: " + mediaCnt + "/" + totalMediaCnt;
                     txt_push_dialog_msg.setText(msg1);
                     txt_push_cnt.setVisibility(View.VISIBLE);
                     txt_push_cnt.setText(msg2);

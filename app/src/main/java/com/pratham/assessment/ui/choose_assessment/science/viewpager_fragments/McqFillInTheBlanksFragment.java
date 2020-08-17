@@ -94,6 +94,8 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
 
         }
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setMcqsQuestion();
 
     }
@@ -138,7 +140,8 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
         question.setText(scienceQuestion.getQname());
         setOdiaFont(getActivity(), question);
 
-        question.setMovementMethod(new ScrollingMovementMethod());
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             String questionExtension = getFileExtension(scienceQuestion.getPhotourl());
             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
@@ -869,7 +872,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-            }else  btn_view_hint.setVisibility(View.GONE);
+            } else btn_view_hint.setVisibility(View.GONE);
 //            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
 
         } else {

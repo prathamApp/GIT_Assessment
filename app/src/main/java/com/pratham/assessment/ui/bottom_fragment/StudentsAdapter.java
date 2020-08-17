@@ -87,7 +87,6 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
         }
         /* Glide.with(mContext).load(*//*AssessmentApplication.pradigiPath*//*"" + "/.LLA/English/LLA_Thumbs/" + studentAvatar.getAvatarName()).into(holder.avatar);
          */
-
         holder.rl_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

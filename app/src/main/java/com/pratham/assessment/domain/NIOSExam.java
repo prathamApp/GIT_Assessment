@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
-@Entity
+@Entity(primaryKeys = {"studentid","examid"})
 public class NIOSExam {
-
+    @NonNull
     private String studentid;
 
     private String subjectname;
@@ -18,7 +18,6 @@ public class NIOSExam {
 
     private String examname;
     @NonNull
-    @PrimaryKey
     private String examid;
 
     private String languageid;

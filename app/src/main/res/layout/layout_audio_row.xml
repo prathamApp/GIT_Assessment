@@ -27,7 +27,7 @@
             android:layout_weight=".1"
             android:layout_margin="@dimen/_2sdp"
             android:background="@drawable/correct_bg"
-            android:text="View hint"
+            android:text="@string/view_hint"
             android:elevation="@dimen/_2sdp"
             android:textSize="@dimen/_10sdp"
             android:padding="@dimen/_3sdp"
@@ -45,8 +45,9 @@
             android:layout_weight="0.5" />
 
         <RelativeLayout
+            android:id="@+id/rl_question_audio"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_140sdp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/main_card_bg"
             android:padding="@dimen/_10sdp">
@@ -63,7 +64,7 @@
             android:id="@+id/rl_record_audio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3">
+            android:layout_weight="0.2">
 
             <TextView
                 android:id="@+id/tv_rec"
@@ -87,33 +88,13 @@
                 android:visibility="visible" />
 
 
-            <LinearLayout
-                android:id="@+id/ll_audio_controls"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_start_audio"
-                android:layout_margin="@dimen/_5sdp"
-                android:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/iv_audio_play_pause"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_play_circle" />
-
-                <SeekBar
-                    android:id="@+id/seek_audio"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3" />
-            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_answer_audio"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_140sdp"
+            android:layout_height="@dimen/_120sdp"
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/main_card_bg"
             android:padding="@dimen/_10sdp">

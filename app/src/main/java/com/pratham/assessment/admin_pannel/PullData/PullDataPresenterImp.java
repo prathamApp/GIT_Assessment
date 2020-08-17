@@ -1,5 +1,6 @@
 package com.pratham.assessment.admin_pannel.PullData;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Base64;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.async.API_Content;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
+import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.ModalProgram;
@@ -30,6 +32,7 @@ import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -49,6 +52,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
     int count = 0;
     int groupCount = 0;
     ArrayList<Village> villageList = new ArrayList<>();
+    ArrayList stateCodes;
 //    ArrayList<RaspVillage> raspVillageList = new ArrayList<>();
 
     List<Crl> crlList = new ArrayList<>();
@@ -134,9 +138,45 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
     }
 
     @Override
-    public void loadSpinner() {
-        String[] states = context.getResources().getStringArray(R.array.india_states);
-        pullDataView.showStatesSpinner(states);
+    public void loadSpinner(String selectedProgram) {
+//        String[] states = context.getResources().getStringArray(R.array.india_states);
+        pullStates(selectedProgram);
+    }
+
+    public void pullStates(String selectedProgram) {
+        ArrayList states = new ArrayList();
+        stateCodes = new ArrayList();
+        states.add("SELECT STATE");
+        stateCodes.add("SELECT STATE");
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Loading subjects");
+        AndroidNetworking.get(APIs.pullStateAPI + selectedProgram)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                states.add(response.getJSONObject(i).getString("StateName"));
+                                stateCodes.add(response.getJSONObject(i).getString("StateCode"));
+                            }
+                            if (states.size() > 0) {
+                                pullDataView.showStatesSpinner(states);
+                            } else
+                                Toast.makeText(context, "No states..", Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                });
+
     }
 
     @Override
@@ -171,8 +211,9 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
 
         pullDataView.showProgressDialog("loading Blocks");
 
-        String[] statesCodes = context.getResources().getStringArray(R.array.india_states_shortcode);
-        selectedBlock = statesCodes[pos];
+//        String[] statesCodes = context.getResources().getStringArray(R.array.india_states_shortcode);
+//        selectedBlock = statesCodes[pos];
+        selectedBlock = (String) stateCodes.get(pos);
         this.selectedProgram = selectedProgram;
         String url;
         if (isConnectedToRasp) {
@@ -695,6 +736,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
         Iterator<Student> i = studentList.iterator();
         while (i.hasNext()) {
             Student stu = i.next(); // must be called before you can call i.remove()
+            stu.setIsniosstudent("0");
             if (stu.getGender().equalsIgnoreCase("deleted"))
                 i.remove();
         }
@@ -759,6 +801,8 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
 //        else
         if (crlList.size() != 0 && studentList.size() != 0 && groupList.size() != 0 && villageList.size() != 0)
             pullDataView.shoConfermationDialog(crlList.size(), studentList.size(), groupList.size(), villageList.size());
+        else Toast.makeText(context, "No data", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

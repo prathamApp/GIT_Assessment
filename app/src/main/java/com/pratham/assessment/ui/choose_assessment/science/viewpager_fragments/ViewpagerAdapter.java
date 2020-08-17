@@ -47,7 +47,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                     fragmentList.add(FillInTheBlanksWithoutOptionFragment.newInstance(i, scienceQuestion));
                     break;
                 case "7":
-                    fragmentList.add(ArrangeSequenceFragment.newInstance(i, scienceQuestion));
+                    fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.arrange_sequence.ArrangeSequenceFragment.newInstance(i, scienceQuestion));
                     break;
                 case "8":
                     fragmentList.add(VideoFragment.newInstance(i, scienceQuestion));
@@ -56,7 +56,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                     fragmentList.add(AudioFragment.newInstance(i, scienceQuestion));
                     break;
                 case "11":
-                    fragmentList.add(FillInTheBlanksWithoutOptionFragment.newInstance(i, scienceQuestion));
+                    fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options.FillInTheBlanksWithoutOptionFragment.newInstance(i, scienceQuestion));
                     break;
                 case "12":
                     fragmentList.add(ImageAnswerFragment.newInstance(i, scienceQuestion));

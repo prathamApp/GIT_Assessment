@@ -60,23 +60,22 @@
         android:layout_above="@+id/btn_ok_img"
         android:background="@drawable/answer_bg">
 
-        <TextView
+       <!-- <TextView
             android:id="@+id/tv_para_label"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_alignParentTop="true"
             android:layout_margin="@dimen/_5sdp"
             android:fontFamily="@font/quicksand_bold"
-            android:text="Paragraph"
+            android:text=""
             android:padding="@dimen/_3sdp"
             android:textAlignment="center"
-            android:textSize="@dimen/_20sdp" />
+            android:textSize="@dimen/_20sdp" />-->
 
         <ScrollView
             android:id="@+id/sv_para"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/tv_para_label"
             android:layout_margin="@dimen/_5sdp">
 
             <RelativeLayout

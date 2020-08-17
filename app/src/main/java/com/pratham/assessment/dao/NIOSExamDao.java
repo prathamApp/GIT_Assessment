@@ -30,8 +30,11 @@ public interface NIOSExamDao {
     @Query("SELECT * FROM NIOSExam where languageid=:langId")
     public List<NIOSExam> getAllSubjectsByLangId(String langId);
 
-    @Query("SELECT * FROM NIOSExam where studentid=:studId")
+    @Query("SELECT * FROM NIOSExam where studentid=:studId ")
     public List<NIOSExam> getAllSubjectsByStudId(String studId);
+
+    @Query("SELECT * FROM NIOSExam where studentid=:studId and subjectid=:subId")
+    public List<NIOSExam> getAllSubjectsByStudIdSubId(String studId, String subId);
 //    @Query("SELECT * FROM Groups WHERE VillageID=:vID ORDER BY GroupName ASC")
 //    public List<Groups> GetGroups(int vID);
 

@@ -4,6 +4,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
 
+import java.io.File;
+
+import static com.pratham.assessment.database.AppDatabase.DB_NAME;
+
 class DeleteSensitiveTablesFromBackupDB {
     static void deleteTables() {
         new AsyncTask<Void, Integer, Void>() {
@@ -39,5 +43,6 @@ class DeleteSensitiveTablesFromBackupDB {
 
         }.execute();
     }
+
 }
 

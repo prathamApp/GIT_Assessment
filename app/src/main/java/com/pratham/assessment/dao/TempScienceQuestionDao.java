@@ -23,6 +23,19 @@ public interface TempScienceQuestionDao {
     @Query("DELETE FROM TempScienceQuestion WHERE paperId=:paperId and qid=:qid")
     public void deleteQuestionByPaperIdQid(String paperId, String qid);
 
+    @Query("UPDATE TempScienceQuestion SET  outofmarks=:outOMarks , startTime=:startTme" +
+            " , endTime=:endTime , marksPerQuestion=:marksPerQ , userAnswer=:userAns" +
+            " , userAnswerId=:userAnsId , isAttempted=:isAttempted , isCorrect=:isCorrect" +
+            " , IsParaQuestion=:isParaQ , RefParaID=:refParaId , SessionID=:sessionId " +
+            ", DeviceID=:DeviceID , ScoredMarks=:ScoredMarks , paperTotalMarks=:paperTotalMarks " +
+            ", paperStartDateTime=:paperStartDateTime , paperEndDateTime=:paperEndDateTime " +
+            ", Label=:label WHERE paperId=:paperId and qid=:qid")
+    public int updateQuestionByPaperIdQid(String paperId, String qid, String outOMarks, String startTme,
+                                          String endTime, String marksPerQ, String userAns, String userAnsId,
+                                          boolean isAttempted, boolean isCorrect, boolean isParaQ, String refParaId,
+                                          String sessionId, String DeviceID, String ScoredMarks, String paperTotalMarks,
+                                          String paperStartDateTime, String paperEndDateTime, String label);
+
 
     @Query("DELETE FROM TempScienceQuestion WHERE examid=:examId and languageid=:langId and subjectid=:subId and paperId=:paperId and StudentID=:studId")
     public int deleteByLangIdSubIdTopicIdPaperIdStudId(String examId, String langId, String subId, String paperId, String studId);

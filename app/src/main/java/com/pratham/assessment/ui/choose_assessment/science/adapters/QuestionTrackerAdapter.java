@@ -12,8 +12,11 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
+
+import static android.graphics.Color.WHITE;
 
 public class QuestionTrackerAdapter extends RecyclerView.Adapter<QuestionTrackerAdapter.MyViewHolder> {
     List<ScienceQuestion> scienceQuestionList;
@@ -52,17 +55,17 @@ public class QuestionTrackerAdapter extends RecyclerView.Adapter<QuestionTracker
         ScienceQuestion scienceQuestion = scienceQuestionList.get(i);
         final int queNo = i + 1;
         myViewHolder.text.setText(queNo + "");
-        if (scienceQuestion.getIsAttempted())
-//            myViewHolder.text.setBackgroundColor(context.getResources().getColor(R.color.colorGreen));
-            myViewHolder.text.setBackground(context.getResources().getDrawable(R.drawable.ripple_round_attempted));
-        else
-            myViewHolder.text.setBackground(context.getResources().getDrawable(R.drawable.ripple_round_not_attempted));
-//            myViewHolder.text.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
-
+        if (scienceQuestion.getIsAttempted()) {
+            myViewHolder.text.setTextColor(Assessment_Utility.selectedColor);
+            myViewHolder.text.setBackground(context.getResources().getDrawable(R.drawable.ripple_round_white));
+        } else {
+            myViewHolder.text.setBackground(context.getResources().getDrawable(R.drawable.not_attempted_round));
+            myViewHolder.text.setTextColor(context.getResources().getColor(R.color.colorWhiteLight));
+        }
         myViewHolder.text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                questionTrackerListener.onQuestionClick(queNo);
+                questionTrackerListener.onQuestionClick(queNo-1);
                 bottomQuestionFragment.dismiss();
             }
         });

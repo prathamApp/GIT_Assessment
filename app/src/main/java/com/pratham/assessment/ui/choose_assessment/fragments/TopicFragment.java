@@ -36,6 +36,9 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;*/
@@ -46,7 +49,7 @@ public class TopicFragment extends Fragment {
     List<AssessmentTest> assessmentTests = new ArrayList<>();
     @ViewById(R.id.rv_topics)
     RecyclerView rv_topics;
-    String subjectId;
+    String subjectId, langId;
     ProgressDialog progressDialog;
 
 
@@ -57,6 +60,7 @@ public class TopicFragment extends Fragment {
     @AfterViews
     public void init() {
         subjectId = FastSave.getInstance().getString("SELECTED_SUBJECT_ID", "1");
+        langId = FastSave.getInstance().getString(LANGUAGE, "1");
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
                 getNIOSExams();
@@ -72,28 +76,53 @@ public class TopicFragment extends Fragment {
 
     private void getNIOSExams() {
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+        langId = FastSave.getInstance().getString(LANGUAGE, "1");
 
-        List<NIOSExam> AllExams = AppDatabase.getDatabaseInstance(getActivity()).getNiosExamDao().getAllSubjectsByStudId(currentStudentID);
+        List<NIOSExam> AllExams = AppDatabase.getDatabaseInstance(getActivity()).getNiosExamDao().getAllSubjectsByStudIdSubId(currentStudentID, subjectId);
 
         if (AllExams != null && AllExams.size() > 0)
             for (int i = 0; i < AllExams.size(); i++) {
                 List<NIOSExamTopics> allTopics = AppDatabase.getDatabaseInstance(getActivity()).getNiosExamTopicDao().getTopicIdByExamId(AllExams.get(i).getExamid());
                 if (allTopics != null && allTopics.size() > 0)
                     for (int j = 0; j < allTopics.size(); j++) {
-                        AssessmentTest test = new AssessmentTest();
-                        test.setLanguageId(allTopics.get(j).getLanguageid());
-                        test.setSubjectname(allTopics.get(j).getSubjectname());
-                        test.setSubjectid(allTopics.get(j).getSubjectid());
-                        test.setExamname(allTopics.get(j).getExamname());
-                        test.setExamid(allTopics.get(j).getExamid());
-                        assessmentTests.add(test);
+                        if (allTopics.get(j).getLanguageid().equalsIgnoreCase(langId)) {
+                            if (checkIfStudentExamExist(AllExams, allTopics.get(j).getExamid())) {
+//                            if(if(AllExams.get(i).getExamid())allTopics.get(j).getExamid())
+                                AssessmentTest test = new AssessmentTest();
+                                test.setLanguageId(allTopics.get(j).getLanguageid());
+                                test.setSubjectname(allTopics.get(j).getSubjectname());
+                                test.setSubjectid(allTopics.get(j).getSubjectid());
+                                test.setExamname(allTopics.get(j).getExamname());
+                                test.setExamid(allTopics.get(j).getExamid());
+                                assessmentTests.add(test);
+                            }
+                        }
                     }
             }
-        setTopicsToRecyclerView();
+        if (assessmentTests.size() > 0)
+            setTopicsToRecyclerView(assessmentTests);
+        else {
+            ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+            ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+            getActivity().getSupportFragmentManager().popBackStack();
+            Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
-    private void getNIOSTest() {
+    private boolean checkIfStudentExamExist(List<NIOSExam> allExams, String examid) {
+        boolean exists = false;
+        for (int i = 0; i < allExams.size(); i++) {
+            if (allExams.get(i).getExamid().equalsIgnoreCase(examid)) {
+                exists = true;
+                break;
+            }
+
+        }
+        return exists;
+    }
+
+    /*private void getNIOSTest() {
         try {
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage("Loading Exams");
@@ -104,11 +133,11 @@ public class TopicFragment extends Fragment {
                     .getAsString(new StringRequestListener() {
                         @Override
                         public void onResponse(String response) {
-                         /*   Gson gson = new Gson();
+                         *//*   Gson gson = new Gson();
                             Type listType = new TypeToken<List<AssessmentTestModal>>() {
                             }.getType();
                             assessmentTestModals = gson.fromJson(response, listType);
-                            assessmentTests.clear();*/
+                            assessmentTests.clear();*//*
                             assessmentTestModals = new ArrayList<>();
                             JSONArray jsonArray = null;
                             try {
@@ -135,20 +164,20 @@ public class TopicFragment extends Fragment {
                                 }
 
 
-                             /*   AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
+                             *//*   AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
                                 AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
-*/
+*//*
 
 
 
-                           /* for (int i = 0; i < assessmentTestModals.size(); i++) {
+     *//* for (int i = 0; i < assessmentTestModals.size(); i++) {
                                 assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
                                 for (int j = 0; j < assessmentTests.size(); j++) {
                                     assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
                                     assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
                                     assessmentTests.get(j).setLanguageId(Assessment_Constants.SELECTED_LANGUAGE);
                                 }
-                            }*/
+                            }*//*
                                 if (assessmentTests.size() > 0) {
                                     AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
                                     AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
@@ -156,18 +185,18 @@ public class TopicFragment extends Fragment {
                                         progressDialog.dismiss();
                                     }
 
-                                    setTopicsToRecyclerView();
-                               /* flowLayout.removeAllViews();
-                                setTopicsToCheckBox(assessmentTests);*/
+                                    setTopicsToRecyclerView(assessmentTests);
+                               *//* flowLayout.removeAllViews();
+                                setTopicsToCheckBox(assessmentTests);*//*
                                 } else {
                                     if (progressDialog != null && progressDialog.isShowing()) {
                                         progressDialog.dismiss();
                                     }
-                              /*  ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+                              *//*  ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                                 ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
                                 getActivity().getSupportFragmentManager().popBackStack();
                                 Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
-    */
+    *//*
                                     //                            getOfflineTests();
 
                                     //                           btnOk.setEnabled(false);
@@ -199,7 +228,7 @@ public class TopicFragment extends Fragment {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
    /* @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -237,25 +266,36 @@ public class TopicFragment extends Fragment {
                                 assessmentTests.get(j).setLanguageId(Assessment_Constants.SELECTED_LANGUAGE);
                             }
                         }
+                        List<AssessmentTest> assessmentPublicTests = new ArrayList<>();
+
                         if (assessmentTests.size() > 0) {
                             AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
                             AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
                             if (progressDialog != null && progressDialog.isShowing() && isVisible()) {
                                 progressDialog.dismiss();
                             }
+                            for (int i = 0; i < assessmentTests.size(); i++) {
+                                if (assessmentTests.get(i).getExamtype() != null && assessmentTests.get(i).getExamtype().equalsIgnoreCase("public"))
+                                    assessmentPublicTests.add(assessmentTests.get(i));
+                            }
+                        }
 
-                            setTopicsToRecyclerView();
-                           /* flowLayout.removeAllViews();
+                        if (assessmentPublicTests.size() > 0) {
+                            setTopicsToRecyclerView(assessmentPublicTests);
+                           /* else
+                                Toast.makeText(getActivity(), "No exams", Toast.LENGTH_SHORT).show();*/
+              /* flowLayout.removeAllViews();
                             setTopicsToCheckBox(assessmentTests);*/
                         } else {
                             if (progressDialog != null && progressDialog.isShowing() && isVisible()) {
                                 progressDialog.dismiss();
                             }
-                          /*  ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
-                            ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
-                            getActivity().getSupportFragmentManager().popBackStack();
+                            if (getActivity() != null) {
+                                ((ChooseAssessmentActivity) Objects.requireNonNull(getActivity())).frameLayout.setVisibility(View.GONE);
+                                ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            }
                             Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
-*/
 //                            getOfflineTests();
 
 //                           btnOk.setEnabled(false);
@@ -271,22 +311,28 @@ public class TopicFragment extends Fragment {
                         if (progressDialog != null && progressDialog.isShowing() && isVisible()) {
                             progressDialog.dismiss();
                         }
-                        ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
+                        ((ChooseAssessmentActivity) Objects.requireNonNull(getActivity())).frameLayout.setVisibility(View.GONE);
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
                         getActivity().getSupportFragmentManager().popBackStack();
 
-                        Toast.makeText(getActivity(), "" + anError, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "" + anError, Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
 
-    private void setTopicsToRecyclerView() {
-        TopicAdapter topicAdapter = new TopicAdapter(getActivity(), assessmentTests);
-        LinearLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 2);
-        rv_topics.setLayoutManager(linearLayoutManager);
-        rv_topics.setAdapter(topicAdapter);
-        topicAdapter.notifyDataSetChanged();
+    private void setTopicsToRecyclerView(List<AssessmentTest> assessmentPublicTests) {
+        try {
+            TopicAdapter topicAdapter = new TopicAdapter(getActivity(), assessmentPublicTests);
+            if (getActivity() != null) {
+                LinearLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 2);
+                rv_topics.setLayoutManager(linearLayoutManager);
+                rv_topics.setAdapter(topicAdapter);
+                topicAdapter.notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
   /*  @Override
@@ -303,9 +349,20 @@ public class TopicFragment extends Fragment {
 
     private void getOfflineTests() {
         assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getTopicBySubIdAndLangId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-        if (assessmentTests.size() > 0)
-            setTopicsToRecyclerView();
-        else {
+        List<AssessmentTest> assessmentPublicTests = new ArrayList<>();
+        if (assessmentTests.size() > 0) {
+            for (int i = 0; i < assessmentTests.size(); i++) {
+                if (assessmentTests.get(i).getExamtype() != null && assessmentTests.get(i).getExamtype().equalsIgnoreCase("public"))
+                    assessmentPublicTests.add(assessmentTests.get(i));
+            }
+        }
+        if (assessmentPublicTests.size() > 0) {
+            setTopicsToRecyclerView(assessmentPublicTests);
+          /*  else
+                Toast.makeText(getActivity(), "No exams", Toast.LENGTH_SHORT).show();
+*/
+
+        } else {
            /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 getExamData();
             } else*/

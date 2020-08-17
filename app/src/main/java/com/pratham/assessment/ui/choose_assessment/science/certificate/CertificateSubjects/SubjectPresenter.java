@@ -7,8 +7,6 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -16,7 +14,6 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.RaspStudent;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 import com.pratham.assessment.utilities.APIs;
@@ -27,7 +24,6 @@ import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -70,11 +66,15 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
         for (AssessmentSubjects assessmentSubjects : subjects) {
             List<AssessmentPaperPattern> paperPatterns = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubId(assessmentSubjects.getSubjectid());
+//            List<AssessmentPaperPattern> paperWithCertQuestions = checkQuestions(paperPatterns);
             List<String> examIds = new ArrayList<>();
             for (int i = 0; i < paperPatterns.size(); i++) {
-                if (!examIds.contains(paperPatterns.get(i).getExamid()))
-                    examIds.add(paperPatterns.get(i).getExamid());
+                if (!examIds.contains(paperPatterns.get(i).getExamid())) {
+                    if (paperPatterns.get(i).getExammode() == null || !paperPatterns.get(i).getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED))
+                        examIds.add(paperPatterns.get(i).getExamid());
+                }
             }
+
 
 //            List<AssessmentPaperForPush> assessmentPaperForPush = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangId(assessmentSubjects.getSubjectid(), Assessment_Constants.currentStudentID, langId);
             List<AssessmentPaperForPush> assessmentPaperForPush = new ArrayList<>();
@@ -106,6 +106,27 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
     }
 
+    private List<AssessmentPaperPattern> checkQuestions
+            (List<AssessmentPaperPattern> paperPatterns) {
+        List<AssessmentPaperPattern> newList = new ArrayList<>();
+        for (int i = 0; i < paperPatterns.size(); i++) {
+            if (!paperPatterns.get(i).getCertificateQuestion1().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion2().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion3().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion4().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion5().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion6().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion7().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion8().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion9().equalsIgnoreCase("") &&
+                    !paperPatterns.get(i).getCertificateQuestion10().equalsIgnoreCase("")) {
+                newList.add(paperPatterns.get(i));
+            }
+        }
+
+        return newList;
+    }
+
     @Override
     public void pullCertificates() {
 //        String url = APIs.pullCertificateByStudIdAPI + Assessment_Constants.currentStudentID;
@@ -128,7 +149,8 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                             Type listType = new TypeToken<List<AssessmentPaperForPush>>() {
                             }.getType();
                             paperList = gson.fromJson(response.toString(), listType);
-                          */  for (int i = 0; i < response.length(); i++) {
+                          */
+                            for (int i = 0; i < response.length(); i++) {
                                 AssessmentPaperForPush paper = new AssessmentPaperForPush();
                                 paper.setLanguageId(response.getJSONObject(i).getString("languageid"));
                                 paper.setSubjectId(response.getJSONObject(i).getString("subjectid"));
@@ -153,7 +175,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                                 paper.setQuestion8Rating(response.getJSONObject(i).getString("question8Rating"));
                                 paper.setQuestion9Rating(response.getJSONObject(i).getString("question9Rating"));
                                 paper.setQuestion10Rating(response.getJSONObject(i).getString("question10Rating"));
-                                paper.setIsniosstudent(response.getJSONObject(i).getString("isniosstudent"));
+//                                paper.setIsniosstudent(response.getJSONObject(i).getString("isniosstudent"));
 //                                paper.setPaperEndTime(response.getJSONObject(i).getString("exammode"));
                                 paperList.add(paper);
 
@@ -250,7 +272,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                 }
             }
 
-                BackupDatabase.backup(context);
+            BackupDatabase.backup(context);
             progressDialog.dismiss();
             subjectView.setSubjectToSpinner();
         }

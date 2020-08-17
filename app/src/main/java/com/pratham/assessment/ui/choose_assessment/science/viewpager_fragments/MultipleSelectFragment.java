@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +85,8 @@ public class MultipleSelectFragment extends Fragment {
             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
         }
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setMultipleSelectQuestion();
 
     }
@@ -360,7 +363,7 @@ public class MultipleSelectFragment extends Fragment {
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-            }else  btn_view_hint.setVisibility(View.GONE);
+            } else btn_view_hint.setVisibility(View.GONE);
 //            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
 
         } else {

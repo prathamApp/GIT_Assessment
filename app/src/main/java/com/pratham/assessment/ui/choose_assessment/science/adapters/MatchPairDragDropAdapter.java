@@ -118,12 +118,13 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
                         Log.d("QQQ", "choice clicked....");
                       /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                         zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
+                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
                     }
                 });
             } else {
                 holder.rl_img.setVisibility(View.GONE);
-                holder.mTitle.setText(scienceQuestionChoice.getMatchingname());
+                if (scienceQuestionChoice.getMatchingname() != null && !scienceQuestionChoice.getMatchingname().equalsIgnoreCase(""))
+                    holder.mTitle.setText(scienceQuestionChoice.getMatchingname());
             }
 
             holder.mTitle.setOnTouchListener(new View.OnTouchListener() {

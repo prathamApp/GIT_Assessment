@@ -148,8 +148,11 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        rl_students.setLayoutManager(mLayoutManager);
-        rl_students.setAdapter(adapter);
+
+        if (rl_students != null) {
+            rl_students.setLayoutManager(mLayoutManager);
+            rl_students.setAdapter(adapter);
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -883,8 +886,10 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                 super.onPostExecute(o);
                 dismissProgressDialog();
 //                Assessment_Constants.ASSESSMENT_TYPE = "";
-                startActivity(new Intent(getActivity(), ChooseAssessmentActivity_.class));
-                getActivity().finish();
+                if (getActivity() != null) {
+                    startActivity(new Intent(getActivity(), ChooseAssessmentActivity_.class));
+                    getActivity().finish();
+                }
 
 //                startActivity(new Intent(getActivity(), ChooseLevelActivity.class));
             }

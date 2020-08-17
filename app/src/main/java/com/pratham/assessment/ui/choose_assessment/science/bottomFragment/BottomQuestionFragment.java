@@ -1,24 +1,37 @@
 package com.pratham.assessment.ui.choose_assessment.science.bottomFragment;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.QuestionTrackerAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 
 import java.util.List;
@@ -28,16 +41,24 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class BottomQuestionFragment extends BottomSheetDialogFragment {
+public class BottomQuestionFragment extends DialogFragment {
 
 
     @BindView(R.id.rv_questions)
     RecyclerView rvQuestion;
     @BindView(R.id.btn_save)
     Button saveAssessment;
+    @BindView(R.id.tv_not_answered_color)
+    TextView tv_not_answered_color;
+    @BindView(R.id.tv_answered_color)
+    TextView tv_answered_color;
+    @BindView(R.id.rl_root)
+    RelativeLayout rl_root;
     /*Context context;*/
     List<ScienceQuestion> scienceQuestionList;
     QuestionTrackerListener questionTrackerListener;
+
+
 
    /* public BottomQuestionFragment(Context context, List<ScienceQuestion> scienceQuestionList) {
         this.context = context;
@@ -45,11 +66,13 @@ public class BottomQuestionFragment extends BottomSheetDialogFragment {
     }*/
 
 
-      /*  @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setStyle(STYLE_NORMAL, R.style.AppModalStyle);
-        }*/
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+    }
 
     @Nullable
     @Override
@@ -57,6 +80,7 @@ public class BottomQuestionFragment extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.question_list_fragment, container, false);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this, view);
+        rl_root.setBackgroundColor(Assessment_Utility.selectedColor);
         scienceQuestionList = (List<ScienceQuestion>) getArguments().get("questionList");
 
         return view;
@@ -71,7 +95,6 @@ public class BottomQuestionFragment extends BottomSheetDialogFragment {
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 5);
         rvQuestion.setLayoutManager(linearLayoutManager);
         rvQuestion.setAdapter(questionTrackerAdapter);
-
     }
 
 //    private void setStudentsToRecycler() {
@@ -128,5 +151,48 @@ public class BottomQuestionFragment extends BottomSheetDialogFragment {
         super.onStop();
 //        EventBus.getDefault().unregister(this);
     }
+
+
+    /*public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog alertD = builder.create();
+//        alertD.setView(view);
+        Dialog dialog = alertD.create();
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+        //Show the dialog!
+        dialog.show();
+
+        //Set the dialog to immersive sticky mode
+        dialog.getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        //Clear the not focusable flag from the window
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        return alertD;
+    }*/
+
+
+  /*  private void setupFullHeight(BottomSheetDialog bottomSheetDialog) {
+        FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
+
+        int windowHeight = getWindowHeight();
+        if (layoutParams != null) {
+            layoutParams.height = windowHeight;
+        }
+        bottomSheet.setLayoutParams(layoutParams);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    private int getWindowHeight() {
+        // Calculate window height for fullscreen use
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
+    }*/
+
+
 
 }

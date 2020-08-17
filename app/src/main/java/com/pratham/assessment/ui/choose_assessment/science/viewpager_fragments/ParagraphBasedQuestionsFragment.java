@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -60,6 +61,8 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
 
         }
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setParaBasedQuestions();
 
     }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -17,12 +16,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
@@ -36,12 +35,12 @@ import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Objects;
 import java.util.UUID;
 
 @EFragment(R.layout.activity_supervised_assessment)
@@ -169,13 +168,13 @@ public class SupervisedAssessmentFragment extends Fragment {
 
     @Click(R.id.submitBtn)
     public void submitSupervisorData() {
-        sName = "" + supervisor_name.getText();
+        sName = "" + supervisor_name.getText().toString();
         if (isPhotoSaved) {
-            if (sName.length() != 0) {
+            if (sName.length() > 0) {
                 Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.SUPERVISED;
                 Assessment_Constants.supervisedAssessment = true;
                 AddSupervisorToDB(supervisorId, sName, imageName);
-            }
+            } else Toast.makeText(context, "Enter name", Toast.LENGTH_SHORT).show();
         } else {
             AnimateCamButton(context, btn_camera);
         }
@@ -268,8 +267,8 @@ public class SupervisedAssessmentFragment extends Fragment {
             intent.putExtra("crlId", supervisorId);
             startActivity(intent);*/
 //            finish();
+            Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStack();
             assessmentAnswerListener.removeSupervisorFragment();
-            getFragmentManager().popBackStack();
         }/* else if (subId.equalsIgnoreCase("1302")) {
             Intent intent = new Intent(SupervisedAssessmentActivity.this, TestDisplayActivity.class);
             intent.putExtra("subId", subId);
@@ -282,7 +281,7 @@ public class SupervisedAssessmentFragment extends Fragment {
             startActivity(intent);*/
             //finish();
             assessmentAnswerListener.removeSupervisorFragment();
-            getFragmentManager().popBackStack();
+            Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStack();
 
             /*Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);
             intent.putExtra("crlId", supervisorId);

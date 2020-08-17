@@ -69,6 +69,8 @@ public class ShowAnswerDialog extends Dialog {
         for (int i = 0; i < userAns.size(); i++) {
             ans.append(userAns.get(i).getChoicename() + ",");
         }
+        if (ans.length() > 0)
+            ans.setLength(ans.length() - 1);
         Assessment_Utility.setOdiaFont(context, multipleSelectAns);
         multipleSelectAns.setText(ans);
 

@@ -29,6 +29,10 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.tasks.Task;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
@@ -87,6 +91,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Bean(PushDataToServer.class)
     PushDataToServer pushDataToServer;
     public static boolean firstPause = true, fragmentBottomOpenFlg = false, fragmentBottomPauseFlg = false, fragmentAddStudentPauseFlg = false, fragmentAddStudentOpenFlg = false;
+
+
+
 
     @AfterViews
     public void init() {
@@ -405,7 +412,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         restart_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finishAffinity();
                 String curSession = AppDatabase.getDatabaseInstance(SplashActivity.this).getStatusDao().getValue("CurrentSession");
                 String toDateTemp = AppDatabase.getDatabaseInstance(SplashActivity.this).getSessionDao().getToDate(curSession);
 
@@ -416,6 +422,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                         AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
                 }
                 dialog.dismiss();
+                finishAffinity();
+
             }
         });
     }

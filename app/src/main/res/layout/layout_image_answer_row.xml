@@ -31,7 +31,7 @@
             android:background="@drawable/correct_bg"
             android:elevation="@dimen/_2sdp"
             android:padding="@dimen/_3sdp"
-            android:text="View hint"
+            android:text="@string/view_hint"
             android:textColor="@color/black"
             android:textSize="@dimen/_10sdp" />
 

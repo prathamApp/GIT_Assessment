@@ -1,42 +1,42 @@
 package com.pratham.assessment.ui.choose_assessment.result;
 
-        import android.graphics.Color;
-        import android.os.Bundle;
-        import android.support.annotation.NonNull;
-        import android.support.annotation.Nullable;
-        import android.support.design.widget.AppBarLayout;
-        import android.support.v4.app.Fragment;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.LinearLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.support.v7.widget.Toolbar;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.Button;
-        import android.widget.RelativeLayout;
-        import android.widget.TextView;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-        import com.pratham.assessment.R;
-        import com.pratham.assessment.custom.FastSave;
-        import com.pratham.assessment.database.AppDatabase;
-        import com.pratham.assessment.domain.AssessmentPaperForPush;
-        import com.pratham.assessment.domain.AssessmentPaperPattern;
-        import com.pratham.assessment.domain.ResultModalClass;
-        import com.pratham.assessment.domain.ResultOuterModalClass;
-        import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
-        import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
-        import com.pratham.assessment.utilities.Assessment_Constants;
-        import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.domain.AssessmentPaperForPush;
+import com.pratham.assessment.domain.AssessmentPaperPattern;
+import com.pratham.assessment.domain.ResultModalClass;
+import com.pratham.assessment.domain.ResultOuterModalClass;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
+import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
-        import org.androidannotations.annotations.AfterViews;
-        import org.androidannotations.annotations.Bean;
-        import org.androidannotations.annotations.Click;
-        import org.androidannotations.annotations.EFragment;
-        import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
-        import java.util.List;
-        import java.util.Objects;
+import java.util.List;
+import java.util.Objects;
 
 /*import butterknife.ButterKnife;
 import butterknife.OnClick;*/
@@ -58,14 +58,18 @@ public class ResultFragment extends Fragment implements ResultListener {
     TextView tv_subject;
     @ViewById(R.id.btn_done)
     Button btn_done;
-    @ViewById(R.id.toolbar)
-    Toolbar mToolbar;
-    @ViewById(R.id.app_bar)
-    AppBarLayout mAppBarLayout;
+    /*@ViewById(R.id.toolbar)
+    Toolbar mToolbar;*/
+//    @ViewById(R.id.app_bar)
+//    AppBarLayout mAppBarLayout;
     @ViewById(R.id.rl_result)
     RelativeLayout rl_result;
     @ViewById(R.id.rl_thanks)
     RelativeLayout rl_thanks;
+    @ViewById(R.id.rl_studInfo)
+    RelativeLayout rl_studInfo;
+    @ViewById(R.id.student_name)
+    TextView student_name;
     /*   @BindView(R.id.certificate_frame)
        FrameLayout certificate_frame;*/
     @Bean(ResultPresenter.class)
@@ -107,11 +111,13 @@ public class ResultFragment extends Fragment implements ResultListener {
             rl_thanks.setVisibility(View.GONE);
 //        presenter = new ResultPresenter(getActivity());
 
-            mToolbar.setTitle(studentName);
+          /*  mToolbar.setTitle(studentName);
             mToolbar.setTitleTextColor(Color.WHITE);
             mToolbar.setSubtitleTextColor(Color.WHITE);
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-
+*/
+            rl_studInfo.setBackgroundColor(Assessment_Utility.selectedColor);
+            student_name.setText(studentName);
             String subName = presenter.getSubjectName(examId);
             String topicName = presenter.getTopicName(examId);
             tv_topic.setText(topicName);
@@ -123,7 +129,7 @@ public class ResultFragment extends Fragment implements ResultListener {
             resultAdapter.notifyDataSetChanged();
 
 //        AppBarLayout mAppBarLayout = view.findViewById(R.id.app_bar);
-            mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+/*            mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 //            boolean isShow = false;
                 int scrollRange = -1;
 
@@ -133,10 +139,10 @@ public class ResultFragment extends Fragment implements ResultListener {
                         scrollRange = appBarLayout.getTotalScrollRange();
                     }
                 }
-            });
+            });*/
         } else {
             rl_result.setVisibility(View.GONE);
-            mAppBarLayout.setVisibility(View.GONE);
+//            mAppBarLayout.setVisibility(View.GONE);
             btn_done.setVisibility(View.GONE);
             Bundle bundle = new Bundle();
             bundle.putString("studentName", studentName);
@@ -224,17 +230,19 @@ public class ResultFragment extends Fragment implements ResultListener {
     public void onDoneClick() {
 
         AssessmentPaperPattern paperPattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubIdAndExamId(subjectId, examId);
-        if (paperPattern.getNoofcertificateq() != null) {
-            if (paperPattern.getNoofcertificateq().equalsIgnoreCase("") || Integer.parseInt(paperPattern.getNoofcertificateq()) == 0) {
-                Objects.requireNonNull(getActivity()).finish();
-            } else {
-                AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
-                Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
-            }
-        } else Objects.requireNonNull(getActivity()).finish();
 
+        if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
+            if (paperPattern.getNoofcertificateq() != null) {
+                if (paperPattern.getNoofcertificateq().equalsIgnoreCase("") || Integer.parseInt(paperPattern.getNoofcertificateq()) == 0) {
+                    Objects.requireNonNull(getActivity()).finish();
+                } else {
+                    AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
+                    Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+                }
+            } else Objects.requireNonNull(getActivity()).finish();
+        } else Objects.requireNonNull(getActivity()).finish();
     }
 
     @Override

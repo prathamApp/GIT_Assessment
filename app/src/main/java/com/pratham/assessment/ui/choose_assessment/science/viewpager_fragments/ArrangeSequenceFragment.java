@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -85,6 +86,8 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
             pos = getArguments().getInt(POS, 0);
             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
         }
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setArrangeSeqQuestion();
 
     }
@@ -114,12 +117,6 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
       }
   */
     public void setArrangeSeqQuestion() {
-      /*  String para="";
-        if (scienceQuestion.isParaQuestion()) {
-            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-        }
-        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
-*/
         question.setText(scienceQuestion.getQname());
         setOdiaFont(getActivity(), question);
 
@@ -184,7 +181,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
         });
 
 
-        List<ScienceQuestionChoice> AnswerList = new ArrayList<>();
+       /* List<ScienceQuestionChoice> AnswerList = new ArrayList<>();
 
 
         if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
@@ -201,9 +198,9 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
         List<ScienceQuestionChoice> pairList = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
         Log.d("wwwwwwwwwww", pairList.size() + "");
         if (!pairList.isEmpty()) {
-/*  for (int p = 0; p < pairList.size(); p++) {
+*//*  for (int p = 0; p < pairList.size(); p++) {
                 list1.add(pairList.get(p).getChoicename());
-            }*/
+            }*//*
 
 
             if (scienceQuestion.getMatchingNameList() == null) {
@@ -223,11 +220,11 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
                 }
 
             }
-
+*/
 
 //        presenter.getShuffledList(scienceQuestion);
 
-            dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, scienceQuestion.getQtid(), getActivity());
+            /*dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, scienceQuestion.getQtid(), getActivity());
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(dragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
@@ -237,7 +234,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
             recyclerArrangeSeq.setLayoutManager(linearLayoutManager1);
             recyclerArrangeSeq.setAdapter(dragDropAdapter);
 
-        }
+        }*/
     }
 
     @Override

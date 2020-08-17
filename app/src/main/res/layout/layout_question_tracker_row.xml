@@ -18,7 +18,7 @@
             android:elevation="@dimen/_3sdp"
             android:textAlignment="center"
             android:background="@drawable/ripple_round"
-            android:textColor="@color/colorWhiteLight"
+            android:textColor="@color/black"
             android:textSize="@dimen/_15sdp" />
 
         <!-- <ImageView

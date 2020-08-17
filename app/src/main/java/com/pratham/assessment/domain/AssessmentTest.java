@@ -17,6 +17,7 @@ public class  AssessmentTest {
 
 
     private String subjectname;
+    private String examtype;
 
     public String getSubjectid() {
         return subjectid;
@@ -58,4 +59,11 @@ public class  AssessmentTest {
         this.examid = examid;
     }
 
+    public String getExamtype() {
+        return examtype;
+    }
+
+    public void setExamtype(String examtype) {
+        this.examtype = examtype;
+    }
 }

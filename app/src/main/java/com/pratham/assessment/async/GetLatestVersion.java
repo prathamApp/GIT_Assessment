@@ -2,7 +2,8 @@ package com.pratham.assessment.async;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import com.pratham.assessment.ui.splash_activity.SplashContract;
+
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentContract;
 
 import org.jsoup.Jsoup;
 
@@ -10,10 +11,10 @@ import org.jsoup.Jsoup;
 public class GetLatestVersion extends AsyncTask<String, String, String> {
 
     String latestVersion;
-    SplashContract.SplashPresenter splashPresenter;
+    ChooseAssessmentContract.ChooseAssessmentPresenter chooseAssessmentPresenter;
 
-    public GetLatestVersion(SplashContract.SplashPresenter splashPresenter) {
-        this.splashPresenter = splashPresenter;
+    public GetLatestVersion(ChooseAssessmentContract.ChooseAssessmentPresenter chooseAssessmentPresenter) {
+        this.chooseAssessmentPresenter = chooseAssessmentPresenter;
     }
 
     @Override
@@ -45,6 +46,6 @@ public class GetLatestVersion extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        splashPresenter.versionObtained(latestVersion);
+        chooseAssessmentPresenter.versionObtained(latestVersion);
     }
 }

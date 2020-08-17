@@ -25,7 +25,7 @@ import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ArrangeSequenceFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.arrange_sequence.ArrangeSequenceFragment;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 

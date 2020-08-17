@@ -2,11 +2,22 @@ package com.pratham.assessment.ui.choose_assessment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
@@ -14,7 +25,11 @@ import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.R;
+import com.pratham.assessment.async.GetLatestVersion;
 import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.custom.custom_dialogs.CustomLodingDialog;
+import com.pratham.assessment.custom.custom_dialogs.PushDataDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
@@ -25,16 +40,23 @@ import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
+import com.sun.mail.imap.Utility;
 
 import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.jsoup.Jsoup;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
+import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 import static com.pratham.assessment.BaseActivity.appDatabase;
+import static com.pratham.assessment.utilities.Assessment_Constants.CURRENT_VERSION;
 
 @EBean
 public class ChooseAssessmentPresenter implements ChooseAssessmentContract.ChooseAssessmentPresenter {
@@ -254,7 +276,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
         downloadedContentTableList = new ArrayList<>();
         List<NIOSExam> AllExams = AppDatabase.getDatabaseInstance(context).getNiosExamDao().getAllSubjectsByStudId(currentStudentID);
-        if (AllExams != null && AllExams.size() > 0)
+        if (AllExams != null && AllExams.size() > 0) {
             for (int i = 0; i < AllExams.size(); i++) {
                 List<NIOSExamTopics> NIOSTopics = AppDatabase.getDatabaseInstance(context).getNiosExamTopicDao().getTopicIdByExamId(AllExams.get(i).getExamid());
                 if (NIOSTopics != null && NIOSTopics.size() > 0)
@@ -267,6 +289,9 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                             downloadedContentTableList.add(subjects);
                     }
             }
+        } else {
+            Toast.makeText(context, "No exams.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getNIOSSubjects() {
@@ -274,7 +299,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         contentTableList.clear();
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Loading subjects");
-        AndroidNetworking.get(APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance().getString("currentStudentID", ""))
+        AndroidNetworking.get(APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance()
+                .getString("currentStudentID", "") + "&appversion=" + /*"1.2.0"*/Assessment_Utility.getCurrentVersion(context))
                 .build()
                 .getAsString(new StringRequestListener() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -324,13 +350,13 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 }
                             }*/
                             if (NIOSSubjectList.size() > 0) {
-                                AppDatabase.getDatabaseInstance(context).getNiosExamDao().deleteByStudId(Assessment_Constants.SELECTED_LANGUAGE);
-                                AppDatabase.getDatabaseInstance(context).getNiosExamDao().insertAllExams(NIOSSubjectList);
+                                AppDatabase.getDatabaseInstance(context).getNiosExamDao().deleteByStudId(Assessment_Constants.currentStudentID);
                                 List<NIOSExamTopics> NIOSTopics;
                                 for (int i = 0; i < NIOSSubjectList.size(); i++) {
                                     NIOSTopics = NIOSSubjectList.get(i).getLststudentexamtopic();
                                     if (NIOSTopics.size() > 0) {
                                         for (int j = 0; j < NIOSTopics.size(); j++) {
+                                            NIOSSubjectList.get(i).setSubjectid(NIOSTopics.get(j).getSubjectid());
                                             AssessmentSubjects subjects = new AssessmentSubjects();
                                             subjects.setLanguageid(NIOSTopics.get(j).getLanguageid());
                                             subjects.setSubjectid(NIOSTopics.get(j).getSubjectid());
@@ -340,6 +366,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                             AppDatabase.getDatabaseInstance(context).getNiosExamTopicDao().insertAllTopics(NIOSTopics);
                                         }
                                     }
+                                    AppDatabase.getDatabaseInstance(context).getNiosExamDao().insertAllExams(NIOSSubjectList);
                                 }
 
                                 if (progressDialog != null && progressDialog.isShowing()) {
@@ -360,17 +387,43 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         if (progressDialog != null && progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
+                        checkVersion();
                     }
                 });
 
 
     }
 
+   /* private void gotoPlayStore() {
+        String currentVersion = Assessment_Utility.getCurrentVersion(context);
+        String updatedVersion = sharedPreferences.getString(CURRENT_VERSION, "-1");
+        if (updatedVersion != null) {
+            if (updatedVersion.equalsIgnoreCase("-1")) {
+                if (Assessment_Utility.isDataConnectionAvailable(context)) {
+                    try {
+                        new GetLatestVersion().execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else splashView.startApp();
+            } else {
+                if (updatedVersion != null && currentVersion != null && isCurrentVersionEqualsPlayStoreVersion(currentVersion, updatedVersion)) {
+                    splashView.showUpdateDialog();
+                } else
+                    splashView.startApp();
+            }
+        }
+    }
+*/
 
     public boolean containsId(final ArrayList<AssessmentSubjects> list, final String id) {
         for (int i = 0; i < list.size(); i++) {
@@ -400,7 +453,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                             if (contentTableList.size() > 0) {
                                 AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
                                 AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(contentTableList);
-                                progressDialog.dismiss();
+                                if (progressDialog != null && progressDialog.isShowing())
+                                    progressDialog.dismiss();
                                 BackupDatabase.backup(context);
 //                            contentTableList.addAll(downloadedContentTableList);
                                 assessView.addContentToViewList(contentTableList);
@@ -417,7 +471,9 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                     public void onError(ANError anError) {
                         Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
-                        progressDialog.dismiss();
+                        AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
+                        if (progressDialog != null && progressDialog.isShowing())
+                            progressDialog.dismiss();
                     }
                 });
 
@@ -506,6 +562,19 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     }
 
     @Override
+    public void versionObtained(String latestVersion) {
+        if (latestVersion != null) {
+            sharedPreferences.edit().putString(CURRENT_VERSION, latestVersion).apply();
+//            checkVersion();
+        /*    if (!latestVersion.equalsIgnoreCase(Assessment_Utility.getCurrentVersion(context)))
+                updateApp();*/
+        } else {
+//            splashView.startApp();
+            Toast.makeText(context, "Updated", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void startActivity(String activityName) {
     }
 
@@ -521,7 +590,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            progressDialog.dismiss();
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
                             List<AssessmentLanguages> assessmentLanguagesList = new ArrayList<>();
 
                             for (int i = 0; i < response.length(); i++) {
@@ -547,16 +617,101 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
                         ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
                         getActivity().getSupportFragmentManager().popBackStackImmediate();*/
-
-                        progressDialog.dismiss();
+                        if (progressDialog != null && progressDialog.isShowing())
+                            progressDialog.dismiss();
 //                        selectTopicDialog.show();
                     }
                 });
 
     }
 
-}
+    private void checkVersion() {
+        String latestVersion = "";
+        String currentVersion = Assessment_Utility.getCurrentVersion(context);
+        Log.d("version::", "Current version = " + currentVersion);
+        try {
+            latestVersion = new GetLatestVersion(this).execute().get();
+            Log.d("version::", "Latest version = " + latestVersion);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        // Force Update Code
+        if ((!currentVersion.equals(latestVersion)) && latestVersion != null) {
+            PushDataDialog pushDialog = new PushDataDialog(context);
 
+            pushDialog.setContentView(R.layout.app_push_data_dialog);
+            Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            pushDialog.setCancelable(false);
+            pushDialog.setCanceledOnTouchOutside(false);
+            pushDialog.show();
+            TextView txt_push_dialog_msg;
+            Button ok_btn, eject_btn;
+            txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
+            ok_btn = pushDialog.findViewById(R.id.ok_btn);
+            eject_btn = pushDialog.findViewById(R.id.eject_btn);
+            ok_btn.setVisibility(View.VISIBLE);
+            eject_btn.setVisibility(View.VISIBLE);
+            ok_btn.setText("Update");
+            eject_btn.setText("Cancel");
+            txt_push_dialog_msg.setText("This app version is older.\n Please update the app.");
+            ok_btn.setOnClickListener(view -> {
+                pushDialog.dismiss();
+                updateApp();
+            });
+            eject_btn.setOnClickListener(view -> {
+                pushDialog.dismiss();
+                Toast.makeText(context, "Update app to download exams.", Toast.LENGTH_SHORT).show();
+            });
+            pushDialog.show();
+           /* AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog);
+            dialogBuilder.setCancelable(false);*/
+//            dialogBuilder.setIcon(R.drawable.ic_warning);
+//            dialogBuilder.setTitle("Upgrade app");
+         /*   dialogBuilder.setMessage("This app version is older. Please update the app");
+            dialogBuilder.setPositiveButton("Update", new android.content.DialogInterface.OnClickListener() {
+                public void onClick(android.content.DialogInterface dialog, int whichButton) {
+//                    pushNewData();
+                    dialog.dismiss();
+//                    isUpdateClicked = true;
+                    updateApp();
+                }
+            });
+*/
+ /*           dialogBuilder.setNegativeButton("Cancel", new android.content.DialogInterface.OnClickListener() {
+                public void onClick(android.content.DialogInterface dialog, int whichButton) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            AlertDialog b = dialogBuilder.create();
+            b.show();*/
+        }
+    }
+
+    private void updateApp() {
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.pratham.assessment&hl=en")));
+        } catch (Exception e) {
+          /*  Modal_Log log = new Modal_Log();
+            log.setCurrentDateTime(new Utility().GetCurrentDate());
+            log.setErrorType("ERROR");
+            log.setExceptionMessage(e.getMessage());
+            log.setExceptionStackTrace(e.getStackTrace().toString());
+            log.setMethodName("MainActivity" + "_" + "checkVersion");
+            log.setDeviceId("");
+            AppDatabase.getDatabaseInstance(ApplicationController.getInstance()).getLogDao().insertLog(log);
+            BackupDatabase.backup(ApplicationController.getInstance());
+*/
+            e.printStackTrace();
+        }
+    }
+}
 
 /*    public void getAPIContent(final String requestType, String url) {
         try {

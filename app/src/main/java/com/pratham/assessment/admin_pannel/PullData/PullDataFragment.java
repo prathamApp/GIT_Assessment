@@ -128,7 +128,7 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
                         pullDataPresenter.clearLists();
                     } else {
                         selectedProgram = prgrmList.get(position).getProgramId();
-                        pullDataPresenter.loadSpinner();
+                        pullDataPresenter.loadSpinner(selectedProgram);
                     }
                 }
 
@@ -143,7 +143,7 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
 
 
     @Override
-    public void showStatesSpinner(String[] states) {
+    public void showStatesSpinner(ArrayList states) {
         ArrayAdapter arrayStateAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, states);
         arrayStateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateSpinner.setAdapter(arrayStateAdapter);

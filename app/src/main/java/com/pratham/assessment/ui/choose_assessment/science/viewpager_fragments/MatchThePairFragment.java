@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -70,6 +71,8 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
             pos = getArguments().getInt(POS, 0);
             scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
         }
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setMatchPairQuestion();
     }
 
@@ -173,13 +176,13 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
         questionImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath,"");
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
             }
         });
         questionGif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath,"");
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
             }
         });
 
@@ -187,10 +190,11 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
 
         if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
             String[] ansIds = scienceQuestion.getUserAnswer().split(",");
-            for (int i = 0; i < ansIds.length; i++) {
-                if (ansIds[i].equalsIgnoreCase(scienceQuestion.getMatchingNameList().get(i).getQcid()))
-                    AnswerList.add(scienceQuestion.getMatchingNameList().get(i));
-            }
+            if (ansIds.length > 0)
+                for (int i = 0; i < ansIds.length; i++) {
+                    if (ansIds[i].equalsIgnoreCase(scienceQuestion.getMatchingNameList().get(i).getQcid()))
+                        AnswerList.add(scienceQuestion.getMatchingNameList().get(i));
+                }
 
         }
 
@@ -251,6 +255,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     public void onItemDragged(List<ScienceQuestionChoice> draggedList) {
         matchPairDragDropAdapter.notifyDataSetChanged();
     }
+
     @Override
     public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
@@ -274,7 +279,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-            }else  btn_view_hint.setVisibility(View.GONE);
+            } else btn_view_hint.setVisibility(View.GONE);
 //            assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
 
         } else {

@@ -56,7 +56,7 @@ public class LanguageFragment extends Fragment {
                 progressDialog.dismiss();
                 ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                 ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
-                ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
+//                ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
 
 //                getActivity().getSupportFragmentManager().popBackStackImmediate();
                 Toast.makeText(getActivity(), "Connect to internet to download languages", Toast.LENGTH_SHORT).show();
@@ -128,7 +128,7 @@ public class LanguageFragment extends Fragment {
 //                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
                         ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
-                        ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
+//                        ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
                         getActivity().getSupportFragmentManager().popBackStackImmediate();
 
                         progressDialog.dismiss();

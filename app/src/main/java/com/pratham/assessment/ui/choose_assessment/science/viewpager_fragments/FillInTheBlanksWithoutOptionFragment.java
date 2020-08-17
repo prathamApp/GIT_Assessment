@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,8 +25,6 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.services.stt_service.ContinuousSpeechService;
 import com.pratham.assessment.services.stt_service.STT_Result;
-import com.pratham.assessment.services.stt_service_new.ContinuousSpeechService_New;
-import com.pratham.assessment.services.stt_service_new.STT_Result_New;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -41,6 +38,7 @@ import org.androidannotations.annotations.ViewById;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.viewpagerAdapter;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
@@ -66,7 +64,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
 
     private float perc = 0;
 
-    public static SpeechRecognizer speech = null;
+    //    public static SpeechRecognizer speech = null;
     private static boolean voiceStart = false, correctArr[];
     public static Intent intent;
     private Intent recognizerIntent;
@@ -93,7 +91,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
             speechService = new ContinuousSpeechService(context, this);
             speechService.resetSpeechRecognizer();
         }
-        question.setMovementMethod(new ScrollingMovementMethod());
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setFillInTheBlanksQuestion();
     }
 
@@ -137,9 +136,10 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     }*/
 
     private void reInitCurrentItems() {
-        etAnswer = viewpagerAdapter.getCurrentFragment().getView().findViewById(R.id.et_answer);
-        ib_mic = viewpagerAdapter.getCurrentFragment().getView().findViewById(R.id.ib_mic);
-
+        if (viewpagerAdapter != null) {
+            etAnswer = Objects.requireNonNull(viewpagerAdapter.getCurrentFragment().getView()).findViewById(R.id.et_answer);
+            ib_mic = Objects.requireNonNull(viewpagerAdapter.getCurrentFragment().getView()).findViewById(R.id.ib_mic);
+        }
 //        ib_mic = viewpagerAdapter.getCurrentFragment().getView().findViewById(R.id.ib_mic);
     }
 
@@ -228,19 +228,23 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         etAnswer.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("@@@", "onTextChanged");
 
 
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                Log.d("@@@", "beforeTextChanged");
+//                onStop();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-//                Log.d("@@@"+scienceQuestion.getQid(), s+"");
+                Log.d("@@@", "afterTextChanged");
                 assessmentAnswerListener.setAnswerInActivity("", s.toString(), scienceQuestion.getQid(), null);
+//                speechService.resetSpeechRecognizer();
+
             }
         });
 
@@ -279,11 +283,13 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
     @Override
     public void onStop() {
         super.onStop();
-        if (speech != null) {
-            speech.stopListening();
-            micPressed(0);
-            voiceStart = false;
-        }
+       /* if (speech != null) {
+            speech.stopListening();*/
+        if (speechService != null)
+            speechService.stopSpeechInput();
+        micPressed(0);
+        voiceStart = false;
+//        }
     }
 
     @Override
@@ -295,9 +301,11 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
         }
         micPressed(0);
         voiceStart = false;
-        if (speech != null) {
+       /* if (speech != null) {
             speech.stopListening();
-        }
+        }*/
+        if (speechService != null)
+            speechService.stopSpeechInput();
 
     }
 

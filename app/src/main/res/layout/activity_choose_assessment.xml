@@ -27,28 +27,28 @@
             android:elevation="@dimen/_3sdp"
             android:src="@drawable/ic_menu" />
 
-        <com.pratham.assessment.custom.toggle_button.SwipeableButton
-            android:id="@+id/toggle_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_45sdp"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/_7sdp"
-            android:visibility="gone"
-            app:checkedBackground="@drawable/shape_scrolling_view_checked"
-            app:checkedIcon="@drawable/ic_play"
-            app:checkedToggleBackground="@drawable/shape_checked_toggle"
-            app:durationAnimation="250"
-            app:isClickToSwipeEnable="true"
-            app:textChecked="@string/checked_text"
-            app:textColorChecked="@color/black"
-            app:textColorUnChecked="@color/black"
-            app:textUnchecked="@string/unchecked_text"
-            app:thresholdEnd="0.1"
-            app:thresholdStart="0.9"
-            app:uncheckedBackground="@drawable/shape_scrolling_view_unchecked"
-            app:uncheckedIcon="@drawable/ic_stop"
-            app:uncheckedToggleBackground="@drawable/shape_unchecked_toggle" />
-
+        <!--  <com.pratham.assessment.custom.toggle_button.SwipeableButton
+              android:id="@+id/toggle_btn"
+              android:layout_width="wrap_content"
+              android:layout_height="@dimen/_45sdp"
+              android:layout_alignParentEnd="true"
+              android:layout_margin="@dimen/_7sdp"
+              android:visibility="gone"
+              app:checkedBackground="@drawable/shape_scrolling_view_checked"
+              app:checkedIcon="@drawable/ic_play"
+              app:checkedToggleBackground="@drawable/shape_checked_toggle"
+              app:durationAnimation="250"
+              app:isClickToSwipeEnable="true"
+              app:textChecked="@string/checked_text"
+              app:textColorChecked="@color/black"
+              app:textColorUnChecked="@color/black"
+              app:textUnchecked="@string/unchecked_text"
+              app:thresholdEnd="0.1"
+              app:thresholdStart="0.9"
+              app:uncheckedBackground="@drawable/shape_scrolling_view_unchecked"
+              app:uncheckedIcon="@drawable/ic_stop"
+              app:uncheckedToggleBackground="@drawable/shape_unchecked_toggle" />
+  -->
         <RelativeLayout
             android:id="@+id/title_bar"
             android:layout_width="match_parent"
@@ -154,5 +154,6 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/navigation_header_layout"
         app:menu="@menu/menu" />
+
 </android.support.v4.widget.DrawerLayout>
 

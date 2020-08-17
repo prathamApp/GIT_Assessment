@@ -263,6 +263,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
 //                    }
                     Assessment_Constants.currentStudentID = stud.get(0).getStudentID();
                     FastSave.getInstance().saveString("currentStudentID", stud.get(0).getStudentID());
+                    FastSave.getInstance().saveBoolean("enrollmentNoLogin", false);
                     BackupDatabase.backup(getContext());
                     return null;
                 } catch (Exception e) {

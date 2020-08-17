@@ -57,7 +57,7 @@ public class QRScanActivity extends BaseActivity implements ZXingScannerView.Res
     @ViewById(R.id.btn_reset_btn)
     Button btn_reset_btn;
 
-//    private AppDatabase appDatabase;
+    //    private AppDatabase appDatabase;
     // QRScanContract.QRScanPresenter presenter;
     int totalStudents = 0;
     String stdFirstName, stdId;
@@ -67,7 +67,7 @@ public class QRScanActivity extends BaseActivity implements ZXingScannerView.Res
     int crlCheck;
 
     @AfterViews
-    public void init(){
+    public void init() {
         mScannerView = new ZXingScannerView(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -276,7 +276,6 @@ public class QRScanActivity extends BaseActivity implements ZXingScannerView.Res
     }
 
 
-
     private String[] decodeStudentId(String text, String s) {
         return text.split(s);
     }
@@ -383,6 +382,7 @@ public class QRScanActivity extends BaseActivity implements ZXingScannerView.Res
                     student.setFullName("" + stdFirstName);
                     student.setNewFlag(1);
                     student.setStudentUID("QR");
+                    student.setIsniosstudent("0");
                     student.setDeviceId(Assessment_Utility.getDeviceId(QRScanActivity.this));
                     String studentName = appDatabase.getStudentDao().checkStudent("" + stdId);
 

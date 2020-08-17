@@ -7,10 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,6 +33,7 @@ import com.pratham.assessment.services.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.PermissionUtils;
+import com.pratham.assessment.utilities.RealPathUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -39,6 +43,7 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
@@ -97,6 +102,8 @@ public class VideoFragment extends Fragment {
             scienceAssessmentActivity = (ScienceAssessmentActivity) getActivity();
 
         }
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setVideoQuestion();
 
     }
@@ -110,39 +117,8 @@ public class VideoFragment extends Fragment {
         return videoFragment;
     }
 
-/*    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            pos = getArguments().getInt(POS, 0);
-            scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
-            assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
-
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.layout_video_row, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-        rl_answer_video = view.findViewById(R.id.rl_answer_video);
-        setVideoQuestion();
-    }*/
 
     public void setVideoQuestion() {
-       /* String para = "";
-        if (scienceQuestion.isParaQuestion()) {
-            para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-        }
-        assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
-*/
         setOdiaFont(getActivity(), question);
 
         fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
@@ -159,67 +135,31 @@ public class VideoFragment extends Fragment {
         Bitmap thumb = ThumbnailUtils.createVideoThumbnail(questionPath, MediaStore.Images.Thumbnails.MICRO_KIND);
         BitmapDrawable ob = new BitmapDrawable(getResources(), thumb);
         questionImage.setBackgroundDrawable(ob);
-      /*  if (VideoCaptured) {
-            rl_answer_video.setVisibility(View.VISIBLE);
-        } else rl_answer_video.setVisibility(View.GONE);*/
+
         if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
             rl_answer_video.setVisibility(View.VISIBLE);
         }
-
-//        question.setText(scienceQuestion.getQname());
-      /*  if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
-            questionImage.setVisibility(View.VISIBLE);
-            Glide.with(context).asBitmap().
-                    load(Assessment_Constants.loadOnlineImagePath + scienceQuestion.getPhotourl()).apply(new RequestOptions()
-                    .fitCenter()
-                    .format(DecodeFormat.PREFER_ARGB_8888)
-                    .override(Target.SIZE_ORIGINAL))
-                    .into(new SimpleTarget<Bitmap>(100, 100) {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            Drawable bd = new BitmapDrawable(resource);
-                            questionImage.setImageDrawable(bd);
-                        }
-                    });
-        } else questionImage.setVisibility(View.GONE);*/
         questionImage.setVisibility(View.VISIBLE);
-
-
-       /* btn_capture_video.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                captureVideo();
-            }
-        });*/
-
-
     }
 
     @Click(R.id.btn_capture_video)
     public void captureVideo() {
-       /* if (Assessment_Constants.VIDEOMONITORING) {
-//            assessmentAnswerListener.pauseVideoMonitoring();
-            VideoMonitoringService.releaseMediaRecorder();
-        }*/
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//        assessmentAnswerListener.setVideoResult(intent, VIDEO_CAPTURE, scienceQuestion);
         setVideoResult(intent, VIDEO_CAPTURE);
-       /* if (VideoCaptured) {
-            rl_answer_video.setVisibility(View.VISIBLE);
-        } else rl_answer_video.setVisibility(View.GONE);
-*/
     }
+
 
     @Click({R.id.iv_answer_image_play_icon, R.id.vv_answer_play_video})
     public void onAnswerVideoClicked() {
         MediaController mediaController = new MediaController(getActivity());
 //        answerPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + scienceQuestion.getUserAnswer();
-
+        answerPath = scienceQuestion.getUserAnswer();
         if (scienceQuestion.getIsAttempted()) {
-            if (answerPath == null)
-                if (scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
-                    answerPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + scienceQuestion.getUserAnswer();
-                else answerPath = scienceQuestion.getUserAnswer();
+            if (answerPath == null) {
+                if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
+                    answerPath = scienceQuestion.getUserAnswer();
+                else answerPath = "";
+            }
             iv_answer_image_play_icon.setVisibility(View.GONE);
             vv_answer.setVisibility(View.VISIBLE);
             vv_answer.setVideoPath(answerPath);
@@ -230,26 +170,11 @@ public class VideoFragment extends Fragment {
             vv_answer.start();
 
         }
-      /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(getActivity(), path, scienceQuestion.getQtid());
-        zoomImageDialog.show();*/
     }
 
     @Click({R.id.iv_question_image})
     public void onVideoClicked() {
-     /*   ZoomImageDialog zoomImageDialog = new ZoomImageDialog(getActivity(), path, scienceQuestion.getQtid());
-        zoomImageDialog.show();*/
-
         MediaController mediaController = new MediaController(getActivity());
-//            mediaController.setAnchorView(videoView);
-
-        //specify the location of media file
-//        Uri uri = Uri.parse(path);
-
-        //Setting MediaController and URI, then starting the videoView
-           /* videoView.setMediaController(mediaController);
-            videoView.setVideoURI(uri);
-            videoView.requestFocus();
-            videoView.start();*/
         questionImage.setVisibility(View.GONE);
         vv_question.setVisibility(View.VISIBLE);
         vv_question.setVideoPath(questionPath);
@@ -260,7 +185,6 @@ public class VideoFragment extends Fragment {
         vv_question.start();
 
     }
-
 
     @Override
     public void onPause() {
@@ -276,17 +200,17 @@ public class VideoFragment extends Fragment {
 
             rl_answer_video.setVisibility(View.VISIBLE);
 //        answerPath = Environment.getExternalStorageDirectory().toString() + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" +scienceQuestion.getUserAnswer();
-            answerPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + scienceQuestion.getUserAnswer();
+//            answerPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + scienceQuestion.getUserAnswer();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 1;
-            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(answerPath, MediaStore.Images.Thumbnails.MICRO_KIND);
+            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Images.Thumbnails.MICRO_KIND);
             BitmapDrawable ob = new BitmapDrawable(getResources(), thumb);
             iv_answer_image_play_icon.setBackgroundDrawable(ob);
+            iv_answer_image_play_icon.setVisibility(View.VISIBLE);
             VideoCaptured = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void setVideoResult(Intent intent, int videoCapture) {
@@ -299,34 +223,21 @@ public class VideoFragment extends Fragment {
                     if (!((ScienceAssessmentActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
                         Toast.makeText(getActivity(), "Give Camera permissions through settings and restart the app.", Toast.LENGTH_LONG).show();
                     } else {
-                        videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
+//                        videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
                         scienceQuestion.setUserAnswer(videoName);
-                        //                    Intent takePicture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3 * 60);
                         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-                        //                    startActivityForResult(intent, VIDEO_CAPTURE);
                     }
                 } else {
-                    videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
+//                    videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
                     scienceQuestion.setUserAnswer(videoName);
-
-                    //                Intent takePicture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                     intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3 * 60);
-                    //                startActivityForResult(intent, VIDEO_CAPTURE);
                 }
-            } else {
-//                assessmentAnswerListener.showCameraError();
-
-//                Toast.makeText(getActivity(), "Camera not found", Toast.LENGTH_LONG).show();
             }
-
-            filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
-
+//            filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
             startActivityForResult(intent, videoCapture);
         } catch (Exception e) {
             e.printStackTrace();
-//            assessmentAnswerListener.showCameraError();
-
         }
     }
 
@@ -339,17 +250,19 @@ public class VideoFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             if (resultCode == -1 && requestCode == VIDEO_CAPTURE) {
-                AssetFileDescriptor videoAsset = getActivity().getContentResolver().openAssetFileDescriptor(data.getData(), "r");
+
+                Uri videoUri = data.getData();
+                String path = RealPathUtil.getUriRealPathAboveKitkat(getActivity(), videoUri);
+                if (path.equalsIgnoreCase("")) {
+                    path = RealPathUtil.getRealPathFromURI_API19(getActivity(), videoUri);
+                }
+                Log.d("vid path", "onActivityResult: " + path);
+                filePath = path;
+
+        /*        AssetFileDescriptor videoAsset = getActivity().getContentResolver().openAssetFileDescriptor(data.getData(), "r");
                 FileInputStream in = videoAsset.createInputStream();
-           /* File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.Assessment");
-
-            if (!direct.exists()) direct.mkdir();*/
-
-//                File direct = new File(Environment.getExternalStorageDirectory().toString() + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
                 File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
-
                 if (!direct.exists()) direct.mkdir();
-
                 File fileName = new File(direct, videoName);
                 if (fileName.exists())
                     fileName.delete();
@@ -360,14 +273,9 @@ public class VideoFragment extends Fragment {
                     out.write(buf, 0, len);
                 }
                 in.close();
-                out.close();
+                out.close();*/
                 showCapturedVideo();
-//                assessmentAnswerListener.resumeVideoMonitoring();
             }
-          /*  if (Assessment_Constants.VIDEOMONITORING)
-                scienceAssessmentActivity.startCameraService();*/
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -377,8 +285,9 @@ public class VideoFragment extends Fragment {
         try {
 
             showAnswerVideo();
-            videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
+          /*  videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
             filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
+         */
             assessmentAnswerListener.setAnswerInActivity("", filePath, scienceQuestion.getQid(), null);
 //        checkAssessment(queCnt);
         } catch (Exception e) {

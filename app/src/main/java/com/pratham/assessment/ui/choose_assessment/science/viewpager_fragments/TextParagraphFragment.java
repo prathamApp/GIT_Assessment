@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -113,7 +114,8 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         }
         continuousSpeechService = new ContinuousSpeechService_New(context, TextParagraphFragment.this, "");
         continuousSpeechService.resetSpeechRecognizer();
-
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setTextPara();
 
     }

@@ -101,7 +101,7 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
         else if (!path.equalsIgnoreCase(""))
             extension = getFileExtension(path);
 
-        if (!extension.equalsIgnoreCase("") && extension.equalsIgnoreCase("mp4")) {
+        if (!extension.equalsIgnoreCase("") && (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("3gp"))) {
             rl_para.setVisibility(View.GONE);
 
             zoomImg.setVisibility(View.GONE);
@@ -163,9 +163,9 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
                             .load(path)
 //                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .placeholder(Drawable.createFromPath(localPath)))
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
+                                    .placeholder(Drawable.createFromPath(localPath)))
                             .into(zoomImg);
                     gifView.setVisibility(View.GONE);
 

@@ -180,7 +180,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     }
                 });
 
-            } else if (imgPath[len].equalsIgnoreCase("mp4")) {
+            } else if (imgPath[len].equalsIgnoreCase("mp4") || imgPath[len].equalsIgnoreCase("3gp")) {
                 myViewHolder.questionImg.setImageResource(R.drawable.ic_play);
                 myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -450,14 +450,16 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                             myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                             myViewHolder.image_you_answered.setVisibility(View.GONE);
                             myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_you_answered_label.setVisibility(View.VISIBLE);
                         } else {
                             setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
                             setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
 //                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
                             myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
-//                                myViewHolder.btnUserAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                             myViewHolder.image_you_answered.setVisibility(View.VISIBLE);
                             myViewHolder.userAnswer.setVisibility(View.GONE);
+
                             myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                             myViewHolder.correctAnsLabel.setVisibility(View.VISIBLE);
 
@@ -467,7 +469,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 if (!result.isCorrect() && result.isAttempted()) {
                     if (userAns.getCorrect().equalsIgnoreCase("true")) {
                         if (!userAns.getChoiceurl().equalsIgnoreCase("")) {
-//                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
+                            myViewHolder.correctAnswer.setVisibility(View.GONE);
                             myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
                             setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
                             setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
@@ -485,6 +488,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 //                }
                 if (!myViewHolder.correctAnswer.getText().equals("")) {
 //                    if (userAns.getChoiceurl().equalsIgnoreCase(""))
+                    myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                     myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
                     myViewHolder.correctAnsLabel.setVisibility(View.VISIBLE);
 
@@ -572,9 +576,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     @Override
                     public void onClick(View view) {
                         if (result.getUserAnswer() != null && !result.getUserAnswer().equalsIgnoreCase("")) {
-                           List imageList = new ArrayList();
-                           List imgs = Arrays.asList(result.getUserAnswer().split(","));
-                           imageList.addAll(imgs);
+                            List imageList = new ArrayList();
+                            List imgs = Arrays.asList(result.getUserAnswer().split(","));
+                            imageList.addAll(imgs);
                             Intent intent = new Intent(context, ImageListDialog_.class);
                             intent.putParcelableArrayListExtra("imageList", (ArrayList<? extends Parcelable>) imageList);
                             intent.putExtra("showDeleteButton", false);
@@ -699,7 +703,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     AudioUtil.playRecording(path, ResultAdapter.this);
                 else AudioUtil.playRecording(localPath, ResultAdapter.this);
             }
-        } else if (extension.equalsIgnoreCase("mp4")) {
+        } else if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("3gp")) {
             MediaController mediaController = new MediaController(context);
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
                 ((VideoView) view).setVideoPath(path);
@@ -781,7 +785,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     }
                 }
             });
-        } else if (extension.equalsIgnoreCase("mp4")) {
+        } else if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("3gp")) {
         }
 
     }

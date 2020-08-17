@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,10 +48,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     GifView questionGif;
     @ViewById(R.id.iv_question_audio)
     ImageView iv_question_audio;
+    @ViewById(R.id.rl_question_audio)
+    RelativeLayout rl_question_audio;
     @ViewById(R.id.iv_start_audio)
     ImageView iv_start_audio;
     @ViewById(R.id.rl_answer_audio)
     RelativeLayout rl_answer_audio;
+
     @ViewById(R.id.iv_answer_audio)
     ImageView iv_answer_audio;
     boolean isPlaying;
@@ -92,6 +96,8 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
 
         }
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setAudioQuestion();
 
     }
@@ -135,10 +141,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
         setOdiaFont(getActivity(), question);
 
-        if (scienceQuestion.getQname().equalsIgnoreCase(""))
-            question.setText("Play the audio");
-        else
-            question.setText(scienceQuestion.getQname());
+        if (scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+            rl_question_audio.setVisibility(View.GONE);
+        } else {
+            rl_question_audio.setVisibility(View.VISIBLE);
+        }
+
+        question.setText(scienceQuestion.getQname());
         rl_answer_audio.setVisibility(View.GONE);
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
@@ -321,9 +330,11 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     @Override
     public void stopPlayer() {
         if (isAnsPlaying)
-            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+            if (iv_answer_audio != null)
+                iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
         if (isPlaying)
-            iv_question_audio.setImageResource(R.drawable.ic_play_circle);
+            if (iv_question_audio != null)
+                iv_question_audio.setImageResource(R.drawable.ic_play_circle);
 
     }
 

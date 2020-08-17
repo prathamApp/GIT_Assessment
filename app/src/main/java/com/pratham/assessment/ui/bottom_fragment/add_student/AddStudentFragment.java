@@ -249,12 +249,13 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         for (int i = 0; i < assessmentLanguagesList.size(); i++) {
             languages.add(assessmentLanguagesList.get(i).getLanguagename());
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.custom_spinner, languages);
-        // Drop down layout style - list view with radio button
+        if (getActivity() != null) {
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.custom_spinner, languages);
+            // Drop down layout style - list view with radio button
 //        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        // attaching data adapter to spinner
-        spinner_app_lang.setAdapter(dataAdapter);
-
+            // attaching data adapter to spinner
+            spinner_app_lang.setAdapter(dataAdapter);
+        }
         spinner_app_lang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -274,10 +275,11 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
     }
 
     private void hideKeyboard(View view) {
-        if (getActivity() != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        if (view != null)
+            if (getActivity() != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
     }
 
     private void addAvatarsInList() {
@@ -558,7 +560,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
 //                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
                         ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
-                        ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
+//                        ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
                         getActivity().getSupportFragmentManager().popBackStackImmediate();
 
                         progressDialog.dismiss();

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.ui.choose_assessment.ChoseAssessmentClicked;
 import com.pratham.assessment.utilities.Assessment_Constants;
@@ -56,11 +57,11 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
         final AssessmentLanguages languages = assessmentLanguages.get(i);
-
-        if(Assessment_Constants.SELECTED_LANGUAGE.equals(languages.getLanguageid())) {
+        String lang = FastSave.getInstance().getString(Assessment_Constants.LANGUAGE, "1");
+        if (lang.equals(languages.getLanguageid())) {
             myViewHolder.game_card_view.setCardBackgroundColor(Assessment_Utility.getRandomColorGradient());
             myViewHolder.title.setTextColor(Color.WHITE);
-        }else {
+        } else {
             myViewHolder.game_card_view.setCardBackgroundColor(Color.WHITE);
             myViewHolder.title.setTextColor(Color.BLACK);
         }

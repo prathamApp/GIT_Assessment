@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PullDataContract {
     public interface PullDataView {
-        public void showStatesSpinner(String[] states);
+        public void showStatesSpinner(ArrayList states);
 
         public void showProgressDialog(String msg);
 
@@ -43,7 +43,7 @@ public interface PullDataContract {
     }
 
     public interface PullDataPresenter {
-        public void loadSpinner();
+        public void loadSpinner(String selectedProgram);
 
         public void proccessVillageData(String respnce);
 
