@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
         android:fontFamily="@font/quicksand_bold"
-        android:text="Oops, Something went wrong!!"
+        android:text="@string/oops_something_went_wrong"
         android:textAlignment="center"
         android:textColor="@color/dark_blue"
         android:textSize="@dimen/_18sdp" />
@@ -29,7 +29,7 @@
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         android:fontFamily="@font/quicksand_bold"
-        android:text="Sorry about that. Press the report button to send the error to us."
+        android:text="@string/sorry_about_that_press_the_report_button_to_send_the_error_to_us"
         android:textAlignment="center"
         android:textColor="@color/colorBtnRedLight"
         android:textSize="@dimen/_12sdp" />
@@ -45,7 +45,7 @@
         android:elevation="@dimen/_5sdp"
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
-        android:text="Report"
+        android:text="@string/report"
         android:textColor="@color/white"
         android:textSize="@dimen/_10sdp" />
 

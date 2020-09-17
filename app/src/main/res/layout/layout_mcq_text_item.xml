@@ -7,7 +7,7 @@
     android:textSize="@dimen/_15sdp"
     android:padding="@dimen/_5sdp"
     android:layout_margin="@dimen/_3sdp"
-    android:fontFamily="@font/quicksand_bold"
+    android:fontFamily="@font/quicksand_medium"
     android:textColor="@color/white"
     android:checked="false"
     android:background="@drawable/custom_radio_button" />

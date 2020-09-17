@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.card.MaterialCardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int pos) {
         pos = viewHolder.getAdapterPosition();
-        viewHolder.group_name.setText(datalist.get(pos).getGroupName());
+        viewHolder.group_name.setText(Html.fromHtml(datalist.get(pos).getGroupName()));
         if (datalist.get(pos).isSelected()) {
 
 //            viewHolder.group_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorGreen));

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -126,8 +127,8 @@ public class VideoFragment extends Fragment {
 //        questionPath = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded" + "/" + fileName;
         questionPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
         if (scienceQuestion.getQname().equalsIgnoreCase(""))
-            question.setText("Watch the video");
-        else question.setText(scienceQuestion.getQname());
+            question.setText(R.string.watch_the_video);
+        else question.setText(Html.fromHtml(scienceQuestion.getQname()));
         rl_answer_video.setVisibility(View.GONE);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -168,7 +169,6 @@ public class VideoFragment extends Fragment {
             vv_answer.setZOrderOnTop(true);
             vv_answer.setZOrderMediaOverlay(true);
             vv_answer.start();
-
         }
     }
 
@@ -221,12 +221,12 @@ public class VideoFragment extends Fragment {
                     String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
 
                     if (!((ScienceAssessmentActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
-                        Toast.makeText(getActivity(), "Give Camera permissions through settings and restart the app.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.give_camera_permissions, Toast.LENGTH_LONG).show();
                     } else {
 //                        videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
                         scienceQuestion.setUserAnswer(videoName);
-                        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3 * 60);
-                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                        intent.putExtra(MediaStore. EXTRA_DURATION_LIMIT, 3 * 60);
+                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     }
                 } else {
 //                    videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
@@ -242,8 +242,7 @@ public class VideoFragment extends Fragment {
     }
 
     private boolean hasCamera() {
-        return getActivity().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA_ANY);
+        return getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
     @Override

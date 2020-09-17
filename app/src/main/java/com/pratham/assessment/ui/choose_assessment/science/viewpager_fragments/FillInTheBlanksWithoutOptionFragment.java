@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -156,8 +157,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
             }
 
         etAnswer.setTextColor(Assessment_Utility.selectedColor);
-        etAnswer.setText(scienceQuestion.getUserAnswer());
-        question.setText(scienceQuestion.getQname());
+        etAnswer.setText(Html.fromHtml(scienceQuestion.getUserAnswer()));
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         setOdiaFont(getActivity(), question);
 
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {

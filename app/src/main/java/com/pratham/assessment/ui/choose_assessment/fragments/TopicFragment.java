@@ -105,7 +105,7 @@ public class TopicFragment extends Fragment {
             ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
             ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
             getActivity().getSupportFragmentManager().popBackStack();
-            Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_exams, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -295,13 +295,13 @@ public class TopicFragment extends Fragment {
                                 ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
                                 getActivity().getSupportFragmentManager().popBackStack();
                             }
-                            Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.no_exams, Toast.LENGTH_SHORT).show();
 //                            getOfflineTests();
 
 //                           btnOk.setEnabled(false);
 
                             AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-                            Toast.makeText(getActivity(), "No exams", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.no_exams, Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -372,7 +372,7 @@ public class TopicFragment extends Fragment {
             ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
             ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
             getActivity().getSupportFragmentManager().popBackStack();
-            Toast.makeText(getActivity(), "Connect to internet to download exams", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
 }

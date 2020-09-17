@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -135,7 +136,7 @@ public class ImageAnswerFragment extends Fragment {
         }
         setOdiaFont(getActivity(), question);
 
-        question.setText(scienceQuestion.getQname());
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -213,7 +214,7 @@ public class ImageAnswerFragment extends Fragment {
         if (imageList.size() > 0) {
             showImageThumbnailDialog(imageList, false);
         } else {
-            Toast.makeText(getActivity(), "No images", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_images, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -269,7 +270,7 @@ public class ImageAnswerFragment extends Fragment {
                     String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
 
                     if (!((ScienceAssessmentActivity) context).isPermissionsGranted(context, permissionArray)) {
-                        Toast.makeText(context, "Give Camera permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.give_camera_permissions, Toast.LENGTH_SHORT).show();
                     } else {
 //                        imageName = Assessment_Utility.getFileName(scienceQuestion.getQid())
                         scienceQuestion.setUserAnswer(path + "/" + fileName);
@@ -318,7 +319,7 @@ public class ImageAnswerFragment extends Fragment {
                     String[] permissionArray = new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE};
 
                     if (!((ScienceAssessmentActivity) context).isPermissionsGranted(context, permissionArray)) {
-                        Toast.makeText(context, "Give Storage permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.give_storage_permissions, Toast.LENGTH_SHORT).show();
                     } else {
 //                        imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
 //                        scienceQuestion.setUserAnswer(fileName);
@@ -477,19 +478,6 @@ public class ImageAnswerFragment extends Fragment {
         startActivityForResult(intent, SHOW_DIALOG);
     }
 
-
-    private String getRealPathFromURI(Uri contentURI) {
-
-        String thePath = "no-path-found";
-        String[] filePathColumn = {MediaStore.Images.Media.DISPLAY_NAME};
-        Cursor cursor = context.getContentResolver().query(contentURI, filePathColumn, null, null, null);
-        if (cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            thePath = cursor.getString(columnIndex);
-        }
-        cursor.close();
-        return thePath;
-    }
 
     @Override
     public void setUserVisibleHint(boolean visible) {

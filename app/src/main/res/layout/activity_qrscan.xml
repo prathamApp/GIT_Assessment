@@ -10,18 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:layout_weight="4"
-        android:text="Scan QR"
-        android:gravity="center"            android:fontFamily="@font/quicksand_bold"
-
         android:background="@color/colorPrimary"
+        android:fontFamily="@font/quicksand_bold"
+        android:gravity="center"
+
+        android:text="@string/scan_qr"
         android:textColor="@color/colorWhiteDark"
         android:textSize="@dimen/_18sdp"
         android:textStyle="bold" />
 
     <RelativeLayout
-        android:layout_below="@id/tv_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_title">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -53,8 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4.5"
-                android:weightSum="6"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="6">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -65,62 +67,62 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40sdp"
                         android:background="@drawable/main_card_bg"
-                        android:elevation="10dp"/>
+                        android:elevation="10dp" />
 
                     <TextView
                         android:id="@+id/tv_stud_one"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_60sdp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:visibility="gone"            android:fontFamily="@font/quicksand_bold"
-
                         android:layout_below="@id/wall_view"
+                        android:layout_gravity="center"
                         android:layout_marginHorizontal="30dp"
-                        android:textStyle="bold|italic"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="Student Name"
+                        android:layout_marginTop="@dimen/_10sdp"
+
                         android:background="@drawable/ripple_effect"
+                        android:fontFamily="@font/quicksand_bold"
                         android:gravity="center"
-                        android:textSize="@dimen/_18sdp" />
+                        android:text="@string/student_name"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/_18sdp"
+                        android:textStyle="bold|italic"
+                        android:visibility="gone" />
 
                     <RelativeLayout
                         android:id="@+id/button_rl"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_50sdp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
                         android:layout_alignParentBottom="true"
-                        android:visibility="gone"
-                        android:layout_marginBottom="@dimen/_2sdp" >
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:gravity="center"
+                        android:visibility="gone">
 
                         <Button
                             android:id="@+id/btn_reset_btn"
                             android:layout_width="@dimen/_90sdp"
                             android:layout_height="@dimen/_60sdp"
                             android:layout_marginRight="@dimen/_5sdp"
-                            android:textSize="@dimen/_11sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:elevation="@dimen/_5sdp"
-                            android:textStyle="bold"
                             android:background="@drawable/ripple_effect"
-                            android:text="Scan New"/>
+                            android:elevation="@dimen/_5sdp"
+                            android:text="@string/scan_new"
+                            android:textSize="@dimen/_11sdp"
+                            android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btn_start_game"
                             android:layout_width="@dimen/_90sdp"
                             android:layout_height="@dimen/_60sdp"
                             android:layout_marginLeft="@dimen/_5sdp"
-                            android:textSize="@dimen/_11sdp"
-                            android:layout_toRightOf="@id/btn_reset_btn"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:elevation="@dimen/_5sdp"
-                            android:textStyle="bold"
+                            android:layout_toRightOf="@id/btn_reset_btn"
                             android:background="@drawable/ripple_effect"
-                            android:text="Start"/>
+                            android:elevation="@dimen/_5sdp"
+                            android:text="@string/start"
+                            android:textSize="@dimen/_11sdp"
+                            android:textStyle="bold" />
 
                     </RelativeLayout>
-
 
 
                 </RelativeLayout>

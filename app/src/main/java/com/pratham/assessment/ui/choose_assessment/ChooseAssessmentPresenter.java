@@ -9,15 +9,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
@@ -28,25 +25,20 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.GetLatestVersion;
 import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.custom.custom_dialogs.CustomLodingDialog;
 import com.pratham.assessment.custom.custom_dialogs.PushDataDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.AssessmentTest;
-import com.pratham.assessment.domain.AssessmentTestModal;
 import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
-import com.sun.mail.imap.Utility;
 
 import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.jsoup.Jsoup;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -290,7 +282,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                     }
             }
         } else {
-            Toast.makeText(context, "No exams.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.no_exams, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -379,7 +371,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 assessView.notifyAdapter();
                                 //getTopicData();
                             } else
-                                Toast.makeText(context, "No Exams..", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.no_exams, Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -461,7 +453,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 assessView.notifyAdapter();
                                 //getTopicData();
                             } else
-                                Toast.makeText(context, "No subjects..", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.no_subjects, Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -469,7 +461,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
                         if (progressDialog != null && progressDialog.isShowing())
@@ -570,7 +562,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 updateApp();*/
         } else {
 //            splashView.startApp();
-            Toast.makeText(context, "Updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -611,7 +603,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
   /*                      ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
@@ -653,16 +645,16 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
             eject_btn = pushDialog.findViewById(R.id.eject_btn);
             ok_btn.setVisibility(View.VISIBLE);
             eject_btn.setVisibility(View.VISIBLE);
-            ok_btn.setText("Update");
-            eject_btn.setText("Cancel");
-            txt_push_dialog_msg.setText("This app version is older.\n Please update the app.");
+            ok_btn.setText(R.string.update);
+            eject_btn.setText(R.string.cancel);
+            txt_push_dialog_msg.setText(R.string.this_app_version_is_older_please_update_the_app);
             ok_btn.setOnClickListener(view -> {
                 pushDialog.dismiss();
                 updateApp();
             });
             eject_btn.setOnClickListener(view -> {
                 pushDialog.dismiss();
-                Toast.makeText(context, "Update app to download exams.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             });
             pushDialog.show();
            /* AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog);

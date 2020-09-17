@@ -60,7 +60,7 @@
                 android:fontFamily="@font/quicksand_bold"
                 android:gravity="center"
                 android:maxHeight="@dimen/_140sdp"
-                android:hint="Enter Answer"
+                android:hint="@string/enter_answer"
                 android:padding="@dimen/_15sdp"
                 android:textColor="@color/green"
                 app:autoSizeMaxTextSize="@dimen/_20sdp"

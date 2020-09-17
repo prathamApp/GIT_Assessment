@@ -71,7 +71,7 @@
                 android:background="@drawable/ripple_effect"
                 android:gravity="center"
                 android:padding="@dimen/_7sdp"
-                android:text="Capture image"
+                android:text="@string/capture_image"
                 android:textSize="@dimen/_13sdp" />
 
             <Button
@@ -84,7 +84,7 @@
                 android:gravity="center"
                 android:visibility="gone"
                 android:padding="@dimen/_7sdp"
-                android:text="show images"
+                android:text="@string/show_images"
                 android:textSize="@dimen/_13sdp" />
         </LinearLayout>
 

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/quicksand_bold"
-            android:text="Name"
+            android:text="@string/name"
             android:layout_margin="@dimen/_10sdp"
             android:textAlignment="center"
             android:textColor="@color/black"

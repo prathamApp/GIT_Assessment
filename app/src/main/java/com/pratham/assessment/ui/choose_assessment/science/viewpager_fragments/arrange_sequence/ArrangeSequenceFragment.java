@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -118,7 +119,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
       }
   */
     public void setArrangeSeqQuestion() {
-        question.setText(scienceQuestion.getQname());
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         setOdiaFont(getActivity(), question);
 
         final String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());

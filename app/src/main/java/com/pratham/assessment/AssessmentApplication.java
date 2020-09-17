@@ -14,6 +14,7 @@ import android.util.Log;
 import com.isupatches.wisefy.WiseFy;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.font.FontChanger;
+import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -37,8 +38,8 @@ public class AssessmentApplication extends Application {
 
     public static String cosPath = "", networkSSID = "PrathamHotSpot-" + Build.SERIAL;
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
-    public static String uploadScienceUrl = "http://www.prathamassessment.org:8085/api/pushassessment/AssessmentPushData";
-    public static String uploadScienceFilesUrl = "http://www.prathamassessment.org:8085/api/question/pushFiles";
+    public static String uploadScienceUrl = APIs.baseAzureURL + "api/pushassessment/AssessmentPushData";
+    public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/question/pushFiles";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
     public static WiseFy wiseF;

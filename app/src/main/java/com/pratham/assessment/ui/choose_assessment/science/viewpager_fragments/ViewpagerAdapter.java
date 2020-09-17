@@ -35,10 +35,10 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                     fragmentList.add(MultipleSelectFragment.newInstance(i, scienceQuestion));
                     break;
                 case "3":
-                    fragmentList.add(TrueFalseFragment.newInstance(i, scienceQuestion));
+                    fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.true_false.TrueFalseFragment.newInstance(i, scienceQuestion));
                     break;
                 case "4":
-                    fragmentList.add(MatchThePairFragment.newInstance(i, scienceQuestion));
+                    fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.match_the_pair.MatchThePairFragment.newInstance(i, scienceQuestion));
                     break;
                 case "5":
                     fragmentList.add(McqFillInTheBlanksFragment.newInstance(i, scienceQuestion));

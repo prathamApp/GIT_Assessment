@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -106,7 +107,7 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
     public void setParaBasedQuestions() {
 
         setOdiaFont(getActivity(), question);
-        question.setText(scienceQuestion.getQname());
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {

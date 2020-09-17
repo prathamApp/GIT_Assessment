@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -38,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
+
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.viewpagerAdapter;
 import static com.pratham.assessment.utilities.Assessment_Constants.STT_REGEX_3;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
@@ -83,7 +85,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
             speechService.resetSpeechRecognizer();
         }
         presenter.setView(FillInTheBlanksWithoutOptionFragment.this);
-        question.setMovementMethod(new ScrollingMovementMethod());
+        if (question != null)
+            question.setMovementMethod(new ScrollingMovementMethod());
         setFillInTheBlanksQuestion();
     }
 
@@ -120,8 +123,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
             }
 
         etAnswer.setTextColor(Assessment_Utility.selectedColor);
-        etAnswer.setText(scienceQuestion.getUserAnswer());
-        question.setText(scienceQuestion.getQname());
+        etAnswer.setText(Html.fromHtml(scienceQuestion.getUserAnswer()));
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
 
         setOdiaFont(getActivity(), question);
 
@@ -250,7 +253,8 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
     }
 
     @Override
-    public void Stt_onError() { }
+    public void Stt_onError() {
+    }
 
     @Override
     public void setUserVisibleHint(boolean visible) {

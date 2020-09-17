@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -214,9 +215,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         } else myViewHolder.questionImg.setVisibility(View.GONE);
 
 
-        myViewHolder.question.setText(result.getQuestion());
+        myViewHolder.question.setText(Html.fromHtml(result.getQuestion()));
         if (!result.getUserAnswer().equalsIgnoreCase(""))
-            myViewHolder.userAnswer.setText(result.getUserAnswer());
+            myViewHolder.userAnswer.setText(Html.fromHtml(result.getUserAnswer()));
        /* else if (!result.getUserAnswerId().equalsIgnoreCase("")) {
             showButtons(myViewHolder, true);
         }*/
@@ -274,21 +275,21 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
 
         if (!result.isAttempted()) {
-            myViewHolder.userAnswer.setText("Skipped");
+            myViewHolder.userAnswer.setText(R.string.skipped);
             myViewHolder.userAnswer.setTextColor(context.getResources().getColor(R.color.colorProgress15));
         } else {
             int color = myViewHolder.tv_you_answered_label.getCurrentTextColor();
             myViewHolder.userAnswer.setTextColor(color);
 
         }
-        myViewHolder.correctAnswer.setText(result.getCorrectAnswer());
+        myViewHolder.correctAnswer.setText(Html.fromHtml(result.getCorrectAnswer()));
         if (result.isCorrect()) {
             myViewHolder.iv_correct_wrong_indicator.setImageResource(R.drawable.ic_check_black);
             myViewHolder.iv_correct_wrong_indicator.setBackgroundColor(context.getResources().getColor(R.color.green));
 
             myViewHolder.cardView.setBackground(context.getResources().getDrawable(R.drawable.green_bg));
             myViewHolder.ll_user_ans.setVisibility(View.GONE);
-            ((TextView) myViewHolder.ll_correct_ans.getChildAt(0)).setText("Answer");
+            ((TextView) myViewHolder.ll_correct_ans.getChildAt(0)).setText(R.string.answer);
 
         } else {
             myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
@@ -435,7 +436,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                     myViewHolder.image_you_answered.setVisibility(View.GONE);
                     myViewHolder.userAnswer.setVisibility(View.VISIBLE);
-                    myViewHolder.userAnswer.setText("Skipped");
+                    myViewHolder.userAnswer.setText(R.string.skipped);
                     myViewHolder.userAnswer.setTextColor(context.getResources().getColor(R.color.colorProgress15));
 
 
@@ -589,7 +590,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 break;
             case VIDEO:
                 if (result.getQuestion().equalsIgnoreCase(""))
-                    myViewHolder.question.setText("Video");
+                    myViewHolder.question.setText(R.string.video);
                 if (result.isAttempted()) {
                     myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
                     myViewHolder.question.setVisibility(View.VISIBLE);
@@ -618,7 +619,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 break;
             case AUDIO:
                 if (result.getQuestion().equalsIgnoreCase(""))
-                    myViewHolder.question.setText("Audio");
+                    myViewHolder.question.setText(R.string.audio);
                 if (result.isAttempted()) {
                     myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
                     myViewHolder.question.setVisibility(View.VISIBLE);

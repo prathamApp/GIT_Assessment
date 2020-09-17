@@ -108,7 +108,7 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
                 }
             });
         } else {
-            Toast.makeText(getActivity(), "No Certificates..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_certificates, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }

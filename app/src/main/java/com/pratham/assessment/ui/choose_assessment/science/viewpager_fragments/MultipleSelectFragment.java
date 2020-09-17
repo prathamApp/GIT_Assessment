@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -125,7 +126,7 @@ public class MultipleSelectFragment extends Fragment {
 */
         setOdiaFont(getActivity(), question);
 
-        question.setText(scienceQuestion.getQname());
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
         final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -203,7 +204,7 @@ public class MultipleSelectFragment extends Fragment {
             checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
             setOdiaFont(getActivity(), checkBox);
             if (!choices.get(j).getChoicename().equalsIgnoreCase(""))
-                checkBox.setText(choices.get(j).getChoicename());
+                checkBox.setText(Html.fromHtml(choices.get(j).getChoicename()));
             else if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
 
 
@@ -232,8 +233,7 @@ public class MultipleSelectFragment extends Fragment {
                         checkBox.setButtonDrawable(bd);
                     }
                 });*/
-                checkBox.setText("View Option " + (j + 1));
-
+                checkBox.setText(getString(R.string.view_option) + (j + 1));
             }
             checkBox.setTag(choices.get(j).getQcid());
            /* if (Assessment_Constants.isPracticeModeOn) {

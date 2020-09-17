@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,7 +10,7 @@
         android:layout_margin="@dimen/_3sdp"
         android:background="@drawable/ripple_effect"
         android:padding="@dimen/_3sdp"
-        android:text="Clear data"
+        android:text="@string/clear_data"
         android:textSize="@dimen/_12sdp" />
 
     <LinearLayout
@@ -28,7 +27,7 @@
             android:layout_margin="@dimen/_30sdp"
             android:layout_weight="1"
             android:background="@drawable/correct_bg"
-            android:text="Assign Groups"
+            android:text="@string/assign_groups"
             android:textSize="@dimen/_10sdp" />
 
         <Button
@@ -38,7 +37,7 @@
             android:layout_margin="@dimen/_30sdp"
             android:layout_weight="1"
             android:background="@drawable/correct_bg"
-            android:text="Push Data"
+            android:text="@string/push_data"
             android:textSize="@dimen/_10sdp" />
 
         <LinearLayout

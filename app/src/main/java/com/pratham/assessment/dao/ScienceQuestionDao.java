@@ -61,7 +61,7 @@ public interface ScienceQuestionDao {
     public List<ScienceQuestion> getQuestionListByPattern(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
 
     @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and qtid!='14' limit :noOfQues")
-    public List<ScienceQuestion> getQuestionListByPatternForAser(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
+    public List<ScienceQuestion> getQuestionListByPatternRandomly(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
 
     @Query("select distinct qid from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId order by random() limit :noOfQues")
     public String getQuestionListByPatternOld(String langId, String subId, String topicId, String qtid, int noOfQues);

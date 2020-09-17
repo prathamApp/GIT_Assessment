@@ -219,7 +219,7 @@ public class FragmentSelectGroup extends Fragment implements ContractGroup {
             Assessment_Utility.showFragment(getActivity(), new FragmentChildAttendance_(), R.id.frame_group,
                     bundle, FragmentChildAttendance.class.getSimpleName());
         } else {
-            Toast.makeText(getContext(), "Please select Group !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_select_group, Toast.LENGTH_SHORT).show();
         }
 
     }

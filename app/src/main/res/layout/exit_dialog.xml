@@ -15,7 +15,7 @@
         android:fontFamily="@font/quicksand_bold"
         android:gravity="center"
         android:paddingHorizontal="@dimen/_7sdp"
-        android:text="What do you want to do?"
+        android:text="@string/what_do_you_want_to_do"
         android:textSize="@dimen/_20sdp"
         android:textStyle="bold|italic" />
 
@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:elevation="5dp"
-            android:text="Restart"
+            android:text="@string/restart"
             android:textSize="@dimen/_12sdp" />
 
         <Button
@@ -44,7 +44,7 @@
 
             android:background="@drawable/ripple_effect"
             android:elevation="5dp"
-            android:text="Exit"
+            android:text="@string/exit"
             android:textSize="@dimen/_12sdp" />
 
         <Button
@@ -55,7 +55,7 @@
             android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:elevation="5dp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textSize="@dimen/_12sdp"
             android:visibility="gone" />
 

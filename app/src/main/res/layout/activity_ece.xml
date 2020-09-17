@@ -99,10 +99,9 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/_5sdp"
         android:background="@drawable/ripple_effect"
-        android:drawableLeft="@drawable/ic_submit_assessment"
         android:drawablePadding="@dimen/_10sdp"
         android:padding="@dimen/_5sdp"
-        android:text="Submit"
+        android:text="@string/submit"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/_15sdp" />
 

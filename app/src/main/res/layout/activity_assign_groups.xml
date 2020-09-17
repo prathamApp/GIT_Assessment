@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:background="@color/colorPrimary"
+        android:fontFamily="@font/quicksand_bold"
         android:gravity="center"
-        android:paddingLeft="16dp"            android:fontFamily="@font/quicksand_bold"
-
-        android:text="Assign Groups"
+        android:paddingLeft="16dp"
+        android:text="@string/assign_groups"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/_15sdp"
         android:textStyle="bold" />
@@ -96,8 +96,8 @@
                 android:layout_below="@+id/LinearLayoutGroups"
                 android:layout_gravity="center"
                 android:layout_margin="16dp"
-                android:text="  Assign  "
                 android:background="@drawable/ripple_effect"
+                android:text="@string/assign"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"

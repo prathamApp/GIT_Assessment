@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.login.group_selection.fragment_child_attendanc
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
     @Override
     public void onBindViewHolder(@NonNull final ChildHolder viewHolder, int pos) {
         // pos = viewHolder.getAdapterPosition();
-        viewHolder.child_name.setText(datalist.get(pos).getFullName());
+        viewHolder.child_name.setText(Html.fromHtml(datalist.get(pos).getFullName()));
         File file;
         file = new File(StudentPhotoPath + "" + datalist.get(pos).getStudentID() + ".jpg");
         String filepath = file.getPath();

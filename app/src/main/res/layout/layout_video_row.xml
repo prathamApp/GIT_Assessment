@@ -98,7 +98,7 @@
                 android:layout_margin="@dimen/_5sdp"
                 android:background="@drawable/ripple_effect"
                 android:padding="@dimen/_5sdp"
-                android:text="Capture Video"
+                android:text="@string/capture_video"
                 android:textSize="@dimen/_15sdp" />
 
 

@@ -53,7 +53,7 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:fontFamily="@font/quicksand_bold"
                         android:gravity="center"
-                        android:text="Profile Name"
+                        android:text="@string/profile_name"
                         android:textColor="@color/colorBlackTransparentDark"
                         android:textSize="@dimen/_14sdp"
                         android:textStyle="bold" />
@@ -79,7 +79,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/quicksand_bold"
                             android:gravity="center"
-                            android:text="Marks"
+                            android:text="@string/marks"
                             android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
 
@@ -115,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/quicksand_bold"
                             android:gravity="center"
-                            android:text="Total marks"
+                            android:text="@string/total_marks"
                             android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
 
@@ -168,7 +168,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
-                                android:text="Total"
+                                android:text="@string/total"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="bold" />
 
@@ -201,7 +201,7 @@
                                 android:fontFamily="@font/quicksand_bold"
 
                                 android:gravity="center"
-                                android:text="Correct"
+                                android:text="@string/correct"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="bold" />
 
@@ -236,7 +236,7 @@
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
 
-                                android:text="Wrong"
+                                android:text="@string/wrong"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="bold" />
 
@@ -271,7 +271,7 @@
                                 android:layout_weight="1"
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
-                                android:text="Skipped"
+                                android:text="@string/skipped"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="bold" />
 
@@ -312,7 +312,7 @@
                                 android:background="@drawable/ripple_rectangle"
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
-                                android:text="Total time"
+                                android:text="@string/total_time"
                                 android:textAlignment="center"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -343,7 +343,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/ripple_rectangle"
                                 android:fontFamily="@font/quicksand_bold"
-                                android:text="Time taken"
+                                android:text="@string/time_taken"
                                 android:textAlignment="center"
                                 android:textSize="@dimen/_12sdp" />
 

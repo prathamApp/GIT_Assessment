@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_radio_button"
         android:checked="false"
-        android:fontFamily="@font/quicksand_bold"
+        android:fontFamily="@font/quicksand_medium"
         android:gravity="center_vertical"
         android:maxHeight="@dimen/_150sdp"
         android:padding="@dimen/_5sdp"

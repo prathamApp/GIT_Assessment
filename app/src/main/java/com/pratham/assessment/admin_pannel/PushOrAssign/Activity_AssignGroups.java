@@ -330,7 +330,7 @@ public class Activity_AssignGroups extends BaseActivity {
             }
 
             if (cnt < 1) {
-                Toast.makeText(Activity_AssignGroups.this, "Please Select atleast one Group !!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Activity_AssignGroups.this, R.string.please_select_at_least_one_group, Toast.LENGTH_SHORT).show();
             } else if (cnt >= 1 && cnt <= 5) {
                 try {
                     //   MultiPhotoSelectActivity.dilog.showDilog(context, "Assigning Groups");
@@ -376,7 +376,7 @@ public class Activity_AssignGroups extends BaseActivity {
                             Activity_AssignGroups.this.runOnUiThread(new Runnable() {
                                 public void run() {
                                     isAssigned = true;
-                                    Toast.makeText(Activity_AssignGroups.this, " Groups Assigned Successfully !!!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Activity_AssignGroups.this, R.string.groups_assigned_successfully, Toast.LENGTH_SHORT).show();
                                     progress.dismiss();
                                    /* FragmentManager fm = getSupportFragmentManager();
                                     for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
@@ -396,7 +396,7 @@ public class Activity_AssignGroups extends BaseActivity {
                 }
 
             } else {
-                Toast.makeText(Activity_AssignGroups.this, " You can select Maximum 5 Groups !!! ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Activity_AssignGroups.this, R.string.you_can_select_maximum_5_groups, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();

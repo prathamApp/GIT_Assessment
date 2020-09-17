@@ -133,9 +133,9 @@ public class WebViewActivity extends BaseActivity implements WebViewInterface {
         Button no_btn = dialog.findViewById(R.id.dia_btn_exit);
         Button yes_btn = dialog.findViewById(R.id.dia_btn_restart);
 
-        dia_title.setText("Do you want to exit?");
-        no_btn.setText("NO");
-        yes_btn.setText("YES");
+        dia_title.setText(R.string.do_you_want_to_exit);
+        no_btn.setText(R.string.no);
+        yes_btn.setText(R.string.yes);
 
         dialog.show();
 

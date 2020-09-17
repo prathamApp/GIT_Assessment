@@ -11,7 +11,7 @@
         android:layout_margin="10dp"
         android:layout_weight="3"
         android:background="@drawable/ripple_effect"
-        android:text="Take Photo" />
+        android:text="@string/take_photo" />
 
     <Space
         android:id="@+id/space"
@@ -28,7 +28,7 @@
         android:layout_weight="3"
         android:background="@drawable/ripple_effect"
         android:layout_below="@id/space"
-        android:text="Choose From Gallery" />
+        android:text="@string/choose_from_gallery" />
 
 
 </RelativeLayout>

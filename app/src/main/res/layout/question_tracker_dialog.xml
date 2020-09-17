@@ -67,7 +67,7 @@
             android:layout_weight="3"
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
-            android:text="Answered"
+            android:text="@string/answered"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
             android:layout_weight="3"
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
-            android:text="Not Answered"
+            android:text="@string/not_answered"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
 
@@ -134,7 +134,7 @@
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="#ffff"
             android:textSize="20sp" />
 
@@ -149,7 +149,7 @@
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="#ffff"
             android:textSize="20sp" />
     </LinearLayout>

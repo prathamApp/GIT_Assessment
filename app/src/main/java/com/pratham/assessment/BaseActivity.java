@@ -389,7 +389,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 case HIDE_OTG_TRANSFER_DIALOG_FAILED:
                     push_lottie.setAnimation("error_cross.json");
                     push_lottie.playAnimation();
-                    txt_push_dialog_msg.setText("Data Copying Failed!! Please re-insert the OTG");
+                    txt_push_dialog_msg.setText(R.string.data_copying_failed);
                     txt_push_dialog_msg.setTextColor(getResources().getColor(R.color.colorRed));
                     txt_push_error.setVisibility(View.GONE);
                     rl_btn.setVisibility(View.VISIBLE);

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,7 +138,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
     private void setMcqsQuestion() {
 
         options = new ArrayList<>();
-        question.setText(scienceQuestion.getQname());
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         setOdiaFont(getActivity(), question);
 
         if (question != null)
@@ -293,7 +294,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         final TextView textView = (TextView) view;
 //                        textView.setElevation(3);
                         textView.setMovementMethod(new ScrollingMovementMethod());
-                        textView.setText(options.get(r).getChoicename());
+                        textView.setText(Html.fromHtml(options.get(r).getChoicename()));
 
                         setOdiaFont(getActivity(), textView);
 
@@ -567,7 +568,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         final TextView textView = (TextView) view;
                         textView.setElevation(3);
                         textView.setMovementMethod(new ScrollingMovementMethod());
-                        textView.setText(options.get(r).getChoicename());
+                        textView.setText(Html.fromHtml(options.get(r).getChoicename()));
                         gridMcq.addView(textView);
                         if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
                             textView.setTextColor(Assessment_Utility.selectedColor);
@@ -634,7 +635,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
 
 //                    }
                     final int finalR = r;
-                    audioText.setText("Audio " + (r + 1));
+                    audioText.setText(getString(R.string.audio) + (r + 1));
                     setOdiaFont(getActivity(), audioText);
 
                     rl_mcq.setOnClickListener(new View.OnClickListener() {

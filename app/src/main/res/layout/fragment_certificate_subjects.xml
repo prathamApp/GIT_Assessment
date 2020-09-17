@@ -73,7 +73,7 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_weight="1"
             android:fontFamily="@font/quicksand_bold"
-            android:text="Certificates.."
+            android:text="@string/certificates"
             android:textColor="@color/white"
             android:textSize="@dimen/_30sdp" />
 
@@ -83,7 +83,7 @@
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_weight="1"
             android:fontFamily="@font/quicksand_bold"
-            android:text="you have earned"
+            android:text="@string/you_have_earned"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp" />
 

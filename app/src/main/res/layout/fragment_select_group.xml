@@ -26,7 +26,7 @@
         android:elevation="@dimen/_10sdp"
         android:background="@drawable/ripple_effect"
         android:scaleType="centerCrop"
-        android:text="Next"
+        android:text="@string/next"
         />
 
 </RelativeLayout>

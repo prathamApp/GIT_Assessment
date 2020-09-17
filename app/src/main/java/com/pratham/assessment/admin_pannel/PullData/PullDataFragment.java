@@ -264,7 +264,7 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
 
     @Override
     public void showErrorToast() {
-        Toast.makeText(getActivity(), "Connect to internet ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -282,7 +282,7 @@ public class PullDataFragment extends Fragment implements PullDataContract.PullD
 
     @Override
     public void showNoConnectivity() {
-        Toast.makeText(getActivity(), "No Internet Connection..", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
 

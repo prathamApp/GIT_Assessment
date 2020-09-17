@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +44,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_match_the_pair_row)
-public class MatchThePairFragment extends Fragment implements StartDragListener {
+public class OldMatchThePairFragment extends Fragment implements StartDragListener {
     @ViewById(R.id.tv_question)
     TextView question;
     @ViewById(R.id.iv_question_image)
@@ -77,12 +78,12 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
     }
 
 
-    public MatchThePairFragment() {
+    public OldMatchThePairFragment() {
         // Required empty public constructor
     }
 
-    public static MatchThePairFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        MatchThePairFragment_ matchThePairFragment = new MatchThePairFragment_();
+    public static OldMatchThePairFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
+        OldMatchThePairFragment_ matchThePairFragment = new OldMatchThePairFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -121,7 +122,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
         assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
 */
         setOdiaFont(getActivity(), question);
-        question.setText(scienceQuestion.getQname());
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
         final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -230,7 +231,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
 
             }
 
-            matchPairDragDropAdapter = new MatchPairDragDropAdapter(this, shuffledList, getActivity());
+           /* matchPairDragDropAdapter = new MatchPairDragDropAdapter(this, shuffledList, getActivity());
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(matchPairDragDropAdapter);
             touchHelper = new ItemTouchHelper(callback);
@@ -240,7 +241,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener 
             LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext());
             recyclerView2.setLayoutManager(linearLayoutManager1);
             recyclerView2.setAdapter(matchPairDragDropAdapter);
-            Log.d("wwwwwwwwwww", pairList.size() + "");
+            Log.d("wwwwwwwwwww", pairList.size() + "");*/
         }
 
     }

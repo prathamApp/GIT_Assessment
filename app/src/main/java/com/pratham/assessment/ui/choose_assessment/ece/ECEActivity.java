@@ -170,9 +170,9 @@ public class ECEActivity extends BaseActivity implements DiscreteScrollView.OnIt
         Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
         Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
 
-        title.setText("Do you want to leave assessment?");
-        restart_btn.setText("No");
-        exit_btn.setText("Yes");
+        title.setText(R.string.do_you_want_to_leave_assessment);
+        restart_btn.setText(R.string.no);
+        exit_btn.setText(R.string.yes);
         dialog.show();
 
         exit_btn.setOnClickListener(new View.OnClickListener() {

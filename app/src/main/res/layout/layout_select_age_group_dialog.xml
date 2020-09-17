@@ -37,7 +37,7 @@
                 android:layout_marginRight="-25dp"
                 android:background="@drawable/radio_button_bg"
                 android:padding="@dimen/_5sdp"
-                android:text="Age 3 to 6"
+                android:text="@string/age_3_to_6"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
                 android:layout_marginLeft="-25dp"
                 android:background="@drawable/radio_button_bg"
                 android:padding="@dimen/_5sdp"
-                android:text="Age 8 to 14"
+                android:text="@string/age_8_to_14"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />
 

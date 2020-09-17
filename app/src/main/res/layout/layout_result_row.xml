@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:fontFamily="@font/quicksand_bold"
+            android:fontFamily="@font/quicksand_medium"
             android:gravity="center"
             android:text="Question"
             android:textColor="@color/black"
@@ -78,7 +78,7 @@
                     android:layout_margin="@dimen/_5sdp"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
-                    android:text="You answered"
+                    android:text="@string/you_answered"
                     android:textSize="@dimen/_12sdp" />
 
 
@@ -89,7 +89,7 @@
                     android:layout_margin="@dimen/_5sdp"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
-                    android:text="Answer"
+                    android:text="@string/answer"
                     android:textSize="@dimen/_11sdp" />
 
                 <Button
@@ -100,7 +100,7 @@
                     android:background="@drawable/ripple_rectangle_result"
                     android:elevation="@dimen/_2sdp"
                     android:gravity="center"
-                    android:text="View Answer"
+                    android:text="@string/view_answer"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
 
@@ -113,7 +113,7 @@
                     android:background="@drawable/ripple_rectangle_result"
                     android:elevation="@dimen/_2sdp"
                     android:gravity="center"
-                    android:text="View Answer"
+                    android:text="@string/view_answer"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
 
@@ -149,7 +149,7 @@
                     android:layout_margin="@dimen/_5sdp"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
-                    android:text="Correct Answer"
+                    android:text="@string/correct_answer"
                     android:textSize="@dimen/_12sdp" />
 
                 <TextView
@@ -159,7 +159,7 @@
                     android:layout_margin="@dimen/_5sdp"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
-                    android:text="Answer"
+                    android:text="@string/answer"
                     android:textSize="@dimen/_11sdp" />
 
                 <Button
@@ -170,7 +170,7 @@
                     android:background="@drawable/ripple_rectangle_result"
                     android:elevation="@dimen/_2sdp"
                     android:gravity="center"
-                    android:text="View Answer"
+                    android:text="@string/view_answer"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
 
@@ -183,7 +183,7 @@
                     android:background="@drawable/ripple_rectangle_result"
                     android:elevation="@dimen/_2sdp"
                     android:gravity="center"
-                    android:text="View Answer"
+                    android:text="@string/view_answer"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
 

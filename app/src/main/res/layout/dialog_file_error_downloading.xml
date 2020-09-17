@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/quicksand_bold"
                 android:maxLines="3"
-                android:text="Problem Downloading File"
+                android:text="@string/problem_downloading_file"
                 android:textColor="@color/primaryText"
                 android:textSize="@dimen/_18sdp"
                 android:textStyle="bold" />

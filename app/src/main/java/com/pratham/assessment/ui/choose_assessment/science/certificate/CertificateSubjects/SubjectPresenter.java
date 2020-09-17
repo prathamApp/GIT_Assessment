@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -193,7 +194,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 //                                assessView.notifyAdapter();
                                 //getTopicData();
                             } else {
-                                Toast.makeText(context, "Nothing to pull..", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.nothing_to_pull, Toast.LENGTH_SHORT).show();
                                 subjectView.setSubjectToSpinner();
                                 progressDialog.dismiss();
                             }
@@ -206,7 +207,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         progressDialog.dismiss();
                     }
@@ -243,7 +244,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
             if (id != null && !id.equalsIgnoreCase(""))
                 getSubjectData(langIds.get(subjectCnt));
             else {
-                Toast.makeText(context, "Nothing to pull", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.nothing_to_pull, Toast.LENGTH_SHORT).show();
                 BackupDatabase.backup(context);
                 progressDialog.dismiss();
 
@@ -305,7 +306,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                                 progressDialog.dismiss();
                                 BackupDatabase.backup(context);
                             } else
-                                Toast.makeText(context, "No subjects..", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.no_subjects, Toast.LENGTH_SHORT).show();
                             subjectCnt++;
                             addSubjectsToDB();
                         } catch (JSONException e) {
@@ -315,7 +316,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         progressDialog.dismiss();
                     }
@@ -355,7 +356,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns()
 
                         progressDialog.dismiss();

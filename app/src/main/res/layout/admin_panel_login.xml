@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="User name"
+                    android:hint="@string/user_name"
                     android:maxLines="1"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:inputType="textWebPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -83,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@drawable/ripple_effect"
-                android:text="Login"
+                android:text="@string/login"
                 android:textColor="#ffffff" />
 
             <Space
@@ -97,7 +97,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@drawable/ripple_effect"
-                android:text="Clear"
+                android:text="@string/clear"
                 android:textColor="#ffffff" />
         </LinearLayout>
     </LinearLayout>

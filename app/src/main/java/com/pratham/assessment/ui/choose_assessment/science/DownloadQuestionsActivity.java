@@ -657,7 +657,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
                     } else {
                         scienceQuestions = AppDatabase.getDatabaseInstance(context).
-                                getScienceQuestionDao().getQuestionListByPatternForAser(Assessment_Constants.SELECTED_LANGUAGE,
+                                getScienceQuestionDao().getQuestionListByPatternRandomly(Assessment_Constants.SELECTED_LANGUAGE,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
 

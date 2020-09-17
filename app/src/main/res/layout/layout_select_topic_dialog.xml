@@ -106,7 +106,7 @@
                 android:background="@drawable/ripple_effect"
                 android:gravity="center"
                 android:padding="@dimen/_10sdp"
-                android:text="Start Assessment"
+                android:text="@string/start_assessment"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -119,7 +119,7 @@
                 android:gravity="center"
                 android:textStyle="bold"
                 android:padding="@dimen/_5sdp"
-                android:text="Update topics"
+                android:text="@string/update_topics"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp" />
 

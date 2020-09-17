@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +77,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                         .into(myViewHolder.image);
             } else {
                 myViewHolder.rl_img.setVisibility(View.GONE);
-                myViewHolder.text.setText(scienceQuestionChoice.getChoicename());
+                myViewHolder.text.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));
             }
         } else {
             if (type.equalsIgnoreCase("ans")) {
@@ -114,7 +115,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                     });
                 } else {
                     myViewHolder.rl_img.setVisibility(View.GONE);
-                    myViewHolder.text.setText(scienceQuestionChoice.getMatchingname());
+                    myViewHolder.text.setText(Html.fromHtml(scienceQuestionChoice.getMatchingname()));
                 }
             }
         }

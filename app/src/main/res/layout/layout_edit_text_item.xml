@@ -7,7 +7,7 @@
     android:background="@drawable/custom_edit_text"
     android:fontFamily="@font/quicksand_bold"
     android:gravity="center"
-    android:hint="Enter Answer"
+    android:hint="@string/enter_answer"
     android:padding="@dimen/_8sdp"
     android:textColor="@color/green"
     android:textSize="@dimen/_20sdp" />

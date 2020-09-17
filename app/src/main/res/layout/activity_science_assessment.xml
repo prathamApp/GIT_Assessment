@@ -31,7 +31,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="@dimen/_5sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Exam Name"
+                android:text="@string/exam_name"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
@@ -44,7 +44,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="@dimen/_5sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Total questions"
+                android:text="@string/total_questions"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
@@ -57,7 +57,7 @@
                 android:layout_below="@+id/tv_total_que"
                 android:layout_margin="@dimen/_5sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Marks"
+                android:text="@string/marks"
                 android:textAlignment="center"
 
                 android:textColor="@color/black"
@@ -70,7 +70,7 @@
                 android:layout_below="@+id/tv_marks"
                 android:layout_margin="@dimen/_5sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Time"
+                android:text="@string/time"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
@@ -83,11 +83,11 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Note:  Pictures of the appearing student \nwill be captured during the exam."
+                android:text="@string/note_pictures_of_the_appearing_student_nwill_be_captured_during_the_exam"
                 android:textAlignment="center"
-                android:visibility="gone"
                 android:textColor="@color/colorBtnRedDark"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone" />
 
 
         </RelativeLayout>
@@ -188,7 +188,7 @@
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_minus10sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Prev"
+                android:text="@string/prev"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_10sdp" />
 
@@ -201,7 +201,7 @@
                 android:layout_marginTop="@dimen/_minus10sdp"
                 android:layout_marginRight="@dimen/_10sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Next"
+                android:text="@string/next"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_10sdp" />
 
@@ -442,13 +442,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
-  <!--          <ImageView
-                android:id="@+id/iv_question_mark"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:padding="@dimen/_2sdp"
-                android:src="@drawable/question_mark" />-->
+            <!--          <ImageView
+                          android:id="@+id/iv_question_mark"
+                          android:layout_width="@dimen/_30sdp"
+                          android:layout_height="@dimen/_30sdp"
+                          android:layout_margin="@dimen/_5sdp"
+                          android:padding="@dimen/_2sdp"
+                          android:src="@drawable/question_mark" />-->
 
             <Button
                 android:id="@+id/btn_submit"
@@ -458,7 +458,7 @@
                 android:layout_margin="@dimen/_3sdp"
                 android:background="@drawable/ripple_effect"
                 android:padding="@dimen/_5sdp"
-                android:text="Submit"
+                android:text="@string/submit"
                 android:textSize="@dimen/_15sdp"
                 android:visibility="gone" />
 

@@ -169,7 +169,7 @@ public class MenuFragment extends Fragment {
             Assessment_Utility.showFragment(getActivity(), new FragmentSelectGroup_(), R.id.frame_group,
                     bundle, FragmentSelectGroup.class.getSimpleName());
         } else {
-            Toast.makeText(getActivity(), "No groups assigned..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_groups_assigned, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,9 +219,9 @@ public class MenuFragment extends Fragment {
         TextView dia_title = dialog.findViewById(R.id.dia_title);
         Button skip = dialog.findViewById(R.id.dia_btn_green);
         Button ok = dialog.findViewById(R.id.dia_btn_yellow);
-        dia_title.setText("Please download language packs offline for better performance");
-        ok.setText("OK");
-        skip.setText("SKIP");
+        dia_title.setText(R.string.download_offline_pack);
+        ok.setText(R.string.ok);
+        skip.setText(R.string.skip);
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

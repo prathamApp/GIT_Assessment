@@ -173,6 +173,6 @@ public class AdminPanelFragment extends Fragment implements AdminPanelContract.A
     public void onDataClearToast() {
         userNameET.setText("");
         passwordET.setText("");
-        Toast.makeText(getActivity(), "Data cleared Successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.data_cleared_successfully, Toast.LENGTH_SHORT).show();
     }
 }

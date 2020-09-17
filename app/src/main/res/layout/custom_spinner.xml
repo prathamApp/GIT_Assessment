@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="@dimen/_13sdp"        android:fontFamily="@font/quicksand_bold"
-
+    android:fontFamily="@font/quicksand_bold"
     android:gravity="left"
-    android:textColor="#000000"
     android:paddingHorizontal="@dimen/_5sdp"
     android:paddingVertical="@dimen/_2sdp"
-    android:textStyle="normal"
-    />
+    android:textColor="#000000"
+    android:textSize="@dimen/_13sdp"
+    android:textStyle="normal" />

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,7 +68,7 @@ public class ShowAnswerDialog extends Dialog {
         ll_multiple_select.setVisibility(View.VISIBLE);
         StringBuffer ans = new StringBuffer();
         for (int i = 0; i < userAns.size(); i++) {
-            ans.append(userAns.get(i).getChoicename() + ",");
+            ans.append(Html.fromHtml(userAns.get(i).getChoicename()) + ",");
         }
         if (ans.length() > 0)
             ans.setLength(ans.length() - 1);

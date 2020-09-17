@@ -220,7 +220,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             startActivity(new Intent(getActivity(), ChooseAssessmentActivity_.class));
             getActivity().finish();
         } else {
-            Toast.makeText(getContext(), "Please Select Students !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_select_students, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -283,7 +283,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
             String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
 
             if (!((SelectGroupActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
-                Toast.makeText(getActivity(), "Give Camera permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.give_camera_permissions, Toast.LENGTH_SHORT).show();
             } else {
 //
                 childItemPos = pos;

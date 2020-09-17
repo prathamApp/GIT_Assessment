@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -93,8 +94,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public static boolean firstPause = true, fragmentBottomOpenFlg = false, fragmentBottomPauseFlg = false, fragmentAddStudentPauseFlg = false, fragmentAddStudentOpenFlg = false;
 
 
-
-
     @AfterViews
     public void init() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -106,6 +105,21 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         context = SplashActivity.this;
         btn_start_game.setVisibility(View.GONE);
 //        iv_logo_pradigi.setVisibility(View.GONE);
+       /* try {
+            Bundle bundle = new Bundle();
+            bundle = this.getIntent().getExtras();
+            String studId = String.valueOf(bundle.getString("studentId"));
+            String appNm = String.valueOf(bundle.getString("appName"));
+            String studName = String.valueOf(bundle.getString("studentName"));
+            String sub = String.valueOf(bundle.getString("subjectName"));
+            String lang = String.valueOf(bundle.getString("subjectLanguage"));
+            String subLevel = String.valueOf(bundle.getString("subjectLevel"));
+            Toast.makeText(this, "Id : " + studId + " AppName : "
+                    + appNm + " StudentName : " + studName + " Subject : " + sub + "Language : " + lang
+                    + " Level : " + subLevel, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         initiateApp();
     }
 
@@ -392,9 +406,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
         Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
 
-        title.setText("Do you want to exit?");
-        restart_btn.setText("Yes");
-        exit_btn.setText("No");
+        title.setText(R.string.do_you_want_to_exit);
+        restart_btn.setText(R.string.yes);
+        exit_btn.setText(R.string.no);
         dialog.show();
 
         exit_btn.setOnClickListener(new View.OnClickListener() {
@@ -563,7 +577,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 }
             } else {
                 if (isActivityRunning) {
-                    Toast.makeText(context, "Connect to internet to download students of this device..", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.connect_to_internet_to_download_students_of_this_device, Toast.LENGTH_LONG).show();
                     BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                     if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
                         bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
@@ -780,9 +794,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         TextView dia_title = STTDialog.findViewById(R.id.dia_title);
         Button skip = STTDialog.findViewById(R.id.dia_btn_green);
         Button ok = STTDialog.findViewById(R.id.dia_btn_yellow);
-        dia_title.setText("Please download language packs offline for better performance");
-        ok.setText("OK");
-        skip.setText("SKIP");
+        dia_title.setText(R.string.please_download_language_packs_offline_for_better_performance);
+        ok.setText(R.string.ok);
+        skip.setText(R.string.skip);
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

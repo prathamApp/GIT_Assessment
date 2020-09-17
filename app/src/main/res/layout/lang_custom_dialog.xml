@@ -50,7 +50,7 @@
                 android:fontFamily="@font/quicksand_bold"
                 android:lines="3"
                 android:paddingHorizontal="@dimen/_7sdp"
-                android:text="Please download language packs offline for better performance"
+                android:text="@string/please_download_language_packs_offline_for_better_performance"
                 android:textSize="@dimen/_15sdp" />
 
 

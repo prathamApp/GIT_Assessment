@@ -311,7 +311,7 @@ public class QRScanActivity extends BaseActivity implements ZXingScannerView.Res
             dialogClick();
 
         } catch (Exception e) {
-            Toast.makeText(this, "Invalid QR Code !!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
             scanNextQRCode();
             BackupDatabase.backup(this);
             e.printStackTrace();

@@ -43,7 +43,8 @@ public class ArrangeSeqPresenter implements ArrangeSequenceContract.ArrangeSeqPr
 
         List list1 = new ArrayList();
         List<ScienceQuestionChoice> shuffledList = new ArrayList<>();
-        List<ScienceQuestionChoice> pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+//        List<ScienceQuestionChoice> pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+        List<ScienceQuestionChoice> pairList = scienceQuestion.getLstquestionchoice();
         Log.d("wwwwwwwwwww", pairList.size() + "");
         if (!pairList.isEmpty()) {
 /*  for (int p = 0; p < pairList.size(); p++) {

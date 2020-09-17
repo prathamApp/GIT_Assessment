@@ -103,7 +103,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -133,7 +132,6 @@ import static com.pratham.assessment.utilities.Assessment_Constants.TRUE_FALSE;
 import static com.pratham.assessment.utilities.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
-import static com.pratham.assessment.utilities.Assessment_Utility.showFragment;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -978,10 +976,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             Button restart_btn = dialog.findViewById(R.id.dia_btn_exit);
                             Button cancel_btn = dialog.findViewById(R.id.dia_btn_cancel);
                             cancel_btn.setVisibility(View.VISIBLE);
-                            title.setText("Media download failed..!");
-                            restart_btn.setText("Skip All");
-                            skip_btn.setText("Skip this");
-                            cancel_btn.setText("Cancel");
+                            title.setText(R.string.Media_download_failed);
+                            restart_btn.setText(R.string.skip_all);
+                            skip_btn.setText(R.string.skip_this);
+                            cancel_btn.setText(R.string.cancel);
                             dialog.show();
 
                             skip_btn.setOnClickListener(new View.OnClickListener() {
@@ -1091,7 +1089,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
                     } else {
                         scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
-                                getScienceQuestionDao().getQuestionListByPatternForAser(selectedLang,
+                                getScienceQuestionDao().getQuestionListByPatternRandomly(selectedLang,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
 
@@ -1103,8 +1101,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     }
                     if (scienceQuestions.size() > 0) {
                         scienceQuestionList.addAll(scienceQuestions);
-                        if (assessmentPaperPatterns.getIsRandom())
-                            Collections.shuffle(scienceQuestionList);
+                       /* if (assessmentPaperPatterns.getIsRandom())
+                        Collections.shuffle(scienceQuestionList);*/
                     }
 
                     List<ScienceQuestion> paraQuestionList;
@@ -1305,10 +1303,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             } else tv_img_capture_warning.setVisibility(View.GONE);
         } else tv_img_capture_warning.setVisibility(View.GONE);
 
-        tv_exam_name.setText("Exam : " + assessmentPaperPatterns.getExamname());
-        tv_time.setText("Time : " + assessmentPaperPatterns.getExamduration() + " mins.");
-        tv_marks.setText("Marks : " + assessmentPaperPatterns.getOutofmarks());
-        tv_total_que.setText("Total questions : " + scienceQuestionList.size());
+        tv_exam_name.setText(getString(R.string.exam) + " " + assessmentPaperPatterns.getExamname());
+        tv_time.setText(getString(R.string.time) + " " + assessmentPaperPatterns.getExamduration() + " mins.");
+        tv_marks.setText(getString(R.string.marks) + " " + assessmentPaperPatterns.getOutofmarks());
+        tv_total_que.setText(getString(R.string.total_questions) + " " + scienceQuestionList.size());
 
         swipe_btn.setOnSwipeListener(new ProSwipeButton.OnSwipeListener() {
             @Override
@@ -1438,7 +1436,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
             iv_prev.setVisibility(View.GONE);
             txt_prev.setVisibility(View.GONE);
-            txt_question_cnt.setText("Question : " + "1" + "/" + scienceQuestionList.size());
+            txt_question_cnt.setText(getString(R.string.question) + " " + "1" + "/" + scienceQuestionList.size());
 
             fragment_view_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -1484,7 +1482,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         //                    }
                     }
                     queCnt = position;
-                    txt_question_cnt.setText("Question : " + (position + 1) + "/" + scienceQuestionList.size());
+                    txt_question_cnt.setText(getString(R.string.question) + " " + (position + 1) + "/" + scienceQuestionList.size());
 
                     if (currentFragment != null) {
                         currentFragment.onPause();
@@ -1891,9 +1889,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             Button cancel_btn = dialog.findViewById(R.id.dia_btn_cancel);
             cancel_btn.setVisibility(View.GONE);
 
-            title.setText("Do you want to leave assessment?");
-            restart_btn.setText("No");
-            exit_btn.setText("Yes");
+            title.setText(R.string.do_you_want_to_leave_assessment);
+            restart_btn.setText(R.string.no);
+            exit_btn.setText(R.string.yes);
             dialog.show();
 
             exit_btn.setOnClickListener(new View.OnClickListener() {
@@ -2737,11 +2735,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     private float calculateTotalLevelQuestions(String level) {
         int totalLevelQuestions = 0, correctQuestions = 0;
         for (int i = 0; i < scienceQuestionList.size(); i++) {
-                if (scienceQuestionList.get(i).getQlevel().equalsIgnoreCase(level)) {
-                    totalLevelQuestions++;
-                    if (scienceQuestionList.get(i).getIsCorrect())
-                        correctQuestions++;
-                }
+            if (scienceQuestionList.get(i).getQlevel().equalsIgnoreCase(level)) {
+                totalLevelQuestions++;
+                if (scienceQuestionList.get(i).getIsCorrect())
+                    correctQuestions++;
+            }
         }
         return CalculateRating(totalLevelQuestions, correctQuestions);
     }
@@ -2806,7 +2804,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 examEndTime = Assessment_Utility.getCurrentDateTime();
             }
             calculateMarks();
-            skippedCnt = correctAnsCnt = wrongAnsCnt = 0;
             calculateCorrectWrongCount();
             AssessmentPaperForPush paper = createPaperToSave(scienceQuestionList);
             String currentSession = FastSave.getInstance().getString("currentSession", "");
@@ -2882,6 +2879,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
 
     private void calculateCorrectWrongCount() {
+        skippedCnt = correctAnsCnt = wrongAnsCnt = 0;
+
         for (int i = 0; i < scienceQuestionList.size(); i++) {
             if (scienceQuestionList.get(i).getIsCorrect()) correctAnsCnt++;
             else if (!scienceQuestionList.get(i).getIsCorrect() && scienceQuestionList.get(i).getIsAttempted())
@@ -2940,8 +2939,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             totalMarks = outOfMarks = 0;
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 totalMarks += Integer.parseInt(scienceQuestionList.get(i).getMarksPerQuestion());
-                outOfMarks += Integer.parseInt(scienceQuestionList.get(i).getOutofmarks());
+//                outOfMarks += Integer.parseInt(scienceQuestionList.get(i).getOutofmarks());
             }
+            outOfMarks = Integer.parseInt(assessmentPaperPatterns.getOutofmarks().trim());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

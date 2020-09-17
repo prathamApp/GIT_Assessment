@@ -29,6 +29,7 @@
         android:roundIcon="@drawable/assessment_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.choose_assessment.science.DownloadQuestionsActivity"></activity>
         <activity
@@ -69,7 +70,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

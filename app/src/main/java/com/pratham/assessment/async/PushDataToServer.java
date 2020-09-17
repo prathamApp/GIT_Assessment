@@ -1290,22 +1290,22 @@ public class PushDataToServer {
             ok_btn.setVisibility(View.VISIBLE);
             if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 if (isTablet || !autoPush)
-                    txt_push_dialog_msg.setText("No internet connection");
+                    txt_push_dialog_msg.setText(R.string.no_internet_connection);
 //                    Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
             } else {
                 if (!dataPushed) {
                     push_lottie.setAnimation("error_cross.json");
                     push_lottie.playAnimation();
-                    txt_push_dialog_msg.setText("Data push failed");
+                    txt_push_dialog_msg.setText(R.string.data_push_failed);
                 } else if (isTablet || !autoPush) {
                     push_lottie.setAnimation("success.json");
                     push_lottie.playAnimation();
                     String msg1 = "", msg2 = "";
-                    msg1 = "Papers pushed: " + pushCnt;
+                    msg1 = context.getString(R.string.papers_pushed) + pushCnt;
 //                    if (answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
                     mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
                     int totalMediaCnt = totalSupervisorCnt + totalAnswerMediaCnt + totalVideoMonCnt;
-                    msg2 = "Media pushed: " + mediaCnt + "/" + totalMediaCnt;
+                    msg2 = context.getString(R.string.media_pushed) + mediaCnt + "/" + totalMediaCnt;
                     txt_push_dialog_msg.setText(msg1);
                     txt_push_cnt.setVisibility(View.VISIBLE);
                     txt_push_cnt.setText(msg2);

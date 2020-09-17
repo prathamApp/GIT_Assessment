@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -126,7 +127,7 @@ public class TrueFalseFragment extends Fragment {
         options = new ArrayList<>();
 
         setOdiaFont(getActivity(), question);
-        question.setText(scienceQuestion.getQname());
+        question.setText(Html.fromHtml(scienceQuestion.getQname()));
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -179,9 +180,9 @@ public class TrueFalseFragment extends Fragment {
         options.clear();
         options = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
         if (options.get(0).getChoicename() != null && !options.get(0).getChoicename().equalsIgnoreCase(""))
-            radioButtonTrue.setText(options.get(0).getChoicename());
+            radioButtonTrue.setText(Html.fromHtml(options.get(0).getChoicename()));
         if (options.get(1).getChoicename() != null && !options.get(1).getChoicename().equalsIgnoreCase(""))
-            radioButtonFalse.setText(options.get(1).getChoicename());
+            radioButtonFalse.setText(Html.fromHtml(options.get(1).getChoicename()));
         radioButtonTrue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

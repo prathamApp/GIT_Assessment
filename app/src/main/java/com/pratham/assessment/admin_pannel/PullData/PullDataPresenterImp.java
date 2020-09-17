@@ -131,7 +131,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
                         @Override
                         public void onError(ANError error) {
                             // handle error
-                            Toast.makeText(context, "Check internet connection", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -164,7 +164,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
                             if (states.size() > 0) {
                                 pullDataView.showStatesSpinner(states);
                             } else
-                                Toast.makeText(context, "No states..", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.no_states, Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -172,7 +172,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 });
@@ -801,7 +801,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
 //        else
         if (crlList.size() != 0 && studentList.size() != 0 && groupList.size() != 0 && villageList.size() != 0)
             pullDataView.shoConfermationDialog(crlList.size(), studentList.size(), groupList.size(), villageList.size());
-        else Toast.makeText(context, "No data", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(context, R.string.no_data, Toast.LENGTH_SHORT).show();
 
     }
 

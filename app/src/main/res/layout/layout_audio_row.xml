@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Record Audio"
+                android:text="@string/record_audio"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_15sdp" />
 
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Your answer"
+                android:text="@string/your_answer"
                 android:textSize="@dimen/_15sdp" />
 
             <ImageView

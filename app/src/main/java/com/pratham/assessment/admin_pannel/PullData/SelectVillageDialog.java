@@ -94,7 +94,7 @@ public class SelectVillageDialog extends Dialog {
         if (villageIDList.size() > 0) {
             villageSelectListener.getSelectedItems(villageIDList);
             dismiss();
-        }else Toast.makeText(context, "Please Select village", Toast.LENGTH_SHORT).show();
+        }else Toast.makeText(context, R.string.please_select_village, Toast.LENGTH_SHORT).show();
     }
 
 }

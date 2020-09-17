@@ -59,7 +59,7 @@ public class LanguageFragment extends Fragment {
 //                ((ChooseAssessmentActivity) getActivity()).toggle_btn.setVisibility(View.VISIBLE);
 
 //                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                Toast.makeText(getActivity(), "Connect to internet to download languages", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.connect_to_internet_to_download_languages, Toast.LENGTH_SHORT).show();
             } else setLanguageRecyclerView();
         }
 
@@ -124,7 +124,7 @@ public class LanguageFragment extends Fragment {
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(getActivity(), "Error in loading..Check internet connection.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
                         ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);

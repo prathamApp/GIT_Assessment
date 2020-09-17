@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.bottom_fragment;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Student studentAvatar = studentAvatarList.get(position);
-        holder.studentName.setText(studentAvatar.getFullName());
+        holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName()));
 
        /* int imgId= Integer.parseInt(studentAvatar.getAvatarName());
         holder.avatar.setImageResource(imgId);*/

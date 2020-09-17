@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,7 +122,7 @@ public class EnrollmentNoFragment extends DialogFragment {
                 setResponse(newEnrolledStudent);
             }
         } else {
-            Toast.makeText(getActivity(), "Enter enrollment number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.enter_enrollment_number, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -142,11 +143,11 @@ public class EnrollmentNoFragment extends DialogFragment {
         newEnrolledStudent.setIsniosstudent("1");
         Student student = AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().getStudent(newEnrolledStudent.getStudentID());
         if (student != null) {
-            Toast.makeText(getActivity(), "Profile is already saved..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.profile_is_already_saved, Toast.LENGTH_SHORT).show();
         } else {
             AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
             BackupDatabase.backup(getActivity());
-            Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
             splashInterface.onChildAdded();
             dismiss();
         }
@@ -206,14 +207,14 @@ public class EnrollmentNoFragment extends DialogFragment {
     private void setResponse(Student student) {
         if (student != null) {
             if (student.getFullName() != null) {
-                tv_enrolled_student_name.setText(student.getFullName());
-                tv_enrolled_student_age.setText(student.getAge() + "");
-                tv_enrolled_student_class.setText(student.getStud_Class());
-                tv_enrolled_student_gender.setText(student.getGender());
-                tv_enrolled_student_grp_id.setText(student.getGroupId());
-                tv_enrolled_student_grp_name.setText(student.getGroupName());
+                tv_enrolled_student_name.setText(Html.fromHtml(student.getFullName()));
+                tv_enrolled_student_age.setText(Html.fromHtml(student.getAge() + ""));
+                tv_enrolled_student_class.setText(Html.fromHtml(student.getStud_Class()));
+                tv_enrolled_student_gender.setText(Html.fromHtml(student.getGender()));
+                tv_enrolled_student_grp_id.setText(Html.fromHtml(student.getGroupId()));
+                tv_enrolled_student_grp_name.setText(Html.fromHtml(student.getGroupName()));
 //            tv_enrolled_student_village_id.setText(student.get);
-                tv_enrolled_student_village_name.setText(student.getVillageName());
+                tv_enrolled_student_village_name.setText(Html.fromHtml(student.getVillageName()));
 
                 rl_enroll_no_details.setVisibility(View.VISIBLE);
                 rl_enroll_no_not_found.setVisibility(View.GONE);
@@ -223,7 +224,7 @@ public class EnrollmentNoFragment extends DialogFragment {
             }
         } else {
             if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                Toast.makeText(getActivity(), "Check internet connection..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
             }
             rl_enroll_no_details.setVisibility(View.GONE);
             rl_enroll_no_not_found.setVisibility(View.VISIBLE);
