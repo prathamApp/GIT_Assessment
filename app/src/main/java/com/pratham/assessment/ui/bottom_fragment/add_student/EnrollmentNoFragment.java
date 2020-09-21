@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.bottom_fragment.add_student;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -205,29 +206,34 @@ public class EnrollmentNoFragment extends DialogFragment {
     }
 
     private void setResponse(Student student) {
-        if (student != null) {
-            if (student.getFullName() != null) {
-                tv_enrolled_student_name.setText(Html.fromHtml(student.getFullName()));
-                tv_enrolled_student_age.setText(Html.fromHtml(student.getAge() + ""));
-                tv_enrolled_student_class.setText(Html.fromHtml(student.getStud_Class()));
-                tv_enrolled_student_gender.setText(Html.fromHtml(student.getGender()));
-                tv_enrolled_student_grp_id.setText(Html.fromHtml(student.getGroupId()));
-                tv_enrolled_student_grp_name.setText(Html.fromHtml(student.getGroupName()));
-//            tv_enrolled_student_village_id.setText(student.get);
-                tv_enrolled_student_village_name.setText(Html.fromHtml(student.getVillageName()));
+        try {
+            if (student != null) {
+                if (student.getFullName() != null) {
 
-                rl_enroll_no_details.setVisibility(View.VISIBLE);
-                rl_enroll_no_not_found.setVisibility(View.GONE);
+                    tv_enrolled_student_name.setText(student.getFullName());
+                    tv_enrolled_student_age.setText(student.getAge() + "");
+                    tv_enrolled_student_class.setText(student.getStud_Class());
+                    tv_enrolled_student_gender.setText(student.getGender());
+                    tv_enrolled_student_grp_id.setText(student.getGroupId());
+                    tv_enrolled_student_grp_name.setText(student.getGroupName());
+    //            tv_enrolled_student_village_id.setText(student.get);
+                    tv_enrolled_student_village_name.setText(student.getVillageName());
+
+                    rl_enroll_no_details.setVisibility(View.VISIBLE);
+                    rl_enroll_no_not_found.setVisibility(View.GONE);
+                } else {
+                    rl_enroll_no_details.setVisibility(View.GONE);
+                    rl_enroll_no_not_found.setVisibility(View.VISIBLE);
+                }
             } else {
+                if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                }
                 rl_enroll_no_details.setVisibility(View.GONE);
                 rl_enroll_no_not_found.setVisibility(View.VISIBLE);
             }
-        } else {
-            if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-            }
-            rl_enroll_no_details.setVisibility(View.GONE);
-            rl_enroll_no_not_found.setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 

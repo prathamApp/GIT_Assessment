@@ -525,16 +525,56 @@ public class Assessment_Utility {
         if (lang.equalsIgnoreCase("Assamese"))
             lang = "as";
 
-        Locale myLocale = new Locale(lang);
-        Locale.setDefault(myLocale);
-/*
-        Resources res = context.getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-*/
-        /*Configuration conf = context.getResources().getConfiguration();
-        conf.setLocale(myLocale);
-        context.createConfigurationContext(conf);
-        context.getResources().updateConfiguration(conf, context.getResources().getDisplayMetrics());*/
+     /*   Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);*/
+
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(new Locale(lang));
+        resources.updateConfiguration(config, dm);
+
+    }
+
+    public static void setLocaleByLanguageId(Context context, String langCode) {
+
+        if (langCode.equalsIgnoreCase(Assessment_Constants.ENGLISH_ID))
+            langCode = "en";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.HINDI_ID))
+            langCode = "hi";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.MARATHI_ID))
+            langCode = "mr";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.KANNADA_ID))
+            langCode = "kn";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.TELUGU_ID))
+            langCode = "te";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.BENGALI_ID))
+            langCode = "bn";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.GUJARATI_ID))
+            langCode = "gu";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.PUNJABI_ID))
+            langCode = "pa";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.TAMIL_ID))
+            langCode = "ta";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.ODIA_ID))
+            langCode = "or";
+        //todo add Malayalam id
+     /*   if (langCode.equalsIgnoreCase(Assessment_Constants.))
+            langCode = "ml";*/
+        if (langCode.equalsIgnoreCase(Assessment_Constants.ASSAMESE_ID))
+            langCode = "as";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.URDU_ID))
+            langCode = "ur";
+
+     /*   Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);*/
+
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(new Locale(langCode));
+        resources.updateConfiguration(config, dm);
+
     }
 
     /**
@@ -1560,7 +1600,7 @@ public class Assessment_Utility {
         Dialog dialog = new Dialog(context);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
-        dialog.setTitle("Please check your network connectivity and try again.");
+        dialog.setTitle(context.getString(R.string.no_internet_connection));
         dialog.show();
     }
 //    /**
@@ -2078,7 +2118,6 @@ public class Assessment_Utility {
         }
         return false;
     }
-
 
 
 }

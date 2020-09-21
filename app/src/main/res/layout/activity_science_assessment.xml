@@ -83,7 +83,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="@string/note_pictures_of_the_appearing_student_nwill_be_captured_during_the_exam"
+                android:text="@string/note_pictures_of_the_appearing_student_will_be_captured_during_the_exam"
                 android:textAlignment="center"
                 android:textColor="@color/colorBtnRedDark"
                 android:textSize="@dimen/_12sdp"
@@ -100,7 +100,7 @@
             android:layout_margin="@dimen/_8sdp"
             android:gravity="center"
             app:bg_color="@android:color/holo_blue_dark"
-            app:btn_text="Swipe to start assessment" />
+            app:btn_text="@string/swipe_to_start_assessment" />
 
 
     </RelativeLayout>

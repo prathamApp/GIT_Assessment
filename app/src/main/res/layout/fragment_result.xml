@@ -254,7 +254,7 @@
             android:layout_margin="@dimen/_15sdp"
             android:background="@drawable/ripple_effect_save_btn"
             android:padding="@dimen/_3sdp"
-            android:text="@string/Okay"
+            android:text="@string/ok"
             android:textSize="@dimen/_15sdp" />
 
     </RelativeLayout>

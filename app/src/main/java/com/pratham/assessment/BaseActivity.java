@@ -1,11 +1,8 @@
 package com.pratham.assessment;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -33,24 +30,18 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.install.InstallState;
-import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.ActivityResult;
 import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.InstallStatus;
-import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
 import com.pratham.assessment.async.CopyDbToOTG;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.custom_dialogs.CustomLodingDialog;
-import com.pratham.assessment.custom.font.FontChanger;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
-import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -65,6 +56,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Constants.TransferredImages;
 
 
@@ -121,6 +113,8 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         ttsService.setSpeechRate(0.7f);
         ttsService.setLanguage(new Locale("en", "IN"));
 
+        String langId = FastSave.getInstance().getString(LANGUAGE, "1");
+        Assessment_Utility.setLocaleByLanguageId(this,langId);
 //        checkForUpdate();
         muteFlg = false;
         Catcho.Builder(this)

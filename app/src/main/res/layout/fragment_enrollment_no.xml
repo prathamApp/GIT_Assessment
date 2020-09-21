@@ -314,7 +314,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
                                 android:gravity="center_vertical"
-                                android:text="Village Id : "
+                                android:text="@string/village_id"
                                 android:textAlignment="center"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/_17sdp"
@@ -422,7 +422,7 @@
                     android:layout_below="@+id/iv_student_not_found"
                     android:layout_margin="@dimen/_5sdp"
                     android:fontFamily="@font/quicksand_bold"
-                    android:text="Student not found.\n Check enrollment number again."
+                    android:text="@string/student_not_found_n_check_enrollment_number_again"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp" />

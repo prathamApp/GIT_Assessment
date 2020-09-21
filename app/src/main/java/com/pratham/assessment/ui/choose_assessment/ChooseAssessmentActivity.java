@@ -1,5 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -7,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -14,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.service.textservice.SpellCheckerService;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -79,6 +82,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.EXAMID;
@@ -140,7 +144,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
        /*     Toast.makeText(this, "Id : " + studId + "\nAppName : "
                     + appName + "\nStudentName : " + studName + "\nSubject : " + subject + "\nLanguage : " + language
                     + "\nLevel : " + subLevel, Toast.LENGTH_LONG).show();
-       */     String langCode = "1";
+       */
+            String langCode = "1";
             if (!language.equalsIgnoreCase("")) {
                 switch (language.toLowerCase()) {
                     case "english":
@@ -195,6 +200,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             e.printStackTrace();
         }
 
+//        setLocale(this, "langCode");
 
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
@@ -344,6 +350,22 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
 
     }
+
+
+    /*public void setLocale(Activity context, String langCode) {
+        Locale locale = new Locale("mr");
+        Locale.setDefault(locale);
+        // Create a new configuration object
+        Configuration config = new Configuration();
+        // Set the locale of the new configuration
+        config.locale = locale;
+        // Update the configuration of the Accplication context
+        getResources().updateConfiguration(
+                config,
+                getResources().getDisplayMetrics());
+    }*/
+
+
 
   /*  @Override
     protected void onCreate(Bundle savedInstanceState) {

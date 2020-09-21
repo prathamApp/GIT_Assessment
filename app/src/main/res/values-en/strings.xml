@@ -6,7 +6,7 @@
     <string name="ECE">ECE</string>
     <string name="pratham_institute">Pratham Institute</string>
     <string name="urbon_program">Urban programme</string>
-<!--    <string name="Okay">Okay</string>-->
+    <!--    <string name="Okay">Okay</string>-->
 
 
     <string-array name="age">
@@ -382,11 +382,11 @@
     <string name="village_id">Village Id :</string>
     <string name="student_not_found_n_check_enrollment_number_again">Student not found.\n Check enrollment number again.</string>
     <string name="swipe_to_start_assessment">Swipe to start assessment</string>
-    <string name="loading_please_wait">Loading... Please wait...</string>
+    <string name="loading_please_wait">Loading… Please wait…</string>
     <string name="loading_students">Loading Students..</string>
     <string name="loading_subjects">Loading subjects</string>
     <string name="loading">Loading..</string>
-    <string name="downloading_paper_pattern">Downloading paper pattern...</string>
+    <string name="downloading_paper_pattern">Downloading paper pattern…</string>
 
     <string name="subjects">Subjects</string>
     <string name="certificate">Certificate</string>
@@ -396,8 +396,6 @@
     <string name="downloading_media_please_wait">Downloading media please wait..</string>
     <string name="are_you_sure_you_want_clear_everything">Are you sure you want to clear everything ?</string>
     <string name="delete">Delete</string>
-
-
 
     <!-- <string name="hello_blank_fragment">Hello blank fragment</string>
      <string name="thank_you_for_giving_assessment">Thank you \n for giving assessment.</string>

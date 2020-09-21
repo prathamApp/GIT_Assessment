@@ -290,7 +290,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         NIOSSubjectList.clear();
         contentTableList.clear();
         final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading subjects");
+        progressDialog.setMessage(context.getString(R.string.loading_subjects));
         AndroidNetworking.get(APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance()
                 .getString("currentStudentID", "") + "&appversion=" + /*"1.2.0"*/Assessment_Utility.getCurrentVersion(context))
                 .build()
@@ -428,7 +428,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     private void getSubjectData() {
         contentTableList.clear();
         final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading subjects");
+        progressDialog.setMessage(context.getString(R.string.loading_subjects));
         AndroidNetworking.get(APIs.AssessmentSubjectAPI + Assessment_Constants.SELECTED_LANGUAGE)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -573,7 +573,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
     private void getLanguageData() {
         final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading..");
+        progressDialog.setMessage(context.getString(R.string.loading));
         progressDialog.setCancelable(false);
         progressDialog.show();
         AndroidNetworking.get(APIs.AssessmentLanguageAPI)

@@ -64,7 +64,7 @@
         android:id="@+id/ok_btn"
         android:layout_width="@dimen/_80sdp"
         android:layout_height="wrap_content"
-        android:text="@string/Okay"
+        android:text="@string/ok"
         android:visibility="gone"
         android:background="@drawable/gradiance_bg_3"
         android:layout_marginBottom="@dimen/_15sdp"

@@ -219,7 +219,7 @@ public class MenuFragment extends Fragment {
         TextView dia_title = dialog.findViewById(R.id.dia_title);
         Button skip = dialog.findViewById(R.id.dia_btn_green);
         Button ok = dialog.findViewById(R.id.dia_btn_yellow);
-        dia_title.setText(R.string.download_offline_pack);
+        dia_title.setText(R.string.please_download_language_packs_offline_for_better_performance);
         ok.setText(R.string.ok);
         skip.setText(R.string.skip);
 

@@ -211,7 +211,9 @@ public class APIs {
 
     //Azure APIs
 //    public static String baseAzureURL = "http://www.prathamassessment.org:8085/";
-//    public static String baseAzureURL = "http://www.apiassessment.openiscool.org/";
+
+
+//    public static String devBaseAzureURL = "http://www.apiassessment.openiscool.org/";
     public static String baseAzureURL = "http://delhigovt.centralindia.cloudapp.azure.com:8081/";
     public static String AssessmentLanguageAPI = baseAzureURL + "api/language/GetLanguage";
     public static String AssessmentSubjectAPI = baseAzureURL + "api/subject/GetSubjectv2?languageid=";

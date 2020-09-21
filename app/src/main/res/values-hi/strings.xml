@@ -1,2 +1,400 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Assessment</string>
+    <string name="read_india">Read India</string>
+    <string name="hybrid_learning">Hybrid Learning</string>
+    <string name="second_chance">Second Chance</string>
+    <string name="ECE">ECE</string>
+    <string name="pratham_institute">Pratham Institute</string>
+    <string name="urbon_program">Urban programme</string>
+<!--    <string name="Okay">Okay</string>-->
+
+
+    <string-array name="age">
+        <item>Select Age</item>
+        <item> 3  </item>
+        <item> 4  </item>
+        <item> 5  </item>
+        <item> 6  </item>
+        <item> 7  </item>
+        <item> 8  </item>
+        <item> 9  </item>
+        <item> 10 </item>
+        <item> 11 </item>
+        <item> 12 </item>
+        <item> 13 </item>
+        <item> 14 </item>
+        <item> 15 </item>
+        <item> 16 </item>
+        <item> 17 </item>
+        <item> 18 </item>
+        <item> 19 </item>
+        <item> 20 </item>
+        <item> 21 </item>
+        <item> 22 </item>
+        <item> 23 </item>
+        <item> 24 </item>
+        <item> 25 </item>
+        <item> 26 </item>
+        <item> 27 </item>
+        <item> 28 </item>
+        <item> 29 </item>
+        <item> 30 </item>
+        <item> 31 </item>
+        <item> 32 </item>
+        <item> 33 </item>
+        <item> 34 </item>
+        <item> 35 </item>
+        <item> 36 </item>
+        <item> 37 </item>
+        <item> 38 </item>
+        <item> 39 </item>
+        <item> 40 </item>
+        <item> 41 </item>
+        <item> 42 </item>
+        <item> 43 </item>
+        <item> 44 </item>
+        <item> 45 </item>
+        <item> 46 </item>
+        <item> 47 </item>
+        <item> 48 </item>
+        <item> 49 </item>
+        <item> 50 </item>
+        <item> 51 </item>
+        <item> 52 </item>
+        <item> 53 </item>
+        <item> 54 </item>
+        <item> 55 </item>
+        <item> 56 </item>
+        <item> 57 </item>
+        <item> 58 </item>
+        <item> 59 </item>
+        <item> 60 </item>
+        <item> 61 </item>
+        <item> 62 </item>
+        <item> 63 </item>
+        <item> 64 </item>
+        <item> 65 </item>
+        <item> 66 </item>
+        <item> 67 </item>
+        <item> 68 </item>
+        <item> 69 </item>
+        <item> 70 </item>
+        <item> 71 </item>
+        <item> 72 </item>
+        <item> 73 </item>
+        <item> 74 </item>
+        <item> 75 </item>
+        <item> 76 </item>
+        <item> 77 </item>
+        <item> 78 </item>
+        <item> 79 </item>
+        <item> 80 </item>
+        <item> 81 </item>
+        <item> 82 </item>
+        <item> 83 </item>
+        <item> 84 </item>
+        <item> 85 </item>
+        <item> 86 </item>
+        <item> 87 </item>
+        <item> 88 </item>
+        <item> 89 </item>
+        <item> 90 </item>
+        <item> 91 </item>
+        <item> 92 </item>
+        <item> 93 </item>
+        <item> 94 </item>
+        <item> 95 </item>
+        <item> 96 </item>
+        <item> 97 </item>
+        <item> 98 </item>
+        <item> 99 </item>
+        <item> 100 </item>
+    </string-array>
+
+    <string-array name="student_class">
+        <item>Select Class</item>
+        <item> 1  </item>
+        <item> 2  </item>
+        <item> 3  </item>
+        <item> 4  </item>
+        <item> 5  </item>
+        <item> 6  </item>
+        <item> 7  </item>
+        <item> 8  </item>
+        <item> 9  </item>
+        <item> 10 </item>
+        <item> 11 </item>
+        <item> 12 </item>
+    </string-array>
+
+
+    <string-array name="india_states">
+        <item>SELECT STATE</item>
+        <item>Andhra Pradesh(AP)</item>
+        <item>Arunachal Pradesh(AR)</item>
+        <item>Assam(AS)</item>
+        <item>Bihar(BR)</item>
+        <item>Chhattisgarh(CG)</item>
+        <item>Goa(GA)</item>
+        <item>Gujarat(GJ)</item>
+        <item>Haryana(HR)</item>
+        <item>Himachal Pradesh(HP)</item>
+        <item>Jammu and kashmir(JK)</item>
+        <item>Jharkhand(JH)</item>
+        <item>Karnataka(KN)</item>
+        <item>Kerala(KL)</item>
+        <item>Madhya Pradesh(MP)</item>
+        <item>Maharashtra(MH)</item>
+        <item>Manipur(MN)</item>
+        <item>Meghalaya(ML)</item>
+        <item>Mizoram(MZ)</item>
+        <item>Nagaland(NL)</item>
+        <item>Orissa(OR)</item>
+        <item>Punjab(PB)</item>
+        <item>Rajasthan(RJ)</item>
+        <item>Sikkim(SK)</item>
+        <item>Tamil Nadu(TN)</item>
+        <item>Telangana(TS)</item>
+        <item>Tripura(TR)</item>
+        <item>Uttarakhand(UK)</item>
+        <item>Uttar Pradesh(UP)</item>
+        <item>West Bengal(WB)</item>
+        <item>Andaman and Nicobar Islands(AN)</item>
+        <item>Chandigarh(CH)</item>
+        <item>Dadra and Nagar Haveli(DH)</item>
+        <item>Daman and Diu(DD)</item>
+        <item>Delhi(DL)</item>
+        <item>Lakshadweep(LD)</item>
+        <item>Pondicherry(PY)</item>
+    </string-array>
+    <string-array name="india_states_shortcode">
+        <item>SELECT STATE</item>
+        <item>AP</item>
+        <item>AR</item>
+        <item>AS</item>
+        <item>BR</item>
+        <item>CG</item>
+        <item>GA</item>
+        <item>GJ</item>
+        <item>HR</item>
+        <item>HP</item>
+        <item>JK</item>
+        <item>JH</item>
+        <item>KN</item>
+        <item>KL</item>
+        <item>MP</item>
+        <item>MH</item>
+        <item>MN</item>
+        <item>ML</item>
+        <item>MZ</item>
+        <item>NL</item>
+        <item>OR</item>
+        <item>PB</item>
+        <item>RJ</item>
+        <item>SK</item>
+        <item>TN</item>
+        <item>TS</item>
+        <item>TR</item>
+        <item>UK</item>
+        <item>UP</item>
+        <item>WB</item>
+        <item>AN</item>
+        <item>CH</item>
+        <item>DH</item>
+        <item>DD</item>
+        <item>DL</item>
+        <item>LD</item>
+        <item>PY</item>
+    </string-array>
+
+    <string-array name="certificate_Languages">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Marathi</item>
+        <item>Gujarati</item>
+        <item>Kannada</item>
+        <item>Bengali</item>
+        <item>Assamese</item>
+        <item>Telugu</item>
+        <item>Tamil</item>
+        <item>Odia</item>
+        <item>Urdu</item>
+        <item>Punjabi</item>
+    </string-array>
+
+    <string name="checked_text">Supervisor Mode</string>
+    <string name="unchecked_text">Practice Mode</string>
+
+
+    <string name="thank_you_for_giving_assessment">असेसमेंट में भाग लेने के लिए धन्यवाद।</string>
+    <string name="video_monitoring_is">वीडियो मॉनिटरिंग चालू है</string>
+    <string name="view_hint">टेक्स्ट देखें</string>
+    <string name="profile_name">प्रोफ़ाइल नेम</string>
+    <string name="time">समय:</string>
+    <string name="total">कुल</string>
+    <string name="assign_groups">ग्रुप्स असाइन करें</string>
+    <string name="assign">असाइन</string>
+    <string name="oops_something_went_wrong">ओहो, कुछ गड़बड़ हो गई!!</string>
+    <string name="sorry_about_that_press_the_report_button_to_send_the_error_to_us">इसके लिए माफ़ करें। त्रुटि हम तक भेजने के लिए रिपोर्ट बटन दबाएं।</string>
+    <string name="report">रिपोर्ट</string>
+    <string name="submit">जमा करें</string>
+    <string name="scan_qr">क्यूआर (QR) स्कैन करें</string>
+    <string name="student_name">विद्यार्थी का नाम :</string>
+    <string name="scan_new">नया स्कैन</string>
+    <string name="start">शुरू करें</string>
+    <string name="exam_name">परीक्षा का नाम :</string>
+    <string name="total_questions">कुल प्रश्न :</string>
+    <string name="note_pictures_of_the_appearing_student_will_be_captured_during_the_exam">नोट: परीक्षा के दौरान उपस्थित छात्रों की तसवीरें ली जाएंगी।</string>
+    <string name="prev">पिछला</string>
+    <string name="pratham_n_assessments">Pratham \n Assesments</string>
+    <string name="enter_supervisor_name">सुपरवाइज़र का नाम भरें</string>
+    <string name="user_name">यूज़रनेम</string>
+    <string name="password">पासवर्ड</string>
+    <string name="login">लॉगिन</string>
+    <string name="clear">क्लियर</string>
+    <string name="please_wait_pushing_data">कृपया प्रतीक्षा करें, डेटा भेजा जा रहा है</string>
+    <string name="check_your_wifi_is_connected_to_pratham_kolibri">जांचें कि आपका वाईफाई प्रथम कोलिब्री से जुड़ा है!</string>
+    <string name="eject_otg">ओटीजी (OTG) इजेक्ट करें</string>
+    <string name="practice">अभ्यास</string>
+    <string name="time_s_up">समय समाप्त!</string>
+    <string name="ok">ठीक है</string>
+    <string name="problem_downloading_file">फाइल डाउनलोड करने में समस्या</string>
+    <string name="what_do_you_want_to_do">आप क्या करना चाहते हैं?</string>
+    <string name="restart">रीस्टार्ट</string>
+    <string name="exit">बाहर जाएं</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="enter_name">नाम भरें</string>
+    <string name="age">उम्र:</string>
+    <string name="gender">लिंग:</string>
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="other">अन्य</string>
+    <string name="language">भाषा:</string>
+    <string name="select_avatar">अवतार चुनें</string>
+    <string name="save_profile">प्रोफ़ाइल सेव करें</string>
+    <string name="marks">अंक</string>
+    <string name="total_marks">कुल अंक</string>
+    <string name="correct">सही</string>
+    <string name="wrong">गलत</string>
+    <string name="skipped">छोड़ दिया</string>
+    <string name="total_time">कुल समय</string>
+    <string name="time_taken">अवधि</string>
+    <string name="certificates">प्रमाण पत्र</string>
+    <string name="you_have_earned">आपने प्राप्त किये हैं</string>
+    <string name="student_name_">विद्यार्थी का नाम</string>
+    <string name="age_">उम्र</string>
+    <string name="class_">कक्षा</string>
+    <string name="gender_">लिंग</string>
+    <string name="group_id">ग्रुप आई डी</string>
+    <string name="group_name">ग्रुप का नाम</string>
+    <string name="village_name">गाँव का नाम</string>
+    <string name="check_enrollment_number">नामांकन संख्या की जाँच करें</string>
+    <string name="enter_enrollment_number">नामांकन संख्या दर्ज करें</string>
+    <string name="create_profile">प्रोफ़ाइल बनाएं</string>
+    <string name="clear_data">डेटा क्लियर करें</string>
+    <string name="push_data">डेटा भेजें</string>
+    <string name="subject">विषय</string>
+    <string name="topic">उपविषय</string>
+    <string name="out_of_marks">कुल अंक</string>
+    <string name="marks_obtained">अंक प्राप्त</string>
+    <string name="done">समाप्त</string>
+    <string name="name">नाम</string>
+    <string name="next">अगला</string>
+    <string name="image">फोटो</string>
+    <string name="please_download_language_packs_offline_for_better_performance">बेहतर काम करने के लिए कृपया भाषा पैक ऑफलाइन डाउनलोड करें</string>
+    <string name="record_audio">ऑडियो रिकॉर्ड करें</string>
+    <string name="your_answer">आपका जवाब</string>
+    <string name="can_do">कर सकते हैं</string>
+    <string name="need_help">मदद चाहिए</string>
+    <string name="enter_answer">जवाब दर्ज करें</string>
+    <string name="capture_image">फोटो खींचें</string>
+    <string name="show_images">फोटो दिखाएं</string>
+    <string name="take_photo">चित्र खींचें</string>
+    <string name="choose_from_gallery">गैलरी से चुनें</string>
+    <string name="you_answered">आपने जवाब दिया</string>
+    <string name="correct_answer">सही जवाब</string>
+    <string name="answer">जवाब</string>
+    <string name="view_answer">जवाब देखें</string>
+    <string name="age_3_to_6">उम्र 3 से 6</string>
+    <string name="age_8_to_14">उम्र 8 से 14</string>
+    <string name="start_assessment">असेसमेंट शुरू करें</string>
+    <string name="update_topics">उपविषय अपडेट करें</string>
+    <string name="true_">सही</string>
+    <string name="false_">गलत</string>
+    <string name="capture_video">वीडियो रिकॉर्ड करें</string>
+    <string name="welcome">स्वागत है</string>
+    <string name="save">सेव करें</string>
+    <string name="answered">जवाब दे दिया है</string>
+    <string name="not_answered">जवाब नहीं दिया है</string>
+    <string name="topics">उपविषय </string>
+    <string name="clear_changes">बदलाव क्लियर करें</string>
+    <string name="or">या</string>
+    <string name="do_you_want_to_exit">क्या आप बाहर आना चाहते हैं?</string>
+    <string name="Media_download_failed">मीडिया डाउनलोड विफल रहा</string>
+    <string name="skip_all">सभी को छोड़ें</string>
+    <string name="skip_this">इसको छोड़ें</string>
+    <string name="data_push_failed">डेटा भेजना विफल रहा</string>
+    <string name="no_internet_connection">इंटरनेट कनेक्शन नहीं है</string>
+    <string name="do_you_want_to_leave_assessment">क्या आप असेसमेंट छोड़ना चाहते हैं?</string>
+    <string name="on">ऑन</string>
+    <string name="off">ऑफ़</string>
+    <string name="view_option">विकल्प देखें</string>
+    <string name="data_copying_failed">डेटा कॉपी करना असफल रहा!! कृपया OTG फिर से डालें</string>
+    <string name="video">वीडियो</string>
+    <string name="yes">हाँ</string>
+    <string name="no">नहीं</string>
+    <string name="watch_the_video">वीडियो देखें</string>
+    <string name="skip">छोड़ें</string>
+    <string name="papers_pushed">भेजे गए पेपर्स:</string>
+    <string name="media_pushed">भेजा गया मीडिया:</string>
+    <string name="audio">ऑडियो</string>
+    <string name="update">अपडेट</string>
+    <string name="this_app_version_is_older_please_update_the_app">ऐप का यह वर्ज़न पुराना है। कृपया ऐप को अपडेट करें।</string>
+    <string name="invalid_qr_code">अवैध QR कोड!!!</string>
+    <string name="no_certificates">कोई प्रमाण पत्र नहीं</string>
+    <string name="nothing_to_pull">पुल करने के लिए कुछ नहीं</string>
+    <string name="error_in_loading_check_internet_connection">लोड करने में त्रुटि.. इंटरनेट कनेक्शन चेक करें</string>
+    <string name="no_exams">कोई परीक्षा नहीं</string>
+    <string name="no_subjects">कोई विषय नहीं</string>
+    <string name="updated">अपडेट हो गया</string>
+    <string name="please_select_group">कृपया ग्रुप का चयन करें!</string>
+    <string name="please_select_students">कृपया विद्यार्थियों का चयन करें!</string>
+    <string name="give_camera_permissions">सेटिंग्स से कैमरा को अनुमति दें और एप्लिकेशन को रीस्टार्ट करें।</string>
+    <string name="no_groups_assigned">कोई ग्रुप असाइन नहीं किया गया है ..</string>
+    <string name="please_select_village">कृपया गाँव का चयन करें</string>
+    <string name="no_images">कोई फोटो नहीं</string>
+    <string name="give_storage_permissions">सेटिंग्स से स्टोरेज को अनुमति दें और एप्लिकेशन को रीस्टार्ट करें।</string>
+    <string name="no_states">राज्य उपलब्ध नहीं हैं</string>
+    <string name="connect_to_internet_to_download_languages">भाषाओं को डाउनलोड करने के लिए इंटरनेट से कनेक्ट करें</string>
+    <string name="no_data">डेटा उपलब्ध नहीं है</string>
+    <string name="select_language">भाषा का चयन करें</string>
+    <string name="please_fil_all_the_details">कृपया सभी विवरण भरें</string>
+    <string name="profile_created_successfully">प्रोफ़ाइल सफलतापूर्वक बन गया ..</string>
+    <string name="profile_is_already_saved">प्रोफ़ाइल पहले ही सेव किया जा चुका है ..</string>
+    <string name="data_cleared_successfully">डेटा सफलतापूर्वक क्लियर किया गया</string>
+    <string name="please_select_at_least_one_group">कृपया कम से कम एक ग्रुप का चयन करें !!!</string>
+    <string name="groups_assigned_successfully">ग्रुप सफलतापूर्वक असाइन किया गया!!!</string>
+    <string name="you_can_select_maximum_5_groups">आप अधिकतम 5 ग्रुप का चयन कर सकते हैं !!!</string>
+    <string name="connect_to_internet_to_download_students_of_this_device">इस डिवाइस के छात्रों के प्रोफाइल को डाउनलोड करने के लिए इंटरनेट से कनेक्ट करें।</string>
+    <string name="exam">परीक्षा</string>
+    <string name="question">सवाल</string>
+
+    <string name="village_id">Village Id :</string>
+    <string name="student_not_found_n_check_enrollment_number_again">Student not found.\n Check enrollment number again.</string>
+    <string name="swipe_to_start_assessment">Swipe to start assessment</string>
+    <string name="loading_please_wait">Loading… Please wait…</string>
+    <string name="loading_students">Loading Students..</string>
+    <string name="loading_subjects">Loading subjects..</string>
+    <string name="loading">Loading..</string>
+    <string name="downloading_paper_pattern">Downloading paper pattern…</string>
+
+    <string name="subjects">Subjects</string>
+    <string name="certificate">Certificate</string>
+    <string name="download_offline_languages">Download offline languages</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_failed_for_following_exams">"Download failed for following exams : "</string>
+    <string name="downloading_media_please_wait">Downloading media please wait..</string>
+    <string name="are_you_sure_you_want_clear_everything">Are you sure you want to clear everything ?</string>
+    <string name="delete">Delete</string>
+</resources>

@@ -321,10 +321,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         Resources res = getResources();
 // Change locale settings in the app.
 
-        DisplayMetrics dm = res.getDisplayMetrics();
+     /*   DisplayMetrics dm = res.getDisplayMetrics();
         android.content.res.Configuration conf = res.getConfiguration();
-        conf.locale = new Locale("en");
-        res.updateConfiguration(conf, dm);
+        conf.locale = new Locale("mr");
+        res.updateConfiguration(conf, dm);*/
     }
 
     private boolean checkPaperAlreadyAttempted() {
@@ -708,9 +708,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             failedExams = failedExams + "\n" + downloadFailedExamList.get(i);
         }
         new AlertDialog.Builder(this)
-                .setTitle("Download Failed")
+                .setTitle(R.string.download_failed)
                 .setCancelable(false)
-                .setMessage("Download failed for following exams : " + failedExams)
+                .setMessage(getString(R.string.download_failed_for_following_exams) + failedExams)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -1272,7 +1272,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
         if (downloadMediaList.size() > 0) {
 
-            mediaProgressDialog.setTitle("Downloading media please wait..");
+            mediaProgressDialog.setTitle(getString(R.string.downloading_media_please_wait));
 //                    mediaProgressDialog.setMessage("Progress : ");
 
             mediaProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

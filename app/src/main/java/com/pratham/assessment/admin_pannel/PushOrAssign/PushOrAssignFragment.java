@@ -93,10 +93,10 @@ public class PushOrAssignFragment extends Fragment {
     public void onClear() {
         AlertDialog clearDataDialog = new AlertDialog.Builder(getActivity())
                 //set message, title, and icon
-                .setTitle("Clear Data")
-                .setMessage("Are you sure you want to clear everything ?")
+                .setTitle(getString(R.string.clear_data))
+                .setMessage(R.string.are_you_sure_you_want_clear_everything)
                 .setIcon(R.drawable.ic_warning)
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //your deleting code
                         clearData();

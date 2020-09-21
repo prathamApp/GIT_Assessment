@@ -351,7 +351,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public void showProgressDialog() {
         progressDialog = new ProgressDialog(SplashActivity.this);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Loading... Please wait...");
+        progressDialog.setMessage(getString(R.string.loading_please_wait));
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -596,7 +596,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         progressDialog.show();
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Loading Students..");
+        progressDialog.setMessage(getString(R.string.loading_students));
         AndroidNetworking.get(url)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {

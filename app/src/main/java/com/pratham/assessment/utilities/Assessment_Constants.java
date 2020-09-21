@@ -138,6 +138,8 @@ public class Assessment_Constants {
     public static String TAMIL_ID = "13";
     public static String TELUGU_ID = "14";
     public static String URDU_ID = "15";
+    //todo add Malayalam id
+//    public static String MALAYALAM_ID = "1";
 
     public static final String STT_REGEX = "[\"\\-+\\.'^?!@#%-_;&*,:|।<>()]";
     public static final String STT_REGEX_2 = "[\"\\-+\\.'^?!@#%-_;&*,:<>()]";

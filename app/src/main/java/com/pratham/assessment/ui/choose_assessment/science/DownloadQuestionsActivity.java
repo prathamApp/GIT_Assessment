@@ -736,7 +736,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
 
         if (downloadMediaList.size() > 0) {
 
-            mediaProgressDialog.setTitle("Downloading media please wait..");
+            mediaProgressDialog.setTitle(getString(R.string.downloading_media_please_wait));
 //                    mediaProgressDialog.setMessage("Progress : ");
 
             mediaProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

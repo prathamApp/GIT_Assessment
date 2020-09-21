@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:background="@drawable/ripple_effect"
-                android:text="@string/Okay"
+                android:text="@string/ok"
                 android:textSize="@dimen/_15sdp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/_15sdp"

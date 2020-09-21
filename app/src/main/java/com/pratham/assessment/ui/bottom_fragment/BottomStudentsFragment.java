@@ -799,7 +799,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
     public void showProgressDialog() {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Loading... Please wait...");
+        progressDialog.setMessage(getActivity().getString(R.string.loading_please_wait));
         progressDialog.setCancelable(false);
         progressDialog.show();
     }

@@ -121,7 +121,7 @@ public class ImageListDialog extends AppCompatActivity {
         if (imageList.size() > 0) {
             if (!showDeleteBtn) {
                 if (imageList.size() == 1) ib_prev.setVisibility(View.INVISIBLE);
-                tv_img_label.setText(R.string.image + imageList.size() + "/" + imageList.size());
+                tv_img_label.setText(getString(R.string.image) + imageList.size() + "/" + imageList.size());
             }
             currentCnt = imageList.size() - 1;
             setUri(imageList.get(currentCnt));
@@ -167,7 +167,7 @@ public class ImageListDialog extends AppCompatActivity {
 
     private void showPrevNext() {
         if (!showDeleteBtn)
-            tv_img_label.setText(R.string.image + (currentCnt + 1) + "/" + imageList.size());
+            tv_img_label.setText(getString(R.string.image) + (currentCnt + 1) + "/" + imageList.size());
 
         if (!showDeleteBtn)
             if (currentCnt > -1 && currentCnt < imageList.size() - 1)
