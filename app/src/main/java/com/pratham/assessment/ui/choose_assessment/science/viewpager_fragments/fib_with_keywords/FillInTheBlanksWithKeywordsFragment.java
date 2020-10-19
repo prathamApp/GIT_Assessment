@@ -193,6 +193,7 @@ public class FillInTheBlanksWithKeywordsFragment extends Fragment
     }
 
 
+
     @Click({R.id.iv_question_image, R.id.iv_question_gif})
     public void questionImageClicked() {
         String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
