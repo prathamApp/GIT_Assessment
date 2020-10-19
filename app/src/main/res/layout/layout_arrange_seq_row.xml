@@ -40,7 +40,8 @@
 
         <ImageView
             android:id="@+id/iv_question_image"
-            style="@style/CustomQuestionImageStyle" />
+            style="@style/CustomQuestionImageStyle"
+            android:layout_weight="0.5" />
 
         <com.pratham.assessment.custom.gif_viewer.GifView
             android:id="@+id/iv_question_gif"

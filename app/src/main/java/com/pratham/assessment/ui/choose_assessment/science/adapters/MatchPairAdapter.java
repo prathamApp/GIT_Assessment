@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,6 +122,7 @@ public class MatchPairAdapter extends RecyclerView.Adapter<MatchPairAdapter.MyVi
                 }
             });
         } else {
+            holder.text.setMovementMethod(new ScrollingMovementMethod());
             holder.rl_img.setVisibility(View.GONE);
             if (scienceQuestionChoice.getChoicename() != null && !scienceQuestionChoice.getChoicename().equalsIgnoreCase(""))
                 holder.text.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));

@@ -192,7 +192,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
 //                showQuestions();
             } else {
                 finish();
-                Toast.makeText(context, "Connect to internet to download paper format.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.connect_to_internet_to_download_paper_format), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -650,18 +650,18 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
 
                     List<ScienceQuestion> scienceQuestions;
                     //                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
-                    if (assessmentPaperPatterns.getIsRandom()) {
+//                    if (assessmentPaperPatterns.getIsRandom()) {
                         scienceQuestions = AppDatabase.getDatabaseInstance(context).
                                 getScienceQuestionDao().getQuestionListByPattern(Assessment_Constants.SELECTED_LANGUAGE,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
-                    } else {
+                    /*} else {
                         scienceQuestions = AppDatabase.getDatabaseInstance(context).
                                 getScienceQuestionDao().getQuestionListByPatternRandomly(Assessment_Constants.SELECTED_LANGUAGE,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
 
-                    }
+                    }*/
 
                     for (int i = 0; i < scienceQuestions.size(); i++) {
                         scienceQuestions.get(i).setOutofmarks(assessmentPatternDetails.get(j).getMarksperquestion());

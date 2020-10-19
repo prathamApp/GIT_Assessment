@@ -35,6 +35,19 @@ public interface AssessmentPaperPatternDao {
     @Query("select * from AssessmentPaperPattern where examid=:examId")
     public AssessmentPaperPattern getAssessmentPaperPatternsByExamId(String examId);
 
+    @Query("select * from AssessmentPaperPattern where examid=:examId and (" +
+            " certificateQuestion1  !='null'  " +
+            "or certificateQuestion2!='null'  " +
+            "or certificateQuestion3!='null'  " +
+            "or certificateQuestion4!='null'  " +
+            "or certificateQuestion5!='null'  " +
+            "or certificateQuestion6!='null'  " +
+            "or certificateQuestion7!='null'  " +
+            "or certificateQuestion8!='null'  " +
+            "or certificateQuestion9!='null'  " +
+            "or certificateQuestion10 !='null')")
+    public AssessmentPaperPattern getAssessmentPaperPatternsByExamIdQNotNull(String examId);
+
     @Query("select examid from ASSESSMENTPAPERPATTERN where examname=:examname")
     public String getExamIdByExamName(String examname);
 

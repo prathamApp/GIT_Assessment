@@ -20,23 +20,25 @@
             app:autoSizeMaxTextSize="@dimen/_20sdp"
             app:autoSizeMinTextSize="@dimen/_15sdp"
             app:autoSizeTextType="uniform" />
+
         <Button
             android:id="@+id/btn_view_hint"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight=".1"
-            android:layout_margin="@dimen/_2sdp"
-            android:background="@drawable/correct_bg"
-            android:text="@string/view_hint"
-            android:elevation="@dimen/_2sdp"
-            android:textSize="@dimen/_10sdp"
-            android:padding="@dimen/_3sdp"
             android:layout_gravity="center"
-            android:textColor="@color/black" />
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight=".1"
+            android:background="@drawable/correct_bg"
+            android:elevation="@dimen/_2sdp"
+            android:padding="@dimen/_3sdp"
+            android:text="@string/view_hint"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10sdp" />
 
         <ImageView
             android:id="@+id/iv_question_image"
-            style="@style/CustomQuestionImageStyle" />
+            style="@style/CustomQuestionImageStyle"
+            android:layout_weight="0.5" />
 
         <com.pratham.assessment.custom.gif_viewer.GifView
             android:id="@+id/iv_question_gif"
@@ -86,7 +88,6 @@
                 android:elevation="@dimen/_3sdp"
                 android:src="@drawable/ic_mic_24dp"
                 android:visibility="visible" />
-
 
 
         </RelativeLayout>

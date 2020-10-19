@@ -5,24 +5,30 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -65,18 +71,24 @@ import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentPatternDetails;
+import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.DownloadMedia;
+import com.pratham.assessment.domain.Modal_Log;
 import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ResultOuterModalClass;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.Score;
+import com.pratham.assessment.domain.Session;
+import com.pratham.assessment.domain.Status;
 import com.pratham.assessment.domain.Student;
+import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.domain.TempScienceQuestion;
 import com.pratham.assessment.interfaces.DataPushListener;
 import com.pratham.assessment.services.image_capture.APictureCapturingService;
 import com.pratham.assessment.services.image_capture.PictureCapturingListener;
 import com.pratham.assessment.services.image_capture.PictureCapturingServiceImpl;
+import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment_;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity_;
@@ -89,6 +101,7 @@ import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.V
 import com.pratham.assessment.utilities.APIs;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.utilities.FileUtils;
 import com.pratham.atm.custom.LockNavigation.PinActivity;
 import com.robinhood.ticker.TickerView;
 
@@ -103,9 +116,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -161,11 +174,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     List<ScienceQuestion> scienceQuestionList = new ArrayList<>();
     AssessmentPaperPattern assessmentPaperPatterns;
     List<AssessmentPatternDetails> assessmentPatternDetails;
+
+    Context context;
     /*
         @BindView(R.id.circle_progress_bar)
         public ProgressBar circle_progress_bar;*/
     List<String> downloadFailedExamList = new ArrayList<>();
-    int mediaDownloadCnt = 0;
+    int mediaDownloadCnt = 0, mediaRetryCount = 3;
     int queDownloadIndex = 0;
     int paperPatternCnt = 0;
     int ansCnt = 0, queCnt = 0;
@@ -258,13 +273,99 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         subjectId = FastSave.getInstance().getString("SELECTED_SUBJECT_ID", "1");
         currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
         pinActivity = new PinActivity();
+        context = this;
+
+        try {
+            Bundle bundle = new Bundle();
+            bundle = this.getIntent().getExtras();
+            String studId = String.valueOf(bundle.getString("studentId"));
+            String appName = String.valueOf(bundle.getString("appName"));
+            String studName = String.valueOf(bundle.getString("studentName"));
+            String subject = String.valueOf(bundle.getString("subjectName"));
+            String language = String.valueOf(bundle.getString("subjectLanguage"));
+            String subLevel = String.valueOf(bundle.getString("subjectLevel"));
+            String examId = String.valueOf(bundle.getString("examId"));
+//            String subjectId = String.valueOf(bundle.getString("subjectId"));
+       /*     Toast.makeText(this, "Id : " + studId + "\nAppName : "
+                    + appName + "\nStudentName : " + studName + "\nSubject : " + subject + "\nLanguage : " + language
+                    + "\nLevel : " + subLevel, Toast.LENGTH_LONG).show();
+       */
+            String langCode = "1";
+            if (!language.equalsIgnoreCase("")) {
+                switch (language.toLowerCase()) {
+                    case "english":
+                        langCode = "1";
+                        break;
+                    case "hindi":
+                        langCode = "2";
+                        break;
+                    case "marathi":
+                        langCode = "3";
+                        break;
+                    case "gujarati":
+                        langCode = "7";
+                        break;
+                    case "kannada":
+                        langCode = "8";
+                        break;
+                    case "assamese":
+                        langCode = "9";
+                        break;
+                    case "bengali":
+                        langCode = "10";
+                        break;
+                    case "odia":
+                        langCode = "12";
+                        break;
+                    case "telugu":
+                        langCode = "14";
+                        break;
+                    default:
+                        langCode = "1";
+                }
+            }
+            Assessment_Constants.SELECTED_LANGUAGE = langCode;
+            FastSave.getInstance().saveString("language", langCode);
+            selectedLang = langCode;
+
+            if (!studId.equalsIgnoreCase("")) {
+                Assessment_Constants.currentStudentID = studId;
+                FastSave.getInstance().saveString("currentStudentID", studId);
+                currentStudentID = studId;
+                createDataBase();
+            }
+            if (!studName.equalsIgnoreCase("")) {
+                Assessment_Constants.currentStudentName = studName;
+                FastSave.getInstance().saveString("currentStudentName", studName);
+            }
+            if (!studName.equalsIgnoreCase("")) {
+//                Assessment_Constants. = studName;
+                FastSave.getInstance().saveString("EXAMID", examId);
+                selectedExamId = examId;
+//                selectedExamId="3187";
+            }
+        } catch (Exception e) {
+            Log.d("Exception@@@", e.getMessage());
+            e.printStackTrace();
+        }
+
 
         assessmentSession = UUID.randomUUID().toString();
 //        Assessment_Constants.assessmentSession=assessmentSession;
         downloadMediaList = new ArrayList<>();
         attemptedList = new ArrayList<>();
 //        iv_question_mark.setVisibility(View.GONE);
+
         rl_que.setBackgroundColor(Assessment_Utility.selectedColor);
+        if (Assessment_Utility.selectedColor == null || Assessment_Utility.selectedColor == 0) {
+            rl_que.setBackgroundColor(Assessment_Utility.getRandomColorGradient());
+            Drawable background = rl_que.getBackground();
+            int color = Color.TRANSPARENT;
+            if (background instanceof ColorDrawable)
+                color = ((ColorDrawable) background).getColor();
+            Assessment_Utility.setSelectedColor(color);
+        }
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         supervisorId = getIntent().getStringExtra("crlId");
         checkPermissions();
@@ -282,7 +383,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //            serviceIntent = new Intent(getApplicationContext(), VideoMonitoringService.class);
         }
 
-
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             downloadPaperPattern();
         } else {
@@ -292,9 +392,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //                showQuestions();
             } else {
                 finish();
-                Toast.makeText(this, "Connect to internet to download paper format.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.connect_to_internet_to_download_paper_format), Toast.LENGTH_SHORT).show();
             }
         }
+
 
      /*   AssessmentPaperPattern assessmentPaperPatterns = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(selectedExamId);
         if (assessmentPaperPatterns != null) {
@@ -340,15 +441,19 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     private void createNewQuestionList(List<TempScienceQuestion> attemptedList) {
 //        Collections.sort(attemptedList, (o1, o2) -> o1.getQid().compareTo(o2.getQid()));
+        int questionSize = scienceQuestionList.size();
+        List<ScienceQuestion> tempList = new ArrayList<>();
+        tempList.addAll(scienceQuestionList);
+        scienceQuestionList.clear();
         for (int i = 0; i < attemptedList.size(); i++) {
-            String qid = attemptedList.get(i).getQid();
+        /*    String qid = attemptedList.get(i).getQid();
             Iterator iterator = scienceQuestionList.iterator();
             while (iterator.hasNext()) {
                 ScienceQuestion scienceQuestion = (ScienceQuestion) iterator.next();
                 if (scienceQuestion.getQid().equalsIgnoreCase(qid))
                     iterator.remove();
 
-            }
+            }*/
       /*  }
         for (int i = 0; i < attemptedList.size(); i++) {*/
             ScienceQuestion scienceQuestion = new ScienceQuestion();
@@ -420,10 +525,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //            scienceQuestionList.add(scienceQuestion);
             scienceQuestionList.add(scienceQuestion);
         }
+        if (scienceQuestionList.size() > questionSize) {
+            scienceQuestionList.clear();
+            scienceQuestionList.addAll(tempList);
+        }
         if (scienceQuestionList.size() > 0)
             showSupervisedPracticeExam();
         else
-            Toast.makeText(ScienceAssessmentActivity.this, "No questions.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScienceAssessmentActivity.this, R.string.no_questions, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -564,7 +673,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     private void downloadQuestions(final String topicId) {
         String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
         progressDialog.show();
-        progressDialog.setMessage("Downloading questions...");
+        progressDialog.setMessage(getString(R.string.downloading_questions));
         AndroidNetworking.get(questionUrl)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -614,7 +723,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(ScienceAssessmentActivity.this, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.error_in_loading_check_internet_connection), Toast.LENGTH_SHORT).show();
                         AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().deletePaperPatterns();
                         if (progressDialog != null && isActivityRunning && progressDialog.isShowing())
                             progressDialog.dismiss();
@@ -626,7 +735,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     private void downloadPaperPattern(/*final String examId, final String langId,
                                       final String subId*/) {
         progressDialog.show();
-        progressDialog.setMessage("Downloading paper pattern...");
+        progressDialog.setMessage(getString(R.string.downloading_paper_pattern));
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
 //        progressDialog.show();
@@ -637,9 +746,20 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     public void onResponse(String response) {
                         Gson gson = new Gson();
                         AssessmentPaperPattern assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
-                        if (assessmentPaperPattern != null)
+                        if (assessmentPaperPattern != null) {
                             AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().insertPaperPattern(assessmentPaperPattern);
-
+                            if (assessmentPaperPattern.getSubjectid() != null && !assessmentPaperPattern.getSubjectid().equalsIgnoreCase("")) {
+                                Assessment_Constants.SELECTED_SUBJECT_ID = assessmentPaperPattern.getSubjectid();
+                                FastSave.getInstance().saveString("SELECTED_SUBJECT_ID", assessmentPaperPattern.getSubjectid());
+                                subjectId = assessmentPaperPattern.getSubjectid();
+                            } else {
+                                Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.no_subjects), Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        } else {
+                            Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.no_subjects), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
                         List<AssessmentPatternDetails> assessmentPatternDetails = assessmentPaperPattern.getLstpatterndetail();
                         for (int i = 0; i < assessmentPatternDetails.size(); i++) {
                             assessmentPatternDetails.get(i).setExamId(assessmentPaperPattern.getExamid());
@@ -836,6 +956,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         if (choiceList.size() > 0) {
                             AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().deleteQuestionChoicesByQID(scienceQuestionList.get(i).getQid());
                             AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().insertAllQuestionChoices(choiceList);
+                            AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().replaceNewLineForQuestionOptions();
+                            AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().replaceNewLineForQuestionOptions2();
                             for (int j = 0; j < choiceList.size(); j++) {
                                 if (!choiceList.get(j).getChoiceurl().equalsIgnoreCase("")) {
                                     DownloadMedia downloadMedia = new DownloadMedia();
@@ -870,6 +992,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         }
                     }
                     AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().insertAllQuestions(scienceQuestionList);
+                    AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().replaceNewLineForQuestions();
 
                     if (!scienceQuestionList.get(i).getPhotourl().equalsIgnoreCase("")) {
                         DownloadMedia downloadMedia = new DownloadMedia();
@@ -977,24 +1100,57 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             Button cancel_btn = dialog.findViewById(R.id.dia_btn_cancel);
                             cancel_btn.setVisibility(View.VISIBLE);
                             title.setText(R.string.Media_download_failed);
-                            restart_btn.setText(R.string.skip_all);
-                            skip_btn.setText(R.string.skip_this);
+                            restart_btn.setVisibility(View.GONE);
+//                            restart_btn.setText(R.string.skip_all);
+//                            skip_btn.setText(R.string.skip_this);
+                            skip_btn.setText("Retry");
                             cancel_btn.setText(R.string.cancel);
                             dialog.show();
 
-                            skip_btn.setOnClickListener(new View.OnClickListener() {
+                            /*skip_btn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     mediaDownloadCnt++;
                                     if (mediaDownloadCnt < downloadMediaList.size()) {
                                         downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
-                                    } else if (mediaProgressDialog != null && isActivityRunning)
+                                    } else if (mediaProgressDialog != null && isActivityRunning) {
                                         mediaProgressDialog.dismiss();
-                                    dialog.dismiss();
-                                    //                                createPaperPatten();
+                                        dialog.dismiss();
+                                        createPaperPatten();
+                                    }
                                 }
                             });
-
+*/
+                            skip_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+//                                    mediaDownloadCnt++;
+                                    mediaRetryCount--;
+                                    if (mediaRetryCount >= 0) {
+                                        if (mediaDownloadCnt < downloadMediaList.size()) {
+                                            downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                                            mediaDownloadCnt++;
+                                            dialog.dismiss();
+                                        } else if (mediaProgressDialog != null && isActivityRunning) {
+                                            mediaProgressDialog.dismiss();
+                                            dialog.dismiss();
+                                            createPaperPatten();
+                                        }
+                                    } else {
+                                        mediaRetryCount = 3;
+                                        if (mediaProgressDialog != null && isActivityRunning)
+                                            mediaProgressDialog.dismiss();
+                                        if (isActivityRunning) {
+                                            /*if (scienceQuestionList.size() > 0) {
+                                                int count = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionDao().deleteQuestionByExamId(selectedExamId);
+                                                Log.d("mediaProgressDialog", "onClick: " + count);
+                                            }*/
+                                            finish();
+                                        }
+                                        Toast.makeText(context, getString(R.string.media_download_failed), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                             restart_btn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1016,8 +1172,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     if (mediaProgressDialog != null && isActivityRunning)
                                         mediaProgressDialog.dismiss();
                                     if (isActivityRunning) {
-                                        if (scienceQuestionList.size() > 0)
+                                       /* if (scienceQuestionList.size() > 0)
                                             AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getScienceQuestionDao().deleteQuestionByExamId(selectedExamId);
+                                       */
                                         finish();
                                     }
                                 }
@@ -1081,18 +1238,21 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getParagraphs(selectedLang,
                             subjectId, assessmentPatternDetails.get(j).getTopicid(), assessmentPatternDetails.get(j).getParalevel());
 
-                    if (assessmentPaperPatterns.getIsRandom()) {
-
-                        scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
-                                getScienceQuestionDao().getQuestionListByPattern(selectedLang,
-                                subjectId, assessmentPatternDetails.get(j).getTopicid(),
-                                assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
-                    } else {
+                    /* if (assessmentPaperPatterns.getIsRandom()) {
+                     */
+                    scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
+                            getScienceQuestionDao().getQuestionListByPattern(selectedLang,
+                            subjectId, assessmentPatternDetails.get(j).getTopicid(),
+                            assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
+                   /* } else {
                         scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                                 getScienceQuestionDao().getQuestionListByPatternRandomly(selectedLang,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
 
+                    }*/
+                    if (assessmentPaperPatterns.getIsRandom()) {
+                        Collections.shuffle(scienceQuestions);
                     }
 
                     for (int i = 0; i < scienceQuestions.size(); i++) {
@@ -1101,8 +1261,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     }
                     if (scienceQuestions.size() > 0) {
                         scienceQuestionList.addAll(scienceQuestions);
-                       /* if (assessmentPaperPatterns.getIsRandom())
-                        Collections.shuffle(scienceQuestionList);*/
                     }
 
                     List<ScienceQuestion> paraQuestionList;
@@ -1145,9 +1303,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             if (scienceQuestionList.size() <= 0) {
                 finish();
                 if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
-                    Toast.makeText(ScienceAssessmentActivity.this, "Connect to internet to download questions.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScienceAssessmentActivity.this, R.string.connect_to_internet_to_download_questions, Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(ScienceAssessmentActivity.this, "No questions.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.no_questions), Toast.LENGTH_SHORT).show();
             }
             if (scienceQuestionList.size() > 0) {
                 boolean examAttempted = checkPaperAlreadyAttempted();
@@ -1288,7 +1446,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             if (direct.exists())
                 downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
             else {
-                Toast.makeText(this, "Media download failed..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.media_download_failed, Toast.LENGTH_SHORT).show();
                 finish();
             }
 
@@ -1317,7 +1475,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     public void run() {
 
                         if (scienceQuestionList.isEmpty()) {
-                            Toast.makeText(ScienceAssessmentActivity.this, "No questions", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.no_questions), Toast.LENGTH_SHORT).show();
                             swipe_btn.showResultIcon(false);
                         } else {
                             swipe_btn.showResultIcon(true);
@@ -2021,6 +2179,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(TRUE_FALSE)) {
                                 scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename().toLowerCase());
                                 scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
+
                             } else {
                                 scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename());
                                 scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
@@ -2306,7 +2465,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 }
                 break;
             case VIDEO:
-                //todo decide marks,isCorrect for video,audio
                 scienceQuestionList.get(queCnt).setUserAnswer(answer);
                 if (scienceQuestionList.get(queCnt).getUserAnswer() != null && !scienceQuestionList.get(queCnt).getUserAnswer().equalsIgnoreCase("")) {
                     scienceQuestionList.get(queCnt).setIsAttempted(true);
@@ -2365,7 +2523,34 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 break;
             case KEYWORDS_QUESTION:
                 if (scienceQuestion.getIsAttempted()) {
-                    if (!answer.equalsIgnoreCase("")) {
+                   /* if (!answer.equalsIgnoreCase("")) {
+                        scienceQuestionList.get(queCnt).setIsCorrect(true);
+                        scienceQuestionList.get(queCnt).
+                                setMarksPerQuestion(scienceQuestionList.get(queCnt).getOutofmarks());
+                    } else {
+                        scienceQuestionList.get(queCnt).setIsCorrect(false);
+                        scienceQuestionList.get(queCnt).
+                                setMarksPerQuestion("0");
+                    }*/
+                    int totalKeywords = 0, correctKeywords = 0, perc = 0;
+                    String[] splittedAns = new String[0];
+                    if (scienceQuestion.getAnswer() != null && !scienceQuestion.getAnswer().equalsIgnoreCase("")) {
+                        splittedAns = scienceQuestion.getAnswer().split(",");
+                    } else if (scienceQuestion.getAnsdesc() != null && !scienceQuestion.getAnsdesc().equalsIgnoreCase("")) {
+                        splittedAns = scienceQuestion.getAnsdesc().split(",");
+                    }
+                    totalKeywords = splittedAns.length;
+                    if (splittedAns.length > 0)
+                        for (int i = 0; i < splittedAns.length; i++) {
+//                            if (answer.matches(splittedAns[i])) {
+                            String uAns = answer.toLowerCase();
+                            String corAns = splittedAns[i].toLowerCase();
+                            if (uAns.contains(corAns)) {
+                                correctKeywords++;
+                            }
+                        }
+                    perc = (correctKeywords * 100) / totalKeywords;
+                    if (perc >= 50) {
                         scienceQuestionList.get(queCnt).setIsCorrect(true);
                         scienceQuestionList.get(queCnt).
                                 setMarksPerQuestion(scienceQuestionList.get(queCnt).getOutofmarks());
@@ -2374,7 +2559,12 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         scienceQuestionList.get(queCnt).
                                 setMarksPerQuestion("0");
                     }
+                } else {
+                    scienceQuestionList.get(queCnt).setIsCorrect(false);
+                    scienceQuestionList.get(queCnt).
+                            setMarksPerQuestion("0");
                 }
+
                 break;
             case IMAGE_ANSWER:
                 if (scienceQuestion.getIsAttempted()) {
@@ -2598,7 +2788,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
                 isAssessmentCompleted = true;
-                Toast.makeText(ScienceAssessmentActivity.this, "Assessment saved successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScienceAssessmentActivity.this, R.string.assessment_saved_successfully, Toast.LENGTH_SHORT).show();
 
                 if (!AssessmentApplication.isTablet)
                     pushDataForNIOS();
@@ -3186,6 +3376,412 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             generateResultData(paper);
         } else {
             finish();
+        }
+    }
+
+    public void createDataBase() {
+        Log.d("$$$", "createDataBase");
+
+        try {
+            boolean dbExist = checkDataBase();
+//            if (!dbExist) {
+            try {
+                Log.d("$$$", "createDataBasebefore");
+
+                appDatabase = AppDatabase.getDatabaseInstance(this);
+
+                Log.d("$$$", "createDataBaseAfter");
+
+                          /*  Room.databaseBuilder(this,
+                            AppDatabase.class, AppDatabase.DB_NAME)
+                            .allowMainThreadQueries()
+                            .addCallback(new RoomDatabase.Callback() {
+                                @Override
+                                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                                    super.onCreate(db);
+                                }
+                            })
+                            .build();*/
+                if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
+                    try {
+                        copyDataBase();
+                        updateNewEntriesInStatusTable();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+//                        showButton();
+                    //populateMenu();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+           /* } else {
+                updateNewEntriesInStatusTable();
+                appDatabase = AppDatabase.getDatabaseInstance(this);
+               *//* appDatabase = Room.databaseBuilder(this,
+                        AppDatabase.class, AppDatabase.DB_NAME)
+                        .allowMainThreadQueries()
+                        .build();*//*
+//                showButton();
+//                getSdCardPath();
+            }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkDataBase() {
+        SQLiteDatabase checkDB = null;
+        try {
+            checkDB = SQLiteDatabase.openDatabase(getDatabasePath(AppDatabase.DB_NAME).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (checkDB != null) {
+            checkDB.close();
+        }
+        return checkDB != null ? true : false;
+    }
+
+    public void updateNewEntriesInStatusTable() {
+        Status status;
+        try {
+
+            status = new Status();
+            String OsVersionName = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("OsVersionName");
+            if (OsVersionName == null || OsVersionName.equalsIgnoreCase("")) {
+                status.setStatusKey("OsVersionName");
+                status.setValue(Assessment_Utility.getOSVersion());
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("OsVersionName", Assessment_Utility.getOSVersion());
+            }
+
+            status = new Status();
+            String OsVersionNum = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("OsVersionNum");
+            if (OsVersionNum == null || OsVersionNum.equalsIgnoreCase("")) {
+
+                status.setStatusKey("OsVersionNum");
+                status.setValue(Assessment_Utility.getOSVersionNo() + "");
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("OsVersionNum", Assessment_Utility.getOSVersionNo() + "");
+
+            }
+            status = new Status();
+            String AvailableStorage = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("AvailableStorage");
+            if (AvailableStorage == null || AvailableStorage.equalsIgnoreCase("")) {
+                status.setStatusKey("AvailableStorage");
+                status.setValue(Assessment_Utility.getAvailableStorage());
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("AvailableStorage", Assessment_Utility.getAvailableStorage());
+
+            }
+            status = new Status();
+            String ScreenResolution = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("ScreenResolution");
+            if (ScreenResolution == null || ScreenResolution.equalsIgnoreCase("")) {
+                status.setStatusKey("ScreenResolution");
+                status.setValue(Assessment_Utility.getScreenResolution((AppCompatActivity) context));
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("ScreenResolution", Assessment_Utility.getScreenResolution((AppCompatActivity) context));
+            }
+
+            status = new Status();
+            String Manufacturer = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("Manufacturer");
+            if (Manufacturer == null || Manufacturer.equalsIgnoreCase("")) {
+                status.setStatusKey("Manufacturer");
+                status.setValue(Assessment_Utility.getManufacturer());
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("Manufacturer", Assessment_Utility.getManufacturer());
+            }
+
+            status = new Status();
+            String Model = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("Model");
+            if (Model == null || Model.equalsIgnoreCase("")) {
+
+                status.setStatusKey("Model");
+                status.setValue(Assessment_Utility.getModel());
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("Model", Assessment_Utility.getModel());
+            }
+
+
+            status = new Status();
+            String ApiLevel = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("ApiLevel");
+            if (ApiLevel == null || ApiLevel.equalsIgnoreCase("")) {
+
+                status.setStatusKey("ApiLevel");
+                status.setValue(Assessment_Utility.getApiLevel() + "");
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("ApiLevel", Assessment_Utility.getApiLevel() + "");
+            }
+
+            status = new Status();
+            String InternalStorageSize = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("InternalStorageSize");
+            if (InternalStorageSize == null || InternalStorageSize.equalsIgnoreCase("")) {
+
+                status.setStatusKey("InternalStorageSize");
+                status.setValue(Assessment_Utility.getInternalStorageSize() + "");
+                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
+            } else {
+                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("InternalStorageSize", Assessment_Utility.getInternalStorageSize() + "");
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void copyDataBase() {
+
+        try {
+            new AsyncTask<Void, Integer, Void>() {
+                ProgressDialog progressDialog;
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog = new ProgressDialog(context);
+                    progressDialog.show();
+                }
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    File folder_file, db_file;
+                    try {
+                        ArrayList<String> sdPath = FileUtils.getExtSdCardPaths(context);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
+                        if (db != null) {
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM Score Where sentFlag=0", null);
+                                List<Score> contents = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        Score detail = new Score();
+                                        detail.setScoreId(content_cursor.getInt(content_cursor.getColumnIndex("ScoreId")));
+                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
+                                        detail.setStudentID(content_cursor.getString(content_cursor.getColumnIndex("StudentID")));
+                                        detail.setDeviceID(content_cursor.getString(content_cursor.getColumnIndex("DeviceID")));
+                                        detail.setResourceID(content_cursor.getString(content_cursor.getColumnIndex("ResourceID")));
+                                        detail.setQuestionId(content_cursor.getInt(content_cursor.getColumnIndex("QuestionId")));
+                                        detail.setScoredMarks(content_cursor.getInt(content_cursor.getColumnIndex("ScoredMarks")));
+                                        detail.setTotalMarks(content_cursor.getInt(content_cursor.getColumnIndex("TotalMarks")));
+                                        detail.setStartDateTime(content_cursor.getString(content_cursor.getColumnIndex("StartDateTime")));
+                                        detail.setEndDateTime(content_cursor.getString(content_cursor.getColumnIndex("EndDateTime")));
+                                        detail.setLevel(content_cursor.getInt(content_cursor.getColumnIndex("Level")));
+                                        detail.setLabel(content_cursor.getString(content_cursor.getColumnIndex("Label")));
+                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
+                                        detail.setIsAttempted(content_cursor.getString(content_cursor.getColumnIndex("isAttempted")).equalsIgnoreCase("true") ? true : false);
+                                        detail.setIsCorrect(content_cursor.getString(content_cursor.getColumnIndex("isCorrect")).equalsIgnoreCase("true") ? true : false);
+                                        detail.setUserAnswer(content_cursor.getString(content_cursor.getColumnIndex("userAnswer")));
+                                        detail.setExamId(content_cursor.getString(content_cursor.getColumnIndex("examId")));
+                                        detail.setPaperId(content_cursor.getString(content_cursor.getColumnIndex("paperId")));
+                                        contents.add(detail);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getScoreDao().addScoreList(contents);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM Session Where sentFlag=0", null);
+                                List<Session> contents = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        Session detail = new Session();
+                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
+                                        detail.setFromDate(content_cursor.getString(content_cursor.getColumnIndex("fromDate")));
+                                        detail.setToDate(content_cursor.getString(content_cursor.getColumnIndex("toDate")));
+                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
+                                        contents.add(detail);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getSessionDao().addSessionList(contents);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM Attendance Where sentFlag=0", null);
+                                List<Attendance> contents = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        Attendance detail = new Attendance();
+                                        detail.setAttendanceID(content_cursor.getInt(content_cursor.getColumnIndex("attendanceID")));
+                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
+                                        detail.setDate(content_cursor.getString(content_cursor.getColumnIndex("Date")));
+                                        detail.setGroupID(content_cursor.getString(content_cursor.getColumnIndex("GroupID")));
+                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
+                                        contents.add(detail);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getAttendanceDao().addAttendanceList(contents);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM AssessmentPaperForPush Where sentFlag=0", null);
+                                List<AssessmentPaperForPush> contents = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        AssessmentPaperForPush detail = new AssessmentPaperForPush();
+                                        detail.setPaperStartTime(content_cursor.getString(content_cursor.getColumnIndex("paperStartTime")));
+                                        detail.setPaperEndTime(content_cursor.getString(content_cursor.getColumnIndex("paperEndTime")));
+                                        detail.setLanguageId(content_cursor.getString(content_cursor.getColumnIndex("languageId")));
+                                        detail.setExamId(content_cursor.getString(content_cursor.getColumnIndex("examId")));
+                                        detail.setSubjectId(content_cursor.getString(content_cursor.getColumnIndex("subjectId")));
+                                        detail.setOutOfMarks(content_cursor.getString(content_cursor.getColumnIndex("outOfMarks")));
+                                        detail.setPaperId(content_cursor.getString(content_cursor.getColumnIndex("paperId")));
+                                        detail.setTotalMarks(content_cursor.getString(content_cursor.getColumnIndex("totalMarks")));
+                                        detail.setExamTime(content_cursor.getString(content_cursor.getColumnIndex("examTime")));
+                                        detail.setCorrectCnt(content_cursor.getInt(content_cursor.getColumnIndex("CorrectCnt")));
+                                        detail.setWrongCnt(content_cursor.getInt(content_cursor.getColumnIndex("wrongCnt")));
+                                        detail.setSkipCnt(content_cursor.getInt(content_cursor.getColumnIndex("SkipCnt")));
+                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
+                                        detail.setStudentId(content_cursor.getString(content_cursor.getColumnIndex("studentId")));
+                                        detail.setExamName(content_cursor.getString(content_cursor.getColumnIndex("examName")));
+                                        detail.setQuestion1Rating(content_cursor.getString(content_cursor.getColumnIndex("question1Rating")));
+                                        detail.setQuestion2Rating(content_cursor.getString(content_cursor.getColumnIndex("question2Rating")));
+                                        detail.setQuestion3Rating(content_cursor.getString(content_cursor.getColumnIndex("question3Rating")));
+                                        detail.setQuestion4Rating(content_cursor.getString(content_cursor.getColumnIndex("question4Rating")));
+                                        detail.setQuestion5Rating(content_cursor.getString(content_cursor.getColumnIndex("question5Rating")));
+                                        detail.setQuestion6Rating(content_cursor.getString(content_cursor.getColumnIndex("question6Rating")));
+                                        detail.setQuestion7Rating(content_cursor.getString(content_cursor.getColumnIndex("question7Rating")));
+                                        detail.setQuestion8Rating(content_cursor.getString(content_cursor.getColumnIndex("question8Rating")));
+                                        detail.setQuestion9Rating(content_cursor.getString(content_cursor.getColumnIndex("question9Rating")));
+                                        detail.setQuestion10Rating(content_cursor.getString(content_cursor.getColumnIndex("question10Rating")));
+                                        detail.setFullName(content_cursor.getString(content_cursor.getColumnIndex("FullName")));
+                                        detail.setGender(content_cursor.getString(content_cursor.getColumnIndex("Gender")));
+                                        detail.setIsniosstudent(content_cursor.getString(content_cursor.getColumnIndex("isniosstudent")));
+                                        detail.setAge(content_cursor.getInt(content_cursor.getColumnIndex("Age")));
+                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
+                                        contents.add(detail);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().insertAllPapersForPush(contents);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM SupervisorData Where sentFlag=0", null);
+                                List<SupervisorData> contents = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        SupervisorData detail = new SupervisorData();
+                                        detail.setsId(content_cursor.getInt(content_cursor.getColumnIndex("sId")));
+                                        detail.setAssessmentSessionId(content_cursor.getString(content_cursor.getColumnIndex("assessmentSessionId")));
+                                        detail.setSupervisorId(content_cursor.getString(content_cursor.getColumnIndex("supervisorId")));
+                                        detail.setSupervisorName(content_cursor.getString(content_cursor.getColumnIndex("supervisorName")));
+                                        detail.setSupervisorPhoto(content_cursor.getString(content_cursor.getColumnIndex("supervisorPhoto")));
+                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
+                                        contents.add(detail);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().insertAll(contents);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM Logs Where sentFlag=0", null);
+                                List<Modal_Log> contents = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        Modal_Log detail = new Modal_Log();
+                                        detail.setLogId(content_cursor.getInt(content_cursor.getColumnIndex("logId")));
+                                        detail.setDeviceId(content_cursor.getString(content_cursor.getColumnIndex("deviceId")));
+                                        detail.setCurrentDateTime(content_cursor.getString(content_cursor.getColumnIndex("currentDateTime")));
+                                        detail.setErrorType(content_cursor.getString(content_cursor.getColumnIndex("errorType")));
+                                        detail.setExceptionMessage(content_cursor.getString(content_cursor.getColumnIndex("exceptionMessage")));
+                                        detail.setExceptionStackTrace(content_cursor.getString(content_cursor.getColumnIndex("exceptionStackTrace")));
+                                        detail.setGroupId(content_cursor.getString(content_cursor.getColumnIndex("groupId")));
+                                        detail.setLogDetail(content_cursor.getString(content_cursor.getColumnIndex("LogDetail")));
+                                        detail.setMethodName(content_cursor.getString(content_cursor.getColumnIndex("methodName")));
+                                        contents.add(detail);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getLogsDao().insertAllLogs(contents);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (!AssessmentApplication.isTablet) {
+                                try {
+                                    Cursor content_cursor;
+                                    content_cursor = db.rawQuery("SELECT * FROM Student Where newFlag=0", null);
+                                    List<Student> contents = new ArrayList<>();
+                                    if (content_cursor.moveToFirst()) {
+                                        while (!content_cursor.isAfterLast()) {
+                                            Student detail = new Student();
+                                            detail.setStudentID(content_cursor.getString(content_cursor.getColumnIndex("StudentID")));
+                                            detail.setStudentUID(content_cursor.getString(content_cursor.getColumnIndex("StudentUID")));
+                                            detail.setFirstName(content_cursor.getString(content_cursor.getColumnIndex("FirstName")));
+                                            detail.setMiddleName(content_cursor.getString(content_cursor.getColumnIndex("MiddleName")));
+                                            detail.setLastName(content_cursor.getString(content_cursor.getColumnIndex("LastName")));
+                                            detail.setFullName(content_cursor.getString(content_cursor.getColumnIndex("FullName")));
+                                            detail.setGender(content_cursor.getString(content_cursor.getColumnIndex("Gender")));
+                                            detail.setRegDate(content_cursor.getString(content_cursor.getColumnIndex("regDate")));
+                                            detail.setAge(content_cursor.getInt(content_cursor.getColumnIndex("Age")));
+                                            detail.setVillageName(content_cursor.getString(content_cursor.getColumnIndex("villageName")));
+                                            detail.setNewFlag(content_cursor.getInt(content_cursor.getColumnIndex("newFlag")));
+                                            detail.setDeviceId(content_cursor.getString(content_cursor.getColumnIndex("DeviceId")));
+                                            detail.setIsniosstudent(content_cursor.getString(content_cursor.getColumnIndex("isniosstudent")));
+                                            contents.add(detail);
+                                            content_cursor.moveToNext();
+                                        }
+                                    }
+                                    AppDatabase.getDatabaseInstance(context).getStudentDao().insertAll(contents);
+                                    content_cursor.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            BackupDatabase.backup(context);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onProgressUpdate(Integer... values) {
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    //addStartTime();
+                    super.onPostExecute(aVoid);
+                    progressDialog.dismiss();
+                    BackupDatabase.backup(context);
+                }
+
+            }.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

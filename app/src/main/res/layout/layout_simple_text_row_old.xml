@@ -14,10 +14,13 @@
         android:layout_gravity="center"
         android:fontFamily="@font/quicksand_medium"
         android:gravity="center"
+        app:autoSizeMaxTextSize="@dimen/_12sdp"
+        app:autoSizeMinTextSize="@dimen/_10sdp"
+        app:autoSizeTextType="uniform"
         android:text="text"
+        android:scrollbars="vertical"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/_13sdp"
         />
 
     <RelativeLayout

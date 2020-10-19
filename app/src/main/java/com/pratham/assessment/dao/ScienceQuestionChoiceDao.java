@@ -15,6 +15,12 @@ public interface ScienceQuestionChoiceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAllQuestionChoices(List<ScienceQuestionChoice> choiceList);
 
+    @Query("UPDATE ScienceQuestionChoice SET choicename  = replace( choicename, '\n', '<br/>' ) WHERE choicename LIKE '%\n%'")
+    public void replaceNewLineForQuestionOptions();
+
+    @Query("UPDATE ScienceQuestionChoice SET matchingname  = replace( matchingname, '\n', '<br/>' ) WHERE matchingname LIKE '%\n%'")
+    public void replaceNewLineForQuestionOptions2();
+
     @Query("DELETE FROM ScienceQuestionChoice")
     public void deleteAllQuestionChoices();
 
@@ -33,7 +39,7 @@ public interface ScienceQuestionChoiceDao {
     @Query("SELECT * FROM ScienceQuestionChoice WHERE qcid=:qcid")
     public ScienceQuestionChoice getQuestionChoicesByQcID(String qcid);
 
-   @Query("SELECT choiceurl FROM ScienceQuestionChoice WHERE qcid=:qcid")
+    @Query("SELECT choiceurl FROM ScienceQuestionChoice WHERE qcid=:qcid")
     public String getImageByQcID(String qcid);
 
   /*  @Query("select * from Groups WHERE DeviceID = 'deleted'")

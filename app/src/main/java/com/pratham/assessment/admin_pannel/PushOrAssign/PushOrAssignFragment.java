@@ -44,10 +44,10 @@ public class PushOrAssignFragment extends Fragment {
     @AfterViews
     public void init() {
         if (Assessment_Constants.VIDEOMONITORING) {
-            video_toggle.setTextOn("ON");
+            video_toggle.setTextOn(getString(R.string.on));
             video_toggle.setChecked(true);
         } else {
-            video_toggle.setTextOff("OFF");
+            video_toggle.setTextOff(getString(R.string.off));
             video_toggle.setChecked(false);
         }
     }
@@ -104,7 +104,7 @@ public class PushOrAssignFragment extends Fragment {
                     }
                 })
 
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }

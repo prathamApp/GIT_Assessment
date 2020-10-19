@@ -245,7 +245,7 @@ public class TopicFragment extends Fragment {
 
     private void getExamData() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading Exams");
+        progressDialog.setMessage(getString(R.string.loading_exams));
         progressDialog.setCancelable(false);
         progressDialog.show();
         AndroidNetworking.get(APIs.AssessmentExamAPI + subjectId + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE)

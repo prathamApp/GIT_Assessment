@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">-->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.pratham.assessment.custom.customFont.SansTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/_130sdp"
     android:layout_height="@dimen/_100sdp"
     android:layout_columnWeight="1"
@@ -13,9 +13,11 @@
     android:layout_marginBottom="@dimen/_5sdp"
     android:background="@drawable/custom_radio_button"
     android:checked="false"
+    android:fadeScrollbars="false"
     android:fontFamily="@font/quicksand_medium"
     android:gravity="center"
     android:padding="@dimen/_5sdp"
+    android:scrollbarSize="7dp"
     android:scrollbars="vertical"
     android:textAlignment="center"
     android:textColor="@color/white"

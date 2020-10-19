@@ -230,7 +230,7 @@
     <string name="video_monitoring_is">વીડિયો મૉનીટરીંગ  ચાલુ છે</string>
     <string name="view_hint">ટેક્સ્ટ જુઓ</string>
     <string name="profile_name">પ્રોફાઈલ નેમ </string>
-    <string name="time">સમય :</string>
+    <string name="time">સમય : </string>
     <string name="total">કુલ :</string>
     <string name="assign_groups">ગૃપ અસાઇન કરો</string>
     <string name="assign">અસાઇન કરો </string>
@@ -242,11 +242,11 @@
     <string name="student_name">વિદ્યાર્થીનું નામ :</string>
     <string name="scan_new">નવું સ્કેન કરો</string>
     <string name="start">શરૂઆત કરો </string>
-    <string name="exam_name">પરીક્ષાનું નામ</string>
-    <string name="total_questions">કુલ પ્રશ્નો</string>
+    <string name="exam_name">પરીક્ષાનું નામ : </string>
+    <string name="total_questions">કુલ પ્રશ્નો : </string>
     <string name="note_pictures_of_the_appearing_student_will_be_captured_during_the_exam">નોંધ : પરીક્ષા દરમિયાન હાજર વિદ્યાર્થીનો ફોટો પાડવામાં આવશે.</string>
     <string name="prev">પાછળ</string>
-    <string name="pratham_n_assessments">Pratham \n Assesments</string>
+    <string name="pratham_n_assessments">Pratham\nAssesments</string>
     <string name="enter_supervisor_name">સુપરવાઈઝરનું નામ લખો.</string>
     <string name="user_name">યૂઝર નેમ </string>
     <string name="password">પાસવર્ડ</string>
@@ -272,7 +272,7 @@
     <string name="language">ભાષા :</string>
     <string name="select_avatar">અવતાર પસંદ કરો :</string>
     <string name="save_profile">પ્રોફાઈલ સાચવો</string>
-    <string name="marks">ગુણ</string>
+    <string name="marks">ગુણ : </string>
     <string name="total_marks">કુલ ગુણ</string>
     <string name="correct">સાચું</string>
     <string name="wrong">ખોટું</string>
@@ -295,8 +295,8 @@
     <string name="push_data">ડેટા મોકલો</string>
     <string name="subject">વિષય :</string>
     <string name="topic">પેટા-વિષય :</string>
-    <string name="out_of_marks">કુલ ગુણ :</string>
-    <string name="marks_obtained">મેળવેલ ગુણ :</string>
+    <string name="out_of_marks">કુલ ગુણ : </string>
+    <string name="marks_obtained">મેળવેલ ગુણ : </string>
     <string name="done">થઇ ગયું</string>
     <string name="name">નામ</string>
     <string name="next">આગળ</string>
@@ -376,25 +376,37 @@
     <string name="groups_assigned_successfully">ગૃપ સફળતાપૂર્વક અસાઇન થયું !!!</string>
     <string name="you_can_select_maximum_5_groups">તમે વધુમાં વધુ 5 ગૃપ પસંદ કરી શકો છો !!!</string>
     <string name="connect_to_internet_to_download_students_of_this_device">આ ઉપકરણમાંથી વિદ્યાર્થીઓની પ્રોફાઈલ ને ડાઉનલોડ કરવા માટે ઈન્ટરનેટથી કનેક્ટ થાઓ..</string>
-    <string name="exam">પરીક્ષા</string>
-    <string name="question">પ્રશ્ન</string>
+    <string name="exam">પરીક્ષા :</string>
+    <string name="question">પ્રશ્ન : </string>
 
-    <string name="village_id">Village Id :</string>
-    <string name="student_not_found_n_check_enrollment_number_again">Student not found.\n Check enrollment number again.</string>
-    <string name="swipe_to_start_assessment">Swipe to start assessment</string>
-    <string name="loading_please_wait">Loading... Please wait...</string>
-    <string name="loading_students">Loading Students..</string>
-    <string name="loading_subjects">Loading subjects</string>
-    <string name="loading">Loading..</string>
-    <string name="downloading_paper_pattern">Downloading paper pattern...</string>
+    <string name="village_id">ગામનું આઈડી:</string>
+    <string name="student_not_found_n_check_enrollment_number_again">વિદ્યાર્થીની માહિતી મળી નથી. નોધણી નંબર ફરીથી ચકાસો.</string>
+    <string name="swipe_to_start_assessment">અસેસમેન્ટ શરૂ કરવા માટે સ્વાઇપ કરો.</string>
+    <string name="loading_please_wait">લોડ થઇ રહ્યું છે.... કૃપા કરીને પ્રતિક્ષા કરો....</string>
+    <string name="loading_students">વિદ્યાર્થીની માહિતી લોડ થઇ રહી છે..</string>
+    <string name="loading_subjects">વિષય લોડ થઇ રહ્યા છે</string>
+    <string name="loading">લોડ થઇ રહ્યું છે..</string>
+    <string name="downloading_paper_pattern">પેપરની પેટર્ન ડાઉનલોડ થઇ રહી છે…</string>
 
-    <string name="subjects">Subjects</string>
-    <string name="certificate">Certificate</string>
-    <string name="download_offline_languages">Download offline languages</string>
-    <string name="download_failed">Download Failed</string>
-    <string name="download_failed_for_following_exams">"Download failed for following exams : "</string>
-    <string name="downloading_media_please_wait">Downloading media please wait..</string>
-    <string name="are_you_sure_you_want_clear_everything">Are you sure you want to clear everything ?</string>
-    <string name="delete">Delete</string>
+    <string name="subjects">વિષય</string>
+    <string name="certificate">પ્રમાણપત્ર</string>
+    <string name="download_offline_languages">ઑફલાઈન ભાષા ડાઉનલોડ કરો</string>
+    <string name="download_failed">ડાઉનલોડ નિષ્ફળ</string>
+    <string name="download_failed_for_following_exams">નીચેની પરીક્ષાઓ માટેનું ડાઉનલોડ નિષ્ફળ ગયું :</string>
+    <string name="downloading_media_please_wait">માધ્યમ ડાઉનલોડ થઇ રહ્યું છે… કૃપા કરીને, પ્રતિક્ષા કરો…</string>
+    <string name="are_you_sure_you_want_clear_everything">શું તમે ખરેખર બધું કાઢી નાખવા માંગો છો?</string>
+    <string name="delete">કાઢી નાખો</string>
+
+    <string name="please_wait">કૃપા કરીને, પ્રતિક્ષા કરો…</string>
+    <string name="connect_to_internet_to_download_paper_format">પેપરનું ફોર્મેટ ડાઉનલોડ કરવા માટે ઈન્ટરનેટ સાથે કનેક્ટ થાઓ.</string>
+    <string name="no_questions">કોઈ પ્રશ્નો નથી.</string>
+    <string name="downloading_questions">પ્રશ્નો ડાઉનલોડ થઇ રહ્યા છે…</string>
+    <string name="connect_to_internet_to_download_questions">પ્રશ્નો ડાઉનલોડ કરવા માટે ઈન્ટરનેટ સાથે કનેક્ટ થાઓ.</string>
+    <string name="media_download_failed">માધ્યમ ડાઉનલોડ નિષ્ફળ ગયું..</string>
+    <string name="assessment_saved_successfully">અસેસમેન્ટ સફળતાપૂર્વક સેવ થઇ ગયું છે</string>
+    <string name="no_students_to_pull">પુલ કરવા માટે કોઈ વિદ્યાર્થીઓની માહિતી નથી.</string>
+    <string name="loading_certificates">પ્રમાણપત્રો લોડ થઇ રહ્યા છે..</string>
+    <string name="loading_exams">પરીક્ષા લોડ થઇ રહી છે.</string>
+
 </resources>
 

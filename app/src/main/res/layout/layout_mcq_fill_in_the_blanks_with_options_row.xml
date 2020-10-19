@@ -23,19 +23,20 @@
             app:autoSizeMaxTextSize="@dimen/_20sdp"
             app:autoSizeMinTextSize="@dimen/_15sdp"
             app:autoSizeTextType="uniform" />
+
         <Button
             android:id="@+id/btn_view_hint"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight=".1"
-            android:layout_margin="@dimen/_2sdp"
-            android:background="@drawable/correct_bg"
-            android:text="@string/view_hint"
-            android:elevation="@dimen/_2sdp"
-            android:textSize="@dimen/_10sdp"
-            android:padding="@dimen/_3sdp"
             android:layout_gravity="center"
-            android:textColor="@color/black" />
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight=".1"
+            android:background="@drawable/correct_bg"
+            android:elevation="@dimen/_2sdp"
+            android:padding="@dimen/_3sdp"
+            android:text="@string/view_hint"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10sdp" />
 
         <RelativeLayout
             android:id="@+id/rl_question_img"
@@ -51,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
+                android:layout_weight="0.5"
                 android:padding="@dimen/_10sdp" />
 
             <com.pratham.assessment.custom.gif_viewer.GifView
@@ -59,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
+                android:layout_weight="0.5"
                 android:padding="@dimen/_10sdp"
                 android:visibility="visible" />
 
@@ -80,18 +83,27 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:fadeScrollbars="false"
+            android:scrollbarSize="7dp"
+            android:scrollbars="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fadeScrollbars="false"
+                android:scrollbarSize="7dp"
+                android:scrollbars="vertical">
 
                 <RadioGroup
                     android:id="@+id/rg_mcq"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/_10sdp"
-                    android:orientation="vertical" />
+                    android:fadeScrollbars="false"
+                    android:orientation="vertical"
+                    android:scrollbarSize="7dp"
+                    android:scrollbars="vertical" />
 
                 <GridLayout
                     android:id="@+id/grid_mcq"
@@ -102,7 +114,10 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:alignmentMode="alignMargins"
-                    android:columnCount="2" />
+                    android:columnCount="2"
+                    android:fadeScrollbars="false"
+                    android:scrollbarSize="@dimen/_7sdp"
+                    android:scrollbars="vertical" />
             </RelativeLayout>
         </ScrollView>
     </LinearLayout>

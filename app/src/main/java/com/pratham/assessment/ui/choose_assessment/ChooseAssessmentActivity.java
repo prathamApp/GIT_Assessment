@@ -1,27 +1,18 @@
 package com.pratham.assessment.ui.choose_assessment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.service.textservice.SpellCheckerService;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,19 +39,10 @@ import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
-import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentTest;
-import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.Crl;
-import com.pratham.assessment.domain.Modal_Log;
-import com.pratham.assessment.domain.Score;
-import com.pratham.assessment.domain.Session;
-import com.pratham.assessment.domain.Status;
-import com.pratham.assessment.domain.Student;
-import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
@@ -69,7 +51,6 @@ import com.pratham.assessment.ui.choose_assessment.science.certificate.Assessmen
 import com.pratham.assessment.ui.splash_activity.SplashActivity_;
 import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
-import com.pratham.assessment.utilities.FileUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -77,13 +58,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import static com.pratham.assessment.utilities.Assessment_Constants.EXAMID;
 import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
@@ -132,7 +110,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     public void init() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         context = this;
-        try {
+      /*  try {
             Bundle bundle = new Bundle();
             bundle = this.getIntent().getExtras();
             String studId = String.valueOf(bundle.getString("studentId"));
@@ -141,10 +119,10 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             String subject = String.valueOf(bundle.getString("subjectName"));
             String language = String.valueOf(bundle.getString("subjectLanguage"));
             String subLevel = String.valueOf(bundle.getString("subjectLevel"));
-       /*     Toast.makeText(this, "Id : " + studId + "\nAppName : "
+       *//*     Toast.makeText(this, "Id : " + studId + "\nAppName : "
                     + appName + "\nStudentName : " + studName + "\nSubject : " + subject + "\nLanguage : " + language
                     + "\nLevel : " + subLevel, Toast.LENGTH_LONG).show();
-       */
+       *//*
             String langCode = "1";
             if (!language.equalsIgnoreCase("")) {
                 switch (language.toLowerCase()) {
@@ -188,7 +166,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             if (!studId.equalsIgnoreCase("")) {
                 Assessment_Constants.currentStudentID = studId;
                 FastSave.getInstance().saveString("currentStudentID", studId);
-                createDataBase();
+//                createDataBase();
             }
             if (!studName.equalsIgnoreCase("")) {
                 Assessment_Constants.currentStudentName = studName;
@@ -198,7 +176,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         } catch (Exception e) {
             Log.d("Exception@@@", e.getMessage());
             e.printStackTrace();
-        }
+        }*/
 
 //        setLocale(this, "langCode");
 
@@ -504,6 +482,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
         else menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
 */
+        String langId = FastSave.getInstance().getString(LANGUAGE, "1");
+        Assessment_Utility.setLocaleByLanguageId(this, langId);
+
         getSupportFragmentManager().popBackStack();
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (fragments == 0) {
@@ -692,6 +673,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     public void languageClicked(int pos, AssessmentLanguages languages) {
         Assessment_Constants.SELECTED_LANGUAGE = languages.getLanguageid();
         FastSave.getInstance().saveString(LANGUAGE, languages.getLanguageid());
+        Assessment_Utility.setLocaleByLanguageId(this, languages.getLanguageid());
         setLanguageInNav();
         clearContentList();
         presenter.copyListData();
@@ -766,15 +748,24 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     private void setLanguageInNav() {
         Menu menu = navigation.getMenu();
         MenuItem nav_lang = menu.findItem(R.id.menu_language);
+        MenuItem nav_sub = menu.findItem(R.id.menu_Subject);
+        MenuItem nav_certi = menu.findItem(R.id.menu_certificate);
+        MenuItem nav_download_offline_lang = menu.findItem(R.id.menu_download_offline_language);
+        MenuItem nav_push_data = menu.findItem(R.id.menu_push_data);
         String lang = AppDatabase.getDatabaseInstance(this).getLanguageDao().getLangNameById(Assessment_Constants.SELECTED_LANGUAGE);
         String languageMenu = "";
         if (lang != null) {
             if (!lang.equals("")) {
-                languageMenu = "Language(" + lang + ")";
+                languageMenu = "Language : " + lang;
             }
-        } else languageMenu = "Language( ENGLISH )";
+        } else languageMenu = "Language : " + " English";
 
         nav_lang.setTitle(languageMenu);
+        nav_certi.setTitle(getString(R.string.certificate));
+        nav_download_offline_lang.setTitle(R.string.download_offline_languages);
+        nav_sub.setTitle(R.string.subjects);
+        nav_push_data.setTitle(R.string.push_data);
+
     }
 
     public void resetActivity() {
@@ -845,410 +836,5 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     }*/
 
-    public void createDataBase() {
-        Log.d("$$$", "createDataBase");
-
-        try {
-            boolean dbExist = checkDataBase();
-//            if (!dbExist) {
-            try {
-                Log.d("$$$", "createDataBasebefore");
-
-                appDatabase = AppDatabase.getDatabaseInstance(this);
-
-                Log.d("$$$", "createDataBaseAfter");
-
-                          /*  Room.databaseBuilder(this,
-                            AppDatabase.class, AppDatabase.DB_NAME)
-                            .allowMainThreadQueries()
-                            .addCallback(new RoomDatabase.Callback() {
-                                @Override
-                                public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                                    super.onCreate(db);
-                                }
-                            })
-                            .build();*/
-                if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
-                    try {
-                        copyDataBase();
-                        updateNewEntriesInStatusTable();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-//                        showButton();
-                    //populateMenu();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-           /* } else {
-                updateNewEntriesInStatusTable();
-                appDatabase = AppDatabase.getDatabaseInstance(this);
-               *//* appDatabase = Room.databaseBuilder(this,
-                        AppDatabase.class, AppDatabase.DB_NAME)
-                        .allowMainThreadQueries()
-                        .build();*//*
-//                showButton();
-//                getSdCardPath();
-            }*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
-        try {
-            checkDB = SQLiteDatabase.openDatabase(getDatabasePath(AppDatabase.DB_NAME).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (checkDB != null) {
-            checkDB.close();
-        }
-        return checkDB != null ? true : false;
-    }
-
-    public void updateNewEntriesInStatusTable() {
-        Status status;
-        try {
-
-            status = new Status();
-            String OsVersionName = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("OsVersionName");
-            if (OsVersionName == null || OsVersionName.equalsIgnoreCase("")) {
-                status.setStatusKey("OsVersionName");
-                status.setValue(Assessment_Utility.getOSVersion());
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("OsVersionName", Assessment_Utility.getOSVersion());
-            }
-
-            status = new Status();
-            String OsVersionNum = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("OsVersionNum");
-            if (OsVersionNum == null || OsVersionNum.equalsIgnoreCase("")) {
-
-                status.setStatusKey("OsVersionNum");
-                status.setValue(Assessment_Utility.getOSVersionNo() + "");
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("OsVersionNum", Assessment_Utility.getOSVersionNo() + "");
-
-            }
-            status = new Status();
-            String AvailableStorage = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("AvailableStorage");
-            if (AvailableStorage == null || AvailableStorage.equalsIgnoreCase("")) {
-                status.setStatusKey("AvailableStorage");
-                status.setValue(Assessment_Utility.getAvailableStorage());
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("AvailableStorage", Assessment_Utility.getAvailableStorage());
-
-            }
-            status = new Status();
-            String ScreenResolution = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("ScreenResolution");
-            if (ScreenResolution == null || ScreenResolution.equalsIgnoreCase("")) {
-                status.setStatusKey("ScreenResolution");
-                status.setValue(Assessment_Utility.getScreenResolution((AppCompatActivity) context));
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("ScreenResolution", Assessment_Utility.getScreenResolution((AppCompatActivity) context));
-            }
-
-            status = new Status();
-            String Manufacturer = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("Manufacturer");
-            if (Manufacturer == null || Manufacturer.equalsIgnoreCase("")) {
-                status.setStatusKey("Manufacturer");
-                status.setValue(Assessment_Utility.getManufacturer());
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("Manufacturer", Assessment_Utility.getManufacturer());
-            }
-
-            status = new Status();
-            String Model = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("Model");
-            if (Model == null || Model.equalsIgnoreCase("")) {
-
-                status.setStatusKey("Model");
-                status.setValue(Assessment_Utility.getModel());
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("Model", Assessment_Utility.getModel());
-            }
-
-
-            status = new Status();
-            String ApiLevel = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("ApiLevel");
-            if (ApiLevel == null || ApiLevel.equalsIgnoreCase("")) {
-
-                status.setStatusKey("ApiLevel");
-                status.setValue(Assessment_Utility.getApiLevel() + "");
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("ApiLevel", Assessment_Utility.getApiLevel() + "");
-            }
-
-            status = new Status();
-            String InternalStorageSize = AppDatabase.getDatabaseInstance(context).getStatusDao().getKey("InternalStorageSize");
-            if (InternalStorageSize == null || InternalStorageSize.equalsIgnoreCase("")) {
-
-                status.setStatusKey("InternalStorageSize");
-                status.setValue(Assessment_Utility.getInternalStorageSize() + "");
-                AppDatabase.getDatabaseInstance(context).getStatusDao().insert(status);
-            } else {
-                AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("InternalStorageSize", Assessment_Utility.getInternalStorageSize() + "");
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void copyDataBase() {
-
-        try {
-            new AsyncTask<Void, Integer, Void>() {
-                ProgressDialog progressDialog;
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    progressDialog = new ProgressDialog(ChooseAssessmentActivity.this);
-                    progressDialog.show();
-                }
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    File folder_file, db_file;
-                    try {
-                        ArrayList<String> sdPath = FileUtils.getExtSdCardPaths(context);
-                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
-                        if (db != null) {
-                            try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM Score Where sentFlag=0", null);
-                                List<Score> contents = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        Score detail = new Score();
-                                        detail.setScoreId(content_cursor.getInt(content_cursor.getColumnIndex("ScoreId")));
-                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
-                                        detail.setStudentID(content_cursor.getString(content_cursor.getColumnIndex("StudentID")));
-                                        detail.setDeviceID(content_cursor.getString(content_cursor.getColumnIndex("DeviceID")));
-                                        detail.setResourceID(content_cursor.getString(content_cursor.getColumnIndex("ResourceID")));
-                                        detail.setQuestionId(content_cursor.getInt(content_cursor.getColumnIndex("QuestionId")));
-                                        detail.setScoredMarks(content_cursor.getInt(content_cursor.getColumnIndex("ScoredMarks")));
-                                        detail.setTotalMarks(content_cursor.getInt(content_cursor.getColumnIndex("TotalMarks")));
-                                        detail.setStartDateTime(content_cursor.getString(content_cursor.getColumnIndex("StartDateTime")));
-                                        detail.setEndDateTime(content_cursor.getString(content_cursor.getColumnIndex("EndDateTime")));
-                                        detail.setLevel(content_cursor.getInt(content_cursor.getColumnIndex("Level")));
-                                        detail.setLabel(content_cursor.getString(content_cursor.getColumnIndex("Label")));
-                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
-                                        detail.setIsAttempted(content_cursor.getString(content_cursor.getColumnIndex("isAttempted")).equalsIgnoreCase("true") ? true : false);
-                                        detail.setIsCorrect(content_cursor.getString(content_cursor.getColumnIndex("isCorrect")).equalsIgnoreCase("true") ? true : false);
-                                        detail.setUserAnswer(content_cursor.getString(content_cursor.getColumnIndex("userAnswer")));
-                                        detail.setExamId(content_cursor.getString(content_cursor.getColumnIndex("examId")));
-                                        detail.setPaperId(content_cursor.getString(content_cursor.getColumnIndex("paperId")));
-                                        contents.add(detail);
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getScoreDao().addScoreList(contents);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM Session Where sentFlag=0", null);
-                                List<Session> contents = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        Session detail = new Session();
-                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
-                                        detail.setFromDate(content_cursor.getString(content_cursor.getColumnIndex("fromDate")));
-                                        detail.setToDate(content_cursor.getString(content_cursor.getColumnIndex("toDate")));
-                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
-                                        contents.add(detail);
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getSessionDao().addSessionList(contents);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM Attendance Where sentFlag=0", null);
-                                List<Attendance> contents = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        Attendance detail = new Attendance();
-                                        detail.setAttendanceID(content_cursor.getInt(content_cursor.getColumnIndex("attendanceID")));
-                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
-                                        detail.setDate(content_cursor.getString(content_cursor.getColumnIndex("Date")));
-                                        detail.setGroupID(content_cursor.getString(content_cursor.getColumnIndex("GroupID")));
-                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
-                                        contents.add(detail);
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getAttendanceDao().addAttendanceList(contents);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM AssessmentPaperForPush Where sentFlag=0", null);
-                                List<AssessmentPaperForPush> contents = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        AssessmentPaperForPush detail = new AssessmentPaperForPush();
-                                        detail.setPaperStartTime(content_cursor.getString(content_cursor.getColumnIndex("paperStartTime")));
-                                        detail.setPaperEndTime(content_cursor.getString(content_cursor.getColumnIndex("paperEndTime")));
-                                        detail.setLanguageId(content_cursor.getString(content_cursor.getColumnIndex("languageId")));
-                                        detail.setExamId(content_cursor.getString(content_cursor.getColumnIndex("examId")));
-                                        detail.setSubjectId(content_cursor.getString(content_cursor.getColumnIndex("subjectId")));
-                                        detail.setOutOfMarks(content_cursor.getString(content_cursor.getColumnIndex("outOfMarks")));
-                                        detail.setPaperId(content_cursor.getString(content_cursor.getColumnIndex("paperId")));
-                                        detail.setTotalMarks(content_cursor.getString(content_cursor.getColumnIndex("totalMarks")));
-                                        detail.setExamTime(content_cursor.getString(content_cursor.getColumnIndex("examTime")));
-                                        detail.setCorrectCnt(content_cursor.getInt(content_cursor.getColumnIndex("CorrectCnt")));
-                                        detail.setWrongCnt(content_cursor.getInt(content_cursor.getColumnIndex("wrongCnt")));
-                                        detail.setSkipCnt(content_cursor.getInt(content_cursor.getColumnIndex("SkipCnt")));
-                                        detail.setSessionID(content_cursor.getString(content_cursor.getColumnIndex("SessionID")));
-                                        detail.setStudentId(content_cursor.getString(content_cursor.getColumnIndex("studentId")));
-                                        detail.setExamName(content_cursor.getString(content_cursor.getColumnIndex("examName")));
-                                        detail.setQuestion1Rating(content_cursor.getString(content_cursor.getColumnIndex("question1Rating")));
-                                        detail.setQuestion2Rating(content_cursor.getString(content_cursor.getColumnIndex("question2Rating")));
-                                        detail.setQuestion3Rating(content_cursor.getString(content_cursor.getColumnIndex("question3Rating")));
-                                        detail.setQuestion4Rating(content_cursor.getString(content_cursor.getColumnIndex("question4Rating")));
-                                        detail.setQuestion5Rating(content_cursor.getString(content_cursor.getColumnIndex("question5Rating")));
-                                        detail.setQuestion6Rating(content_cursor.getString(content_cursor.getColumnIndex("question6Rating")));
-                                        detail.setQuestion7Rating(content_cursor.getString(content_cursor.getColumnIndex("question7Rating")));
-                                        detail.setQuestion8Rating(content_cursor.getString(content_cursor.getColumnIndex("question8Rating")));
-                                        detail.setQuestion9Rating(content_cursor.getString(content_cursor.getColumnIndex("question9Rating")));
-                                        detail.setQuestion10Rating(content_cursor.getString(content_cursor.getColumnIndex("question10Rating")));
-                                        detail.setFullName(content_cursor.getString(content_cursor.getColumnIndex("FullName")));
-                                        detail.setGender(content_cursor.getString(content_cursor.getColumnIndex("Gender")));
-                                        detail.setIsniosstudent(content_cursor.getString(content_cursor.getColumnIndex("isniosstudent")));
-                                        detail.setAge(content_cursor.getInt(content_cursor.getColumnIndex("Age")));
-                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
-                                        contents.add(detail);
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().insertAllPapersForPush(contents);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM SupervisorData Where sentFlag=0", null);
-                                List<SupervisorData> contents = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        SupervisorData detail = new SupervisorData();
-                                        detail.setsId(content_cursor.getInt(content_cursor.getColumnIndex("sId")));
-                                        detail.setAssessmentSessionId(content_cursor.getString(content_cursor.getColumnIndex("assessmentSessionId")));
-                                        detail.setSupervisorId(content_cursor.getString(content_cursor.getColumnIndex("supervisorId")));
-                                        detail.setSupervisorName(content_cursor.getString(content_cursor.getColumnIndex("supervisorName")));
-                                        detail.setSupervisorPhoto(content_cursor.getString(content_cursor.getColumnIndex("supervisorPhoto")));
-                                        detail.setSentFlag(content_cursor.getInt(content_cursor.getColumnIndex("sentFlag")));
-                                        contents.add(detail);
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().insertAll(contents);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM Logs Where sentFlag=0", null);
-                                List<Modal_Log> contents = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        Modal_Log detail = new Modal_Log();
-                                        detail.setLogId(content_cursor.getInt(content_cursor.getColumnIndex("logId")));
-                                        detail.setDeviceId(content_cursor.getString(content_cursor.getColumnIndex("deviceId")));
-                                        detail.setCurrentDateTime(content_cursor.getString(content_cursor.getColumnIndex("currentDateTime")));
-                                        detail.setErrorType(content_cursor.getString(content_cursor.getColumnIndex("errorType")));
-                                        detail.setExceptionMessage(content_cursor.getString(content_cursor.getColumnIndex("exceptionMessage")));
-                                        detail.setExceptionStackTrace(content_cursor.getString(content_cursor.getColumnIndex("exceptionStackTrace")));
-                                        detail.setGroupId(content_cursor.getString(content_cursor.getColumnIndex("groupId")));
-                                        detail.setLogDetail(content_cursor.getString(content_cursor.getColumnIndex("LogDetail")));
-                                        detail.setMethodName(content_cursor.getString(content_cursor.getColumnIndex("methodName")));
-                                        contents.add(detail);
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getLogsDao().insertAllLogs(contents);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            if (!AssessmentApplication.isTablet) {
-                                try {
-                                    Cursor content_cursor;
-                                    content_cursor = db.rawQuery("SELECT * FROM Student Where newFlag=0", null);
-                                    List<Student> contents = new ArrayList<>();
-                                    if (content_cursor.moveToFirst()) {
-                                        while (!content_cursor.isAfterLast()) {
-                                            Student detail = new Student();
-                                            detail.setStudentID(content_cursor.getString(content_cursor.getColumnIndex("StudentID")));
-                                            detail.setStudentUID(content_cursor.getString(content_cursor.getColumnIndex("StudentUID")));
-                                            detail.setFirstName(content_cursor.getString(content_cursor.getColumnIndex("FirstName")));
-                                            detail.setMiddleName(content_cursor.getString(content_cursor.getColumnIndex("MiddleName")));
-                                            detail.setLastName(content_cursor.getString(content_cursor.getColumnIndex("LastName")));
-                                            detail.setFullName(content_cursor.getString(content_cursor.getColumnIndex("FullName")));
-                                            detail.setGender(content_cursor.getString(content_cursor.getColumnIndex("Gender")));
-                                            detail.setRegDate(content_cursor.getString(content_cursor.getColumnIndex("regDate")));
-                                            detail.setAge(content_cursor.getInt(content_cursor.getColumnIndex("Age")));
-                                            detail.setVillageName(content_cursor.getString(content_cursor.getColumnIndex("villageName")));
-                                            detail.setNewFlag(content_cursor.getInt(content_cursor.getColumnIndex("newFlag")));
-                                            detail.setDeviceId(content_cursor.getString(content_cursor.getColumnIndex("DeviceId")));
-                                            detail.setIsniosstudent(content_cursor.getString(content_cursor.getColumnIndex("isniosstudent")));
-                                            contents.add(detail);
-                                            content_cursor.moveToNext();
-                                        }
-                                    }
-                                    AppDatabase.getDatabaseInstance(context).getStudentDao().insertAll(contents);
-                                    content_cursor.close();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            BackupDatabase.backup(context);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onProgressUpdate(Integer... values) {
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    //addStartTime();
-                    super.onPostExecute(aVoid);
-                    progressDialog.dismiss();
-                    BackupDatabase.backup(context);
-                }
-
-            }.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 }

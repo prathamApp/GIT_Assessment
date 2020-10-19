@@ -123,7 +123,8 @@ public class EnrollmentNoFragment extends DialogFragment {
                 setResponse(newEnrolledStudent);
             }
         } else {
-            Toast.makeText(getActivity(), R.string.enter_enrollment_number, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), R.string.enter_enrollment_number, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Enter enrollment number", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -144,11 +145,13 @@ public class EnrollmentNoFragment extends DialogFragment {
         newEnrolledStudent.setIsniosstudent("1");
         Student student = AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().getStudent(newEnrolledStudent.getStudentID());
         if (student != null) {
-            Toast.makeText(getActivity(), R.string.profile_is_already_saved, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), R.string.profile_is_already_saved, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Profile is already saved..", Toast.LENGTH_SHORT).show();
         } else {
             AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
             BackupDatabase.backup(getActivity());
-            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Profile created Successfully..", Toast.LENGTH_SHORT).show();
             splashInterface.onChildAdded();
             dismiss();
         }
@@ -158,11 +161,13 @@ public class EnrollmentNoFragment extends DialogFragment {
     private void getStudentByEnrollmentNo(String enrollmentNo) {
         try {
             newEnrolledStudent = new Student();
+            String url=APIs.pullStudentByEnrollmentNoAPI + enrollmentNo;
             ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//            progressDialog.setMessage(getString(R.string.loading));
             progressDialog.setMessage("Loading..");
             progressDialog.setCancelable(false);
             progressDialog.show();
-            AndroidNetworking.get(APIs.pullStudentByEnrollmentNoAPI + enrollmentNo)
+            AndroidNetworking.get(url)
                     .build()
                     .getAsJSONArray(new JSONArrayRequestListener() {
                         @Override
@@ -227,7 +232,8 @@ public class EnrollmentNoFragment extends DialogFragment {
                 }
             } else {
                 if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
                 }
                 rl_enroll_no_details.setVisibility(View.GONE);
                 rl_enroll_no_not_found.setVisibility(View.VISIBLE);

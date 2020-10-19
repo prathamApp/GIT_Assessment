@@ -83,8 +83,10 @@ public class LanguageFragment extends Fragment {
     private void setLanguageRecyclerView() {
         LanguageAdapter adapter = new LanguageAdapter(getActivity(), assessmentLanguagesList);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 2);
-        rvLanguage.setLayoutManager(linearLayoutManager);
-        rvLanguage.setAdapter(adapter);
+        if (rvLanguage != null) {
+            rvLanguage.setLayoutManager(linearLayoutManager);
+            rvLanguage.setAdapter(adapter);
+        }
     }
 
 /*    @Override
@@ -96,7 +98,7 @@ public class LanguageFragment extends Fragment {
 
 
     private void getLanguageData() {
-        progressDialog.setMessage("Loading..");
+        progressDialog.setMessage(getString(R.string.loading));
         progressDialog.setCancelable(false);
         progressDialog.show();
         AndroidNetworking.get(APIs.AssessmentLanguageAPI)

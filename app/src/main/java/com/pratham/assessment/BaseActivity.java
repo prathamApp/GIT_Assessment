@@ -115,6 +115,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
         String langId = FastSave.getInstance().getString(LANGUAGE, "1");
         Assessment_Utility.setLocaleByLanguageId(this,langId);
+
 //        checkForUpdate();
         muteFlg = false;
         Catcho.Builder(this)
@@ -123,7 +124,6 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 .build();
 
         Log.d("@path@@", AssessmentApplication.assessPath);
-//        overrideDefaultTypefacenots();
     }
 
     /*    private void overrideDefaultTypefaces() {

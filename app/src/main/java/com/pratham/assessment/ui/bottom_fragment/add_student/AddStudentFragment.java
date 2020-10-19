@@ -224,7 +224,8 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         } else {
             assessmentLanguagesList = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getAllLangs();
             if (assessmentLanguagesList.size() <= 0) {
-                Toast.makeText(getActivity(), R.string.connect_to_internet_to_download_languages, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), R.string.connect_to_internet_to_download_languages, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Connect to internet to download languages", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             } else {
                 setLanguagesToSpinner();
@@ -241,10 +242,14 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                 }
             }
         });*/
+    /*    String langId = FastSave.getInstance().getString(LANGUAGE, "1");
+        Assessment_Utility.setLocaleByLanguageId(getActivity(),langId);*/
+
     }
 
     private void setLanguagesToSpinner() {
         List<String> languages = new ArrayList<>();
+
         languages.add("Select language");
         for (int i = 0; i < assessmentLanguagesList.size(); i++) {
             languages.add(assessmentLanguagesList.get(i).getLanguagename());
@@ -263,8 +268,10 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                     TextView lang = (TextView) view;
                     selectedLang = lang.getText().toString();
                     String langId = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getLangIdByName(selectedLang);
-                    Assessment_Constants.SELECTED_LANGUAGE = langId;
-                    FastSave.getInstance().saveString(LANGUAGE, langId);
+                    if(langId!=null){
+                        Assessment_Constants.SELECTED_LANGUAGE = langId;
+                        FastSave.getInstance().saveString(LANGUAGE, langId);
+                    }
                 }
             }
 
@@ -398,10 +405,12 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         //ButtonClickSound.start();
         if (assessmentLanguagesList.size() <= 0) {
             if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
-                Toast.makeText(getActivity(), R.string.connect_to_internet_to_download_languages, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), R.string.connect_to_internet_to_download_languages, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Connect to internet to download languages", Toast.LENGTH_SHORT).show();
             else {
                 getLanguageData();
-                Toast.makeText(getActivity(), R.string.select_language, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), R.string.select_language, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Select language", Toast.LENGTH_SHORT).show();
 
             }
         } else if (et_studentName.getText().toString().equalsIgnoreCase("") ||
@@ -409,7 +418,8 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                 spinner_age.getSelectedItem().toString().equalsIgnoreCase("select age") ||
                 gender.equalsIgnoreCase("") || avatarName == null ||
                 selectedLang.equalsIgnoreCase("Select language") || selectedLang.equalsIgnoreCase("")) {
-            Toast.makeText(getActivity(), R.string.please_fil_all_the_details, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), R.string.please_fil_all_the_details, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please fill all the details..", Toast.LENGTH_SHORT).show();
         } else {
             Student student = new Student();
             student.setStudentID(AssessmentApplication.getUniqueID().toString());
@@ -429,7 +439,8 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
             student.setDeviceId(Assessment_Utility.getDeviceId(getActivity()));
             AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(student);
             BackupDatabase.backup(getActivity());
-            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
             //startActivity(new Intent(getActivity(), ChooseLevelActivity.class));
             splashInterface.onChildAdded();
             dismiss();
@@ -526,6 +537,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
     }
 
     private void getLanguageData() {
+//        progressDialog.setMessage(getString(R.string.loading));
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -556,7 +568,8 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
                         ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);

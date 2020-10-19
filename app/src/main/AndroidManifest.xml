@@ -18,18 +18,19 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
     <uses-feature android:name="android.hardware.camera" />
     <application
         android:name=".AssessmentApplication"
-        android:largeHeap="true"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/assessment_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/assessment_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.choose_assessment.science.DownloadQuestionsActivity"></activity>
         <activity
@@ -46,9 +47,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.choose_assessment.science.ScienceAssessmentActivity_"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-       <activity
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.choose_assessment.science.DownloadQuestionsActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
@@ -66,12 +73,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.choose_assessment.ChooseAssessmentActivity_"
-            android:exported="true"
             android:screenOrientation="portrait">
-            <intent-filter>
+         <!--   <intent-filter>
                 <action android:name="com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".ui.login.MainActivity_"
@@ -131,7 +137,9 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
             </intent-filter>
         </receiver>
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
 
         <provider

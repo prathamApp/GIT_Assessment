@@ -156,7 +156,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                     }
                 });
-            } else if (imgPath[len].equalsIgnoreCase("jpg") || imgPath[len].equalsIgnoreCase("png")) {
+            } else if (imgPath[len].equalsIgnoreCase("jpg") ||imgPath[len].equalsIgnoreCase("jpeg") || imgPath[len].equalsIgnoreCase("png")) {
                 Glide.with(context)
                         .load(path)
                         .apply(new RequestOptions()
@@ -740,7 +740,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                 }
             });
-        } else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
+        } else if (extension.equalsIgnoreCase("jpg") ||extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
             prevView = view;
             Glide.with(context)
                     .load(path)

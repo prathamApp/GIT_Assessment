@@ -289,10 +289,11 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     private void getNIOSSubjects() {
         NIOSSubjectList.clear();
         contentTableList.clear();
+        String url = APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance()
+                .getString("currentStudentID", "") + "&appversion=" + /*"1.2.0"*/Assessment_Utility.getCurrentVersion(context);
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_subjects));
-        AndroidNetworking.get(APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance()
-                .getString("currentStudentID", "") + "&appversion=" + /*"1.2.0"*/Assessment_Utility.getCurrentVersion(context))
+        AndroidNetworking.get(url)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -683,6 +684,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
             AlertDialog b = dialogBuilder.create();
             b.show();*/
+        } else {
+            Toast.makeText(context, "Version mismatch", Toast.LENGTH_SHORT).show();
         }
     }
 

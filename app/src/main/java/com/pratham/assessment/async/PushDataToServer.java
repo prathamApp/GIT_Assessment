@@ -431,6 +431,7 @@ public class PushDataToServer {
 
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
             final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
+            final MediaType MEDIA_TYPE_JPEG = MediaType.parse("image/jpeg");
             final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/mp4");
             final MediaType MEDIA_TYPE_3GP = MediaType.parse("video/3gp");
             final MediaType MEDIA_TYPE_MP3 = MediaType.parse("audio/mp3");
@@ -452,6 +453,8 @@ public class PushDataToServer {
                         mediaType = MEDIA_TYPE_PNG;
                     else if (extension.equalsIgnoreCase("jpg"))
                         mediaType = MEDIA_TYPE_JPG;
+                    else if (extension.equalsIgnoreCase("jpeg"))
+                        mediaType = MEDIA_TYPE_JPEG;
                     else if (extension.equalsIgnoreCase("3gp"))
                         mediaType = MEDIA_TYPE_3GP;
                     else if (extension.equalsIgnoreCase("mp4"))
@@ -1147,7 +1150,7 @@ public class PushDataToServer {
                             Log.d("PUSH_STATUS", "Science Data push failed");
                             dataPushed = false;
                             if (!autoPush) {
-                                String msg = "Data push failed";
+                                String msg = context.getString(R.string.data_push_failed);
                                 if (dataPushed) {
                                     msg = "Ece data pushed successfully.Science data push failed.";
                                 }

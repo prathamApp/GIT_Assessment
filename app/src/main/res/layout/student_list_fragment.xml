@@ -47,7 +47,7 @@
             android:layout_margin="@dimen/_7sdp"
             android:background="@drawable/correct_bg"
             android:elevation="@dimen/_3sdp"
-            android:text="@string/create_profile"
+            android:text="Create profile"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp" />
 
@@ -58,7 +58,7 @@
             android:layout_below="@id/add_student"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/_3sdp"
-            android:text="@string/or"
+            android:text="or"
             android:textSize="@dimen/_15sdp"
             android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
             android:layout_margin="@dimen/_7sdp"
             android:background="@drawable/gradiance_bg_3"
             android:elevation="@dimen/_3sdp"
-            android:text="@string/enter_enrollment_number"
+            android:text="Enter enrollment number"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp" />
 

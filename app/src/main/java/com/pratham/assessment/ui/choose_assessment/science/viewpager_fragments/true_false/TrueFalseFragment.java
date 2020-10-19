@@ -127,13 +127,14 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
 
         setOdiaFont(getActivity(), question);
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
+        String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
+//                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+        String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
         if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
 
-            String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
-//                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-            String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 
             String path = scienceQuestion.getPhotourl();
@@ -176,6 +177,23 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
                 questionImage.setImageBitmap(bitmap);
             }*/
         } else questionImage.setVisibility(View.GONE);
+
+
+        questionImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
+            }
+        });
+        questionGif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
+            }
+        });
+
+
+
         options.clear();
         presenter.getOptions(scienceQuestion.getQid());
         //  options = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());

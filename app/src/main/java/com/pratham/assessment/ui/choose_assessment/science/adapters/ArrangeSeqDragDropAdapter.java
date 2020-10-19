@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -44,7 +45,8 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
     StartDragListener startDragListener;
     AssessmentAnswerListener assessmentAnswerListener;
     String qid = "";
-    String qtId = "";
+    //    String qtId = "";
+    String path;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -52,6 +54,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
         ImageView iv_choice_image;
         View rowView;
         ScrollView sv_arr_seq;
+        LinearLayout ll_options;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -60,6 +63,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
             mTitle = itemView.findViewById(R.id.tv_text);
             iv_choice_image = itemView.findViewById(R.id.iv_choice_image);
             sv_arr_seq = itemView.findViewById(R.id.sv_arr_seq);
+            ll_options = itemView.findViewById(R.id.ll_options);
         }
     }
 
@@ -70,7 +74,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
 //        questionTypeListener = scienceAdapter;
         startDragListener = fragment;
         assessmentAnswerListener = (ScienceAssessmentActivity) context;
-        this.qtId = qtId;
+//        this.qtId = qtId;
     }
 
     @Override
@@ -97,10 +101,9 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
             qid = data.get(0).getQid();
             ScienceQuestionChoice scienceQuestionChoice = data.get(position);
             if (!scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
-                final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getChoiceurl();
-
-                String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
-                final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+                /*Assessment_Constants.loadOnlineImagePath +*/
+                ;
+                path = scienceQuestionChoice.getChoiceurl();
 
 
                 holder.iv_choice_image.setVisibility(View.VISIBLE);
@@ -113,17 +116,17 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                         .override(Target.SIZE_ORIGINAL))
                         .into(holder.iv_choice_image);
 
-                holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
+               /* holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                      /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                        zoomImageDialog.show();*/
+                      *//*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+                        zoomImageDialog.show();*//*
                         Assessment_Utility.showZoomDialog(context, path, localPath,"");
                     }
-                });
+                });*/
             } else holder.mTitle.setText(scienceQuestionChoice.getChoicename());
 
-            holder.mTitle.setOnTouchListener(new View.OnTouchListener() {
+            holder.ll_options.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() ==
@@ -140,6 +143,10 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                     if (event.getAction() ==
                             MotionEvent.ACTION_DOWN) {
                         startDragListener.requestDrag(holder);
+                        String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+                        final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
                     }
                     return false;
                 }

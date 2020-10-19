@@ -205,7 +205,8 @@ public class MultipleSelectFragment extends Fragment {
             setOdiaFont(getActivity(), checkBox);
             if (!choices.get(j).getChoicename().equalsIgnoreCase(""))
                 checkBox.setText(Html.fromHtml(choices.get(j).getChoicename()));
-            else if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
+            /*else*/
+            if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
 
 
                 final String path = choices.get(j).getChoiceurl();
@@ -233,7 +234,8 @@ public class MultipleSelectFragment extends Fragment {
                         checkBox.setButtonDrawable(bd);
                     }
                 });*/
-                checkBox.setText(getString(R.string.view_option) + (j + 1));
+                if (choices.get(j).getChoicename().equalsIgnoreCase(""))
+                    checkBox.setText(getString(R.string.view_option) + " " + (j + 1));
             }
             checkBox.setTag(choices.get(j).getQcid());
            /* if (Assessment_Constants.isPracticeModeOn) {

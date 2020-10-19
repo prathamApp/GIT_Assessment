@@ -17,7 +17,7 @@ import java.util.List;
 @EBean
 public class ArrangeSeqPresenter implements ArrangeSequenceContract.ArrangeSeqPresenter {
     Context context;
-    ArrangeSequenceContract.ArrangeSeqView view ;
+    ArrangeSequenceContract.ArrangeSeqView view;
 
     public ArrangeSeqPresenter(Context context) {
         this.context = context;
@@ -27,6 +27,7 @@ public class ArrangeSeqPresenter implements ArrangeSequenceContract.ArrangeSeqPr
     public void setView(ArrangeSequenceContract.ArrangeSeqView view) {
         this.view = view;
     }
+
     @Override
     public void getShuffledList(ScienceQuestion scienceQuestion) {
         List<ScienceQuestionChoice> AnswerList = new ArrayList<>();
@@ -56,9 +57,10 @@ public class ArrangeSeqPresenter implements ArrangeSequenceContract.ArrangeSeqPr
                 shuffledList.clear();
 
                 shuffledList.addAll(pairList);
-                while (shuffledList.equals(pairList)) {
-                    Collections.shuffle(shuffledList);
-                }
+                if (shuffledList.size() > 1)
+                    while (shuffledList.equals(pairList)) {
+                        Collections.shuffle(shuffledList);
+                    }
 //                Collections.shuffle(shuffledList);
             } else {
                 if (AnswerList.size() > 0)

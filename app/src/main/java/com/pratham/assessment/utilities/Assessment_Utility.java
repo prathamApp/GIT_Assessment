@@ -568,7 +568,8 @@ public class Assessment_Utility {
 
      /*   Locale myLocale = new Locale(lang);
         Locale.setDefault(myLocale);*/
-
+        Locale myLocale = new Locale(langCode);
+        Locale.setDefault(myLocale);
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
         Configuration config = resources.getConfiguration();

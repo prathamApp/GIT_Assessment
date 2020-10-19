@@ -335,7 +335,7 @@ public class Activity_AssignGroups extends BaseActivity {
                 try {
                     //   MultiPhotoSelectActivity.dilog.showDilog(context, "Assigning Groups");
                     progress = new ProgressDialog(Activity_AssignGroups.this);
-                    progress.setMessage("Please Wait...");
+                    progress.setMessage(getString(R.string.please_wait));
                     progress.setCanceledOnTouchOutside(false);
                     progress.show();
 

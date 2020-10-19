@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -88,7 +89,7 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
         ScienceAssessmentActivity.dialogOpen = true;
         if (para != null && !para.equalsIgnoreCase("")) {
             rl_para.setVisibility(View.VISIBLE);
-            text.setText(para);
+            text.setText(Html.fromHtml(para));
             text.setVisibility(View.VISIBLE);
             zoomImg.setVisibility(View.GONE);
             gifView.setVisibility(View.GONE);
@@ -154,7 +155,7 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
                             e.printStackTrace();
                         }
                     }
-                } else if (imgPath[len].equalsIgnoreCase("jpg") || imgPath[len].equalsIgnoreCase("png")) {
+                } else if (imgPath[len].equalsIgnoreCase("jpg") || imgPath[len].equalsIgnoreCase("jpeg") || imgPath[len].equalsIgnoreCase("png")) {
                     zoomImg.setVisibility(View.VISIBLE);
 //                    Glide.get(context).clearDiskCache();
                     rl_para.setVisibility(View.GONE);

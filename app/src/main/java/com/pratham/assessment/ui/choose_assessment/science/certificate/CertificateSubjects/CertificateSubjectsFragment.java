@@ -14,15 +14,21 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.domain.AssessmentPaperForPush;
+import com.pratham.assessment.domain.AssessmentPaperPattern;
+import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.ExpandableRecyclerAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.SubjectAdapter;
+import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -83,7 +89,28 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 
 //        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLang(Assessment_Constants.currentStudentID);
-        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLangCertificatequestionsNotNull(currentStudentID);
+        List<String> distinctExamIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersCertificatequestionsNotNull(currentStudentID);
+        List<String> examIdsForPracticeMode = new ArrayList<>();
+
+        for (int i = 0; i < distinctExamIds.size(); i++) {
+            AssessmentPaperPattern pattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao()
+                    .getAssessmentPaperPatternsByExamIdQNotNull(distinctExamIds.get(i));
+            if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE)) {
+                examIdsForPracticeMode.add(pattern.getExamid());
+            }
+        }
+        List<String> languageIds = new ArrayList<>();
+
+        for (int j = 0; j < examIdsForPracticeMode.size(); j++) {
+            List<String> langId = AppDatabase.getDatabaseInstance(getActivity())
+                    .getAssessmentPaperForPushDao()
+                    .getAssessmentPapersByUniqueLangCertificatequestionsNotNull(currentStudentID, examIdsForPracticeMode.get(j));
+
+            if (langId != null && langId.size() > 0 && !langId.contains(langId))
+                languageIds.addAll(langId);
+        }
+
+//        languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLangCertificatequestionsNotNull(currentStudentID);
         List<String> languages = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getLangList(languageIds);
         if (languages.size() > 0 && languageIds.size() > 0) {
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.custom_spinner, languages);

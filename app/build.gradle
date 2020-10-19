@@ -8,8 +8,8 @@ android {
         applicationId "com.pratham.assessment"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 20
-        versionName "1.2.3"
+        versionCode 23
+        versionName "1.2.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }

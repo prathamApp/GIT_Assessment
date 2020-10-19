@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -211,6 +212,15 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
     }
 
+    @Click({R.id.iv_question_image, R.id.iv_question_gif})
+    public void questionImageClicked() {
+        String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
+        final String localPath = AssessmentApplication.assessPath
+                + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH
+                + "/" + fileName;
+        showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
+    }
+
     private void setWords() {
         splitWords = Arrays.asList(scienceQuestion.getQname().split(" "));
 
@@ -258,6 +268,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
                 myTextView.setText(Html.fromHtml(splitWords.get(i)));
                 myTextView.setId(i);
                 myTextView.setTextSize(22);
+                myTextView.setTypeface(ResourcesCompat.getFont(context, R.font.quicksand_medium));
                 myTextView.setTextColor(getResources().getColor(R.color.white));
                 final int finalI = i;
                 myTextView.setOnClickListener(v -> {

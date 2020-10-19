@@ -199,7 +199,7 @@ public class AssessmentCertificateActivity extends BaseActivity {
             long diffMinutes = diff / (60 * 1000) % 60;
             long diffHours = diff / (60 * 60 * 1000);
 
-            tv_time_taken.setText("Time taken : " + diffHours + " : " + diffMinutes + "  : " + diffSeconds);
+            tv_time_taken.setText(getString(R.string.time_taken)+" " + diffHours + " : " + diffMinutes + "  : " + diffSeconds);
         } catch (ParseException e) {
             e.printStackTrace();
         }

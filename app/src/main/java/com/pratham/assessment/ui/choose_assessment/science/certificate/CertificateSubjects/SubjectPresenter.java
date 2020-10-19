@@ -71,7 +71,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
             List<String> examIds = new ArrayList<>();
             for (int i = 0; i < paperPatterns.size(); i++) {
                 if (!examIds.contains(paperPatterns.get(i).getExamid())) {
-                    if (paperPatterns.get(i).getExammode() == null || !paperPatterns.get(i).getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED))
+                    if (paperPatterns.get(i).getExammode() == null || paperPatterns.get(i).getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE))
                         examIds.add(paperPatterns.get(i).getExamid());
                 }
             }
@@ -138,7 +138,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         progressDialog.show();
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Loading Certificates..");
+        progressDialog.setMessage(context.getString(R.string.loading_certificates));
         AndroidNetworking.get(url)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -283,7 +283,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
     private void getSubjectData(final String languageId) {
         final List<AssessmentSubjects> subjects = new ArrayList<>();
 //        final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading subjects");
+        progressDialog.setMessage(context.getString(R.string.loading_subjects));
         AndroidNetworking.get(APIs.AssessmentSubjectAPI + languageId)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -327,7 +327,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 
     private void getLanguageData() {
         assessmentLanguagesList = new ArrayList<>();
-        progressDialog.setMessage("Loading..");
+        progressDialog.setMessage(context.getString(R.string.loading));
         progressDialog.setCancelable(false);
         progressDialog.show();
         AndroidNetworking.get(APIs.AssessmentLanguageAPI)

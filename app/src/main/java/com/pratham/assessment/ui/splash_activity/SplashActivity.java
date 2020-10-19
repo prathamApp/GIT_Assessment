@@ -351,7 +351,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public void showProgressDialog() {
         progressDialog = new ProgressDialog(SplashActivity.this);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage(getString(R.string.loading_please_wait));
+//        progressDialog.setMessage(getString(R.string.loading_please_wait));
+        progressDialog.setMessage("Loading… Please wait…");
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -406,9 +407,12 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
         Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
 
-        title.setText(R.string.do_you_want_to_exit);
-        restart_btn.setText(R.string.yes);
-        exit_btn.setText(R.string.no);
+//        title.setText(R.string.do_you_want_to_exit);
+//        restart_btn.setText(R.string.yes);
+//        exit_btn.setText(R.string.no);
+        title.setText("Do you want to exit?");
+        restart_btn.setText("Yes");
+        exit_btn.setText("No");
         dialog.show();
 
         exit_btn.setOnClickListener(new View.OnClickListener() {
@@ -577,7 +581,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 }
             } else {
                 if (isActivityRunning) {
-                    Toast.makeText(context, R.string.connect_to_internet_to_download_students_of_this_device, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, R.string.connect_to_internet_to_download_students_of_this_device, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Connect to internet to download students profiles of this device..", Toast.LENGTH_LONG).show();
                     BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                     if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
                         bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
@@ -596,7 +601,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         progressDialog.show();
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage(getString(R.string.loading_students));
+//        progressDialog.setMessage(getString(R.string.loading_students));
+        progressDialog.setMessage("Loading students..");
         AndroidNetworking.get(url)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -641,7 +647,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                             } else {
                                 if (isActivityRunning) {
 
-                                    Toast.makeText(context, "No students to pull..", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, R.string.no_students_to_pull, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context,"No students to pull", Toast.LENGTH_SHORT).show();
 //                                subjectView.setSubjectToSpinner();
                                     BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                                     if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
@@ -667,7 +674,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
                     @Override
                     public void onError(ANError anError) {
-                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, getString(R.string.error_in_loading_check_internet_connection), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Error in loading.. check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
                             progressDialog.dismiss();
@@ -794,10 +802,12 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         TextView dia_title = STTDialog.findViewById(R.id.dia_title);
         Button skip = STTDialog.findViewById(R.id.dia_btn_green);
         Button ok = STTDialog.findViewById(R.id.dia_btn_yellow);
-        dia_title.setText(R.string.please_download_language_packs_offline_for_better_performance);
-        ok.setText(R.string.ok);
-        skip.setText(R.string.skip);
-
+//        dia_title.setText(R.string.please_download_language_packs_offline_for_better_performance);
+//        ok.setText(R.string.ok);
+//        skip.setText(R.string.skip);
+        dia_title.setText("Please download language packs offline for better performance");
+        ok.setText("ok");
+        skip.setText("skip");
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
