@@ -282,7 +282,9 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                     }
             }
         } else {
-            Toast.makeText(context, R.string.no_exams, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, R.string.no_exams, Toast.LENGTH_SHORT).show();
+//            Assessment_Utility.showDialog(context,context.getString(R.string.no_exams));
+            assessView.showNoExamLayout(true);
         }
     }
 
@@ -367,12 +369,14 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 }
                                 BackupDatabase.backup(context);
 //                            contentTableList.addAll(downloadedContentTableList);
-
                                 assessView.addContentToViewList(contentTableList);
                                 assessView.notifyAdapter();
                                 //getTopicData();
                             } else
-                                Toast.makeText(context, R.string.no_exams, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, R.string.no_exams, Toast.LENGTH_SHORT).show();
+//                                Assessment_Utility.showDialog(context, context.getString(R.string.no_exams));
+                                assessView.showNoExamLayout(true);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -454,7 +458,9 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 assessView.notifyAdapter();
                                 //getTopicData();
                             } else
-                                Toast.makeText(context, R.string.no_subjects, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, R.string.no_subjects, Toast.LENGTH_SHORT).show();
+//                        Assessment_Utility.showDialog(context,context.getString(R.string.no_subjects));
+                            assessView.showNoExamLayout(true);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

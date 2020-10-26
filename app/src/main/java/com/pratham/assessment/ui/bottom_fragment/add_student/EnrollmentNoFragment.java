@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,6 +66,9 @@ public class EnrollmentNoFragment extends DialogFragment {
 
     @BindView(R.id.rl_enroll_no_not_found)
     RelativeLayout rl_enroll_no_not_found;
+    @BindView(R.id.form_root)
+    RelativeLayout form_root;
+
 
     Student newEnrolledStudent;
 
@@ -115,6 +119,7 @@ public class EnrollmentNoFragment extends DialogFragment {
 
     @OnClick(R.id.btn_check_enrollment_no)
     public void checkNo() {
+        hideKeyboard(form_root);
         if (!enrollmentNo.getText().toString().trim().equalsIgnoreCase("")) {
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 getStudentByEnrollmentNo(enrollmentNo.getText().toString().trim());
@@ -128,6 +133,13 @@ public class EnrollmentNoFragment extends DialogFragment {
         }
     }
 
+    private void hideKeyboard(View view) {
+        if (view != null)
+            if (getActivity() != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+    }
 
     @OnClick(R.id.btn_add_new_student_enroll)
     public void onAddNewClick() {
@@ -151,7 +163,7 @@ public class EnrollmentNoFragment extends DialogFragment {
             AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
             BackupDatabase.backup(getActivity());
 //            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(),"Profile created Successfully..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
             splashInterface.onChildAdded();
             dismiss();
         }
@@ -161,7 +173,7 @@ public class EnrollmentNoFragment extends DialogFragment {
     private void getStudentByEnrollmentNo(String enrollmentNo) {
         try {
             newEnrolledStudent = new Student();
-            String url=APIs.pullStudentByEnrollmentNoAPI + enrollmentNo;
+            String url = APIs.pullStudentByEnrollmentNoAPI + enrollmentNo;
             ProgressDialog progressDialog = new ProgressDialog(getActivity());
 //            progressDialog.setMessage(getString(R.string.loading));
             progressDialog.setMessage("Loading..");
@@ -221,7 +233,7 @@ public class EnrollmentNoFragment extends DialogFragment {
                     tv_enrolled_student_gender.setText(student.getGender());
                     tv_enrolled_student_grp_id.setText(student.getGroupId());
                     tv_enrolled_student_grp_name.setText(student.getGroupName());
-    //            tv_enrolled_student_village_id.setText(student.get);
+                    //            tv_enrolled_student_village_id.setText(student.get);
                     tv_enrolled_student_village_name.setText(student.getVillageName());
 
                     rl_enroll_no_details.setVisibility(View.VISIBLE);

@@ -30,7 +30,9 @@ public class FIB_With_keywords_Presenter implements FIB_With_keywords_Contract.F
     @Override
     public void processSTT_Result(String answer, ArrayList<String> sttResult) {
         String sttResultStr = "";
-        for (int i = 0; i < sttResult.size(); i++) {
+        try {
+
+            for (int i = 0; i < sttResult.size(); i++) {
             System.out.println("LogTag" + " onResults :  " + sttResult.get(i));
 
             if (sttResult.get(i).equalsIgnoreCase(answer))
@@ -38,19 +40,16 @@ public class FIB_With_keywords_Presenter implements FIB_With_keywords_Contract.F
             else sttResultStr = sttResult.get(0);
         }
 
-        String[] splitQues = answer.replaceAll(STT_REGEX_3, "").split(" ");
+     /*   String[] splitQues = answer.replaceAll(STT_REGEX_3, "").split(" ");
         String[] splitRes = sttResultStr.split(" ");
 
-        try {
             for (String splitRe : splitRes)
                 for (int i = 0; i < splitQues.length; i++)
                     if (splitRe.equalsIgnoreCase(splitQues[i])) {
                         correctArr[i] = true;
                         break;
                     }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         int correctCnt = 0;
         for (boolean b : correctArr)
@@ -61,8 +60,11 @@ public class FIB_With_keywords_Presenter implements FIB_With_keywords_Contract.F
         Log.d("Punctu", "onResults: " + perc);
         if (perc >= 75) {
             Arrays.fill(correctArr, true);
-        }
+        }*/
         fib_view.reInitCurrentItems();
         fib_view.appendText(sttResultStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

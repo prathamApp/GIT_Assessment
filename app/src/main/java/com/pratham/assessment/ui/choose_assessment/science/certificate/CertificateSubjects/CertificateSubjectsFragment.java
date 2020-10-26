@@ -95,9 +95,11 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
         for (int i = 0; i < distinctExamIds.size(); i++) {
             AssessmentPaperPattern pattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao()
                     .getAssessmentPaperPatternsByExamIdQNotNull(distinctExamIds.get(i));
-            if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE)) {
-                examIdsForPracticeMode.add(pattern.getExamid());
-            }
+            if (pattern != null)
+                if (pattern.getExammode() != null)
+                    if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE)) {
+                        examIdsForPracticeMode.add(pattern.getExamid());
+                    }
         }
         List<String> languageIds = new ArrayList<>();
 

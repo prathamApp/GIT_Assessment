@@ -265,12 +265,12 @@
     <string name="exit">बाहर जाएं</string>
     <string name="cancel">रद्द करें</string>
     <string name="enter_name">नाम भरें</string>
-    <string name="age">उम्र:</string>
-    <string name="gender">लिंग:</string>
+    <string name="age">उम्र : </string>
+    <string name="gender">लिंग : </string>
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
     <string name="other">अन्य</string>
-    <string name="language">भाषा:</string>
+    <string name="language">भाषा : </string>
     <string name="select_avatar">अवतार चुनें</string>
     <string name="save_profile">प्रोफ़ाइल सेव करें</string>
     <string name="marks">अंक : </string>
@@ -346,8 +346,8 @@
     <string name="no">नहीं</string>
     <string name="watch_the_video">वीडियो देखें</string>
     <string name="skip">छोड़ें</string>
-    <string name="papers_pushed">भेजे गए पेपर्स:</string>
-    <string name="media_pushed">भेजा गया मीडिया:</string>
+    <string name="papers_pushed">भेजे गए पेपर्स :</string>
+    <string name="media_pushed">भेजा गया मीडिया :</string>
     <string name="audio">ऑडियो</string>
     <string name="update">अपडेट</string>
     <string name="this_app_version_is_older_please_update_the_app">ऐप का यह वर्ज़न पुराना है। कृपया ऐप को अपडेट करें।</string>
@@ -377,7 +377,7 @@
     <string name="groups_assigned_successfully">ग्रुप सफलतापूर्वक असाइन किया गया!!!</string>
     <string name="you_can_select_maximum_5_groups">आप अधिकतम 5 ग्रुप का चयन कर सकते हैं !!!</string>
     <string name="connect_to_internet_to_download_students_of_this_device">इस डिवाइस के छात्रों के प्रोफाइल को डाउनलोड करने के लिए इंटरनेट से कनेक्ट करें।</string>
-    <string name="exam">परीक्षा :</string>
+    <string name="exam">परीक्षा : </string>
     <string name="question">सवाल : </string>
 
     <string name="village_id">गाँव की आईडी </string>
@@ -393,7 +393,7 @@
     <string name="certificate">प्रमाण पत्र</string>
     <string name="download_offline_languages">ऑफ़लाइन भाषाओं को डाउनलोड करें</string>
     <string name="download_failed">डाउनलोड विफल रहा </string>
-    <string name="download_failed_for_following_exams">निम्नलिखित परीक्षाओं के लिए डाउनलोड विफल रहा:</string>
+    <string name="download_failed_for_following_exams">निम्नलिखित परीक्षाओं के लिए डाउनलोड विफल रहा : </string>
     <string name="downloading_media_please_wait">मीडिया डाउनलोड हो रहा है कृपया प्रतीक्षा करें ..</string>
     <string name="are_you_sure_you_want_clear_everything">क्या आप वाकई सब कुछ मिटाना (क्लियर करना) चाहते हैं?</string>
     <string name="delete">डिलीट </string>

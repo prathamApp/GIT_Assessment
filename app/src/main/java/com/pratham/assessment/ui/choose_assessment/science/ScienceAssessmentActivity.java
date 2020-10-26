@@ -1131,6 +1131,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                             downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
                                             mediaDownloadCnt++;
                                             dialog.dismiss();
+
+
+                                            if (mediaDownloadCnt >= downloadMediaList.size())
+                                                if (mediaProgressDialog != null && isActivityRunning) {
+                                                    mediaProgressDialog.dismiss();
+                                                    createPaperPatten();
+                                                }
+
+
                                         } else if (mediaProgressDialog != null && isActivityRunning) {
                                             mediaProgressDialog.dismiss();
                                             dialog.dismiss();
@@ -1235,22 +1244,28 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
                     List<ScienceQuestion> scienceQuestions;
                     //                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
-                    para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getParagraphs(selectedLang,
-                            subjectId, assessmentPatternDetails.get(j).getTopicid(), assessmentPatternDetails.get(j).getParalevel());
+                    if (assessmentPaperPatterns.getIsRandom())
+                        para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getParagraphsRandomly(selectedLang,
+                                subjectId, assessmentPatternDetails.get(j).getTopicid(),
+                                assessmentPatternDetails.get(j).getParalevel(), PARAGRAPH_BASED_QUESTION);
+                    else
+                        para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao()
+                                .getParagraphs(selectedLang,
+                                        subjectId, assessmentPatternDetails.get(j).getTopicid(),
+                                        assessmentPatternDetails.get(j).getParalevel(), PARAGRAPH_BASED_QUESTION);
 
-                    /* if (assessmentPaperPatterns.getIsRandom()) {
-                     */
-                    scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
-                            getScienceQuestionDao().getQuestionListByPattern(selectedLang,
-                            subjectId, assessmentPatternDetails.get(j).getTopicid(),
-                            assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
-                   /* } else {
+                    if (!assessmentPaperPatterns.getIsRandom()) {
+                        scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
+                                getScienceQuestionDao().getQuestionListByPattern(selectedLang,
+                                subjectId, assessmentPatternDetails.get(j).getTopicid(),
+                                assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
+                    } else {
                         scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                                 getScienceQuestionDao().getQuestionListByPatternRandomly(selectedLang,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                 assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
 
-                    }*/
+                    }
                     if (assessmentPaperPatterns.getIsRandom()) {
                         Collections.shuffle(scienceQuestions);
                     }
@@ -1283,6 +1298,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                                 paraQuestionList.get(p).setOutofmarks(assessmentPatternDetails.get(k).getMarksperquestion() + "");
                                         }
                                     }
+                                }
+                                if (assessmentPaperPatterns.getIsRandom()) {
+                                    Collections.shuffle(paraQuestionList);
                                 }
                                 scienceQuestionList.addAll(paraQuestionList);
                             }
@@ -2532,6 +2550,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         scienceQuestionList.get(queCnt).
                                 setMarksPerQuestion("0");
                     }*/
+
                     int totalKeywords = 0, correctKeywords = 0, perc = 0;
                     String[] splittedAns = new String[0];
                     if (scienceQuestion.getAnswer() != null && !scienceQuestion.getAnswer().equalsIgnoreCase("")) {

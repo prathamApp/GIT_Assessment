@@ -12,17 +12,21 @@ import static com.pratham.assessment.utilities.Assessment_Constants.CURRENT_VERS
 
 public interface ChooseAssessmentContract {
 
-    public interface ChooseAssessmentView{
+    public interface ChooseAssessmentView {
         void clearContentList();
 
         void addContentToViewList(List<AssessmentSubjects> contentTable);
 
+        void showNoExamLayout(boolean show);
+
         void notifyAdapter();
 
     }
-    public interface ChooseAssessmentPresenter{
 
-        public void versionObtained(String latestVersion) ;
+    public interface ChooseAssessmentPresenter {
+
+        public void versionObtained(String latestVersion);
+
         public void startActivity(String activityName);
 
         void copyListData();

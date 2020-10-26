@@ -46,8 +46,11 @@ public interface ScienceQuestionDao {
     @Query("SELECT * FROM ScienceQuestion WHERE RefParaID=:qid and IsParaQuestion and qlevel=:level")
     public List<ScienceQuestion> getParaQuestionByQidAndLevel(String qid, String level);
 
-    @Query("SELECT * FROM ScienceQuestion WHERE qtid='14' and languageid=:selectedLanguage and subjectid=:subjectId and topicid=:topicid and qlevel=:level")
-    public ScienceQuestion getParagraphs(String selectedLanguage, String subjectId, String topicid, String level);
+    @Query("SELECT * FROM ScienceQuestion WHERE qtid=:qtid  and languageid=:selectedLanguage and subjectid=:subjectId and topicid=:topicid and qlevel=:level")
+    public ScienceQuestion getParagraphs(String selectedLanguage, String subjectId, String topicid, String level, String qtid);
+
+    @Query("SELECT * FROM ScienceQuestion WHERE qtid=:qtid  and languageid=:selectedLanguage and subjectid=:subjectId and topicid=:topicid and qlevel=:level order by random() limit 1")
+    public ScienceQuestion getParagraphsRandomly(String selectedLanguage, String subjectId, String topicid, String level, String qtid);
 
     @Query("SELECT qname FROM ScienceQuestion WHERE qid=:refId ")
     public String getParabyRefId(String refId);
@@ -62,11 +65,11 @@ public interface ScienceQuestionDao {
     public void deleteByLangIdSubIdTopicId(String topicId, String langId, String subId);
 
     @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and qtid!='14' order by random() limit :noOfQues")
+    public List<ScienceQuestion> getQuestionListByPatternRandomly(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
+
+    @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and qtid!='14' limit :noOfQues")
     public List<ScienceQuestion> getQuestionListByPattern(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
 
-    /* @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and qtid!='14' limit :noOfQues")
-     public List<ScienceQuestion> getQuestionListByPatternRandomly(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
- */
     @Query("select distinct qid from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId order by random() limit :noOfQues")
     public String getQuestionListByPatternOld(String langId, String subId, String topicId, String qtid, int noOfQues);
 

@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.location.Address;
 import android.location.Geocoder;
@@ -49,6 +50,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -60,8 +62,11 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -196,6 +201,34 @@ public class Assessment_Utility {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+    public static void showDialog(Context context, String msg) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.no_data_exit_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+        RelativeLayout root = dialog.findViewById(R.id.root);
+        TextView title = dialog.findViewById(R.id.dia_title);
+        Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
+        Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
+        Button cancel_btn = dialog.findViewById(R.id.dia_btn_cancel);
+       /* RelativeLayout.LayoutParams rel_btn = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        root.setLayoutParams(rel_btn);
+       */
+//        root.setLayoutParams(new FrameLayout.LayoutParams(350, 280));
+        cancel_btn.setVisibility(View.INVISIBLE);
+        restart_btn.setVisibility(View.INVISIBLE);
+        title.setText(msg);
+        exit_btn.setText(R.string.ok);
+        dialog.show();
+        exit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     public static void showAlertDialogue(Context act, String msg) {

@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
-import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
@@ -45,10 +44,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
-import static com.pratham.assessment.utilities.Assessment_Utility.setLocale;
-import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
@@ -156,7 +152,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
 
 
             final String path = scienceQuestion.getPhotourl();
-            if (questionExtension.equalsIgnoreCase("gif") || questionExtension.equalsIgnoreCase("png") || questionExtension.equalsIgnoreCase("jpg")|| questionExtension.equalsIgnoreCase("jpeg")) {
+            if (questionExtension.equalsIgnoreCase("gif") || questionExtension.equalsIgnoreCase("png") || questionExtension.equalsIgnoreCase("jpg") || questionExtension.equalsIgnoreCase("jpeg")) {
                 questionImage.setVisibility(View.VISIBLE);
                 rl_question_img.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -273,7 +269,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                     String ansExtension = getFileExtension(options.get(r).getChoiceurl());
                     if (ansExtension.equalsIgnoreCase("gif") ||
                             ansExtension.equalsIgnoreCase("png") ||
-                            ansExtension.equalsIgnoreCase("jpg")||
+                            ansExtension.equalsIgnoreCase("jpg") ||
                             ansExtension.equalsIgnoreCase("jpeg")) {
                         imgCnt++;
                     } else {
@@ -475,8 +471,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         setImage(view, imageUrl, localPath);
                         gridMcq.addView(viewRoot);
 
-                    } else
-                    if (!options.get(r).getChoiceurl().trim().equalsIgnoreCase("")
+                    } else if (!options.get(r).getChoiceurl().trim().equalsIgnoreCase("")
                             && !options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
 
                         radioGroupMcq.setVisibility(View.GONE);
@@ -527,16 +522,15 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
 
 
                         gridMcq.addView(view);
-                    }
-                    else if (audioCnt == options.size()) {
-                    radioGroupMcq.setVisibility(View.GONE);
-                    gridMcq.setVisibility(View.VISIBLE);
-                    String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(r).getChoiceurl());
+                    } else if (audioCnt == options.size()) {
+                        radioGroupMcq.setVisibility(View.GONE);
+                        gridMcq.setVisibility(View.VISIBLE);
+                        String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(r).getChoiceurl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-                    final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+                        final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 //                    String path = options.get(r).getChoiceurl();
-                    String pathExtension = getFileExtension(options.get(r).getChoiceurl());
+                        String pathExtension = getFileExtension(options.get(r).getChoiceurl());
                   /*  String[] imgPath = path.split("\\.");
                     int len;
                     if (imgPath.length > 0)
@@ -545,13 +539,13 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                   /*  final GifView gifView;
                     ImageView imageView = null;*/
 
-                    final String imageUrl = options.get(r).getChoiceurl();
+                        final String imageUrl = options.get(r).getChoiceurl();
 
-                    final ImageView audioImage;
-                    final RelativeLayout rl_mcq;
-                    View viewRoot;
-                    final ImageView tick;
-                    final TextView audioText;
+                        final ImageView audioImage;
+                        final RelativeLayout rl_mcq;
+                        View viewRoot;
+                        final ImageView tick;
+                        final TextView audioText;
 
 
 //                    if (pathExtension.equalsIgnoreCase("gif")) {
@@ -563,64 +557,64 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         /*  setImage(view, imageUrl, localPath);
                         gridMcq.addView(view);*/
 //                    } else {
-                    viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_audio_item, gridMcq, false);
-                    audioImage = viewRoot.findViewById(R.id.mcq_audio);
-                    rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
-                    tick = viewRoot.findViewById(R.id.iv_tick);
-                    audioText = viewRoot.findViewById(R.id.txt_audio_title);
+                        viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_audio_item, gridMcq, false);
+                        audioImage = viewRoot.findViewById(R.id.mcq_audio);
+                        rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
+                        tick = viewRoot.findViewById(R.id.iv_tick);
+                        audioText = viewRoot.findViewById(R.id.txt_audio_title);
 
 
 //                    }
-                    final int finalR = r;
-                    audioText.setText(getString(R.string.audio) + (r + 1));
-                    setOdiaFont(getActivity(), audioText);
+                        final int finalR = r;
+                        audioText.setText(getString(R.string.audio) + (r + 1));
+                        setOdiaFont(getActivity(), audioText);
 
-                    rl_mcq.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            for (int g = 0; g < gridMcq.getChildCount(); g++) {
+                        rl_mcq.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                for (int g = 0; g < gridMcq.getChildCount(); g++) {
 //                                gridMcq.getChildAt(g).setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
-                                ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+                                    ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
 //                                ((ImageView) ((LinearLayout) ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(0)).getChildAt(1)).setImageResource(R.drawable.ic_play);
-                            }
-                            tick.setVisibility(View.VISIBLE);
-                            List<ScienceQuestionChoice> ans = new ArrayList<>();
-                            ans.add(options.get(finalR));
-                            scienceQuestion.setMatchingNameList(ans);
-                            assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), ans);
+                                }
+                                tick.setVisibility(View.VISIBLE);
+                                List<ScienceQuestionChoice> ans = new ArrayList<>();
+                                ans.add(options.get(finalR));
+                                scienceQuestion.setMatchingNameList(ans);
+                                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), ans);
 
-                        }
-                    });
+                            }
+                        });
 //                    final ImageView finalImageView = imageView;
-                    audioImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            for (int g = 0; g < gridMcq.getChildCount(); g++) {
+                        audioImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                for (int g = 0; g < gridMcq.getChildCount(); g++) {
 //                                gridMcq.getChildAt(g).setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
 //                                ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
-                                ((ImageView) ((LinearLayout) ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(0)).getChildAt(1)).setImageResource(R.drawable.ic_play);
+                                    ((ImageView) ((LinearLayout) ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(0)).getChildAt(1)).setImageResource(R.drawable.ic_play);
 
-                            }
-                            currentView = v;
-                            setAudioToOption(v, imageUrl, localPath);
+                                }
+                                currentView = v;
+                                setAudioToOption(v, imageUrl, localPath);
 //                            rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
 
-                        }
-                    });
+                            }
+                        });
 //                    zoomImg.setVisibility(View.GONE);
-                    if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
+                        if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
 //                        rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
-                        tick.setVisibility(View.VISIBLE);
+                            tick.setVisibility(View.VISIBLE);
 
-                    } else {
+                        } else {
 //                        rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
-                        tick.setVisibility(View.GONE);
+                            tick.setVisibility(View.GONE);
+
+                        }
+//                    setImage(view, imageUrl, localPath);
+                        gridMcq.addView(viewRoot);
 
                     }
-//                    setImage(view, imageUrl, localPath);
-                    gridMcq.addView(viewRoot);
-
-                }
 
             }
         }
@@ -681,8 +675,9 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                 ((TextView) view).setTextColor(Color.WHITE);
             if (view instanceof RelativeLayout) {
                 ((CardView) ((RelativeLayout) view).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
-            } if (view instanceof LinearLayout) {
-                ((TextView)((CardView)((LinearLayout) view).getChildAt(0)).getChildAt(0)).setTextColor(Color.WHITE);
+            }
+            if (view instanceof LinearLayout) {
+                ((TextView) ((CardView) ((LinearLayout) view).getChildAt(0)).getChildAt(0)).setTextColor(Color.WHITE);
             }
 
         }
@@ -809,6 +804,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
         //INSERT CUSTOM CODE HERE
         String para = "";
         if (scienceQuestion != null) {
+            scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());

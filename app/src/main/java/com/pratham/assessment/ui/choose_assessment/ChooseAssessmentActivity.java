@@ -93,7 +93,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     TextView tv_choose_assessment;
     @ViewById(R.id.menu_icon)
     ImageButton menu_icon;
-
+    @ViewById(R.id.rl_no_exams)
+    RelativeLayout rl_no_exams;
     /* @ViewById(R.id.toggle_btn)
      public SwipeableButton toggle_btn;*/
     Context context;
@@ -105,11 +106,15 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     boolean videoMonitoring = false;
     @Bean(PushDataToServer.class)
     PushDataToServer pushDataToServer;
+    @ViewById(R.id.tv_no_exams)
+    TextView tv_no_exams;
 
     @AfterViews
     public void init() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         context = this;
+
+
       /*  try {
             Bundle bundle = new Bundle();
             bundle = this.getIntent().getExtras();
@@ -266,6 +271,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                     case R.id.menu_Subject:
                         menu_icon.setImageDrawable(getDrawable(R.drawable.ic_menu));
                         rlSubject.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        rl_no_exams.setVisibility(View.GONE);
                         frameLayout.setVisibility(View.GONE);
                         tv_choose_assessment.setText("Choose subject");
 //                        toggle_btn.setVisibility(View.VISIBLE);
@@ -526,21 +533,43 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     public void addContentToViewList(List<AssessmentSubjects> contentTable) {
 
         contentTableList.addAll(contentTable);
+        if (contentTableList.size() > 0) {
        /* AssessmentSubjects ece = new AssessmentSubjects();
         ece.setSubjectid("0");
         ece.setSubjectname("ECE");
         contentTableList.add(ece);*/
-        for (int i = 0; i < contentTableList.size(); i++) {
-            if (contentTableList.get(i).getSubjectname().equalsIgnoreCase("english"))
-                contentTableList.remove(contentTableList.get(i));
-        }
-        Collections.sort(contentTableList, new Comparator<AssessmentSubjects>() {
-            @Override
-            public int compare(AssessmentSubjects o1, AssessmentSubjects o2) {
-                return o1.getSubjectid().compareTo(o2.getSubjectid());
+            for (int i = 0; i < contentTableList.size(); i++) {
+                if (contentTableList.get(i).getSubjectname().equalsIgnoreCase("english"))
+                    contentTableList.remove(contentTableList.get(i));
             }
-        });
-        Log.d("sorted", contentTableList.toString());
+            Collections.sort(contentTableList, new Comparator<AssessmentSubjects>() {
+                @Override
+                public int compare(AssessmentSubjects o1, AssessmentSubjects o2) {
+                    return o1.getSubjectid().compareTo(o2.getSubjectid());
+                }
+            });
+            Log.d("sorted", contentTableList.toString());
+            showNoExamLayout(false);
+
+        } else {
+            showNoExamLayout(true);
+        }
+    }
+
+    @Override
+    public void showNoExamLayout(boolean show) {
+        String langId = FastSave.getInstance().getString(LANGUAGE, "1");
+        Assessment_Utility.setLocaleByLanguageId(this, langId);
+        tv_no_exams.setText(R.string.no_exams);
+
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+            rl_no_exams.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            rl_no_exams.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

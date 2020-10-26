@@ -264,12 +264,12 @@
     <string name="exit">ପୁଣିଥରେ ଆରମ୍ଭ</string>
     <string name="cancel">କ୍ୟାନସେଲ</string>
     <string name="enter_name">ନାମ ପ୍ରବେଶ</string>
-    <string name="age">ବୟସ :</string>
-    <string name="gender">ଲିଙ୍ଗ :</string>
+    <string name="age">ବୟସ : </string>
+    <string name="gender">ଲିଙ୍ଗ : </string>
     <string name="male">ପୁରୁଷ</string>
     <string name="female">ସ୍ତ୍ରୀ</string>
     <string name="other">ଅନ୍ୟାନ୍ୟ</string>
-    <string name="language">ଭାଷା :</string>
+    <string name="language">ଭାଷା : </string>
     <string name="select_avatar">ଅବତାର ବାଛ</string>
     <string name="save_profile">ପ୍ରୋଫାଇଲ ସେଭ କର</string>
     <string name="marks">ମାର୍କ : </string>
@@ -281,10 +281,10 @@
     <string name="time_taken">ଲାଗୁଥିବା ସମୟ</string>
     <string name="certificates">ସାର୍ଟିଫିକେଟସ୍ .. ..</string>
     <string name="you_have_earned">ତୁମେ ରୋଜଗାର କରିଛ</string>
-    <string name="student_name_">ଛାତ୍ର / ଛାତ୍ରୀଙ୍କ ନାମ :</string>
-    <string name="age_">ବୟସ :</string>
-    <string name="class_">ଶ୍ରେଣୀ :</string>
-    <string name="gender_">ଲିଙ୍ଗ :</string>
+    <string name="student_name_">ଛାତ୍ର / ଛାତ୍ରୀଙ୍କ ନାମ : </string>
+    <string name="age_">ବୟସ : </string>
+    <string name="class_">ଶ୍ରେଣୀ : </string>
+    <string name="gender_">ଲିଙ୍ଗ : </string>
     <string name="group_id">ଗ୍ରୁପ ଆଇ. ଡି .</string>
     <string name="group_name">ଗ୍ରୁପ ନାମ</string>
     <string name="village_name">ଗ୍ରାମ ନାମ</string>
@@ -293,8 +293,8 @@
     <string name="create_profile">ପ୍ରୋଫାଇଲ ସୃଷ୍ଟି କର</string>
     <string name="clear_data">ଡାଟା କ୍ଲିଅର କର</string>
     <string name="push_data">ଡାଟା ପୂରାଅ</string>
-    <string name="subject">ବିଷୟ :</string>
-    <string name="topic">ପ୍ରସଙ୍ଗ :</string>
+    <string name="subject">ବିଷୟ : </string>
+    <string name="topic">ପ୍ରସଙ୍ଗ : </string>
     <string name="out_of_marks">ସମୁଦାୟ ମାର୍କ : </string>
     <string name="marks_obtained">ମିଳିଥିବା ମାର୍କ : </string>
     <string name="done">ହେଇଯାଇଛି</string>
@@ -379,7 +379,7 @@
     <string name="exam">ପରୀକ୍ଷା : </string>
     <string name="question">ପ୍ରଶ୍ନ : </string>
 
-    <string name="village_id">ଗ୍ରାମ ଆଇ ଡି :</string>
+    <string name="village_id">ଗ୍ରାମ ଆଇ ଡି : </string>
     <string name="student_not_found_n_check_enrollment_number_again">ଛାତ୍ରଛାତ୍ରୀ ପାଇଲୁ ନାହିଁ / ପୁନର୍ବାର ନାମଲେଖା ନମ୍ବର ଯାଞ୍ଚ କରନ୍ତୁ ।</string>
     <string name="swipe_to_start_assessment">ମୂଲ୍ୟାଙ୍କନ ଆରମ୍ଭ ଆରମ୍ଭ କରିବା ପାଇଁ ସ୍ୱାଇପ୍ କର ।</string>
     <string name="loading_please_wait">ଲୋଡିଙ୍ଗ୍ ହେଉଛି … ଦୟାକରି ଅପେକ୍ଷା କର…</string>
@@ -392,7 +392,7 @@
     <string name="certificate">ସାର୍ଟିଫିକେଟସ୍ </string>
     <string name="download_offline_languages">ଅଫଲାଇନରେ ଭାଷାକୁ ଡାଉନଲୋଡ୍ କର </string>
     <string name="download_failed">ଡାଉନଲୋଡ୍ ବିଫଳ ହେଲା </string>
-    <string name="download_failed_for_following_exams">ନିମ୍ନଲିଖିତ ପରୀକ୍ଷା ପାଇଁ ଡାଉନଲୋଡ୍ ବିଫଳ ହେଲା :</string>
+    <string name="download_failed_for_following_exams">ନିମ୍ନଲିଖିତ ପରୀକ୍ଷା ପାଇଁ ଡାଉନଲୋଡ୍ ବିଫଳ ହେଲା : </string>
     <string name="downloading_media_please_wait">ମିଡିଆ ଡାଉନଲୋଡ୍ ହେଉଛି ଦୟାକରି ଅପେକ୍ଷା କର ..</string>
     <string name="are_you_sure_you_want_clear_everything">ତୁମେ ସବୁ କ୍ଲିଅର କରିବାକୁ ଚାହୁଁଛ କି ?</string>
     <string name="delete">ଡିଲିଟ୍</string>

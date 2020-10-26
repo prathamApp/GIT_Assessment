@@ -468,6 +468,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="@dimen/_5sdp"
+                android:visibility="gone"
                 app:dotsColor="@color/white"
                 app:dotsCornerRadius="5dp"
                 app:dotsSize="10dp"
