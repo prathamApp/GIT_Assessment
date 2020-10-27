@@ -295,6 +295,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 .getString("currentStudentID", "") + "&appversion=" + /*"1.2.0"*/Assessment_Utility.getCurrentVersion(context);
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_subjects));
+        progressDialog.show();
         AndroidNetworking.get(url)
                 .build()
                 .getAsString(new StringRequestListener() {

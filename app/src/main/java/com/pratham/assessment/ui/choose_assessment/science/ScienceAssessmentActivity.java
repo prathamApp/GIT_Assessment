@@ -2553,18 +2553,18 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
                     int totalKeywords = 0, correctKeywords = 0, perc = 0;
                     String[] splittedAns = new String[0];
-                    if (scienceQuestion.getAnswer() != null && !scienceQuestion.getAnswer().equalsIgnoreCase("")) {
-                        splittedAns = scienceQuestion.getAnswer().split(",");
-                    } else if (scienceQuestion.getAnsdesc() != null && !scienceQuestion.getAnsdesc().equalsIgnoreCase("")) {
+                    if (scienceQuestion.getAnsdesc() != null && !scienceQuestion.getAnsdesc().equalsIgnoreCase("")) {
                         splittedAns = scienceQuestion.getAnsdesc().split(",");
-                    }
+                    } /*else if (scienceQuestion.getAnsdesc() != null && !scienceQuestion.getAnsdesc().equalsIgnoreCase("")) {
+                        splittedAns = scienceQuestion.getAnsdesc().split(",");
+                    }*/
                     totalKeywords = splittedAns.length;
                     if (splittedAns.length > 0)
                         for (int i = 0; i < splittedAns.length; i++) {
 //                            if (answer.matches(splittedAns[i])) {
                             String uAns = answer.toLowerCase();
                             String corAns = splittedAns[i].toLowerCase();
-                            if (uAns.contains(corAns)) {
+                            if (uAns.contains(corAns) || corAns.contains(uAns)) {
                                 correctKeywords++;
                             }
                         }
