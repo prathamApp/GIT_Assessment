@@ -75,6 +75,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/ripple_rectangle"
+                android:elevation="@dimen/_5sdp"
                 android:padding="@dimen/_5sdp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_mic_24dp" />

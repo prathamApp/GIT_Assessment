@@ -277,6 +277,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment implements ST
             } else if (micPressed == 1) {
                 ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);
             }
+            ib_mic.setElevation(5);
         }
     }
 

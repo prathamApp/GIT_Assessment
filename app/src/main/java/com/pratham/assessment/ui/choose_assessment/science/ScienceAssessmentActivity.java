@@ -1244,6 +1244,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
                     List<ScienceQuestion> scienceQuestions;
                     //                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
+
+//                    SELECT * FROM ScienceQuestion WHERE qtid="14"  and languageid="2" and subjectid="27" and topicid="474" and qlevel="3" order by random() limit 1
+
                     if (assessmentPaperPatterns.getIsRandom())
                         para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getParagraphsRandomly(selectedLang,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
@@ -2568,7 +2571,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 correctKeywords++;
                             }
                         }
-                    perc = (correctKeywords * 100) / totalKeywords;
+                    if (totalKeywords > 0)
+                        perc = (correctKeywords * 100) / totalKeywords;
                     if (perc >= 50) {
                         scienceQuestionList.get(queCnt).setIsCorrect(true);
                         scienceQuestionList.get(queCnt).

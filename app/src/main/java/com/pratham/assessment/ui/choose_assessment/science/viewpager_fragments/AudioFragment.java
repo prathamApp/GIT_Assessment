@@ -283,6 +283,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             if (isAudioRecording) {
                 isAudioRecording = false;
                 iv_start_audio.setImageResource(R.drawable.ic_mic_24dp);
+                iv_start_audio.setElevation(5);
                 AudioUtil.stopRecording();
                 scienceQuestion.setUserAnswer(path);
                 rl_answer_audio.setVisibility(View.VISIBLE);
@@ -291,8 +292,9 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
             } else {
                 isAudioRecording = true;
-                iv_start_audio.setImageResource(R.drawable.ic_pause);
+                iv_start_audio.setImageResource(R.drawable.ic_stop_black_24dp);
                 AudioUtil.startRecording(path);
+                iv_start_audio.setElevation(5);
                 rl_answer_audio.setVisibility(View.GONE);
 
             }
@@ -351,6 +353,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         if (isAudioRecording) {
             isAudioRecording = false;
             iv_start_audio.setImageResource(R.drawable.ic_mic_24dp);
+            iv_start_audio.setElevation(5);
             AudioUtil.stopRecording();
             scienceQuestion.setUserAnswer(path);
             rl_answer_audio.setVisibility(View.VISIBLE);

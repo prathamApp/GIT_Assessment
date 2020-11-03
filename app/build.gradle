@@ -8,8 +8,8 @@ android {
         applicationId "com.pratham.assessment"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 24
-        versionName "1.2.7"
+        versionCode 25
+        versionName "1.2.8"
         testInstrumentationRunner "android.support.test.runner.Android  JUnitRunner"
 
     }
@@ -129,7 +129,12 @@ dependencies {
 //error handler
 //    implementation 'com.github.RohitSurwase.UCE-Handler:uce_handler:1.4'
 
+    //screenshot
+    implementation 'com.github.peter1492:LongScreenshot:1.0'
+
     implementation 'com.google.android.play:core:1.7.3'
+
+//    implementation 'com.android.legacy:legacy-support-v4:1.0.0'
 }
 repositories {
     mavenCentral()

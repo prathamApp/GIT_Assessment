@@ -223,6 +223,8 @@ public class FillInTheBlanksWithKeywordsFragment extends Fragment
                 ib_mic.setImageResource(R.drawable.ic_mic_24dp);
             else
                 ib_mic.setImageResource(R.drawable.ic_stop_black_24dp);
+            ib_mic.setElevation(5);
+
         }
     }
 

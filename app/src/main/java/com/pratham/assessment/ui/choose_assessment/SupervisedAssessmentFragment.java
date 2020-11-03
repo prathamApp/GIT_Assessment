@@ -267,7 +267,8 @@ public class SupervisedAssessmentFragment extends Fragment {
             intent.putExtra("crlId", supervisorId);
             startActivity(intent);*/
 //            finish();
-            Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStack();
+            if (getActivity() != null)
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStack();
             assessmentAnswerListener.removeSupervisorFragment();
         }/* else if (subId.equalsIgnoreCase("1302")) {
             Intent intent = new Intent(SupervisedAssessmentActivity.this, TestDisplayActivity.class);
@@ -281,7 +282,8 @@ public class SupervisedAssessmentFragment extends Fragment {
             startActivity(intent);*/
             //finish();
             assessmentAnswerListener.removeSupervisorFragment();
-            Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStack();
+            if (getActivity() != null)
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStack();
 
             /*Intent intent = new Intent(SupervisedAssessmentActivity.this, ScienceAssessmentActivity.class);
             intent.putExtra("crlId", supervisorId);

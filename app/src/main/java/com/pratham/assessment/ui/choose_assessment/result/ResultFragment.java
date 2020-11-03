@@ -106,16 +106,10 @@ public class ResultFragment extends Fragment implements ResultListener {
         tv_name.setText(studentName);
 
         btn_done.setVisibility(View.GONE);
-        /*if (!Assessment_Constants.supervisedAssessment || !Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised")) {*/
+        //todo uncomment
         if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
             rl_thanks.setVisibility(View.GONE);
-//        presenter = new ResultPresenter(getActivity());
 
-          /*  mToolbar.setTitle(studentName);
-            mToolbar.setTitleTextColor(Color.WHITE);
-            mToolbar.setSubtitleTextColor(Color.WHITE);
-            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-*/
             rl_studInfo.setBackgroundColor(Assessment_Utility.selectedColor);
             student_name.setText(studentName);
             String subName = presenter.getSubjectName(examId);
@@ -128,18 +122,7 @@ public class ResultFragment extends Fragment implements ResultListener {
             rv_question_answers.setLayoutManager(linearLayoutManager);
             resultAdapter.notifyDataSetChanged();
 
-//        AppBarLayout mAppBarLayout = view.findViewById(R.id.app_bar);
-/*            mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                //            boolean isShow = false;
-                int scrollRange = -1;
 
-                @Override
-                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                    if (scrollRange == -1) {
-                        scrollRange = appBarLayout.getTotalScrollRange();
-                    }
-                }
-            });*/
         } else {
             rl_result.setVisibility(View.GONE);
 //            mAppBarLayout.setVisibility(View.GONE);
@@ -149,10 +132,7 @@ public class ResultFragment extends Fragment implements ResultListener {
             Assessment_Utility.showFragment(getActivity(), new ThankYouFragment_(), R.id.frame_thanks, bundle, ThankYouFragment.class.getName());
 
 
-           /* rl_result.setVisibility(View.GONE);
-            mAppBarLayout.setVisibility(View.GONE);
-            rl_thanks.setVisibility(View.VISIBLE);
-            btn_done.setVisibility(View.GONE);*/
+
         }
     }
   /*  @Override
@@ -230,7 +210,6 @@ public class ResultFragment extends Fragment implements ResultListener {
     public void onDoneClick() {
 
         AssessmentPaperPattern paperPattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubIdAndExamId(subjectId, examId);
-
         if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
             if (paperPattern.getNoofcertificateq() != null) {
                 if (paperPattern.getNoofcertificateq().equalsIgnoreCase("") || Integer.parseInt(paperPattern.getNoofcertificateq()) == 0) {

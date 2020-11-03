@@ -90,6 +90,7 @@ public class Assessment_Constants {
     public static String STORE_VIDEO_MONITORING_PATH = "/.Assessment/Content/VideoMonitoring";
     public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
     public static String STORE_STUDENT_IMAGE_PATH = "/.Assessment/Content/StudentImages";
+    public static String STORE_STUDENT_PDF_PATH = "/.Assessment/Content/StudentPDFs";
     public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO = "answerAudio";

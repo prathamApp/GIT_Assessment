@@ -27,20 +27,20 @@
             android:id="@+id/myScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/rl_bottom"
             android:layout_margin="@dimen/_5sdp"
             android:elevation="5dp"
             android:fadeScrollbars="false"
             android:padding="@dimen/_5sdp"
-            android:layout_above="@+id/rl_bottom"
             android:scrollbarSize="6dp">
 
             <com.nex3z.flowlayout.FlowLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/myflowlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-               android:layout_margin="@dimen/_10sdp"
-                android:padding="@dimen/_3sdp"
                 android:layout_gravity="center"
+                android:layout_margin="@dimen/_10sdp"
+                android:padding="@dimen/_3sdp"
                 app:flChildSpacing="10dp" />
         </ScrollView>
 
@@ -73,6 +73,7 @@
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:background="@drawable/ripple_rectangle"
+                    android:elevation="@dimen/_5sdp"
                     android:padding="@dimen/_15sdp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_mic_24dp" />
@@ -81,15 +82,14 @@
                     android:id="@+id/ib_stop"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:background="@drawable/ripple_rectangle"
+                    android:elevation="@dimen/_5sdp"
                     android:padding="@dimen/_15sdp"
                     android:scaleType="fitXY"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_stop_black_24dp" />
+                    android:src="@drawable/ic_stop_black_24dp"
+                    android:visibility="gone" />
             </LinearLayout>
             <!--<com.pratham.assessment.custom.voice_ripple.VoiceRippleView
                 android:id="@+id/ib_mic"

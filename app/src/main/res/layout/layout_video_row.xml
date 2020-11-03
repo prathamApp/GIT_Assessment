@@ -39,7 +39,7 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/_3sdp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.35"
             android:background="@drawable/main_card_bg"
             android:padding="@dimen/_3sdp">
 
@@ -47,7 +47,7 @@
                 android:id="@+id/iv_question_image"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_150sdp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:src="@drawable/ic_play_circle"
                 android:visibility="visible" />
 
@@ -144,7 +144,7 @@
                 android:id="@+id/iv_answer_image_play_icon"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_150sdp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:src="@drawable/ic_play_circle"
                 android:visibility="visible" />
 
@@ -152,7 +152,7 @@
                 android:id="@+id/vv_answer_play_video"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_150sdp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:visibility="gone" />
 
         </RelativeLayout>

@@ -1,24 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frame_fragment_certificate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/pattern_3"
+    android:background="@color/white"
     tools:context=".ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/_10sdp">
+    <com.pratham.assessment.custom.customFont.SansTextView
+        android:id="@+id/tv_pdf"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/_5sdp"
+        android:background="@drawable/correct_bg"
+        android:elevation="@dimen/_3sdp"
+        android:fontFamily="@font/quicksand_bold"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_2sdp"
+        android:text="PDF"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
 
-        <ScrollView
+    <!--  <FrameLayout
+          android:id="@+id/frame_fragment_certificate"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/tv_pdf"
+          android:background="@drawable/pattern_3"
+          tools:context=".ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment">
+  -->
+
+    <ScrollView
+        android:id="@+id/scroll_v"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_pdf">
+
+        <RelativeLayout
+            android:id="@+id/rl_cer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@drawable/pattern_3"
+            android:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_7sdp"
+                android:background="@color/white"
                 android:visibility="visible">
 
                 <ImageView
@@ -50,13 +79,27 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_5sdp"
-                        android:fontFamily="@font/quicksand_bold"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginHorizontal="@dimen/_5sdp"
+                        android:fontFamily="@font/quicksand_medium"
                         android:gravity="center"
                         android:text="@string/profile_name"
                         android:textColor="@color/colorBlackTransparentDark"
                         android:textSize="@dimen/_14sdp"
-                        android:textStyle="bold" />
+                         />
+
+                    <TextView
+                        android:id="@+id/tv_name_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:gravity="center"
+                        android:layout_marginHorizontal="@dimen/_5sdp"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:text="@string/profile_name"
+                        android:textColor="@color/colorBlackTransparentDark"
+                        android:textSize="@dimen/_14sdp"
+                         />
                 </LinearLayout>
 
 
@@ -169,6 +212,7 @@
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
                                 android:text="@string/total"
+                                android:textColor="@color/secondaryText"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="bold" />
 
@@ -199,7 +243,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/quicksand_bold"
-
+                                android:textColor="@color/secondaryText"
                                 android:gravity="center"
                                 android:text="@string/correct"
                                 android:textSize="@dimen/_12sdp"
@@ -235,7 +279,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
-
+                                android:textColor="@color/secondaryText"
                                 android:text="@string/wrong"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="bold" />
@@ -312,6 +356,7 @@
                                 android:background="@drawable/ripple_rectangle"
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
+                                android:textColor="@color/secondaryText"
                                 android:text="@string/total_time"
                                 android:textAlignment="center"
                                 android:textSize="@dimen/_12sdp" />
@@ -343,6 +388,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/ripple_rectangle"
                                 android:fontFamily="@font/quicksand_bold"
+                                android:textColor="@color/secondaryText"
                                 android:text="@string/time_taken"
                                 android:textAlignment="center"
                                 android:textSize="@dimen/_12sdp" />
@@ -366,178 +412,178 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/ll_time"
-                        android:layout_margin="@dimen/_3sdp"/>
+                        android:layout_margin="@dimen/_3sdp" />
 
-                  <!--  <LinearLayout
-                        android:id="@+id/ll_qiestions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/ll_time"
-                        android:layout_margin="@dimen/_3sdp"
-                        android:visibility="gone"
-                        android:orientation="vertical">
+                    <!--  <LinearLayout
+                          android:id="@+id/ll_qiestions"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_below="@+id/ll_time"
+                          android:layout_margin="@dimen/_3sdp"
+                          android:visibility="gone"
+                          android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/_5sdp"
+                              android:layout_weight="1"
+                              android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/q1_label"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ripple_rectangle"
-                                android:fontFamily="@font/quicksand_bold"
-                                android:text="Do you know skeletal system?"
-                                android:textAlignment="center"
-                                android:textSize="@dimen/_12sdp" />
+                              <TextView
+                                  android:id="@+id/q1_label"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:background="@drawable/ripple_rectangle"
+                                  android:fontFamily="@font/quicksand_bold"
+                                  android:text="Do you know skeletal system?"
+                                  android:textAlignment="center"
+                                  android:textSize="@dimen/_12sdp" />
 
-                            <RatingBar
-                                android:id="@+id/q1_ratingStars"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1.1"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="@color/colorAccent"
-                                android:stepSize="1"
-                                android:theme="@style/Widget.AppCompat.RatingBar"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                              <RatingBar
+                                  android:id="@+id/q1_ratingStars"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center"
+                                  android:layout_weight="1.1"
+                                  android:isIndicator="true"
+                                  android:numStars="5"
+                                  android:progressTint="@color/colorAccent"
+                                  android:stepSize="1"
+                                  android:theme="@style/Widget.AppCompat.RatingBar"
+                                  android:visibility="visible" />
+                          </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/_5sdp"
+                              android:layout_weight="1"
+                              android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/q2_label"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ripple_rectangle"
-                                android:fontFamily="@font/quicksand_bold"
-                                android:text="Do you know skeletal system?"
-                                android:textAlignment="center"
-                                android:textSize="@dimen/_12sdp" />
+                              <TextView
+                                  android:id="@+id/q2_label"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:background="@drawable/ripple_rectangle"
+                                  android:fontFamily="@font/quicksand_bold"
+                                  android:text="Do you know skeletal system?"
+                                  android:textAlignment="center"
+                                  android:textSize="@dimen/_12sdp" />
 
-                            <RatingBar
-                                android:id="@+id/q2_ratingStars"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1.1"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="@color/colorAccent"
-                                android:stepSize="1"
-                                android:theme="@style/Widget.AppCompat.RatingBar"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                              <RatingBar
+                                  android:id="@+id/q2_ratingStars"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center"
+                                  android:layout_weight="1.1"
+                                  android:isIndicator="true"
+                                  android:numStars="5"
+                                  android:progressTint="@color/colorAccent"
+                                  android:stepSize="1"
+                                  android:theme="@style/Widget.AppCompat.RatingBar"
+                                  android:visibility="visible" />
+                          </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/_5sdp"
+                              android:layout_weight="1"
+                              android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/q3_label"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ripple_rectangle"
-                                android:fontFamily="@font/quicksand_bold"
-                                android:text="Do you know skeletal system?"
-                                android:textAlignment="center"
-                                android:textSize="@dimen/_12sdp" />
+                              <TextView
+                                  android:id="@+id/q3_label"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:background="@drawable/ripple_rectangle"
+                                  android:fontFamily="@font/quicksand_bold"
+                                  android:text="Do you know skeletal system?"
+                                  android:textAlignment="center"
+                                  android:textSize="@dimen/_12sdp" />
 
-                            <RatingBar
-                                android:id="@+id/q3_ratingStars"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1.1"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="@color/colorAccent"
-                                android:stepSize="1"
-                                android:theme="@style/Widget.AppCompat.RatingBar"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                              <RatingBar
+                                  android:id="@+id/q3_ratingStars"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center"
+                                  android:layout_weight="1.1"
+                                  android:isIndicator="true"
+                                  android:numStars="5"
+                                  android:progressTint="@color/colorAccent"
+                                  android:stepSize="1"
+                                  android:theme="@style/Widget.AppCompat.RatingBar"
+                                  android:visibility="visible" />
+                          </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/_5sdp"
+                              android:layout_weight="1"
+                              android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/q4_label"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ripple_rectangle"
-                                android:fontFamily="@font/quicksand_bold"
-                                android:text="Do you know skeletal system?"
-                                android:textAlignment="center"
-                                android:textSize="@dimen/_12sdp" />
+                              <TextView
+                                  android:id="@+id/q4_label"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:background="@drawable/ripple_rectangle"
+                                  android:fontFamily="@font/quicksand_bold"
+                                  android:text="Do you know skeletal system?"
+                                  android:textAlignment="center"
+                                  android:textSize="@dimen/_12sdp" />
 
-                            <RatingBar
-                                android:id="@+id/q4_ratingStars"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1.1"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="@color/colorAccent"
-                                android:stepSize="1"
-                                android:theme="@style/Widget.AppCompat.RatingBar"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                              <RatingBar
+                                  android:id="@+id/q4_ratingStars"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center"
+                                  android:layout_weight="1.1"
+                                  android:isIndicator="true"
+                                  android:numStars="5"
+                                  android:progressTint="@color/colorAccent"
+                                  android:stepSize="1"
+                                  android:theme="@style/Widget.AppCompat.RatingBar"
+                                  android:visibility="visible" />
+                          </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/_5sdp"
+                              android:layout_weight="1"
+                              android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/q5_label"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ripple_rectangle"
-                                android:fontFamily="@font/quicksand_bold"
-                                android:text="Do you know skeletal system?"
-                                android:textAlignment="center"
-                                android:textSize="@dimen/_12sdp" />
+                              <TextView
+                                  android:id="@+id/q5_label"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:background="@drawable/ripple_rectangle"
+                                  android:fontFamily="@font/quicksand_bold"
+                                  android:text="Do you know skeletal system?"
+                                  android:textAlignment="center"
+                                  android:textSize="@dimen/_12sdp" />
 
-                            <RatingBar
-                                android:id="@+id/q5_ratingStars"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1.1"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="@color/colorAccent"
-                                android:stepSize="1"
-                                android:theme="@style/Widget.AppCompat.RatingBar"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                              <RatingBar
+                                  android:id="@+id/q5_ratingStars"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center"
+                                  android:layout_weight="1.1"
+                                  android:isIndicator="true"
+                                  android:numStars="5"
+                                  android:progressTint="@color/colorAccent"
+                                  android:stepSize="1"
+                                  android:theme="@style/Widget.AppCompat.RatingBar"
+                                  android:visibility="visible" />
+                          </LinearLayout>
 
-                    </LinearLayout>-->
+                      </LinearLayout>-->
 
                     <!-- <RelativeLayout
                          android:layout_width="@dimen/_120sdp"
@@ -587,6 +633,8 @@
                 </RelativeLayout>
                 <!--                </ScrollView>-->
             </RelativeLayout>
-        </ScrollView>
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+        </RelativeLayout>
+    </ScrollView>
+    <!--        </RelativeLayout>-->
+    <!--    </FrameLayout>-->
+</RelativeLayout>
