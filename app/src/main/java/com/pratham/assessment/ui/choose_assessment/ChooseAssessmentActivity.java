@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -95,6 +96,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     ImageButton menu_icon;
     @ViewById(R.id.rl_no_exams)
     RelativeLayout rl_no_exams;
+    @ViewById(R.id.swipe_to_refresh)
+    SwipeRefreshLayout swipe_to_refresh;
     /* @ViewById(R.id.toggle_btn)
      public SwipeableButton toggle_btn;*/
     Context context;
@@ -193,6 +196,22 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         name.setText(Html.fromHtml(studentName));
 
         Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
+        swipe_to_refresh.setColorSchemeColors(getResources().getColor(R.color.catcho_primary));
+        swipe_to_refresh.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        menu_icon.setImageDrawable(getDrawable(R.drawable.ic_menu));
+                        rlSubject.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        rl_no_exams.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.GONE);
+                        clearContentList();
+                        presenter.copyListData();
+//                        swipe_to_refresh.setRefreshing(false);
+                    }
+                }
+        );
 
         Menu menu = navigation.getMenu();
 //        MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
@@ -558,6 +577,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
     @Override
     public void showNoExamLayout(boolean show) {
+        swipe_to_refresh.setRefreshing(false);
         String langId = FastSave.getInstance().getString(LANGUAGE, "1");
         Assessment_Utility.setLocaleByLanguageId(this, langId);
         tv_no_exams.setText(R.string.no_exams);
@@ -575,6 +595,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @Override
     public void notifyAdapter() {
         chooseAssessAdapter.notifyDataSetChanged();
+        swipe_to_refresh.setRefreshing(false);
         /*if (COS_Utility.isDataConnectionAvailable(ChooseLevelActivity.this))
                     getAPIContent(COS_Constants.INTERNET_DOWNLOAD, COS_Constants.INTERNET_DOWNLOAD_API);
                 else {

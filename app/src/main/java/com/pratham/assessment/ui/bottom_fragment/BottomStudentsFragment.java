@@ -91,6 +91,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
             addAvatarsInList();
             studentList = new ArrayList<>();
+            Status status = new Status();
+            setAppVersion(status);
             gson = new Gson();
          /*   adapter = new StudentsAdapter(getActivity(), this, studentList, avatarList);
 

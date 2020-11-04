@@ -114,43 +114,49 @@
             android:layout_below="@+id/menu_icon"
             android:visibility="visible">
             <!--android:layout_marginTop="@dimen/minus_margin"-->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/choose_subject_recycler"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_to_refresh"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:clipToPadding="false"
-                android:gravity="center"
-                android:layoutAnimation="@anim/layout_fall_down"
-                android:scrollbars="vertical" />
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/choose_subject_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:clipToPadding="false"
+                    android:gravity="center"
+                    android:layoutAnimation="@anim/layout_fall_down"
+                    android:scrollbars="vertical" />
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <RelativeLayout
-            android:id="@+id/rl_no_exams"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/iv_no_exams"
+                android:id="@+id/rl_no_exams"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_margin="@dimen/_5sdp"
-                android:gravity="center"
-                android:src="@drawable/no_usage_data"
-                android:visibility="visible" />
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
-            <TextView
-                android:id="@+id/tv_no_exams"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_no_exams"
-                android:layout_alignParentBottom="true"
-                android:fontFamily="@font/quicksand_bold"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_18sdp" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/iv_no_exams"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:src="@drawable/no_usage_data"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_no_exams"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_no_exams"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp" />
+            </RelativeLayout>
 
         </RelativeLayout>
 
