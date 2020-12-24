@@ -21,6 +21,7 @@ public interface CertificateTopicListDao {
     @Query("DELETE FROM CertificateTopicList")
     public void deleteCertificateTopicList();
 
+
     @Query("DELETE FROM CertificateTopicList where topicid=:topicid")
     public void deleteQuestionByTopicId(String topicid);
 
