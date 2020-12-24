@@ -17,6 +17,7 @@ public abstract class APictureCapturingClass {
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     static {
+
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
