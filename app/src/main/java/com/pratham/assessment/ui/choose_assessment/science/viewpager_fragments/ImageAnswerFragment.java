@@ -2,7 +2,6 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -33,7 +32,7 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.RealPathUtil;

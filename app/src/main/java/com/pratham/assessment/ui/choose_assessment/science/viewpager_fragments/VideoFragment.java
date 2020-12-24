@@ -2,7 +2,6 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,9 +29,8 @@ import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.services.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.RealPathUtil;
 
@@ -40,12 +38,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;

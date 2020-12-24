@@ -26,7 +26,7 @@ import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairDragDropAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;

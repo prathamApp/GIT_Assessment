@@ -51,8 +51,8 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ViewpagerAdapter;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.robinhood.ticker.TickerView;
 
@@ -69,8 +69,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.EXAMID;
-import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_CHOICE;
+import static com.pratham.assessment.constants.Assessment_Constants.EXAMID;
+import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_CHOICE;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 
 @EActivity(R.layout.activity_science_assessment)

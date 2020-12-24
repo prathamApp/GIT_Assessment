@@ -60,7 +60,6 @@ public class ScienceQuestion implements Serializable {
     private String userAnswer = "";
     private boolean isAttempted;
     private boolean isCorrect;
-    // new 27-04-2020
     public boolean IsParaQuestion;
     private String RefParaID;
 

@@ -1,31 +1,18 @@
 package com.pratham.assessment.ui.choose_assessment.science.certificate;
 
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
-import com.pratham.assessment.domain.AssessmentPaperForPush;
-import com.pratham.assessment.domain.AssessmentPaperPattern;
-import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSubjectsFragment;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSubjectsFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+/*import butterknife.BindView;
+import butterknife.ButterKnife;*/
 public class AssessmentCertificateActivity extends BaseActivity {
-    @BindView(R.id.spinner_sub)
+    /*@BindView(R.id.spinner_sub)
     Spinner spinnerSubject;
     @BindView(R.id.spinner_paper)
     Spinner spinnerPaper;
@@ -51,14 +38,14 @@ public class AssessmentCertificateActivity extends BaseActivity {
     List<AssessmentPaperPattern> paperPatterns;
 //    AssessmentCertificateContract.CertificatePresenter presenter;
     String selectedSub, selectedTopic;
-
+*/
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment_certificate);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
 
         Assessment_Utility.showFragment(this, new CertificateSubjectsFragment_(),
                 R.id.frame_certificate, null, CertificateSubjectsFragment.class.getSimpleName());
@@ -115,7 +102,7 @@ public class AssessmentCertificateActivity extends BaseActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTopic.setAdapter(dataAdapter);
 *//*
-       *//* spinnerTopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+     *//* spinnerTopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedTopic = spinnerTopic.getSelectedItem().toString();
@@ -189,7 +176,7 @@ public class AssessmentCertificateActivity extends BaseActivity {
 
     }
 */
-    private void calculateTime(String paperStartTime, String paperEndTime) {
+   /* private void calculateTime(String paperStartTime, String paperEndTime) {
         try {
             Date date1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(paperStartTime);
             Date date2 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(paperEndTime);
@@ -203,7 +190,7 @@ public class AssessmentCertificateActivity extends BaseActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /*private void generateCertificateData() {
         presenter.generateCertificate(selectedSub);
@@ -211,9 +198,9 @@ public class AssessmentCertificateActivity extends BaseActivity {
 */
     @Override
     public void onBackPressed() {
-        int fragments=getSupportFragmentManager().getBackStackEntryCount();
-        if(fragments>1){
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments > 1) {
             super.onBackPressed();
-        }else finish();
+        } else finish();
     }
 }

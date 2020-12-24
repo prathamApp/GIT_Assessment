@@ -1,24 +1,19 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_with_keywords;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import static com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options.FillInTheBlanksWithoutOptionFragment.correctArr;
-import static com.pratham.assessment.utilities.Assessment_Constants.STT_REGEX_3;
 
 @EBean
-public class FIB_With_keywords_Presenter implements FIB_With_keywords_Contract.FIB_WithoutOptionPresenter{
+public class FIB_With_keywords_Presenter implements FIB_With_keywords_Contract.FIB_WithoutOptionPresenter {
 
     Context context;
     private FIB_With_keywords_Contract.FIB_WithoutOption_View fib_view;
 
 
-    public FIB_With_keywords_Presenter(Context context){
+    public FIB_With_keywords_Presenter(Context context) {
         this.context = context;
     }
 
@@ -33,12 +28,12 @@ public class FIB_With_keywords_Presenter implements FIB_With_keywords_Contract.F
         try {
 
             for (int i = 0; i < sttResult.size(); i++) {
-            System.out.println("LogTag" + " onResults :  " + sttResult.get(i));
+                System.out.println("LogTag" + " onResults :  " + sttResult.get(i));
 
-            if (sttResult.get(i).equalsIgnoreCase(answer))
-                sttResultStr = sttResult.get(i);
-            else sttResultStr = sttResult.get(0);
-        }
+                if (sttResult.get(i).equalsIgnoreCase(answer))
+                    sttResultStr = sttResult.get(i);
+                else sttResultStr = sttResult.get(0);
+            }
 
      /*   String[] splitQues = answer.replaceAll(STT_REGEX_3, "").split(" ");
         String[] splitRes = sttResultStr.split(" ");
@@ -61,8 +56,8 @@ public class FIB_With_keywords_Presenter implements FIB_With_keywords_Contract.F
         if (perc >= 75) {
             Arrays.fill(correctArr, true);
         }*/
-        fib_view.reInitCurrentItems();
-        fib_view.appendText(sttResultStr);
+            fib_view.reInitCurrentItems();
+            fib_view.appendText(sttResultStr);
         } catch (Exception e) {
             e.printStackTrace();
         }

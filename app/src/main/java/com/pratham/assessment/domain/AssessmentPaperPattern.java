@@ -15,6 +15,8 @@ public class AssessmentPaperPattern implements Serializable {
     private String subjectname;
     @Embedded
     private ArrayList<AssessmentPatternDetails> lstpatterndetail;
+   /* @Embedded
+    private ArrayList<CertificateTopicList> lstexamcertificatetopiclist;*/
 
     private String examname;
 
@@ -50,9 +52,9 @@ public class AssessmentPaperPattern implements Serializable {
     private String subjectid;
 
 
-        private boolean IsRandom;
-        private String noofcertificateq;
-        private String exammode;
+    private boolean IsRandom;
+    private String noofcertificateq;
+    private String exammode;
 
     public String getSubjectname() {
         return subjectname;
@@ -189,6 +191,7 @@ public class AssessmentPaperPattern implements Serializable {
     public void setCertificateQuestion10(String certificateQuestion10) {
         this.certificateQuestion10 = certificateQuestion10;
     }
+
     public boolean getIsRandom() {
         return IsRandom;
     }
@@ -212,6 +215,14 @@ public class AssessmentPaperPattern implements Serializable {
     public void setExammode(String exammode) {
         this.exammode = exammode;
     }
+
+    /*public ArrayList<CertificateTopicList> getLstexamcertificatetopiclist() {
+        return lstexamcertificatetopiclist;
+    }
+
+    public void setLstexamcertificatetopiclist(ArrayList<CertificateTopicList> lstexamcertificatetopiclist) {
+        this.lstexamcertificatetopiclist = lstexamcertificatetopiclist;
+    }*/
 }
 
 

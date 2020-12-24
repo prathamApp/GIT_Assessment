@@ -23,7 +23,7 @@ public class AssessmentPatternDetails {
     private String qlevelmarks;
 
 
-    private String topicname;
+        private String topicname;
 
     public String getExamId() {
         return examId;

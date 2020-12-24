@@ -18,7 +18,7 @@ import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.login.group_selection.fragment_child_attendance.FragmentChildAttendance;
 import com.pratham.assessment.ui.login.group_selection.fragment_child_attendance.FragmentChildAttendance_;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -29,7 +29,7 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.util.ArrayList;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.StudentPhotoPath;
+import static com.pratham.assessment.constants.Assessment_Constants.StudentPhotoPath;
 
 
 @EFragment(R.layout.fragment_select_group)

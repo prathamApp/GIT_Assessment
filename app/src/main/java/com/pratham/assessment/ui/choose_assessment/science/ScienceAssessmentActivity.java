@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -25,12 +24,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
@@ -58,16 +58,18 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.NonSwipeableViewPager;
 import com.pratham.assessment.custom.circular_progress_view.AnimationStyle;
 import com.pratham.assessment.custom.circular_progress_view.CircleView;
 import com.pratham.assessment.custom.circular_progress_view.CircleViewAnimation;
+import com.pratham.assessment.custom.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.custom.dots_indicator.WormDotsIndicator;
 import com.pratham.assessment.custom.swipeButton.ProSwipeButton;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
-import com.pratham.assessment.discrete_view.DiscreteScrollView;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentPatternDetails;
@@ -85,23 +87,21 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.domain.TempScienceQuestion;
 import com.pratham.assessment.interfaces.DataPushListener;
-import com.pratham.assessment.services.image_capture.APictureCapturingService;
-import com.pratham.assessment.services.image_capture.PictureCapturingListener;
-import com.pratham.assessment.services.image_capture.PictureCapturingServiceImpl;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.interfaces.PermissionResult;
+import com.pratham.assessment.services.video_monitoring_capture_images.APictureCapturingClass;
+import com.pratham.assessment.services.video_monitoring_capture_images.PictureCapturingClassImpl;
+import com.pratham.assessment.services.video_monitoring_capture_images.PictureCapturingListener;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment;
 import com.pratham.assessment.ui.choose_assessment.SupervisedAssessmentFragment_;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
-import com.pratham.assessment.services.camera.VideoMonitoringService;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.AssessmentTimeUpDialog;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ViewpagerAdapter;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.FileUtils;
+import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.atm.custom.LockNavigation.PinActivity;
 import com.robinhood.ticker.TickerView;
 
@@ -117,33 +117,32 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.ARRANGE_SEQUENCE;
-import static com.pratham.assessment.utilities.Assessment_Constants.AUDIO;
-import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
-import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
-import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
-import static com.pratham.assessment.utilities.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
-import static com.pratham.assessment.utilities.Assessment_Constants.EXAMID;
-import static com.pratham.assessment.utilities.Assessment_Constants.FILL_IN_THE_BLANK;
-import static com.pratham.assessment.utilities.Assessment_Constants.FILL_IN_THE_BLANK_WITH_OPTION;
-import static com.pratham.assessment.utilities.Assessment_Constants.IMAGE_ANSWER;
-import static com.pratham.assessment.utilities.Assessment_Constants.KEYWORDS_QUESTION;
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
-import static com.pratham.assessment.utilities.Assessment_Constants.MATCHING_PAIR;
-import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_CHOICE;
-import static com.pratham.assessment.utilities.Assessment_Constants.MULTIPLE_SELECT;
-import static com.pratham.assessment.utilities.Assessment_Constants.PARAGRAPH_BASED_QUESTION;
-import static com.pratham.assessment.utilities.Assessment_Constants.TEXT_PARAGRAPH;
-import static com.pratham.assessment.utilities.Assessment_Constants.TRUE_FALSE;
-import static com.pratham.assessment.utilities.Assessment_Constants.VIDEO;
-import static com.pratham.assessment.utilities.Assessment_Constants.VIDEOMONITORING;
+import static com.pratham.assessment.constants.Assessment_Constants.ARRANGE_SEQUENCE;
+import static com.pratham.assessment.constants.Assessment_Constants.AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
+import static com.pratham.assessment.constants.Assessment_Constants.EXAMID;
+import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK;
+import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK_WITH_OPTION;
+import static com.pratham.assessment.constants.Assessment_Constants.IMAGE_ANSWER;
+import static com.pratham.assessment.constants.Assessment_Constants.KEYWORDS_QUESTION;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.MATCHING_PAIR;
+import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_CHOICE;
+import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_SELECT;
+import static com.pratham.assessment.constants.Assessment_Constants.PARAGRAPH_BASED_QUESTION;
+import static com.pratham.assessment.constants.Assessment_Constants.TEXT_PARAGRAPH;
+import static com.pratham.assessment.constants.Assessment_Constants.TRUE_FALSE;
+import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
+import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 
 /*import butterknife.BindView;
@@ -151,7 +150,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;*/
 //@Fullscreen
 @EActivity(R.layout.activity_science_assessment)
-public class ScienceAssessmentActivity extends BaseActivity implements PictureCapturingListener, DiscreteScrollView.OnItemChangedListener, AssessmentAnswerListener, QuestionTrackerListener, DataPushListener {
+public class ScienceAssessmentActivity extends BaseActivity implements PictureCapturingListener, DiscreteScrollView.OnItemChangedListener, AssessmentAnswerListener, QuestionTrackerListener, DataPushListener, PermissionResult {
 
 
     public static ViewpagerAdapter viewpagerAdapter;
@@ -228,6 +227,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     TextView txt_question_cnt;
     @ViewById(R.id.tv_img_capture_warning)
     TextView tv_img_capture_warning;
+    @ViewById(R.id.cl_root)
+    CoordinatorLayout cl_root;
 
     int imgCaptureCnt = 0;
     String imgFileName = "";
@@ -262,9 +263,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     private static final String[] requiredPermissions = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA,
+            PermissionUtils.Manifest_RECORD_AUDIO,
     };
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
-    private APictureCapturingService pictureService;
+    private APictureCapturingClass pictureService;
 
     @AfterViews
     public void init() {
@@ -293,9 +295,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             String langCode = "1";
             if (!language.equalsIgnoreCase("")) {
                 switch (language.toLowerCase()) {
-                    case "english":
-                        langCode = "1";
-                        break;
                     case "hindi":
                         langCode = "2";
                         break;
@@ -320,6 +319,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     case "telugu":
                         langCode = "14";
                         break;
+                    case "english":
                     default:
                         langCode = "1";
                 }
@@ -368,7 +368,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         supervisorId = getIntent().getStringExtra("crlId");
-        checkPermissions();
+//        checkPermissionsNew();
 //        subjectId = getIntent().getStringExtra("subId");
 //        subjectId = Assessment_Constants.SELECTED_SUBJECT_ID;
         progressDialog = new ProgressDialog(this);
@@ -376,25 +376,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
 //        showSelectTopicDialog();
         if (Assessment_Constants.VIDEOMONITORING) {
-            pictureService = PictureCapturingServiceImpl.getInstance(this);
+            pictureService = PictureCapturingClassImpl.getInstance(this);
 
 //            frame_video_monitoring.setVisibility(View.VISIBLE);
 
 //            serviceIntent = new Intent(getApplicationContext(), VideoMonitoringService.class);
         }
 
-        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            downloadPaperPattern();
-        } else {
-            AssessmentPaperPattern assessmentPaperPatterns = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(selectedExamId);
-            if (assessmentPaperPatterns != null) {
-                generatePaperPattern();
-//                showQuestions();
-            } else {
-                finish();
-                Toast.makeText(this, getString(R.string.connect_to_internet_to_download_paper_format), Toast.LENGTH_SHORT).show();
-            }
-        }
+//        startFetchingData();
+
 
 
      /*   AssessmentPaperPattern assessmentPaperPatterns = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(selectedExamId);
@@ -419,24 +409,250 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         bottomQuestionFragment = new BottomQuestionFragment();
 
 
-        Resources res = getResources();
+//        Resources res = getResources();
 // Change locale settings in the app.
 
      /*   DisplayMetrics dm = res.getDisplayMetrics();
         android.content.res.Configuration conf = res.getConfiguration();
         conf.locale = new Locale("mr");
         res.updateConfiguration(conf, dm);*/
+        checkPermissions();
+
     }
+
+    private void startFetchingData() {
+        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+            downloadPaperPattern();
+        } else {
+            AssessmentPaperPattern assessmentPaperPatterns = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(selectedExamId);
+            if (assessmentPaperPatterns != null) {
+                generatePaperPattern();
+//                showQuestions();
+            } else {
+                checkOfflineExamInSDCard();
+              /*  finish();
+                Toast.makeText(this, getString(R.string.connect_to_internet_to_download_paper_format), Toast.LENGTH_SHORT).show();
+            */
+            }
+        }
+    }
+
+    private void checkOfflineExamInSDCard() {
+        // check if db exists in sd card .Assessment/Content/offline_assessment_database
+        boolean dbExists = checkSDCardDB();
+        if (dbExists) {
+            //copy offline db to assessment db
+            copySDCardDB();
+        }
+        // media path .Assessment/Content/Downloaded
+        //fetch
+
+    }
+
+    private boolean checkSDCardDB() {
+        try {
+            String sdCardPath = Assessment_Utility.getExternalPath(context);
+            File dbFile = new File(sdCardPath + ".Assessment/Content/offline_assessment_database");
+            return dbFile.exists();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+
+        }
+    }
+
+    private void copySDCardDB() {
+        try {
+            new AsyncTask<Void, Integer, Void>() {
+                ProgressDialog progressDialog;
+                boolean copySuccessful;
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog = new ProgressDialog(context);
+                    progressDialog.show();
+                }
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    try {
+                        ArrayList<String> sdPath = FileUtils.getExtSdCardPaths(context);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(sdPath + ".Assessment/Content/offline_assessment_database", null, SQLiteDatabase.OPEN_READONLY);
+                        if (db != null) {
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM AssessmentPaperPattern", null);
+                                List<AssessmentPaperPattern> paperPatternList = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        AssessmentPaperPattern paperPattern = new AssessmentPaperPattern();
+                                        paperPattern.setSubjectname(content_cursor.getString(content_cursor.getColumnIndex("subjectname")));
+                                        paperPattern.setExamname(content_cursor.getString(content_cursor.getColumnIndex("examname")));
+                                        paperPattern.setExamduration(content_cursor.getString(content_cursor.getColumnIndex("examduration")));
+                                        paperPattern.setCertificateQuestion1(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion1")));
+                                        paperPattern.setCertificateQuestion2(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion2")));
+                                        paperPattern.setCertificateQuestion3(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion3")));
+                                        paperPattern.setCertificateQuestion4(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion4")));
+                                        paperPattern.setCertificateQuestion5(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion5")));
+                                        paperPattern.setCertificateQuestion6(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion6")));
+                                        paperPattern.setCertificateQuestion7(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion7")));
+                                        paperPattern.setCertificateQuestion8(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion8")));
+                                        paperPattern.setCertificateQuestion9(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion9")));
+                                        paperPattern.setCertificateQuestion10(content_cursor.getString(content_cursor.getColumnIndex("certificateQuestion10")));
+                                        paperPattern.setOutofmarks(content_cursor.getString(content_cursor.getColumnIndex("outofmarks")));
+                                        paperPattern.setExamid(content_cursor.getString(content_cursor.getColumnIndex("examid")));
+                                        paperPattern.setSubjectid(content_cursor.getString(content_cursor.getColumnIndex("subjectid")));
+                                        paperPattern.setIsRandom((content_cursor.getInt(content_cursor.getColumnIndex("IsRandom"))) == 1 ? true : false);
+                                        paperPattern.setNoofcertificateq(content_cursor.getString(content_cursor.getColumnIndex("noofcertificateq")));
+                                        paperPattern.setExammode(content_cursor.getString(content_cursor.getColumnIndex("exammode")));
+                                        paperPatternList.add(paperPattern);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().insertAllPapersPatterns(paperPatternList);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM AssessmentPatternDetails", null);
+                                List<AssessmentPatternDetails> assessmentPatternDetailsList = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        AssessmentPatternDetails assessmentPatternDetails = new AssessmentPatternDetails();
+                                        assessmentPatternDetails.setTotalmarks(content_cursor.getString(content_cursor.getColumnIndex("totalmarks")));
+                                        assessmentPatternDetails.setNoofquestion(content_cursor.getString(content_cursor.getColumnIndex("noofquestion")));
+                                        assessmentPatternDetails.setQtname(content_cursor.getString(content_cursor.getColumnIndex("qtname")));
+                                        assessmentPatternDetails.setMarksperquestion(content_cursor.getString(content_cursor.getColumnIndex("marksperquestion")));
+                                        assessmentPatternDetails.setTopicid(content_cursor.getString(content_cursor.getColumnIndex("topicid")));
+                                        assessmentPatternDetails.setQlevel(content_cursor.getString(content_cursor.getColumnIndex("qlevel")));
+                                        assessmentPatternDetails.setParalevel(content_cursor.getString(content_cursor.getColumnIndex("paralevel")));
+                                        assessmentPatternDetails.setQlevelmarks(content_cursor.getString(content_cursor.getColumnIndex("qlevelmarks")));
+                                        assessmentPatternDetails.setTopicname(content_cursor.getString(content_cursor.getColumnIndex("topicname")));
+                                        assessmentPatternDetailsList.add(assessmentPatternDetails);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getAssessmentPatternDetailsDao().insertAllPatternDetails(assessmentPatternDetailsList);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM ScienceQuestion", null);
+                                List<ScienceQuestion> scienceQuestionList = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        ScienceQuestion scienceQuestion = new ScienceQuestion();
+                                        scienceQuestion.setAnsdesc(content_cursor.getString(content_cursor.getColumnIndex("ansdesc")));
+                                        scienceQuestion.setUpdatedby(content_cursor.getString(content_cursor.getColumnIndex("updatedby")));
+                                        scienceQuestion.setQlevel(content_cursor.getString(content_cursor.getColumnIndex("qlevel")));
+                                        scienceQuestion.setAddedby(content_cursor.getString(content_cursor.getColumnIndex("addedby")));
+                                        scienceQuestion.setLanguageid(content_cursor.getString(content_cursor.getColumnIndex("languageid")));
+                                        scienceQuestion.setActive(content_cursor.getString(content_cursor.getColumnIndex("active")));
+                                        scienceQuestion.setLessonid(content_cursor.getString(content_cursor.getColumnIndex("lessonid")));
+                                        scienceQuestion.setQtid(content_cursor.getString(content_cursor.getColumnIndex("qtid")));
+                                        scienceQuestion.setQid(content_cursor.getString(content_cursor.getColumnIndex("qid")));
+                                        scienceQuestion.setSubjectid(content_cursor.getString(content_cursor.getColumnIndex("subjectid")));
+                                        scienceQuestion.setAddedtime(content_cursor.getString(content_cursor.getColumnIndex("addedtime")));
+                                        scienceQuestion.setUpdatedtime(content_cursor.getString(content_cursor.getColumnIndex("updatedtime")));
+                                        scienceQuestion.setPhotourl(content_cursor.getString(content_cursor.getColumnIndex("photourl")));
+                                        scienceQuestion.setExamtime(content_cursor.getString(content_cursor.getColumnIndex("examtime")));
+                                        scienceQuestion.setTopicid(content_cursor.getString(content_cursor.getColumnIndex("topicid")));
+                                        scienceQuestion.setAnswer(content_cursor.getString(content_cursor.getColumnIndex("answer")));
+                                        scienceQuestion.setOutofmarks(content_cursor.getString(content_cursor.getColumnIndex("outofmarks")));
+                                        scienceQuestion.setQname(content_cursor.getString(content_cursor.getColumnIndex("qname")));
+                                        scienceQuestion.setHint(content_cursor.getString(content_cursor.getColumnIndex("hint")));
+                                        scienceQuestion.setExamid(content_cursor.getString(content_cursor.getColumnIndex("examid")));
+                                        scienceQuestion.setPdid(content_cursor.getString(content_cursor.getColumnIndex("pdid")));
+                                        scienceQuestion.setStartTime(content_cursor.getString(content_cursor.getColumnIndex("startTime")));
+                                        scienceQuestion.setEndTime(content_cursor.getString(content_cursor.getColumnIndex("endTime")));
+                                        scienceQuestion.setMarksPerQuestion(content_cursor.getString(content_cursor.getColumnIndex("marksPerQuestion")));
+                                        scienceQuestion.setPaperid(content_cursor.getString(content_cursor.getColumnIndex("paperid")));
+                                        scienceQuestion.setUserAnswerId(content_cursor.getString(content_cursor.getColumnIndex("userAnswerId")));
+                                        scienceQuestion.setUserAnswer(content_cursor.getString(content_cursor.getColumnIndex("userAnswer")));
+                                        scienceQuestion.setIsAttempted((content_cursor.getInt(content_cursor.getColumnIndex("isAttempted"))) == 1 ? true : false);
+                                        scienceQuestion.setIsCorrect((content_cursor.getInt(content_cursor.getColumnIndex("isCorrect"))) == 1 ? true : false);
+                                        scienceQuestion.setIsParaQuestion(content_cursor.getInt((content_cursor.getColumnIndex("IsParaQuestion"))) == 1 ? true : false);
+                                        scienceQuestion.setRefParaID(content_cursor.getString(content_cursor.getColumnIndex("RefParaID")));
+                                        scienceQuestionList.add(scienceQuestion);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().insertAllQuestions(scienceQuestionList);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Cursor content_cursor;
+                                content_cursor = db.rawQuery("SELECT * FROM ScienceQuestionChoice", null);
+                                List<ScienceQuestionChoice> scienceQuestionChoiceList = new ArrayList<>();
+                                if (content_cursor.moveToFirst()) {
+                                    while (!content_cursor.isAfterLast()) {
+                                        ScienceQuestionChoice scienceQuestionChoice = new ScienceQuestionChoice();
+                                        scienceQuestionChoice.setQcid(content_cursor.getString(content_cursor.getColumnIndex("qcid")));
+                                        scienceQuestionChoice.setQid(content_cursor.getString(content_cursor.getColumnIndex("qid")));
+                                        scienceQuestionChoice.setMatchingname(content_cursor.getString(content_cursor.getColumnIndex("matchingname")));
+                                        scienceQuestionChoice.setChoicename(content_cursor.getString(content_cursor.getColumnIndex("choicename")));
+                                        scienceQuestionChoice.setCorrect(content_cursor.getString(content_cursor.getColumnIndex("correct")));
+                                        scienceQuestionChoice.setMatchingurl(content_cursor.getString(content_cursor.getColumnIndex("matchingurl")));
+                                        scienceQuestionChoice.setChoiceurl(content_cursor.getString(content_cursor.getColumnIndex("choiceurl")));
+                                        scienceQuestionChoiceList.add(scienceQuestionChoice);
+                                        content_cursor.moveToNext();
+                                    }
+                                }
+                                AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().insertAllQuestionChoices(scienceQuestionChoiceList);
+                                content_cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            copySuccessful = true;
+                            BackupDatabase.backup(context);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onProgressUpdate(Integer... values) {
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    //addStartTime();
+                    super.onPostExecute(aVoid);
+                    progressDialog.dismiss();
+                    BackupDatabase.backup(context);
+                    if (copySuccessful) {
+                        createPaperPatten();
+                    } else {
+                        finish();
+                        Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.connect_to_internet_to_download_paper_format), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }.execute();
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private boolean checkPaperAlreadyAttempted() {
 //        String currentSession = FastSave.getInstance().getString("currentSession", "");
 
         attemptedList = AppDatabase.getDatabaseInstance(this).getTempScienceQuestionDao().getAlreadyAttemptedPaper(currentStudentID, subjectId, selectedExamId, selectedLang);
-        if (attemptedList.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return attemptedList.size() > 0;
     }
 
     private void createNewQuestionList(List<TempScienceQuestion> attemptedList) {
@@ -757,22 +973,23 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 finish();
                             }
                         } else {
-                            Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.no_subjects), Toast.LENGTH_SHORT).show();
-                            finish();
+                          /*  Toast.makeText(ScienceAssessmentActivity.this, getString(R.string.no_subjects), Toast.LENGTH_SHORT).show();
+                            finish();*/
+                            checkOfflineExamInSDCard();
                         }
                         List<AssessmentPatternDetails> assessmentPatternDetails = assessmentPaperPattern.getLstpatterndetail();
                         for (int i = 0; i < assessmentPatternDetails.size(); i++) {
                             assessmentPatternDetails.get(i).setExamId(assessmentPaperPattern.getExamid());
-
                         }
-
                         if (!assessmentPatternDetails.isEmpty())
                             insertPatternDetailsToDB(assessmentPatternDetails);
 
-                       /* paperPatternCnt++;
-                        if (paperPatternCnt < examIDList.size()) {
-                            downloadPaperPattern();
-                        } else {*/
+                      /*  List<CertificateTopicList> certificateTopicList = assessmentPaperPattern.getLstexamcertificatetopiclist();
+                        if (!certificateTopicList.isEmpty())
+                            insertCertificateQuestionListToDB(certificateTopicList);
+*/
+
+
                         if (progressDialog != null && isActivityRunning && progressDialog.isShowing())
                             progressDialog.dismiss();
 //                            for (int i = 0; i < examIDList.size(); i++) {
@@ -819,7 +1036,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     }
                 });
 
-
     }
 
     private void showDownloadFailedDialog(final String langId) {
@@ -854,6 +1070,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+   /* private void insertCertificateQuestionListToDB(List<CertificateTopicList> certificateTopicList) {
+        for (int i = 0; i < certificateTopicList.size(); i++) {
+            AppDatabase.getDatabaseInstance(this).getCertificateTopicListDao().deleteQuestionByTopicId(certificateTopicList.get(i).getTopicid());
+        }
+        AppDatabase.getDatabaseInstance(this).getCertificateTopicListDao().insertAllCertificateTopicQuestions(certificateTopicList);
+
+    }*/
 
     private void insertPatternDetailsToDB(List<AssessmentPatternDetails> paperPatterns) {
         for (int i = 0; i < paperPatterns.size(); i++) {
@@ -1938,7 +2162,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 if (pictureService != null)
                                     pictureService.startCapturing(ScienceAssessmentActivity.this, imgFileName);
                                 else {
-                                    pictureService = PictureCapturingServiceImpl.getInstance(ScienceAssessmentActivity.this);
+                                    pictureService = PictureCapturingClassImpl.getInstance(ScienceAssessmentActivity.this);
                                     pictureService.startCapturing(ScienceAssessmentActivity.this, imgFileName);
 
                                 }
@@ -2216,6 +2440,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             }
             this.answer = ans;
 
+        } else {
+            for (int i = 0; i < scienceQuestionList.size(); i++) {
+                if (scienceQuestionList.get(i).getQid().equalsIgnoreCase(qid)) {
+                    scienceQuestionList.get(i).setIsAttempted(false);
+                    scienceQuestionList.get(i).setIsCorrect(false);
+                    scienceQuestionList.get(i).setUserAnswer("");
+                    scienceQuestionList.get(i).setUserAnswerId("");
+                }
+            }
         }
         if (ansId.equalsIgnoreCase(""))
             this.ansId = "-1";
@@ -3059,7 +3292,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 score.setStartDateTime(scienceQuestionList.get(i).getStartTime());
                 if (FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false))
                     //            if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("practice"))
-                    score.setLabel("supervised assessment" + examStatus);
+                    score.setLabel("supervised " + examStatus);
                 else score.setLabel(Assessment_Constants.PRACTICE + examStatus);
                 score.setEndDateTime(scienceQuestionList.get(i).getEndTime());
                 //            score.setStudentID(Assessment_Constants.currentStudentID);
@@ -3297,7 +3530,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     }
 
 
-    public void startCameraService() {
+    /*public void startCameraService() {
         if (serviceIntent != null)
             startService(serviceIntent);
         String fileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + ".mp4";
@@ -3324,7 +3557,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             }
 
         }, 300);
-    }
+    }*/
 
     @Override
     public void onCaptureDone(String pictureUrl, byte[] pictureData) {
@@ -3373,6 +3606,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         }
     }
 
+    boolean firstTimePermission = true, deniedOnce = false;
+
     /**
      * checking  permissions at Runtime.
      */
@@ -3386,11 +3621,38 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             }
         }
         if (!neededPermissions.isEmpty()) {
-            requestPermissions(neededPermissions.toArray(new String[]{}),
-                    MY_PERMISSIONS_REQUEST_ACCESS_CODE);
+            if (firstTimePermission) {
+                firstTimePermission = false;
+                deniedOnce = true;
+                requestPermissions(neededPermissions.toArray(new String[]{}),
+                        MY_PERMISSIONS_REQUEST_ACCESS_CODE);
+            } else {
+                if (deniedOnce) {
+                    deniedOnce = false;
+                    permissionDenied();
+                } else permissionForeverDenied();
+            }
+        } else {
+            startFetchingData();
         }
+
     }
 
+    private void checkPermissionsNew() {
+       /* permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
+                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                PermissionUtils.Manifest_RECORD_AUDIO,
+                PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                PermissionUtils.Manifest_ACCESS_FINE_LOCATION
+        };
+*/
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            if (!isPermissionsGranted(ScienceAssessmentActivity.this, requiredPermissions)) {
+                askCompactPermissionsInSplash(requiredPermissions, ScienceAssessmentActivity.this, ScienceAssessmentActivity.this);
+            }
+
+        }
+    }
 
     @Override
     public void onResponseGet() {
@@ -3806,5 +4068,34 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void permissionGranted() {
+        startFetchingData();
+    }
+
+    @Override
+    public void permissionDenied() {
+        Snackbar please_grant_the_permissions = Snackbar.make(cl_root, "Please grant the permissions", Snackbar.LENGTH_INDEFINITE);
+        please_grant_the_permissions.setAction("GRANT", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                askCompactPermissionsInSplash(requiredPermissions, ScienceAssessmentActivity.this, context);
+                firstTimePermission = true;
+//                checkPermissions();
+                openSettingsApp(ScienceAssessmentActivity.this);
+            }
+        });
+        please_grant_the_permissions.show();
+    }
+
+
+    @Override
+    public void permissionForeverDenied() {
+        Toast.makeText(context, /*getString(R.string.give_camera_permissions)*/ "Please enable permissions from settings", Toast.LENGTH_SHORT).show();
+        finish();
+//        openSettingsApp(this);
+
     }
 }

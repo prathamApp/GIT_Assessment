@@ -15,6 +15,7 @@ import com.pratham.assessment.dao.AssessmentPaperPatternDao;
 import com.pratham.assessment.dao.AssessmentPatternDetailsDao;
 import com.pratham.assessment.dao.AssessmentTestDao;
 import com.pratham.assessment.dao.AttendanceDao;
+import com.pratham.assessment.dao.CertificateTopicListDao;
 import com.pratham.assessment.dao.ContentTableDao;
 import com.pratham.assessment.dao.CrlDao;
 import com.pratham.assessment.dao.DownloadMediaDao;
@@ -111,6 +112,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract AssessmentPaperPatternDao getAssessmentPaperPatternDao();
 
     public abstract AssessmentPatternDetailsDao getAssessmentPatternDetailsDao();
+
+    public abstract CertificateTopicListDao getCertificateTopicListDao();
 
     public abstract SupervisorDataDao getSupervisorDataDao();
 

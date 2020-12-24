@@ -9,7 +9,7 @@ import android.hardware.usb.UsbManager;
 
 import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.domain.StorageInfo;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.greenrobot.eventbus.EventBus;

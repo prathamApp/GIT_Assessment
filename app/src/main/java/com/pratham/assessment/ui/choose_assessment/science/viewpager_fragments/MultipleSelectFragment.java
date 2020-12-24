@@ -21,13 +21,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
-import com.pratham.assessment.custom.sparkbutton.SparkButton;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -39,7 +38,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import static android.graphics.Color.GREEN;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;

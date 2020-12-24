@@ -36,7 +36,7 @@ import com.pratham.assessment.domain.Status;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.services.LocationService;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.FileUtils;
 import com.pratham.assessment.utilities.SDCardUtil;
@@ -59,7 +59,6 @@ import java.util.List;
 import static android.content.Context.ACTIVITY_SERVICE;
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 import static com.pratham.assessment.ui.splash_activity.SplashActivity.appDatabase;
-import static com.pratham.assessment.utilities.Assessment_Constants.CURRENT_VERSION;
 
 @EBean
 public class SplashPresenter implements SplashContract.SplashPresenter {

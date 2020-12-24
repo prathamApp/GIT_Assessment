@@ -11,29 +11,32 @@ import android.widget.TextView;
 
 import com.pratham.assessment.R;
 
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.ViewById;
-
-import butterknife.BindView;
+/*import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 public class PushDataDialog extends Dialog {
 
-    @BindView(R.id.ok_btn)
+    //    @BindView(R.id.ok_btn)
     Button ok_btn;
-    @BindView(R.id.txt_push_dialog_msg)
+    //    @BindView(R.id.txt_push_dialog_msg)
     TextView txt_push_dialog_msg;
-    @BindView(R.id.txt_push_cnt)
+    //    @BindView(R.id.txt_push_cnt)
     TextView txt_push_cnt;
-
-
 
     public PushDataDialog(@NonNull Context context) {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.app_push_data_dialog);
-        ButterKnife.bind(this);
-
+//        ButterKnife.bind(this);
+        ok_btn = findViewById(R.id.ok_btn);
+        txt_push_dialog_msg = findViewById(R.id.txt_push_dialog_msg);
+        txt_push_cnt = findViewById(R.id.txt_push_cnt);
+        ok_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public PushDataDialog(@NonNull Context context, int themeResId) {
@@ -68,9 +71,9 @@ public class PushDataDialog extends Dialog {
         ok_btn.setVisibility(View.VISIBLE);
     }*/
 
-    @OnClick(R.id.ok_btn)
+  /*  @OnClick(R.id.ok_btn)
     public void okClick() {
         dismiss();
     }
-
+*/
 }

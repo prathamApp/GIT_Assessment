@@ -1,4 +1,4 @@
-package com.pratham.assessment.utilities;
+package com.pratham.assessment.constants;
 
 public class APIs {
     private APIs() {

@@ -1,6 +1,7 @@
 package com.pratham.assessment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -42,8 +44,9 @@ import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.utilities.PermissionUtils;
 
 import net.alhazmy13.catcho.library.Catcho;
 
@@ -56,15 +59,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
-import static com.pratham.assessment.utilities.Assessment_Constants.TransferredImages;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.TransferredImages;
 
 
 /**
  * Created by Ameya on 15-Mar-18.
  */
 
-public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
+public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener/*, PermissionResult*/ {
 
     public static TTSService ttsService;
     public static STTService sttService;
@@ -114,7 +117,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         ttsService.setLanguage(new Locale("en", "IN"));
 
         String langId = FastSave.getInstance().getString(LANGUAGE, "1");
-        Assessment_Utility.setLocaleByLanguageId(this,langId);
+        Assessment_Utility.setLocaleByLanguageId(this, langId);
 
 //        checkForUpdate();
         muteFlg = false;
@@ -124,6 +127,19 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 .build();
 
         Log.d("@path@@", AssessmentApplication.assessPath);
+
+        String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
+                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                PermissionUtils.Manifest_RECORD_AUDIO,
+                PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                PermissionUtils.Manifest_ACCESS_FINE_LOCATION
+        };
+
+        /*if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            if (!isPermissionsGranted(this, permissionArray)) {
+                askCompactPermissionsInSplash(permissionArray, this);
+            }
+        }*/
     }
 
     /*    private void overrideDefaultTypefaces() {
@@ -167,22 +183,24 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
 
-    /**
+    /* *//*
      * @param context    current Context
      * @param permission String permission to ask
      * @return boolean true/false
-     */
+     *//*
     public boolean isPermissionGranted(Context context, String permission) {
         boolean granted = ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED));
         return granted;
     }
 
-    /**
+    */
+
+    /*
      * @param context     current Context
      * @param permissions String[] permission to ask
      * @return boolean true/false
      */
-    public boolean isPermissionsGranted(Context context, String permissions[]) {
+/*    public boolean isPermissionsGranted(Context context, String permissions[]) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
 
@@ -195,9 +213,8 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
         return granted;
     }
-
-
-    private void internalRequestPermission(String[] permissionAsk) {
+*/
+   /* private void internalRequestPermission(String[] permissionAsk) {
         String arrayPermissionNotGranted[];
         ArrayList<String> permissionsNotGranted = new ArrayList<>();
 
@@ -222,9 +239,9 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         }
 
 
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
         if (requestCode != KEY_PERMISSION) {
@@ -243,7 +260,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
         }
 
-      /*  if (permissionResult != null) {
+      *//*  if (permissionResult != null) {
             if (granted) {
                 permissionResult.permissionGranted();
             } else {
@@ -258,20 +275,20 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
 
             }
-        }*/
+        }*//*
 
     }
 
-    /**
+    *//**
      * @param permission       String permission ask
      * @param permissionResult callback PermissionResult
-     */
+     *//*
     public void askCompactPermission(String permission, PermissionResult permissionResult) {
         permissionsAsk = new String[]{permission};
         this.permissionResult = permissionResult;
         internalRequestPermission(permissionsAsk);
 
-    }
+    }*/
 
     /**
      * @param permissions      String[] permissions ask
@@ -280,11 +297,11 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     public void askCompactPermissions(String permissions[], PermissionResult permissionResult) {
         permissionsAsk = permissions;
         this.permissionResult = permissionResult;
-        internalRequestPermission(permissionsAsk);
+        internalRequestPermission(permissionsAsk,this);
 
     }
 
-    public void openSettingsApp(Context context) {
+/*    public void openSettingsApp(Context context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -293,7 +310,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         }
 
 
-    }
+    }*/
 
 
     public void ActivityOnPause() {
@@ -567,9 +584,26 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
+   /* @Override
+    public void permissionGranted() {
+
+    }
+
+    @Override
+    public void permissionDenied() {
+        Toast.makeText(BaseActivity.this, getString(R.string.give_camera_permissions), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void permissionForeverDenied() {
+        Toast.makeText(BaseActivity.this, getString(R.string.give_camera_permissions), Toast.LENGTH_SHORT).show();
+        finish();
+
+    }*/
+
     //Flexible Update
- /*   public void checkForUpdate() {
-*//*
+    /*   public void checkForUpdate() {
+     *//*
         if (BuildConfig.DEBUG) {
             appUpdateManager = new FakeAppUpdateManager(this);
             ((FakeAppUpdateManager) appUpdateManager).setUpdateAvailable(0);
@@ -666,5 +700,151 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         }*//*
 
     }*/
+
+    /**
+     * @param context    current Context
+     * @param permission String permission to ask
+     * @return boolean true/false
+     */
+    public boolean isPermissionGranted(Context context, String permission) {
+        boolean granted = ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED));
+        return granted;
+    }
+
+    /**
+     * @param context     current Context
+     * @param permissions String[] permission to ask
+     * @return boolean true/false
+     */
+    public boolean isPermissionsGranted(Context context, String permissions[]) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return true;
+
+        boolean granted = true;
+
+        for (String permission : permissions) {
+            if (!(ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED))
+                granted = false;
+        }
+
+        return granted;
+    }
+
+
+    private void internalRequestPermission(String[] permissionAsk,Context context) {
+        String arrayPermissionNotGranted[];
+        ArrayList<String> permissionsNotGranted = new ArrayList<>();
+
+        for (int i = 0; i < permissionAsk.length; i++) {
+            if (!isPermissionGranted(context, permissionAsk[i])) {
+                permissionsNotGranted.add(permissionAsk[i]);
+            }
+        }
+
+
+        if (permissionsNotGranted.isEmpty()) {
+
+            if (permissionResult != null)
+                permissionResult.permissionGranted();
+
+        } else {
+
+            arrayPermissionNotGranted = new String[permissionsNotGranted.size()];
+            arrayPermissionNotGranted = permissionsNotGranted.toArray(arrayPermissionNotGranted);
+            ActivityCompat.requestPermissions((Activity) context, arrayPermissionNotGranted, KEY_PERMISSION);
+
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        if (requestCode != KEY_PERMISSION) {
+            return;
+        }
+
+        List<String> permissionDenied = new LinkedList<>();
+        boolean granted = true;
+
+        for (int i = 0; i < grantResults.length; i++) {
+
+            if (!(grantResults[i] == PackageManager.PERMISSION_GRANTED)) {
+                granted = false;
+                permissionDenied.add(permissions[i]);
+            }
+
+        }
+
+        if (permissionResult != null) {
+            if (granted) {
+                permissionResult.permissionGranted();
+            } else {
+                for (String s : permissionDenied) {
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, s)) {
+                        permissionResult.permissionForeverDenied();
+                        return;
+                    }
+                }
+
+                permissionResult.permissionDenied();
+
+
+            }
+        }
+
+    }
+
+    /**
+     * @param permission       String permission ask
+     * @param permissionResult callback PermissionResult
+     */
+    public void askCompactPermission(String permission, PermissionResult permissionResult) {
+        permissionsAsk = new String[]{permission};
+        this.permissionResult = permissionResult;
+        internalRequestPermission(permissionsAsk,this);
+
+    }
+
+    /** @param permissions      String[] permissions ask
+     * @param permissionResult callback PermissionResult
+     */
+    public void askCompactPermissionsInSplash(String permissions[], PermissionResult permissionResult,Context context) {
+        permissionsAsk = permissions;
+        this.permissionResult = permissionResult;
+        internalRequestPermission(permissionsAsk,context);
+
+    }
+    public void openSettingsApp(Context context) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + context.getPackageName()));
+            startActivity(intent);
+        }
+
+       /* Intent intent = new Intent("android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS");
+        if (intent.resolveActivity(context.getPackageManager()) == null) {
+            intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        }
+
+        final String EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key";
+        final String EXTRA_SHOW_FRAGMENT_ARGUMENTS = ":settings:show_fragment_args";
+
+        Bundle bundle = new Bundle();
+        String showArgs = "package:" + context.getPackageName();
+        bundle.putString(EXTRA_FRAGMENT_ARG_KEY, showArgs);
+        intent.putExtra(EXTRA_FRAGMENT_ARG_KEY, showArgs);
+        intent.putExtra(EXTRA_SHOW_FRAGMENT_ARGUMENTS, bundle);
+
+        try {
+            context.startActivity(intent);
+            String toastText = "Find PowerShade here";
+            Toast.makeText(context, toastText, LENGTH_LONG).show();
+        } catch (Exception e) {
+            // ask user to grant permission manually
+        }*/
+    }
 
 }

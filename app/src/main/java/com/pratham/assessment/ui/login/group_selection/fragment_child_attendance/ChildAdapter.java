@@ -19,10 +19,10 @@ import com.pratham.assessment.domain.Student;
 import java.io.File;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+/*import butterknife.BindView;
+import butterknife.ButterKnife;*/
 
-import static com.pratham.assessment.utilities.Assessment_Constants.StudentPhotoPath;
+import static com.pratham.assessment.constants.Assessment_Constants.StudentPhotoPath;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder> {
     private ArrayList<Student> datalist;
@@ -149,15 +149,15 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
     }
 
     public class ChildHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.child_name)
+        //        @BindView(R.id.child_name)
         TextView child_name;
         /*  @BindView(R.id.child_avatar)
           LottieAnimationView child_avatar; */
-        @BindView(R.id.iv_child)
+//        @BindView(R.id.iv_child)
         ImageView child_avatar;
-        @BindView(R.id.iv_tick)
+        //        @BindView(R.id.iv_tick)
         ImageView tick;
-        @BindView(R.id.iv_camera)
+        //        @BindView(R.id.iv_camera)
         ImageView iv_camera;
        /* @BindView(R.id.child_card)
         MaterialCardView group_card;*/
@@ -166,7 +166,11 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildHolder>
 
         public ChildHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+//            ButterKnife.bind(this, itemView);
+            child_name = itemView.findViewById(R.id.child_name);
+            child_avatar = itemView.findViewById(R.id.iv_child);
+            tick = itemView.findViewById(R.id.iv_tick);
+            iv_camera = itemView.findViewById(R.id.iv_camera);
         }
     }
 }

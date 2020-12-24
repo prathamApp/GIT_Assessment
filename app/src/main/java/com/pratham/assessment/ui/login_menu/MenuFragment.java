@@ -24,7 +24,7 @@ import com.pratham.assessment.ui.login.MainActivity_;
 import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup;
 import com.pratham.assessment.ui.login.group_selection.fragment_select_group.FragmentSelectGroup_;
 import com.pratham.assessment.ui.login.qr_scan.QRScanActivity_;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;

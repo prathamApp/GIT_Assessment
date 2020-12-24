@@ -25,7 +25,7 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.ece.ECEActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

@@ -2,6 +2,7 @@ package com.pratham.assessment.ui.choose_assessment.result;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -20,7 +21,7 @@ import com.bumptech.glide.request.target.Target;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
@@ -69,9 +70,16 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                 myViewHolder.image.setVisibility(View.VISIBLE);
                 myViewHolder.text.setVisibility(View.GONE);
 
+                final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getChoiceurl();
+
+                String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+                final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+
                 Glide.with(context).asBitmap().
-                        load(scienceQuestionChoice.getChoiceurl()).apply(new RequestOptions()
+                        load(path).apply(new RequestOptions()
                         .fitCenter()
+                        .placeholder(Drawable.createFromPath(localPath))
                         .format(DecodeFormat.PREFER_ARGB_8888)
                         .override(Target.SIZE_ORIGINAL))
                         .into(myViewHolder.image);
@@ -86,9 +94,17 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                     myViewHolder.image.setVisibility(View.VISIBLE);
                     myViewHolder.text.setVisibility(View.GONE);
 
+                    final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getMatchingurl();
+
+                    String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getMatchingurl());
+                    final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+
+
                     Glide.with(context).asBitmap().
-                            load(/*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getMatchingurl()).apply(new RequestOptions()
+                            load(path).apply(new RequestOptions()
                             .fitCenter()
+                            .placeholder(Drawable.createFromPath(localPath))
                             .format(DecodeFormat.PREFER_ARGB_8888)
                             .override(Target.SIZE_ORIGINAL))
                             .into(myViewHolder.image);

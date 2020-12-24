@@ -31,7 +31,7 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -111,19 +111,23 @@ public class SupervisedAssessmentFragment extends Fragment {
 
     @Click(R.id.btn_camera)
     public void openCamera() {
-        fileName = paperId + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR + ".jpg";
-        path = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/";
+        try {
+            fileName = paperId + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR + ".jpg";
+            path = AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH + "/";
 
-        imageName = fileName;
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        File imagesFolder = new File(path);
-        if (!imagesFolder.exists()) imagesFolder.mkdirs();
-        File image = new File(imagesFolder, fileName);
+            imageName = fileName;
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            File imagesFolder = new File(path);
+            if (!imagesFolder.exists()) imagesFolder.mkdirs();
+            File image = new File(imagesFolder, fileName);
 //                            capturedImageUri = Uri.fromFile(image);
-        capturedImageUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", image);
-        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            capturedImageUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", image);
+            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        } catch (Exception e) {
+             e.printStackTrace();
+        }
     }
 
 

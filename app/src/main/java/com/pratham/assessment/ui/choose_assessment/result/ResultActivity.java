@@ -13,7 +13,7 @@ import org.androidannotations.annotations.EActivity;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
+//import butterknife.ButterKnife;
 
 @EActivity(R.layout.activity_result)
 public class ResultActivity extends BaseActivity implements ResultContract.ResultView {

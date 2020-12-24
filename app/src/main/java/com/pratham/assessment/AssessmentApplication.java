@@ -14,8 +14,8 @@ import android.util.Log;
 import com.isupatches.wisefy.WiseFy;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.font.FontChanger;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.io.File;
@@ -29,7 +29,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.PREFS_VERSION;
+import static com.pratham.assessment.constants.Assessment_Constants.PREFS_VERSION;
 
 public class AssessmentApplication extends Application {
 

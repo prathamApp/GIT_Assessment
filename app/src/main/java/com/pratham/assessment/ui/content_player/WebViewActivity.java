@@ -26,7 +26,7 @@ import com.pratham.assessment.domain.CertificateModelClass;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
+//import butterknife.ButterKnife;
 
 
 
@@ -47,7 +47,7 @@ public class WebViewActivity extends BaseActivity implements WebViewInterface {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
         webView = (WebView) findViewById(R.id.loadPage);
 
         webResId = getIntent().getStringExtra("resId");

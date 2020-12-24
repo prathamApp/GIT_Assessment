@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -15,24 +16,21 @@ import android.widget.Toast;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.Village;
 
+
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class SelectVillageDialog extends Dialog {
 
-    @BindView(R.id.txt_clear_changes)
+   /* @BindView(R.id.txt_clear_changes)
     TextView clear_changes;
     @BindView(R.id.btn_close)
     ImageButton btn_close;
     @BindView(R.id.txt_message)
     TextView txt_message_village;
     @BindView(R.id.flowLayout)
-    GridLayout flowLayout;
+    GridLayout flowLayout;*/
 
     Context context;
     List<Village> villageList;
@@ -52,7 +50,43 @@ public class SelectVillageDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_village_dialog);
-        ButterKnife.bind(this);
+        TextView clear_changes = findViewById(R.id.txt_clear_changes);
+        ImageButton btn_close = findViewById(R.id.btn_close);
+        TextView txt_message_village = findViewById(R.id.txt_message);
+        GridLayout flowLayout = findViewById(R.id.flowLayout);
+        TextView txt_save = findViewById(R.id.txt_save);
+
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        clear_changes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < checkBoxes.size(); i++) {
+                    checkBoxes.get(i).setChecked(false);
+                }
+            }
+        });
+        txt_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> villageIDList = new ArrayList();
+                for (int i = 0; i < checkBoxes.size(); i++) {
+                    if (checkBoxes.get(i).isChecked()) {
+                        villageIDList.add(checkBoxes.get(i).getTag().toString());
+                    }
+                }
+                if (villageIDList.size() > 0) {
+                    villageSelectListener.getSelectedItems(villageIDList);
+                    dismiss();
+                } else Toast.makeText(context, R.string.please_select_village, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         setCanceledOnTouchOutside(false);
         setCancelable(false);
         txt_message_village.setText("Select Village");
@@ -71,19 +105,19 @@ public class SelectVillageDialog extends Dialog {
     }
 
 
-    @OnClick(R.id.btn_close)
+  /*  @OnClick(R.id.btn_close)
     public void closeDialog() {
         dismiss();
-    }
+    }*/
 
-    @OnClick(R.id.txt_clear_changes)
+   /* @OnClick(R.id.txt_clear_changes)
     public void clearChanges() {
         for (int i = 0; i < checkBoxes.size(); i++) {
             checkBoxes.get(i).setChecked(false);
         }
-    }
+    }*/
 
-    @OnClick(R.id.txt_save)
+   /* @OnClick(R.id.txt_save)
     public void ok() {
         ArrayList<String> villageIDList = new ArrayList();
         for (int i = 0; i < checkBoxes.size(); i++) {
@@ -94,8 +128,8 @@ public class SelectVillageDialog extends Dialog {
         if (villageIDList.size() > 0) {
             villageSelectListener.getSelectedItems(villageIDList);
             dismiss();
-        }else Toast.makeText(context, R.string.please_select_village, Toast.LENGTH_SHORT).show();
-    }
+        } else Toast.makeText(context, R.string.please_select_village, Toast.LENGTH_SHORT).show();
+    }*/
 
 }
 

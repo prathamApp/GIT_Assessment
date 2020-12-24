@@ -17,8 +17,8 @@ import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.EBean;

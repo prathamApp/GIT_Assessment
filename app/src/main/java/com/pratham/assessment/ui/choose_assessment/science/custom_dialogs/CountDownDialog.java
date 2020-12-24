@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import com.pratham.assessment.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+/*import butterknife.BindView;
+import butterknife.ButterKnife;*/
 
 
 public class CountDownDialog extends Dialog {
 
-    @BindView(R.id.tv_timer)
+    //    @BindView(R.id.tv_timer)
     TextView timer;
 
     Context context;
@@ -31,7 +31,8 @@ public class CountDownDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_countdown_dialog);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this)
+        timer = findViewById(R.id.tv_timer);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
         CountDownTimer mCountDownTimer = new CountDownTimer(5000, 1000) {

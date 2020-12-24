@@ -20,7 +20,7 @@ import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Assessment;
 import com.pratham.assessment.domain.Score;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import java.util.ArrayList;
 

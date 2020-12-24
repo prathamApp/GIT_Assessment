@@ -24,7 +24,7 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.Village;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity_;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;

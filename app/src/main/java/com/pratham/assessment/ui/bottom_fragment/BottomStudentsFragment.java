@@ -45,7 +45,7 @@ import com.pratham.assessment.ui.bottom_fragment.add_student.AddStudentFragment;
 import com.pratham.assessment.ui.bottom_fragment.add_student.EnrollmentNoFragment;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;

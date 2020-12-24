@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,8 +17,7 @@ import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
-import com.pratham.assessment.utilities.Assessment_Utility;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;

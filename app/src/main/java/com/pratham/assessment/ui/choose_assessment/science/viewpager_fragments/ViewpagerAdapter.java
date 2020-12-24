@@ -29,6 +29,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
             String questionType = scienceQuestion.getQtid();
             switch (questionType) {
                 case "1":
+                case "5":
                     fragmentList.add(McqFillInTheBlanksFragment.newInstance(i, scienceQuestion));
                     break;
                 case "2":
@@ -39,9 +40,6 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                     break;
                 case "4":
                     fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.match_the_pair.MatchThePairFragment.newInstance(i, scienceQuestion));
-                    break;
-                case "5":
-                    fragmentList.add(McqFillInTheBlanksFragment.newInstance(i, scienceQuestion));
                     break;
                 case "6":
                 case "11":

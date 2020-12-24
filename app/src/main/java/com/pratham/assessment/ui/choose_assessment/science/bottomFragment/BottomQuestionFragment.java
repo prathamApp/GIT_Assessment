@@ -1,29 +1,19 @@
 package com.pratham.assessment.ui.choose_assessment.science.bottomFragment;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,26 +23,25 @@ import com.pratham.assessment.ui.choose_assessment.science.adapters.QuestionTrac
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
-
 import java.util.List;
 
-import butterknife.BindView;
+/*import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 
 public class BottomQuestionFragment extends DialogFragment {
 
 
-    @BindView(R.id.rv_questions)
+    //    @BindView(R.id.rv_questions)
     RecyclerView rvQuestion;
-    @BindView(R.id.btn_save)
+    //    @BindView(R.id.btn_save)
     Button saveAssessment;
-    @BindView(R.id.tv_not_answered_color)
+    //    @BindView(R.id.tv_not_answered_color)
     TextView tv_not_answered_color;
-    @BindView(R.id.tv_answered_color)
+    //    @BindView(R.id.tv_answered_color)
     TextView tv_answered_color;
-    @BindView(R.id.rl_root)
+    //    @BindView(R.id.rl_root)
     RelativeLayout rl_root;
     /*Context context;*/
     List<ScienceQuestion> scienceQuestionList;
@@ -79,10 +68,22 @@ public class BottomQuestionFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.question_list_fragment, container, false);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ButterKnife.bind(this, view);
-        rl_root.setBackgroundColor(Assessment_Utility.selectedColor);
+//        ButterKnife.bind(this, view);
         scienceQuestionList = (List<ScienceQuestion>) getArguments().get("questionList");
 
+        rvQuestion = view.findViewById(R.id.rv_questions);
+        saveAssessment = view.findViewById(R.id.btn_save);
+        tv_not_answered_color = view.findViewById(R.id.tv_not_answered_color);
+        tv_answered_color = view.findViewById(R.id.tv_answered_color);
+        rl_root = view.findViewById(R.id.rl_root);
+        rl_root.setBackgroundColor(Assessment_Utility.selectedColor);
+
+        saveAssessment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                questionTrackerListener.onSaveAssessmentClick();
+            }
+        });
         return view;
     }
 
@@ -118,7 +119,7 @@ public class BottomQuestionFragment extends DialogFragment {
     }
 
 
-    @OnClick(R.id.btn_save)
+   /* @OnClick(R.id.btn_save)
     public void addStudent() {
 //        getActivity().finish();
         questionTrackerListener.onSaveAssessmentClick();
@@ -126,7 +127,7 @@ public class BottomQuestionFragment extends DialogFragment {
 //        AddStudentFragment addStudentFragment = AddStudentFragment.newInstance(this);
 //        addStudentFragment.show(getActivity().getSupportFragmentManager(), AddStudentFragment.class.getSimpleName());
 
-    }
+    }*/
 
     @Override
     public void onCancel(DialogInterface dialog) {
@@ -192,7 +193,6 @@ public class BottomQuestionFragment extends DialogFragment {
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }*/
-
 
 
 }

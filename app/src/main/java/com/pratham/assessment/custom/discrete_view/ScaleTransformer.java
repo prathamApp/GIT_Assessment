@@ -1,4 +1,4 @@
-package com.pratham.assessment.discrete_view;
+package com.pratham.assessment.custom.discrete_view;
 
 /**
  * Created by HP on 23-05-2018.

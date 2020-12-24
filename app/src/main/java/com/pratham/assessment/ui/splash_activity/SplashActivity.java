@@ -13,9 +13,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,16 +24,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.google.android.play.core.appupdate.AppUpdateInfo;
-import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.tasks.Task;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
@@ -47,8 +44,8 @@ import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment_;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity_;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.SplashSupportActivity;
@@ -74,6 +71,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     Button btn_start_game;
     @ViewById(R.id.iv_logo)
     ImageView iv_logo;
+    @ViewById(R.id.rl_splash)
+    RelativeLayout rl_splash;
     /*    @BindView(R.id.iv_logo_pradigi)
         ImageView iv_logo_pradigi;
         @BindView(R.id.temppp)
@@ -92,6 +91,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     @Bean(PushDataToServer.class)
     PushDataToServer pushDataToServer;
     public static boolean firstPause = true, fragmentBottomOpenFlg = false, fragmentBottomPauseFlg = false, fragmentAddStudentPauseFlg = false, fragmentAddStudentOpenFlg = false;
+    String[] permissionArray;
+    Snackbar please_grant_the_permissions;
 
 
     @AfterViews
@@ -142,7 +143,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
     public void initiateApp() {
 
-        String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
+        permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
                 PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
                 PermissionUtils.Manifest_RECORD_AUDIO,
                 PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
@@ -151,7 +152,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
             if (!isPermissionsGranted(SplashActivity.this, permissionArray)) {
-                askCompactPermissions(permissionArray, SplashActivity.this);
+                askCompactPermissionsInSplash(permissionArray, SplashActivity.this,context);
             } else {
                 splashPresenter.checkVersion();
             }
@@ -398,6 +399,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     }
 
     public void showExitDialog() {
+
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -420,31 +422,40 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             public void onClick(View v) {
                 dialog.dismiss();
 //                showBottomFragment();
-                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
-                if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
-                    bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
-                }
+                if (please_grant_the_permissions != null && please_grant_the_permissions.isShown())
+                    please_grant_the_permissions.dismiss();
+
+
+            BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                if(isActivityRunning &&!bottomStudentsFragment.isVisible()&&!bottomStudentsFragment.isAdded())
+
+            {
+                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
             }
-        });
+        }
+    });
 
-        restart_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String curSession = AppDatabase.getDatabaseInstance(SplashActivity.this).getStatusDao().getValue("CurrentSession");
-                String toDateTemp = AppDatabase.getDatabaseInstance(SplashActivity.this).getSessionDao().getToDate(curSession);
+        restart_btn.setOnClickListener(new View.OnClickListener()
 
-                Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
+    {
+        @Override
+        public void onClick (View v){
+        String curSession = AppDatabase.getDatabaseInstance(SplashActivity.this).getStatusDao().getValue("CurrentSession");
+        String toDateTemp = AppDatabase.getDatabaseInstance(SplashActivity.this).getSessionDao().getToDate(curSession);
 
-                if (toDateTemp != null) {
-                    if (toDateTemp.equalsIgnoreCase("na"))
-                        AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
-                }
-                dialog.dismiss();
-                finishAffinity();
+        Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
 
-            }
-        });
+        if (toDateTemp != null) {
+            if (toDateTemp.equalsIgnoreCase("na"))
+                AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
+        }
+        dialog.dismiss();
+        finishAffinity();
+
     }
+    });
+}
+
 
     @Override
     public void permissionGranted() {
@@ -454,10 +465,21 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
     @Override
     public void permissionDenied() {
+        please_grant_the_permissions = Snackbar.make(rl_splash, "Please grant the permissions", Snackbar.LENGTH_INDEFINITE);
+        please_grant_the_permissions.setAction("GRANT", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                askCompactPermissionsInSplash(permissionArray, SplashActivity.this,context);
+            }
+        });
+        please_grant_the_permissions.show();
     }
 
     @Override
     public void permissionForeverDenied() {
+        splashPresenter.checkVersion();
+        Toast.makeText(context, /*getString(R.string.give_camera_permissions)*/ "Please enable permissions from settings", Toast.LENGTH_SHORT).show();
+        Log.d("permissionForeverDenied", "permissionForeverDenied");
     }
 
     public void createDataBase() {
@@ -648,7 +670,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 if (isActivityRunning) {
 
 //                                    Toast.makeText(context, R.string.no_students_to_pull, Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(context,"No students to pull", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "No students to pull", Toast.LENGTH_SHORT).show();
 //                                subjectView.setSubjectToSpinner();
                                     BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                                     if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
@@ -675,7 +697,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     @Override
                     public void onError(ANError anError) {
 //                        Toast.makeText(context, getString(R.string.error_in_loading_check_internet_connection), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(context,"Error in loading.. check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Error in loading.. check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         if (isActivityRunning && progressDialog != null && progressDialog.isShowing())
                             progressDialog.dismiss();

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.pratham.assessment.custom.FastSave;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 
 @SuppressLint("AppCompatCustomView")
 public class SansTextView extends TextView {

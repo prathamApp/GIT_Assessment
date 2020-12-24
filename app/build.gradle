@@ -65,8 +65,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     //Butterknife
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    /*implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'*/
     //material design
     implementation 'com.android.support:design:28.0.0'
     implementation 'net.alhazmy13.catcho:library:1.1.0'

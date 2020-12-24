@@ -21,7 +21,7 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 
 public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessmentAdapter.MyViewHolder> {
 

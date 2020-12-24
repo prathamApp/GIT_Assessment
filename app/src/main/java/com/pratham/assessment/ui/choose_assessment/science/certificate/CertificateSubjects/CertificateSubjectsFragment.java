@@ -14,13 +14,11 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
-import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.ExpandableRecyclerAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.SubjectAdapter;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -28,7 +26,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 

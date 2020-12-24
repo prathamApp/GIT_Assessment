@@ -1,4 +1,4 @@
-package com.pratham.assessment.utilities;
+package com.pratham.assessment.constants;
 
 public class Assessment_Constants {
     public static final String INITIAL_ENTRIES = "initial_entries";

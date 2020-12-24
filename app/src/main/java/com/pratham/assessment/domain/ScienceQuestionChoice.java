@@ -14,7 +14,6 @@ public class ScienceQuestionChoice implements Serializable {
     @NonNull
     @PrimaryKey
     private String qcid;
-
     private String qid;
     private String matchingname;
     private String choicename;

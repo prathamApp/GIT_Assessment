@@ -15,14 +15,17 @@ import com.bumptech.glide.Glide;
 import com.pratham.assessment.R;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
 
-import butterknife.BindView;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.ViewById;
+
+/*import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 
 public class AssessmentTimeUpDialog extends Dialog {
 
-    @BindView(R.id.btn_ok_time_up)
+    //    @ViewById(R.id.btn_ok_time_up)
     Button btn_ok;
     Context context;
     QuestionTrackerListener questionTrackerListener;
@@ -37,18 +40,26 @@ public class AssessmentTimeUpDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.assessment_time_up_dialog);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
+        btn_ok = findViewById(R.id.btn_ok_time_up);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setCancelable(false);
         setCanceledOnTouchOutside(false);
 
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                questionTrackerListener.onSaveAssessmentClick();
+            }
+        });
     }
 
-    @OnClick(R.id.btn_ok_time_up)
+    /*@Click(R.id.btn_ok_time_up)
     public void closeDialog() {
 //        ((Activity) context).finish();
         dismiss();
         questionTrackerListener.onSaveAssessmentClick();
-    }
+    }*/
 }
 

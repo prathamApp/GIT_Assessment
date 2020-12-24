@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,51 +24,53 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
-import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.SplashInterface;
-import com.pratham.assessment.utilities.APIs;
+import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+/*
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+*/
 
 public class EnrollmentNoFragment extends DialogFragment {
 
-    @BindView(R.id.et_enrollment_no)
+    //    @BindView(R.id.et_enrollment_no)
     EditText enrollmentNo;
 
-    @BindView(R.id.tv_enrolled_student_name)
+    //    @BindView(R.id.tv_enrolled_student_name)
     TextView tv_enrolled_student_name;
-    @BindView(R.id.tv_enrolled_student_age)
+    //    @BindView(R.id.tv_enrolled_student_age)
     TextView tv_enrolled_student_age;
-    @BindView(R.id.tv_enrolled_student_class)
+    //    @BindView(R.id.tv_enrolled_student_class)
     TextView tv_enrolled_student_class;
-    @BindView(R.id.tv_enrolled_student_gender)
+    //    @BindView(R.id.tv_enrolled_student_gender)
     TextView tv_enrolled_student_gender;
-    @BindView(R.id.tv_enrolled_student_grp_id)
+    //    @BindView(R.id.tv_enrolled_student_grp_id)
     TextView tv_enrolled_student_grp_id;
-    @BindView(R.id.tv_enrolled_student_grp_name)
+    //    @BindView(R.id.tv_enrolled_student_grp_name)
     TextView tv_enrolled_student_grp_name;
-    @BindView(R.id.tv_enrolled_student_village_id)
+    //    @BindView(R.id.tv_enrolled_student_village_id)
     TextView tv_enrolled_student_village_id;
-    @BindView(R.id.tv_enrolled_student_village_name)
+    //    @BindView(R.id.tv_enrolled_student_village_name)
     TextView tv_enrolled_student_village_name;
 
-    @BindView(R.id.rl_enroll_no_details_outer)
+    //    @BindView(R.id.rl_enroll_no_details_outer)
     RelativeLayout rl_enroll_no_details;
 
-    @BindView(R.id.rl_enroll_no_not_found)
+    //    @BindView(R.id.rl_enroll_no_not_found)
     RelativeLayout rl_enroll_no_not_found;
-    @BindView(R.id.form_root)
+    //    @BindView(R.id.form_root)
     RelativeLayout form_root;
-
+    Button btn_check_enrollment_no;
+    Button btn_add_new_student_enroll;
 
     Student newEnrolledStudent;
 
@@ -106,7 +108,21 @@ public class EnrollmentNoFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_enrollment_no, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        ButterKnife.bind(this, view);
+//        ButterKnife.bind(this, view);
+        enrollmentNo = view.findViewById(R.id.et_enrollment_no);
+        tv_enrolled_student_name = view.findViewById(R.id.tv_enrolled_student_name);
+        tv_enrolled_student_age = view.findViewById(R.id.tv_enrolled_student_age);
+        tv_enrolled_student_class = view.findViewById(R.id.tv_enrolled_student_class);
+        tv_enrolled_student_gender = view.findViewById(R.id.tv_enrolled_student_gender);
+        tv_enrolled_student_grp_id = view.findViewById(R.id.tv_enrolled_student_grp_id);
+        tv_enrolled_student_grp_name = view.findViewById(R.id.tv_enrolled_student_grp_name);
+        tv_enrolled_student_village_id = view.findViewById(R.id.tv_enrolled_student_village_id);
+        tv_enrolled_student_village_name = view.findViewById(R.id.tv_enrolled_student_village_name);
+        rl_enroll_no_details = view.findViewById(R.id.rl_enroll_no_details_outer);
+        rl_enroll_no_not_found = view.findViewById(R.id.rl_enroll_no_not_found);
+        btn_check_enrollment_no = view.findViewById(R.id.btn_check_enrollment_no);
+        btn_add_new_student_enroll = view.findViewById(R.id.btn_add_new_student_enroll);
+        form_root = view.findViewById(R.id.form_root);
         rl_enroll_no_details.setVisibility(View.GONE);
         rl_enroll_no_not_found.setVisibility(View.GONE);
         return view;
@@ -115,9 +131,22 @@ public class EnrollmentNoFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        btn_check_enrollment_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkNo();
+            }
+        });
+
+        btn_add_new_student_enroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAddNewClick();            }
+        });
+
     }
 
-    @OnClick(R.id.btn_check_enrollment_no)
+    //    @OnClick(R.id.btn_check_enrollment_no)
     public void checkNo() {
         hideKeyboard(form_root);
         if (!enrollmentNo.getText().toString().trim().equalsIgnoreCase("")) {
@@ -141,7 +170,7 @@ public class EnrollmentNoFragment extends DialogFragment {
             }
     }
 
-    @OnClick(R.id.btn_add_new_student_enroll)
+    //    @OnClick(R.id.btn_add_new_student_enroll)
     public void onAddNewClick() {
         //ButtonClickSound.start();
         if (newEnrolledStudent.getGender() != null) {

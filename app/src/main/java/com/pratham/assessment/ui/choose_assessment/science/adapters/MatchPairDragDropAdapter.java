@@ -25,7 +25,7 @@ import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActi
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.match_the_pair.MatchThePairFragment;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;

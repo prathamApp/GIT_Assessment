@@ -24,8 +24,8 @@ import com.pratham.assessment.domain.AssessmentTestModal;
 import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;*/

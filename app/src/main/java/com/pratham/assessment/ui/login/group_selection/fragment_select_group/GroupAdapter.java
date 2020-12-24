@@ -18,8 +18,8 @@ import com.pratham.assessment.domain.Groups;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+/*import butterknife.BindView;
+import butterknife.ButterKnife;*/
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
     private ArrayList<Groups> datalist;
@@ -48,11 +48,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
 
 //            viewHolder.group_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorGreen));
 //            viewHolder.group_name.setTextColor(context.getResources().getColor(R.color.colorBlack));
-            viewHolder.tick.setVisibility(View.VISIBLE);
+            viewHolder.iv_tick.setVisibility(View.VISIBLE);
         } else {
 //            viewHolder.group_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorAccent));
 //            viewHolder.group_name.setTextColor(context.getResources().getColor(R.color.colorBlack));
-            viewHolder.tick.setVisibility(View.INVISIBLE);
+            viewHolder.iv_tick.setVisibility(View.INVISIBLE);
 
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -74,16 +74,19 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.group_card)
+        //        @BindView(R.id.group_card)
         RelativeLayout group_card;
-        @BindView(R.id.group_name)
+        //        @BindView(R.id.group_name)
         TextView group_name;
-        @BindView(R.id.iv_tick)
-        ImageView tick;
+        //        @BindView(R.id.iv_tick)
+        ImageView iv_tick;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+//            ButterKnife.bind(this, itemView);
+            group_card = itemView.findViewById(R.id.group_card);
+            group_name = itemView.findViewById(R.id.group_name);
+            iv_tick = itemView.findViewById(R.id.iv_tick);
         }
     }
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,31 +14,49 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.List;
 
-import butterknife.BindView;
+/*import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 public class ShowAnswerDialog extends Dialog {
 
-    @BindView(R.id.rl_ans_options1_result)
+    //    @ViewById(R.id.rl_ans_options1_result)
     RecyclerView list1;
-    @BindView(R.id.rl_ans_options2_result)
+    //    @ViewById(R.id.rl_ans_options2_result)
     RecyclerView list2;
-    @BindView(R.id.ll_multiple_select_result)
+    //    @ViewById(R.id.ll_multiple_select_result)
     LinearLayout ll_multiple_select;
-    @BindView(R.id.ll_match_pair_result)
+    //    @ViewById(R.id.ll_match_pair_result)
     LinearLayout ll_match_pair;
-    @BindView(R.id.tv_multiple_select_ans)
+    //    @ViewById(R.id.tv_multiple_select_ans)
     TextView multipleSelectAns;
+    Button btn_ok;
     List<ScienceQuestionChoice> scienceQuestionChoices;
+
 
     public ShowAnswerDialog(Context context, List<ScienceQuestionChoice> scienceQuestionChoices) {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.layout_answer_dialog);
         this.scienceQuestionChoices = scienceQuestionChoices;
-        ButterKnife.bind(this);
+
+        list1 = findViewById(R.id.rl_ans_options1_result);
+        list2 = findViewById(R.id.rl_ans_options2_result);
+        ll_multiple_select = findViewById(R.id.ll_multiple_select_result);
+        ll_match_pair = findViewById(R.id.ll_match_pair_result);
+        multipleSelectAns = findViewById(R.id.tv_multiple_select_ans);
+        btn_ok = findViewById(R.id.btn_ok);
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+//        ButterKnife.bind(this);
         setRecycler();
        /* String[] queArr = new String[scienceQuestionChoices.size()];
         String[] ansArr = new String[scienceQuestionChoices.size()];
@@ -62,8 +81,13 @@ public class ShowAnswerDialog extends Dialog {
     public ShowAnswerDialog(Context context, List<ScienceQuestionChoice> userAns, String multipleSelect) {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.layout_answer_dialog);
-        ButterKnife.bind(this);
-
+//        ButterKnife.bind(this);
+        list1 = findViewById(R.id.rl_ans_options1_result);
+        list2 = findViewById(R.id.rl_ans_options2_result);
+        ll_multiple_select = findViewById(R.id.ll_multiple_select_result);
+        ll_match_pair = findViewById(R.id.ll_match_pair_result);
+        multipleSelectAns = findViewById(R.id.tv_multiple_select_ans);
+        btn_ok = findViewById(R.id.btn_ok);
         ll_match_pair.setVisibility(View.GONE);
         ll_multiple_select.setVisibility(View.VISIBLE);
         StringBuffer ans = new StringBuffer();
@@ -74,15 +98,31 @@ public class ShowAnswerDialog extends Dialog {
             ans.setLength(ans.length() - 1);
         Assessment_Utility.setOdiaFont(context, multipleSelectAns);
         multipleSelectAns.setText(ans);
-
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public ShowAnswerDialog(Context context, String img) {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.layout_answer_dialog);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
+        list1 = findViewById(R.id.rl_ans_options1_result);
+        list2 = findViewById(R.id.rl_ans_options2_result);
+        ll_multiple_select = findViewById(R.id.ll_multiple_select_result);
+        ll_match_pair = findViewById(R.id.ll_match_pair_result);
+        multipleSelectAns = findViewById(R.id.tv_multiple_select_ans);
+        btn_ok = findViewById(R.id.btn_ok);
         this.dismiss();
-
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
 
     }
 
@@ -92,7 +132,13 @@ public class ShowAnswerDialog extends Dialog {
     public ShowAnswerDialog(Context context, List<ScienceQuestionChoice> userAns, List<ScienceQuestionChoice> scienceQuestionChoice) {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.layout_answer_dialog);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
+        list1 = findViewById(R.id.rl_ans_options1_result);
+        list2 = findViewById(R.id.rl_ans_options2_result);
+        ll_multiple_select = findViewById(R.id.ll_multiple_select_result);
+        ll_match_pair = findViewById(R.id.ll_match_pair_result);
+        multipleSelectAns = findViewById(R.id.tv_multiple_select_ans);
+        btn_ok = findViewById(R.id.btn_ok);
         ll_match_pair.setVisibility(View.VISIBLE);
         ll_multiple_select.setVisibility(View.GONE);
 
@@ -104,11 +150,16 @@ public class ShowAnswerDialog extends Dialog {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list2.setLayoutManager(linearLayoutManager1);
         list2.setAdapter(adapter1);
-
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
-    @OnClick(R.id.btn_ok)
+  /*  @Click(R.id.btn_ok)
     public void onOk() {
         dismiss();
-    }
+    }*/
 }

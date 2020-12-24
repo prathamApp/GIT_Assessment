@@ -25,8 +25,7 @@ import com.pratham.assessment.services.stt_service.ContinuousSpeechService;
 import com.pratham.assessment.services.stt_service.STT_Result;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options.FillInTheBlanksWithoutOptionFragment_;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -42,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity.viewpagerAdapter;
-import static com.pratham.assessment.utilities.Assessment_Constants.STT_REGEX_3;
+import static com.pratham.assessment.constants.Assessment_Constants.STT_REGEX_3;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
@@ -191,7 +190,6 @@ public class FillInTheBlanksWithKeywordsFragment extends Fragment
             }
         });
     }
-
 
 
     @Click({R.id.iv_question_image, R.id.iv_question_gif})

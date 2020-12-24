@@ -14,7 +14,7 @@ import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.domain.Modal_Download;
 import com.pratham.assessment.domain.Modal_FileDownloading;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.FILE_DOWNLOAD_STARTED;
+import static com.pratham.assessment.constants.Assessment_Constants.FILE_DOWNLOAD_STARTED;
 
 
 public class DownloadingTask extends AsyncTask {

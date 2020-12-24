@@ -27,7 +27,7 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
-import static com.pratham.assessment.utilities.Assessment_Constants.StudentPhotoPath;
+import static com.pratham.assessment.constants.Assessment_Constants.StudentPhotoPath;
 
 @EFragment(R.layout.fragment_child_attendance)
 public class FragmentChildAttendance extends Fragment implements ContractChildAttendance.attendanceView {

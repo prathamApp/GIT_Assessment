@@ -4,10 +4,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
 
-import java.io.File;
-
-import static com.pratham.assessment.database.AppDatabase.DB_NAME;
-
 class DeleteSensitiveTablesFromBackupDB {
     static void deleteTables() {
         new AsyncTask<Void, Integer, Void>() {
@@ -24,6 +20,8 @@ class DeleteSensitiveTablesFromBackupDB {
 
                         db.execSQL("drop table if exists ScienceQuestion");
                         db.execSQL("drop table if exists ScienceQuestionChoice");
+                        db.execSQL("drop table if exists TempScienceQuestion");
+//                        db.execSQL("drop table if exists Score");
 //                        db.execSQL("drop table if exists DownloadMedia");
                     }
                 } catch (Exception e) {

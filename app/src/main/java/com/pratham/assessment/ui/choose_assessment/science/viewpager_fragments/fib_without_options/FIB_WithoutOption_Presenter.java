@@ -1,43 +1,15 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.androidnetworking.interfaces.StringRequestListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.database.AppDatabase;
-import com.pratham.assessment.database.BackupDatabase;
-import com.pratham.assessment.domain.AssessmentLanguages;
-import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.NIOSExam;
-import com.pratham.assessment.domain.NIOSExamTopics;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentContract;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
 
 import org.androidannotations.annotations.EBean;
-import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static com.pratham.assessment.BaseActivity.appDatabase;
 import static com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options.FillInTheBlanksWithoutOptionFragment.correctArr;
-import static com.pratham.assessment.utilities.Assessment_Constants.STT_REGEX_3;
+import static com.pratham.assessment.constants.Assessment_Constants.STT_REGEX_3;
 
 @EBean
 public class FIB_WithoutOption_Presenter implements FIB_WithoutOption_Contract.FIB_WithoutOptionPresenter{

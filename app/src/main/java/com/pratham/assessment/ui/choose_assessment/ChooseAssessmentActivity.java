@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -50,7 +49,7 @@ import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.splash_activity.SplashActivity_;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -64,10 +63,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.pratham.assessment.utilities.Assessment_Constants.EXAMID;
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
-import static com.pratham.assessment.utilities.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
-import static com.pratham.assessment.utilities.Assessment_Constants.VIDEOMONITORING;
+import static com.pratham.assessment.constants.Assessment_Constants.EXAMID;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
+import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
 @EActivity(R.layout.activity_choose_assessment)
@@ -557,10 +556,10 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         ece.setSubjectid("0");
         ece.setSubjectname("ECE");
         contentTableList.add(ece);*/
-            for (int i = 0; i < contentTableList.size(); i++) {
+            /*for (int i = 0; i < contentTableList.size(); i++) {
                 if (contentTableList.get(i).getSubjectname().equalsIgnoreCase("english"))
                     contentTableList.remove(contentTableList.get(i));
-            }
+            }*/
             Collections.sort(contentTableList, new Comparator<AssessmentSubjects>() {
                 @Override
                 public int compare(AssessmentSubjects o1, AssessmentSubjects o2) {

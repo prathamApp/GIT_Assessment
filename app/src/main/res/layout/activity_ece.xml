@@ -83,7 +83,7 @@
     </LinearLayout>
 
 
-    <com.pratham.assessment.discrete_view.DiscreteScrollView
+    <com.pratham.assessment.custom.discrete_view.DiscreteScrollView
         android:id="@+id/attendance_recycler_view"
         android:layout_below="@id/ll_progress"
         android:layout_width="match_parent"

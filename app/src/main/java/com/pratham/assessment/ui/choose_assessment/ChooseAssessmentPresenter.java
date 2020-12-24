@@ -32,8 +32,8 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.EBean;
@@ -48,7 +48,7 @@ import java.util.concurrent.ExecutionException;
 
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 import static com.pratham.assessment.BaseActivity.appDatabase;
-import static com.pratham.assessment.utilities.Assessment_Constants.CURRENT_VERSION;
+import static com.pratham.assessment.constants.Assessment_Constants.CURRENT_VERSION;
 
 @EBean
 public class ChooseAssessmentPresenter implements ChooseAssessmentContract.ChooseAssessmentPresenter {
@@ -373,11 +373,14 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                                 assessView.addContentToViewList(contentTableList);
                                 assessView.notifyAdapter();
                                 //getTopicData();
-                            } else
+                            } else {
 //                                Toast.makeText(context, R.string.no_exams, Toast.LENGTH_SHORT).show();
 //                                Assessment_Utility.showDialog(context, context.getString(R.string.no_exams));
+                                if (progressDialog != null && progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
+                                }
                                 assessView.showNoExamLayout(true);
-
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

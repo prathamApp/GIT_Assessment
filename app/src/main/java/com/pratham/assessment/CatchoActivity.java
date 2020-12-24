@@ -2,7 +2,6 @@ package com.pratham.assessment;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.pratham.assessment.custom.FastSave;
@@ -11,7 +10,7 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Modal_Log;
 import com.pratham.assessment.ui.splash_activity.SplashActivity_;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import net.alhazmy13.catcho.library.Catcho;

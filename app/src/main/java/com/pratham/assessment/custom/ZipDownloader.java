@@ -9,7 +9,7 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.async.DownloadingTask;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Modal_Download;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.FileUtils;
 
 import java.io.File;

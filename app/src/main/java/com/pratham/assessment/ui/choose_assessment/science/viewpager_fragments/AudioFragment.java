@@ -21,11 +21,10 @@ import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.AudioUtil;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -33,7 +32,6 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
@@ -55,9 +53,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     ImageView iv_start_audio;
     @ViewById(R.id.rl_answer_audio)
     RelativeLayout rl_answer_audio;
+   /* @ViewById(R.id.cv_answer_audio)
+    CardView cv_answer_audio;*/
 
     @ViewById(R.id.iv_answer_audio)
     ImageView iv_answer_audio;
+    @ViewById(R.id.iv_close)
+    ImageView iv_close;
     boolean isPlaying;
     boolean isAnsPlaying;
     boolean isAudioRecording;
@@ -400,6 +402,18 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
         }
 
+
+    }
+
+
+    @Click(R.id.iv_close)
+    public void deleteAudio() {
+        if (isAnsPlaying) {
+            isAnsPlaying = false;
+            AudioUtil.stopPlayingAudio();
+        }
+        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), null);
+        rl_answer_audio.setVisibility(View.GONE);
 
     }
 

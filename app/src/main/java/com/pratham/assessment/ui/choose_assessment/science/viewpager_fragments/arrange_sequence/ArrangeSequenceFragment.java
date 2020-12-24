@@ -24,7 +24,7 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ArrangeSeqDragDropAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;

@@ -2,13 +2,8 @@ package com.pratham.assessment.ui.choose_assessment;
 
 
 import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.NIOSExam;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
-import static com.pratham.assessment.utilities.Assessment_Constants.CURRENT_VERSION;
 
 public interface ChooseAssessmentContract {
 

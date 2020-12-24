@@ -20,39 +20,45 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.TopicSelectListener;
 
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.List;
-
+/*
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 
 public class SelectTopicDialog extends Dialog {
 
-    @BindView(R.id.tv_update_topics)
+    //    @ViewById(R.id.tv_update_topics)
     public TextView updateTopics;
-    @BindView(R.id.btn_close)
+    //    @ViewById(R.id.btn_close)
     ImageButton btn_close;
-    @BindView(R.id.txt_message)
+    //    @ViewById(R.id.txt_message)
     TextView topics;
-    @BindView(R.id.spinner_topic)
+    //    @ViewById(R.id.spinner_topic)
     Spinner spinner_topic;
     /*@BindView(R.id.select_spinner_Subject)
     Spinner spinner_subject;*/
-    @BindView(R.id.select_spinner_lang)
-    Spinner spinner_lang;
-    @BindView(R.id.txt_start_assessment)
-    TextView txt_ok;
-    /* @BindView(R.id.tv_timer)
-     public TextView timer;*/
-    @BindView(R.id.ll_count_down)
-    public RelativeLayout ll_count_down;
-    @BindView(R.id.ll_select_topic)
-    public LinearLayout ll_select_topic;
-    @BindView(R.id.circle_progress_bar)
-    public ProgressBar circle_progress_bar;
 
+    //    @ViewById(R.id.select_spinner_lang)
+    Spinner spinner_lang;
+    //    @ViewById(R.id.txt_start_assessment)
+    TextView txt_ok;
+    /* @ViewById(R.id.tv_timer)
+     public TextView timer;*/
+
+
+//    @ViewById(R.id.ll_count_down)
+ /*   public RelativeLayout ll_count_down;
+//    @ViewById(R.id.ll_select_topic)
+    public LinearLayout ll_select_topic;
+    @ViewById(R.id.circle_progress_bar)
+    public ProgressBar circle_progress_bar;
+*/
 
     Context context;
     List<AssessmentPaperPattern> toipcsModalList;
@@ -75,7 +81,7 @@ public class SelectTopicDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_select_topic_dialog);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
         topics.setText("Select Exams");
@@ -158,21 +164,21 @@ public class SelectTopicDialog extends Dialog {
     }
 
 
-    @OnClick(R.id.btn_close)
+  /*  @Click(R.id.btn_close)
     public void closeDialog() {
         ((Activity) context).finish();
         dismiss();
     }
+*/
 
-
-    @OnClick(R.id.txt_start_assessment)
-    public void ok() {
-        String selectedTopic = spinner_topic.getSelectedItem().toString();
-//        String selectedSub = spinner_subject.getSelectedItem().toString();
-//        String selectedLang = spinner_lang.getSelectedItem().toString();
-//        topicSelectListener.getSelectedTopic(selectedTopic, Assessment_Constants.SELECTED_LANGUAGE, this);
-    }
-
+    /*   @Click(R.id.txt_start_assessment)
+       public void ok() {
+           String selectedTopic = spinner_topic.getSelectedItem().toString();
+   //        String selectedSub = spinner_subject.getSelectedItem().toString();
+   //        String selectedLang = spinner_lang.getSelectedItem().toString();
+   //        topicSelectListener.getSelectedTopic(selectedTopic, Assessment_Constants.SELECTED_LANGUAGE, this);
+       }
+   */
     @Override
     public void onBackPressed() {
         ((Activity) context).finish();

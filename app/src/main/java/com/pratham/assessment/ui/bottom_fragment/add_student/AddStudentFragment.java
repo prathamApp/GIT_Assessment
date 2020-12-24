@@ -24,6 +24,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -45,8 +46,8 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.SplashInterface;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
@@ -55,44 +56,45 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+/*
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+*/
 
-import static com.pratham.assessment.utilities.Assessment_Constants.LANGUAGE;
-
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 
 public class AddStudentFragment extends DialogFragment implements AvatarClickListener {
 
-    @BindView(R.id.form_root)
+    //    @BindView(R.id.form_root)
     RelativeLayout homeRoot;
 
     List<AssessmentLanguages> assessmentLanguagesList;
     ProgressDialog progressDialog;
 
 
-    @BindView(R.id.rv_Avatars)
+    //    @BindView(R.id.rv_Avatars)
     RecyclerView recyclerView;
 
-    @BindView(R.id.et_studentName)
+    //    @BindView(R.id.et_studentName)
     EditText et_studentName;
 
-    @BindView(R.id.spinner_age)
+    //    @BindView(R.id.spinner_age)
     Spinner spinner_age;
 
-    @BindView(R.id.spinner_app_lang)
+    //    @BindView(R.id.spinner_app_lang)
     Spinner spinner_app_lang;
 
 /*    @BindView(R.id.spinner_class)
     Spinner spinner_class;*/
 
-    @BindView(R.id.rb_male)
+    //    @BindView(R.id.rb_male)
     RadioButton rb_male;
 
-    @BindView(R.id.rb_female)
+    //    @BindView(R.id.rb_female)
     RadioButton rb_female;
-
+    Button btn_add_new_student;
     String gender = "";
     String selectedLang = "";
     String avatarName;
@@ -225,7 +227,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
             assessmentLanguagesList = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getAllLangs();
             if (assessmentLanguagesList.size() <= 0) {
 //                Toast.makeText(getActivity(), R.string.connect_to_internet_to_download_languages, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(),"Connect to internet to download languages", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Connect to internet to download languages", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             } else {
                 setLanguagesToSpinner();
@@ -268,7 +270,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                     TextView lang = (TextView) view;
                     selectedLang = lang.getText().toString();
                     String langId = AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().getLangIdByName(selectedLang);
-                    if(langId!=null){
+                    if (langId != null) {
                         Assessment_Constants.SELECTED_LANGUAGE = langId;
                         FastSave.getInstance().saveString(LANGUAGE, langId);
                     }
@@ -335,7 +337,38 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_student, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        ButterKnife.bind(this, view);
+//        ButterKnife.bind(this, view);
+
+
+        recyclerView = view.findViewById(R.id.rv_Avatars);
+        et_studentName = view.findViewById(R.id.et_studentName);
+        spinner_age = view.findViewById(R.id.spinner_age);
+        spinner_app_lang = view.findViewById(R.id.spinner_app_lang);
+        rb_male = view.findViewById(R.id.rb_male);
+        rb_female = view.findViewById(R.id.rb_female);
+        btn_add_new_student = view.findViewById(R.id.btn_add_new_student);
+        rb_male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gender = "Male";
+
+            }
+        });
+        rb_female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gender = "Female";
+
+            }
+        });
+
+        btn_add_new_student.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAddNewClick();
+            }
+        });
+
         editorListener(et_studentName);
         return view;
     }
@@ -384,23 +417,23 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         }
     }
 
-    @OnClick(R.id.rb_male)
-    public void maleGenderClicked() {
-        //ButtonClickSound.start();
-        // rb_male.setBackground(getResources().getDrawable(R.drawable.correct_bg));
-        // rb_female.setBackground(getResources().getDrawable(R.drawable.ripple_rectangle));
-        gender = "Male";
-    }
+    /* @OnClick(R.id.rb_male)
+     public void maleGenderClicked() {
+         //ButtonClickSound.start();
+         // rb_male.setBackground(getResources().getDrawable(R.drawable.correct_bg));
+         // rb_female.setBackground(getResources().getDrawable(R.drawable.ripple_rectangle));
+         gender = "Male";
+     }
 
-    @OnClick(R.id.rb_female)
-    public void femaleGenderClicked() {
-        //ButtonClickSound.start();
-        //rb_female.setBackground(getResources().getDrawable(R.drawable.correct_bg));
-        //rb_male.setBackground(getResources().getDrawable(R.drawable.ripple_rectangle));
-        gender = "Female";
-    }
-
-    @OnClick(R.id.btn_add_new_student)
+     @OnClick(R.id.rb_female)
+     public void femaleGenderClicked() {
+         //ButtonClickSound.start();
+         //rb_female.setBackground(getResources().getDrawable(R.drawable.correct_bg));
+         //rb_male.setBackground(getResources().getDrawable(R.drawable.ripple_rectangle));
+         gender = "Female";
+     }
+ */
+//    @OnClick(R.id.btn_add_new_student)
     public void onAddNewClick() {
         //ButtonClickSound.start();
         if (assessmentLanguagesList.size() <= 0) {
@@ -410,7 +443,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
             else {
                 getLanguageData();
 //                Toast.makeText(getActivity(), R.string.select_language, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(),"Select language", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Select language", Toast.LENGTH_SHORT).show();
 
             }
         } else if (et_studentName.getText().toString().equalsIgnoreCase("") ||
@@ -569,7 +602,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
                     @Override
                     public void onError(ANError anError) {
 //                        Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(getActivity(),"Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().deletePaperPatterns();
                         ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
                         ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);

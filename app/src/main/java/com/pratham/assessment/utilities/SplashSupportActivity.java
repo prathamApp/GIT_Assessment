@@ -107,7 +107,7 @@ public class SplashSupportActivity extends BaseActivity implements MediaPlayer.O
 
     }
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
         if (requestCode != KEY_PERMISSION) {
@@ -144,7 +144,7 @@ public class SplashSupportActivity extends BaseActivity implements MediaPlayer.O
         }
 
     }
-
+*/
     /**
      * @param permission       String permission ask
      * @param permissionResult callback PermissionResult
@@ -156,17 +156,17 @@ public class SplashSupportActivity extends BaseActivity implements MediaPlayer.O
 
     }
 
-    /**
+    /*
      * @param permissions      String[] permissions ask
      * @param permissionResult callback PermissionResult
      */
-    public void askCompactPermissions(String permissions[], PermissionResult permissionResult) {
+   /* public void askCompactPermissionsInSplash(String permissions[], PermissionResult permissionResult) {
         permissionsAsk = permissions;
         this.permissionResult = permissionResult;
         internalRequestPermission(permissionsAsk);
 
     }
-
+*/
     public void openSettingsApp(Context context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {

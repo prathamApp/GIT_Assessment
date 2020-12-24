@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,22 +15,25 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.QuestionTrackerAdapter;
 
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.List;
 
-import butterknife.BindView;
+/*import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnClick;*/
 
 
 public class QuestionTrackDialog extends Dialog {
 
-    @BindView(R.id.txt_cancel)
+    //    @ViewById(R.id.txt_cancel)
     TextView cancel;
-    @BindView(R.id.btn_close)
+    //    @ViewById(R.id.btn_close)
     ImageButton btn_close;
-    @BindView(R.id.txt_message)
+    //    @ViewById(R.id.txt_message)
     TextView tv_topics;
-    @BindView(R.id.rv_questions)
+    //    @ViewById(R.id.rv_questions)
     RecyclerView rvQuestion;
 
 
@@ -48,10 +52,27 @@ public class QuestionTrackDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question_tracker_dialog);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
+        cancel = findViewById(R.id.txt_cancel);
+        btn_close = findViewById(R.id.btn_close);
+        tv_topics = findViewById(R.id.txt_message);
         tv_topics.setText("Question Tracker");
+
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
        /* QuestionTrackerAdapter questionTrackerAdapter = new QuestionTrackerAdapter(this, context, scienceQuestionList);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(context, 5);
         rvQuestion.setLayoutManager(linearLayoutManager);
@@ -60,21 +81,23 @@ public class QuestionTrackDialog extends Dialog {
     }
 
 
-    @OnClick(R.id.btn_close)
+  /*  @Click(R.id.btn_close)
     public void closeDialog() {
         dismiss();
 
     }
-
-    @OnClick(R.id.txt_cancel)
+*/
+/*
+    @Click(R.id.txt_cancel)
     public void cancel() {
         dismiss();
     }
 
-    @OnClick(R.id.txt_save)
+    @Click(R.id.txt_save)
     public void ok() {
 
     }
+*/
 
 
 }

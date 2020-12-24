@@ -23,9 +23,9 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
-import com.pratham.assessment.discrete_view.DSVOrientation;
-import com.pratham.assessment.discrete_view.DiscreteScrollView;
-import com.pratham.assessment.discrete_view.ScaleTransformer;
+import com.pratham.assessment.custom.discrete_view.DSVOrientation;
+import com.pratham.assessment.custom.discrete_view.DiscreteScrollView;
+import com.pratham.assessment.custom.discrete_view.ScaleTransformer;
 import com.pratham.assessment.domain.ECEModel;
 import com.pratham.assessment.domain.Score;
 

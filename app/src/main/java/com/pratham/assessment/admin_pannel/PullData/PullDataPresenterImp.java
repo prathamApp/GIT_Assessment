@@ -15,7 +15,6 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.async.API_Content;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
-import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.Groups;
 import com.pratham.assessment.domain.ModalProgram;
@@ -27,8 +26,8 @@ import com.pratham.assessment.domain.RaspVillage;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.Village;
 import com.pratham.assessment.interfaces.API_Content_Result;
-import com.pratham.assessment.utilities.APIs;
-import com.pratham.assessment.utilities.Assessment_Constants;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
