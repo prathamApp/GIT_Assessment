@@ -301,7 +301,7 @@
     <string name="done">ہو گیا</string>
     <string name="name">نام</string>
     <string name="next">اگلا</string>
-    <string name="image">تصویر</string>
+    <string name="image">تصویر : </string>
     <string name="please_download_language_packs_offline_for_better_performance">براہ کرم بہتر کارکردگی کیلئے لینگویج پیک کو آف لائن ڈاؤن لوڈ کریں</string>
     <string name="record_audio">آڈیو ریکارڈ کریں</string>
     <string name="your_answer">آپ کا جواب</string>

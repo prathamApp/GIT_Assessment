@@ -16,10 +16,10 @@ public interface ScienceQuestionChoiceDao {
     public void insertAllQuestionChoices(List<ScienceQuestionChoice> choiceList);
 
     @Query("UPDATE ScienceQuestionChoice SET choicename  = replace( choicename, '\n', '<br/>' ) WHERE choicename LIKE '%\n%'")
-    public void replaceNewLineForQuestionOptions();
+    public void replaceNewLineForQuestionOptionChoiceNames();
 
     @Query("UPDATE ScienceQuestionChoice SET matchingname  = replace( matchingname, '\n', '<br/>' ) WHERE matchingname LIKE '%\n%'")
-    public void replaceNewLineForQuestionOptions2();
+    public void replaceNewLineForQuestionOptionMatchingNames();
 
     @Query("DELETE FROM ScienceQuestionChoice")
     public void deleteAllQuestionChoices();

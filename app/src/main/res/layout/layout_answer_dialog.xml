@@ -4,9 +4,19 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_5sdp">
 
+    <TextView
+        android:id="@+id/tv_correct_wrong_cnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/_5sdp"
+        android:fontFamily="@font/quicksand_medium"
+        android:textSize="@dimen/_14sdp" />
+
     <LinearLayout
         android:id="@+id/ll_match_pair_result"
         android:layout_width="match_parent"
+        android:layout_below="@+id/tv_correct_wrong_cnt"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_ok"
         android:layout_centerInParent="true"

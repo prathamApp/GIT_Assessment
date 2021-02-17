@@ -36,6 +36,8 @@ public interface SplashContract {
 
         void copyDataBase();
 
+        void copySDCardDB();
+
         boolean getSdCardPath();
 
         void populateSDCardMenu();

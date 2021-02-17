@@ -241,7 +241,7 @@ public class EnrollmentNoFragment extends DialogFragment {
                         @Override
                         public void onError(ANError anError) {
                             progressDialog.dismiss();
-
+                            Toast.makeText(getActivity(), "Enrollment number not found.", Toast.LENGTH_SHORT).show();
                         }
                     });
         } catch (Exception e) {
@@ -274,7 +274,7 @@ public class EnrollmentNoFragment extends DialogFragment {
             } else {
                 if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
 //                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Enrollment number not found.", Toast.LENGTH_SHORT).show();
                 }
                 rl_enroll_no_details.setVisibility(View.GONE);
                 rl_enroll_no_not_found.setVisibility(View.VISIBLE);

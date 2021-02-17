@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
@@ -133,12 +134,14 @@ public class FillInTheBlanksWithKeywordsFragment extends Fragment
                 .split(" ")
                 .length];
 
-        if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+        if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
-            final String localPath = AssessmentApplication.assessPath
-                    + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH
-                    + "/" + fileName;
+            final String localPath;
+            if (scienceQuestion.getIsQuestionFromSDCard())
+                localPath = scienceQuestion.getPhotourl();
+            else
+                localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
             String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
@@ -148,25 +151,28 @@ public class FillInTheBlanksWithKeywordsFragment extends Fragment
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-                    if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                    /*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(Objects.requireNonNull(getActivity())).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
-                    } else {
+                    } else {*/
                         gif = new FileInputStream(localPath);
                         questionImage.setVisibility(View.GONE);
                         questionGif.setVisibility(View.VISIBLE);
                         questionGif.setGifResource(gif);
-                    }
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 Glide.with(Objects.requireNonNull(getActivity()))
-                        .load(path)
-                        .apply(new RequestOptions().placeholder(Drawable.createFromPath(localPath)))
+                        .load(localPath)
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
             }
         } else questionImage.setVisibility(View.GONE);
@@ -279,6 +285,7 @@ public class FillInTheBlanksWithKeywordsFragment extends Fragment
         //INSERT CUSTOM CODE HERE
         String para = "";
         if (scienceQuestion != null) {
+            scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
             } else btn_view_hint.setVisibility(View.GONE);

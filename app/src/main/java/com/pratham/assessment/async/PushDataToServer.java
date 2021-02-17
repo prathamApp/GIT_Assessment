@@ -21,12 +21,14 @@ import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.custom_dialogs.PushDataDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.Attendance;
+import com.pratham.assessment.domain.CertificateKeywordRating;
 import com.pratham.assessment.domain.DownloadMedia;
 import com.pratham.assessment.domain.Modal_Log;
 import com.pratham.assessment.domain.Modal_RaspFacility;
@@ -36,7 +38,6 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.login.MainActivity;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.Background;
@@ -46,7 +47,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -54,6 +62,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -63,6 +74,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.support.constraint.Constraints.TAG;
+import static com.pratham.assessment.AssessmentApplication.UploadJsonZipURL;
 import static com.pratham.assessment.AssessmentApplication.isTablet;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
@@ -84,11 +96,11 @@ public class PushDataToServer {
     JSONArray assessmentScoreData;
     JSONArray attendanceData;
     JSONArray studentData;
-//    JSONArray crlData;
+    //    JSONArray crlData;
     JSONArray sessionData;
-//    JSONArray learntWords;
+    //    JSONArray learntWords;
     JSONArray supervisorData;
-//    JSONArray groupsData;
+    //    JSONArray groupsData;
 //    JSONArray assessmentData;
 //    JSONArray assessmentScienceData;
     JSONArray logsData;
@@ -113,6 +125,7 @@ public class PushDataToServer {
     TextView txt_push_cnt;
     RelativeLayout rl_btn;
     Button ok_btn;
+    private int BUFFER = 10000;
 
     public PushDataToServer(Context context) {
         this.context = context;
@@ -633,13 +646,16 @@ public class PushDataToServer {
         JSONArray paperData = new JSONArray();
         JSONObject _obj_paper = null;
         JSONArray scoreData = new JSONArray();
+        JSONArray ratingData = new JSONArray();
         pushCnt = paperList.size();
         JSONObject _obj_score;
+        JSONObject _obj_rating;
         try {
             for (int p = 0; p < paperList.size(); p++) {
                 _obj_paper = new JSONObject();
                 AssessmentPaperForPush _paper = paperList.get(p);
                 List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllNewScores(paperList.get(p).getPaperId(), paperList.get(p).getSessionID());
+                List<CertificateKeywordRating> ratingList = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getAllCertificateQuestionsNew(paperList.get(p).getPaperId());
                 if (scoreList.size() > 0) {
                     _obj_paper.put("languageId", _paper.getLanguageId());
                     _obj_paper.put("subjectId", _paper.getSubjectId());
@@ -661,15 +677,9 @@ public class PushDataToServer {
                     _obj_paper.put("question8Rating", _paper.getQuestion8Rating());
                     _obj_paper.put("question9Rating", _paper.getQuestion9Rating());
                     _obj_paper.put("question10Rating", _paper.getQuestion10Rating());
+//                    _obj_paper.put("certificateQuestionRatings", _paper.getCertificateQuestionRatings());
                     _obj_paper.put("isniosstudent", _paper.getIsniosstudent());
-//                    DownloadMedia video = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeAndPaperId(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, _paper.getPaperId());
 
-                    /*  DownloadMedia video = new DownloadMedia();
-                    video.setPaperId(_paper.getPaperId());*/
-//                    video.setPhotoUrl(Environment.getExternalStorageDirectory() + "/.Assessment/Content/videoMonitoring/" + _paper.getPaperId() + ".mp4");
-//                    video.setPhotoUrl(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + _paper.getPaperId() + ".mp4");
-               /*     if (video != null)
-                        videoRecordingList.add(video);*/
                     scoreData = new JSONArray();
                     for (int i = 0; i < scoreList.size(); i++) {
                         _obj_score = new JSONObject();
@@ -690,12 +700,31 @@ public class PushDataToServer {
                         _obj_score.put("isCorrect", _score.getIsCorrect());
                         _obj_score.put("userAnswer", _score.getUserAnswer());
                         _obj_score.put("paperId", _score.getPaperId());
-//                        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByQidAndPaperId(_score.getQuestionId() + "", _score.getPaperId()));
-//                    _obj_score.put("examId", _score.getExamId());
+
                         scoreData.put(_obj_score);
                     }
                 }
                 _obj_paper.put("assessmentScoreData", scoreData);
+
+                if (ratingList.size() > 0) {
+                    ratingData = new JSONArray();
+                    for (int i = 0; i < ratingList.size(); i++) {
+                        _obj_rating = new JSONObject();
+                        CertificateKeywordRating _rating = ratingList.get(i);
+                        _obj_rating.put("certificatekeyword", _rating.getCertificatekeyword());
+                        _obj_rating.put("certificatequestion", _rating.getCertificatequestion());
+                        _obj_rating.put("examId", _rating.getExamId());
+                        _obj_rating.put("paperId", _rating.getPaperId());
+                        _obj_rating.put("subjectId", _rating.getSubjectId());
+                        _obj_rating.put("languageId", _rating.getLanguageId());
+                        _obj_rating.put("studentId", _rating.getStudentId());
+                        _obj_rating.put("rating", _rating.getRating());
+
+                        ratingData.put(_obj_rating);
+                    }
+                }
+                _obj_paper.put("assessmentRatingData", ratingData);
+
                 paperData.put(_obj_paper);
             }
         } catch (Exception e) {
@@ -863,16 +892,51 @@ public class PushDataToServer {
 */
 
     private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject, String url) {
+        final String filepathstr;
+
         try {
-//            JSONObject jsonArrayData = new JSONObject(data);
-            AndroidNetworking.post(url)
-                    .addHeaders("Content-Type", "application/json")
-                    .addJSONObjectBody(requestJsonObject)
+
+            String newdata = compress(String.valueOf(requestJsonObject));
+            String uuID = "" + Assessment_Utility.getUUID();
+            String jsonPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH;
+            if (!new File(jsonPath).exists())
+                new File(jsonPath).mkdir();
+            filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + uuID;
+
+           /* String filepathstr = Environment.getExternalStorageDirectory().toString()
+                    + "/.FCAInternal/PushJsons/" + uuID; // file path to save*/
+            File filepath = new File(filepathstr + ".json"); // file path to save
+            if (filepath.exists())
+                filepath.delete();
+            FileWriter writer = new FileWriter(filepath);
+            writer.write(String.valueOf(requestJsonObject));
+            writer.flush();
+            writer.close();
+
+            String[] s = new String[1];
+
+            // Type the path of the files in here
+            s[0] = filepathstr + ".json";
+            // first parameter is d files second parameter is zip file name
+            zip(s, filepathstr + ".zip", filepath);
+
+
+            AndroidNetworking.upload(UploadJsonZipURL)
+                    .addHeaders("Content-Type", "file/zip")
+                    .addMultipartFile("" + uuID, new File(filepathstr + ".zip"))
+                    .setPriority(Priority.HIGH)
                     .build()
+                    /* AndroidNetworking.post(url)
+                             .addHeaders("Content-Type", "application/json")
+                             .addJSONObjectBody(requestJsonObject)
+                             .build()*/
                     .getAsString(new StringRequestListener() {
 
                         @Override
                         public void onResponse(String response) {
+                            //todo delete file
+                            if (new File(filepathstr + ".zip").exists())
+                                new File(filepathstr + ".zip").delete();
                             Log.d("PUSH_STATUS", "Data pushed successfully");
                             Drawable icon = context.getResources().getDrawable(R.drawable.ic_check);
                             pushSupervisorImages();
@@ -981,8 +1045,6 @@ public class PushDataToServer {
     }
 
 
-
-
     private void setMediaPushFlag(String type) {
         if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_SUPERVISOR)) {
             int cnt = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
@@ -1056,5 +1118,46 @@ public class PushDataToServer {
             e.printStackTrace();
         }
 
+    }
+
+
+    public static String compress(String str) throws IOException {
+        if (str == null || str.length() == 0) {
+            return str;
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPOutputStream gzip = new GZIPOutputStream(out);
+        gzip.write(str.getBytes());
+        gzip.close();
+        String outStr = out.toString("UTF-8");
+        return outStr;
+    }
+
+
+    public void zip(String[] _files, String zipFileName, File filepath) {
+        try {
+            BufferedInputStream origin = null;
+            FileOutputStream dest = new FileOutputStream(zipFileName);
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+            byte[] data = new byte[BUFFER];
+            for (int i = 0; i < _files.length; i++) {
+                Log.v("Compress", "Adding: " + _files[i]);
+                FileInputStream fi = new FileInputStream(_files[i]);
+                origin = new BufferedInputStream(fi, BUFFER);
+                ZipEntry entry = new ZipEntry(_files[i].substring(_files[i].lastIndexOf("/") + 1));
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, count);
+                }
+                origin.close();
+            }
+
+            out.close();
+            filepath.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

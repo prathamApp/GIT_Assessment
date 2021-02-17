@@ -14,9 +14,6 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.ViewById;
-
 import java.util.List;
 
 /*import butterknife.BindView;
@@ -35,6 +32,7 @@ public class ShowAnswerDialog extends Dialog {
     LinearLayout ll_match_pair;
     //    @ViewById(R.id.tv_multiple_select_ans)
     TextView multipleSelectAns;
+    TextView tv_correct_wrong_cnt;
     Button btn_ok;
     List<ScienceQuestionChoice> scienceQuestionChoices;
 
@@ -49,13 +47,9 @@ public class ShowAnswerDialog extends Dialog {
         ll_multiple_select = findViewById(R.id.ll_multiple_select_result);
         ll_match_pair = findViewById(R.id.ll_match_pair_result);
         multipleSelectAns = findViewById(R.id.tv_multiple_select_ans);
+        tv_correct_wrong_cnt = findViewById(R.id.tv_correct_wrong_cnt);
         btn_ok = findViewById(R.id.btn_ok);
-        btn_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        btn_ok.setOnClickListener(v -> dismiss());
 //        ButterKnife.bind(this);
         setRecycler();
        /* String[] queArr = new String[scienceQuestionChoices.size()];
@@ -67,6 +61,9 @@ public class ShowAnswerDialog extends Dialog {
         }*/
         ll_match_pair.setVisibility(View.VISIBLE);
         ll_multiple_select.setVisibility(View.GONE);
+        tv_correct_wrong_cnt.setVisibility(View.GONE);
+
+
         ResultDialogAdapter adapter = new ResultDialogAdapter(context, scienceQuestionChoices, "que");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list1.setLayoutManager(linearLayoutManager);
@@ -87,8 +84,10 @@ public class ShowAnswerDialog extends Dialog {
         ll_multiple_select = findViewById(R.id.ll_multiple_select_result);
         ll_match_pair = findViewById(R.id.ll_match_pair_result);
         multipleSelectAns = findViewById(R.id.tv_multiple_select_ans);
+        tv_correct_wrong_cnt = findViewById(R.id.tv_correct_wrong_cnt);
         btn_ok = findViewById(R.id.btn_ok);
         ll_match_pair.setVisibility(View.GONE);
+        tv_correct_wrong_cnt.setVisibility(View.GONE);
         ll_multiple_select.setVisibility(View.VISIBLE);
         StringBuffer ans = new StringBuffer();
         for (int i = 0; i < userAns.size(); i++) {
@@ -137,11 +136,19 @@ public class ShowAnswerDialog extends Dialog {
         list2 = findViewById(R.id.rl_ans_options2_result);
         ll_multiple_select = findViewById(R.id.ll_multiple_select_result);
         ll_match_pair = findViewById(R.id.ll_match_pair_result);
+        tv_correct_wrong_cnt = findViewById(R.id.tv_correct_wrong_cnt);
         multipleSelectAns = findViewById(R.id.tv_multiple_select_ans);
         btn_ok = findViewById(R.id.btn_ok);
         ll_match_pair.setVisibility(View.VISIBLE);
         ll_multiple_select.setVisibility(View.GONE);
-
+        tv_correct_wrong_cnt.setVisibility(View.VISIBLE);
+        int correctCnt = 0, wrongCnt;
+        for (int i = 0; i < userAns.size(); i++) {
+            if (userAns.get(i).getMyIscorrect().trim().equalsIgnoreCase("true"))
+                correctCnt++;
+        }
+        wrongCnt = userAns.size() - correctCnt;
+        tv_correct_wrong_cnt.setText(context.getResources().getString(R.string.correct) + " : " + correctCnt + "  " + context.getResources().getString(R.string.wrong) + " : " + wrongCnt);
         ResultDialogAdapter adapter = new ResultDialogAdapter(context, scienceQuestionChoice, "que");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list1.setLayoutManager(linearLayoutManager);
@@ -150,12 +157,7 @@ public class ShowAnswerDialog extends Dialog {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list2.setLayoutManager(linearLayoutManager1);
         list2.setAdapter(adapter1);
-        btn_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        btn_ok.setOnClickListener(v -> dismiss());
     }
 
   /*  @Click(R.id.btn_ok)

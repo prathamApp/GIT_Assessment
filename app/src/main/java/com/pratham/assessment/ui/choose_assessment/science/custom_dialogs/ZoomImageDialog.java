@@ -141,6 +141,8 @@ public class ZoomImageDialog extends AppCompatActivity implements AudioPlayerInt
                         Glide.with(this).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(zoomImg);
                         zoomImg.setVisibility(View.VISIBLE);

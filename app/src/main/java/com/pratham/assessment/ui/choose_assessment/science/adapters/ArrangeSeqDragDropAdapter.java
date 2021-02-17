@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.pratham.assessment.AssessmentApplication;
@@ -113,6 +115,8 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                         load(path).apply(new RequestOptions()
                         .fitCenter()
                         .format(DecodeFormat.PREFER_ARGB_8888)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
                         .override(Target.SIZE_ORIGINAL))
                         .into(holder.iv_choice_image);
 
@@ -124,7 +128,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                         Assessment_Utility.showZoomDialog(context, path, localPath,"");
                     }
                 });*/
-            } else holder.mTitle.setText(scienceQuestionChoice.getChoicename());
+            } else holder.mTitle.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));
 
             holder.ll_options.setOnTouchListener(new View.OnTouchListener() {
                 @Override

@@ -300,7 +300,7 @@
     <string name="done">થઇ ગયું</string>
     <string name="name">નામ</string>
     <string name="next">આગળ</string>
-    <string name="image">ફોટો</string>
+    <string name="image">ફોટો : </string>
     <string name="please_download_language_packs_offline_for_better_performance">વધુ સારા પ્રદર્શન માટે કૃપા કરીને લેંગ્વેજ પૅક ઓફલાઈન ડાઉનલોડ કરો.</string>
     <string name="record_audio">ઑડિયો રેકોર્ડ કરો </string>
     <string name="your_answer">તમારો જવાબ</string>

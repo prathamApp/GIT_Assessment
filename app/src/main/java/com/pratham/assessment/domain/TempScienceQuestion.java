@@ -51,6 +51,7 @@ public class TempScienceQuestion implements Serializable {
     private boolean isCorrect;
     public boolean IsParaQuestion;
     private String RefParaID;
+    private boolean IsQuestionFromSDCard;
 
     private String SessionID;
     private String StudentID;
@@ -412,5 +413,13 @@ public class TempScienceQuestion implements Serializable {
 
     public void setPaperId(@NonNull String paperId) {
         this.paperId = paperId;
+    }
+
+    public boolean getIsQuestionFromSDCard() {
+        return IsQuestionFromSDCard;
+    }
+
+    public void setIsQuestionFromSDCard(boolean questionFromSDCard) {
+        IsQuestionFromSDCard = questionFromSDCard;
     }
 }

@@ -301,7 +301,7 @@
     <string name="done">समाप्त</string>
     <string name="name">नाम</string>
     <string name="next">अगला</string>
-    <string name="image">फोटो</string>
+    <string name="image">फोटो : </string>
     <string name="please_download_language_packs_offline_for_better_performance">बेहतर काम करने के लिए कृपया भाषा पैक ऑफलाइन डाउनलोड करें</string>
     <string name="record_audio">ऑडियो रिकॉर्ड करें</string>
     <string name="your_answer">आपका जवाब</string>

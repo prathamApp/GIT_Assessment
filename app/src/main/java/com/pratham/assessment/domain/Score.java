@@ -31,6 +31,12 @@ public class Score implements Serializable {
     private String StartDateTime;
     @ColumnInfo(name = "EndDateTime")
     private String EndDateTime;
+    @ColumnInfo(name = "revisitedStartDateTime")
+    private String revisitedStartDateTime;
+    @ColumnInfo(name = "revisitedEndDateTime")
+    private String revisitedEndDateTime;
+
+
     @ColumnInfo(name = "Level")
     private int Level;
     @ColumnInfo(name = "Label")
@@ -209,5 +215,21 @@ public class Score implements Serializable {
 
     public void setPaperId(String paperId) {
         this.paperId = paperId;
+    }
+
+    public String getRevisitedStartDateTime() {
+        return revisitedStartDateTime;
+    }
+
+    public void setRevisitedStartDateTime(String revisitedStartDateTime) {
+        this.revisitedStartDateTime = revisitedStartDateTime;
+    }
+
+    public String getRevisitedEndDateTime() {
+        return revisitedEndDateTime;
+    }
+
+    public void setRevisitedEndDateTime(String revisitedEndDateTime) {
+        this.revisitedEndDateTime = revisitedEndDateTime;
     }
 }

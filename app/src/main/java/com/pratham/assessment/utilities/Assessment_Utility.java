@@ -202,6 +202,7 @@ public class Assessment_Utility {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
+
     public static void showDialog(Context context, String msg) {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -679,14 +680,16 @@ public class Assessment_Utility {
     public static String getExternalPath(Context context) {
         String sdCardPath = null;
         ArrayList<String> sdcard_path = SDCardUtil.getExtSdCardPaths(context);
-        for (String path : sdcard_path) {
+/*        for (String path : sdcard_path) {
             String final_sd_path = path;
             if (new File(final_sd_path + "/.AOP_External").exists()) {
                 sdCardPath = final_sd_path + "/.AOP_External/";
                 break;
             }
-        }
-        return sdCardPath;
+        }*/
+        if (sdcard_path.size() > 0)
+            return sdcard_path.get(0);
+        else return null;
     }
 
     public static void showLog(String message, String tag) {
@@ -2022,10 +2025,16 @@ public class Assessment_Utility {
         }
     }
 
-    public static String getFileName(String qid, String photoUrl) {
+   /* public static String getFileName(String qid, String photoUrl) {
         String[] splittedPath = photoUrl.split("/");
         String fileName = qid + "_" + splittedPath[splittedPath.length - 1];
         return fileName;
+    }*/
+
+   public static String getFileName(String qid, String photoUrl) {
+       String[] splittedName = photoUrl.split("/");
+       String FName = splittedName[splittedName.length - 1];
+       return FName;
     }
 
     public static Date stringToDate(String date) {

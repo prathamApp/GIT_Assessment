@@ -19,9 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
@@ -29,7 +31,6 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 
@@ -145,10 +146,14 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
 
         if (question != null)
             question.setMovementMethod(new ScrollingMovementMethod());
-        if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+        if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             String questionExtension = getFileExtension(scienceQuestion.getPhotourl());
             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
-            final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+            final String localPath;
+            if (scienceQuestion.getIsQuestionFromSDCard())
+                localPath = scienceQuestion.getPhotourl();
+            else
+                localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 
             final String path = scienceQuestion.getPhotourl();
@@ -166,18 +171,18 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                 if (questionExtension.equalsIgnoreCase("gif")) {
                     try {
                         InputStream gif;
-                        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                        /*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                             Glide.with(getActivity()).asGif()
                                     .load(path)
                                     .apply(new RequestOptions()
                                             .placeholder(Drawable.createFromPath(localPath)))
                                     .into(questionImage);
-                        } else {
-                            gif = new FileInputStream(localPath);
-                            questionImage.setVisibility(View.GONE);
-                            questionGif.setVisibility(View.VISIBLE);
-                            questionGif.setGifResource(gif);
-                        }
+                        } else {*/
+                        gif = new FileInputStream(localPath);
+                        questionImage.setVisibility(View.GONE);
+                        questionGif.setVisibility(View.VISIBLE);
+                        questionGif.setGifResource(gif);
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -190,8 +195,10 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
 //                    zoomImg.setVisibility(View.VISIBLE);
                 } else {
                     Glide.with(getActivity())
-                            .load(path)
+                            .load(localPath)
                             .apply(new RequestOptions()
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
                                     .placeholder(Drawable.createFromPath(localPath)))
                             .into(questionImage);
                 }
@@ -265,7 +272,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             gridMcq.removeAllViews();
 
             for (int r = 0; r < options.size(); r++) {
-                if (!options.get(r).getChoiceurl().equalsIgnoreCase("")) {
+                if (options.get(r).getChoiceurl() != null && !options.get(r).getChoiceurl().equalsIgnoreCase("")) {
                     String ansExtension = getFileExtension(options.get(r).getChoiceurl());
                     if (ansExtension.equalsIgnoreCase("gif") ||
                             ansExtension.equalsIgnoreCase("png") ||
@@ -289,7 +296,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                 String ansId = scienceQuestion.getUserAnswerId();
 
                 //                if (textCnt == options.size() && imgCnt == 0) {
-                if (options.get(r).getChoiceurl().trim().equalsIgnoreCase("") && !options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
+                if ((options.get(r).getChoiceurl() == null || options.get(r).getChoiceurl().trim().equalsIgnoreCase("")) && !options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
                     radioGroupMcq.setVisibility(View.GONE);
                     gridMcq.setVisibility(View.VISIBLE);
 //                    if (options.get(r).getChoiceurl().equalsIgnoreCase("")) {
@@ -370,7 +377,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
 //                        }
                     }*/
                 } else /*if (imgCnt == options.size() && textCnt == 0) {*/
-                    if (!options.get(r).getChoiceurl().trim().equalsIgnoreCase("") &&
+                    if (options.get(r).getChoiceurl() != null && !options.get(r).getChoiceurl().trim().equalsIgnoreCase("") &&
                             options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
                         radioGroupMcq.setVisibility(View.GONE);
                         gridMcq.setVisibility(View.VISIBLE);
@@ -411,36 +418,21 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                             tick = viewRoot.findViewById(R.id.iv_tick);
                             zoomImg = viewRoot.findViewById(R.id.iv_view_img);
 
-/*setImage(view, imageUrl, localPath);
-                        gridMcq.addView(view);*/
-//                        if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
-//                            view.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
-//                        } else {
-//                            view.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
-//
-//                        }
 
                         }
                         final int finalR = r;
-//                    final ImageView finalImageView = imageView;
                         view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 for (int g = 0; g < gridMcq.getChildCount(); g++) {
                                     gridMcq.getChildAt(g).setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
-                                    ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+                                    if (options.get(g).getChoiceurl() != null && !options.get(g).getChoiceurl().equalsIgnoreCase(""))
+                                        ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+                                    else
+                                        ((TextView) gridMcq.getChildAt(g)).setTextColor(Color.WHITE);
                                 }
                                 rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
                                 tick.setVisibility(View.VISIBLE);
-                     /*       String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(finalR).getChoiceurl());
-                            String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-*/
-
-//                            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-//                            showZoomDialog(getActivity(), options.get(finalR).getChoiceurl(), localPath);
-                            /*} else {
-                                 showZoomDialog(localPath);
-                            }*/
                                 List<ScienceQuestionChoice> ans = new ArrayList<>();
                                 ans.add(options.get(finalR));
                                 scienceQuestion.setMatchingNameList(ans);
@@ -471,7 +463,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         setImage(view, imageUrl, localPath);
                         gridMcq.addView(viewRoot);
 
-                    } else if (!options.get(r).getChoiceurl().trim().equalsIgnoreCase("")
+                    } else if (options.get(r).getChoiceurl() != null && !options.get(r).getChoiceurl().trim().equalsIgnoreCase("")
                             && !options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
 
                         radioGroupMcq.setVisibility(View.GONE);
@@ -718,6 +710,8 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             Glide.with(getActivity())
                     .load(path)
                     .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
                             .placeholder(Drawable.createFromPath(placeholder)))
                     .into(imageView);
         }

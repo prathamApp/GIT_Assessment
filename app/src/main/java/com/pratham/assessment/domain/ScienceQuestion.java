@@ -11,14 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
-
-
-
-
-
-
 @Entity
 public class ScienceQuestion implements Serializable {
 
@@ -54,6 +46,9 @@ public class ScienceQuestion implements Serializable {
     @Ignore
     boolean isMediaDownloaded;
     private String endTime;
+    private String revisitedStartTime;
+    private String revisitedEndTime;
+
     private String marksPerQuestion = "0";
     private String paperid;
     private String userAnswerId = "";
@@ -62,6 +57,8 @@ public class ScienceQuestion implements Serializable {
     private boolean isCorrect;
     public boolean IsParaQuestion;
     private String RefParaID;
+    private boolean IsQuestionFromSDCard;
+
 
     public String getUserAnswer() {
         if (userAnswer == null)
@@ -342,5 +339,44 @@ public class ScienceQuestion implements Serializable {
 
     public void setRefParaID(String refParaID) {
         RefParaID = refParaID;
+    }
+
+    public boolean getIsQuestionFromSDCard() {
+        return IsQuestionFromSDCard;
+    }
+
+    public void setIsQuestionFromSDCard(boolean questionFromSDCard) {
+        IsQuestionFromSDCard = questionFromSDCard;
+    }
+
+    public String getRevisitedStartTime() {
+        return revisitedStartTime;
+    }
+
+    public void setRevisitedStartTime(String revisitedStartTime) {
+        this.revisitedStartTime = revisitedStartTime;
+    }
+
+    public String getRevisitedEndTime() {
+        return revisitedEndTime;
+    }
+
+    public void setRevisitedEndTime(String revisitedEndTime) {
+        this.revisitedEndTime = revisitedEndTime;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ScienceQuestion){
+            ScienceQuestion element = (ScienceQuestion) obj;
+            if(element != null && this.qid.equals(element.qid)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(qid);
     }
 }

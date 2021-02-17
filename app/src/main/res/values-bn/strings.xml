@@ -300,7 +300,7 @@
     <string name="done">হয়ে গেছে</string>
     <string name="name">নাম</string>
     <string name="next">এর পর</string>
-    <string name="image">ছবি</string>
+    <string name="image">ছবি : </string>
     <string name="please_download_language_packs_offline_for_better_performance">আরও ভালো পারফরম্যান্সের জন্য অফলাইনে ল্যাঙ্গুয়েজ প্যাক ডাউনলোড করুন।</string>
     <string name="record_audio">অডিও রেকর্ড করুন</string>
     <string name="your_answer">আপনার উত্তর</string>

@@ -8,6 +8,8 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -17,8 +19,6 @@ import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
-import com.pratham.assessment.constants.APIs;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.EBean;
@@ -56,8 +56,8 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
 //        subjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
         AllSubjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(langId);
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
-//        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, Assessment_Constants.currentStudentID);
-        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, currentStudentID);
+//        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, currentStudentID);
+        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getDistinctSubjectsByStudentIdLangId(currentStudentID, langId);
         for (int j = 0; j < AllSubjects.size(); j++) {
             for (int i = 0; i < attemptedSubjectIds.size(); i++) {
                 if (attemptedSubjectIds.get(i).equalsIgnoreCase(AllSubjects.get(j).getSubjectid()))
@@ -65,13 +65,14 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
             }
         }
 
+
         for (AssessmentSubjects assessmentSubjects : subjects) {
-            List<AssessmentPaperPattern> paperPatterns = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubId(assessmentSubjects.getSubjectid());
+            List<AssessmentPaperPattern> paperPatterns = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubjectId(assessmentSubjects.getSubjectid());
 //            List<AssessmentPaperPattern> paperWithCertQuestions = checkQuestions(paperPatterns);
             List<String> examIds = new ArrayList<>();
             for (int i = 0; i < paperPatterns.size(); i++) {
                 if (!examIds.contains(paperPatterns.get(i).getExamid())) {
-                    if (paperPatterns.get(i).getExammode() == null || paperPatterns.get(i).getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE))
+//                    if (paperPatterns.get(i).getExammode() == null || paperPatterns.get(i).getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE))
                         examIds.add(paperPatterns.get(i).getExamid());
                 }
             }
@@ -81,7 +82,9 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
             List<AssessmentPaperForPush> assessmentPaperForPush = new ArrayList<>();
             if (!examIds.isEmpty()) {
                 for (int i = 0; i < examIds.size(); i++) {
-                    assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPaperBySubIdAndLangIdExamId(assessmentSubjects.getSubjectid(), currentStudentID, langId, examIds.get(i)));
+                    assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
+                            .getAssessmentPaperForPushDao()
+                            .getAssessmentPaperBySubIdAndLangIdExamId(assessmentSubjects.getSubjectid(), currentStudentID, langId, examIds.get(i)));
                 }
 
                 Collections.sort(assessmentPaperForPush, new Comparator<AssessmentPaperForPush>() {

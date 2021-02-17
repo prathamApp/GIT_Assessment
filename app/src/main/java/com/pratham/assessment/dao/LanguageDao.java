@@ -6,8 +6,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.pratham.assessment.domain.AssessmentLanguages;
-import com.pratham.assessment.domain.AssessmentSubjects;
-import com.pratham.assessment.domain.ScienceQuestion;
 
 import java.util.List;
 
@@ -18,6 +16,9 @@ public interface LanguageDao {
 
     @Query("DELETE FROM AssessmentLanguages")
     public void deleteAllLangs();
+
+    @Query("DELETE FROM AssessmentLanguages where languageid=:langId ")
+    public void deleteByLangId(String langId);
 
     @Query("SELECT * FROM AssessmentLanguages ")
     public List<AssessmentLanguages> getAllLangs();

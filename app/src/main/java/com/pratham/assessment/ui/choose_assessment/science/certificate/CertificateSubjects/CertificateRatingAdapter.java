@@ -11,7 +11,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.domain.CertificateModelClass;
 import com.pratham.assessment.domain.CertificateRatingModalClass;
+import com.pratham.assessment.domain.CertificateTopicList;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
@@ -48,11 +50,11 @@ public class CertificateRatingAdapter extends RecyclerView.Adapter<CertificateRa
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        CertificateRatingModalClass ratingModalClass = questionList.get(i);
+        CertificateRatingModalClass topicList = questionList.get(i);
 
         Assessment_Utility.setOdiaFont(context, myViewHolder.question);
-        myViewHolder.question.setText(ratingModalClass.getCertificateQuestion());
-        myViewHolder.ratingBar.setRating(ratingModalClass.getRating());
+        myViewHolder.question.setText(topicList.getCertificateQuestion());
+        myViewHolder.ratingBar.setRating(topicList.getRating());
 
     }
 

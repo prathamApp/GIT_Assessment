@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
@@ -105,13 +106,17 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
 
         setOdiaFont(getActivity(), question);
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
-        if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+        if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
 
             String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-            String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+            final String localPath;
+            if (scienceQuestion.getIsQuestionFromSDCard())
+                localPath = scienceQuestion.getPhotourl();
+            else
+                localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 
             String path = scienceQuestion.getPhotourl();
@@ -123,26 +128,28 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-                    if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                   /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(getActivity()).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
 //                    zoomImg.setVisibility(View.VISIBLE);
-                    } else {
+                    } else {*/
                         gif = new FileInputStream(localPath);
                         questionImage.setVisibility(View.GONE);
                         questionGif.setVisibility(View.VISIBLE);
                         questionGif.setGifResource(gif);
-                    }
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 Glide.with(getActivity())
-                        .load(path)
+                        .load(localPath)
                         .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
             }

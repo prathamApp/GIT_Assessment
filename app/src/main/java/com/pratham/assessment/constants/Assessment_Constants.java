@@ -91,12 +91,14 @@ public class Assessment_Constants {
     public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
     public static String STORE_STUDENT_IMAGE_PATH = "/.Assessment/Content/StudentImages";
     public static String STORE_STUDENT_PDF_PATH = "/.Assessment/Content/StudentPDFs";
+    public static String STORE_PUSH_JSON_PATH = "/.Assessment/Content/PushJson";
     public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO = "answerAudio";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE = "answerImage";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA = "answerMedia";
     public static String DOWNLOAD_MEDIA_TYPE_SUPERVISOR = "supervisorImage";
+    public static String SDCARD_OFFLINE_PATH_SAVED = "sdcardOfflinePathSaved";
 
     public static final String KOLIBRI_BLOCK = "kolibri_block";
     public static final String SERVER_BLOCK = "server_block";
@@ -180,6 +182,7 @@ public class Assessment_Constants {
         PULL_PROGRAMS("http://swap.prathamcms.org/api/program");
 
         public static final String SCORE_COUNT = "ScoreCount";
+        public static final String EXAM_STATUS = "ExamStatus";
         public static final String STUDENTS = "students";
         public static final String METADATA = "metadata";
 

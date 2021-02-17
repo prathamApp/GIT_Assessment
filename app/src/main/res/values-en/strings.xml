@@ -300,7 +300,7 @@
     <string name="done">Done</string>
     <string name="name">Name</string>
     <string name="next">Next</string>
-    <string name="image">Image</string>
+    <string name="image">Image : </string>
     <string name="please_download_language_packs_offline_for_better_performance">Please download language packs offline for better performance</string>
     <string name="record_audio">Record Audio</string>
     <string name="your_answer">Your answer</string>

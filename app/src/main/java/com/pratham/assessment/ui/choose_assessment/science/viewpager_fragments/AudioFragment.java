@@ -1,10 +1,12 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,16 +14,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.AudioUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -41,6 +44,8 @@ import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog
 public class AudioFragment extends Fragment implements AudioPlayerInterface {
     @ViewById(R.id.tv_question)
     TextView question;
+    @ViewById(R.id.tv_duration)
+    TextView tv_duration;
     @ViewById(R.id.iv_question_image)
     ImageView questionImage;
     @ViewById(R.id.iv_question_gif)
@@ -152,12 +157,16 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         rl_answer_audio.setVisibility(View.GONE);
-        if (!scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+        if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 
             fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //            path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded" + "/" + fileName;
-            localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+            final String localPath;
+            if (scienceQuestion.getIsQuestionFromSDCard())
+                localPath = scienceQuestion.getPhotourl();
+            else
+                localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
             String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
@@ -168,18 +177,18 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-                    if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+/*                    if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(getActivity()).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
-                    } else {
-                        gif = new FileInputStream(localPath);
-                        questionImage.setVisibility(View.GONE);
-                        questionGif.setVisibility(View.VISIBLE);
-                        questionGif.setGifResource(gif);
-                    }
+                    } else {*/
+                    gif = new FileInputStream(localPath);
+                    questionImage.setVisibility(View.GONE);
+                    questionGif.setVisibility(View.VISIBLE);
+                    questionGif.setGifResource(gif);
+                    //}
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -192,8 +201,10 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 //                    zoomImg.setVisibility(View.VISIBLE);
             } else {
                 Glide.with(getActivity())
-                        .load(path)
+                        .load(localPath)
                         .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
             }
@@ -278,6 +289,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     @Click(R.id.iv_start_audio)
     public void startAudio() {
         try {
+            if (isAnsPlaying) {
+                isAnsPlaying = false;
+                iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+                AudioUtil.stopPlayingAudio();
+
+            }
+
             String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + ".mp3";
 
 //            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
@@ -287,6 +305,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
                 iv_start_audio.setImageResource(R.drawable.ic_mic_24dp);
                 iv_start_audio.setElevation(5);
                 AudioUtil.stopRecording();
+
                 scienceQuestion.setUserAnswer(path);
                 rl_answer_audio.setVisibility(View.VISIBLE);
                 assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
@@ -299,9 +318,17 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
                 iv_start_audio.setElevation(5);
                 rl_answer_audio.setVisibility(View.GONE);
 
+
             }
 //            assessmentAnswerListener.setAudio(path, isAudioRecording);
-
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+            int finalTime = mediaPlayer.getDuration();
+            String dur = formateMilliSeccond(finalTime);
+            Log.d("finalTime", "onAnswerPlayClick: " + dur);
+//            assessmentAnswerListener.setAudio(path, isAudioRecording);
+            tv_duration.setText(dur);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -325,11 +352,48 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
 
             }
-//            assessmentAnswerListener.setAudio(path, isAudioRecording);
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Function to convert milliseconds time to
+     * Timer Format
+     * Hours:Minutes:Seconds
+     */
+    public static String formateMilliSeccond(long milliseconds) {
+        String finalTimerString = "";
+        String secondsString = "";
+
+        // Convert total duration into time
+        int hours = (int) (milliseconds / (1000 * 60 * 60));
+        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
+
+        // Add hours if there
+        if (hours > 0) {
+            finalTimerString = hours + " : ";
+        }
+
+        // Prepending 0 to seconds if it is one digit
+        if (seconds < 10) {
+            secondsString = "0" + seconds;
+        } else {
+            secondsString = "" + seconds;
+        }
+
+        finalTimerString = finalTimerString + minutes + " : " + secondsString;
+
+        //      return  String.format("%02d Min, %02d Sec",
+        //                TimeUnit.MILLISECONDS.toMinutes(milliseconds),
+        //                TimeUnit.MILLISECONDS.toSeconds(milliseconds) -
+        //                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
+
+        // return timer string
+        return finalTimerString;
     }
 
     @Override
@@ -389,6 +453,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         //INSERT CUSTOM CODE HERE
         String para = "";
         if (scienceQuestion != null) {
+            scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());

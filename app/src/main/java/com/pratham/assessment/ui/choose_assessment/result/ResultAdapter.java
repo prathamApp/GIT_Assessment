@@ -18,16 +18,17 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 
@@ -144,7 +145,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 Glide.with(context).asGif()
                         .load(path)
                         .apply(new RequestOptions()
-                                .placeholder(Drawable.createFromPath(localPath)))
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .placeholder(Drawable.createFromPath(localPath))
+                        )
                         .into(myViewHolder.questionImg);
                 myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -155,11 +159,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                     }
                 });
-            } else if (imgPath[len].equalsIgnoreCase("jpg") ||imgPath[len].equalsIgnoreCase("jpeg") || imgPath[len].equalsIgnoreCase("png")) {
+            } else if (imgPath[len].equalsIgnoreCase("jpg") || imgPath[len].equalsIgnoreCase("jpeg") || imgPath[len].equalsIgnoreCase("png")) {
                 Glide.with(context)
                         .load(path)
                         .apply(new RequestOptions()
-                                .placeholder(Drawable.createFromPath(localPath)))
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .placeholder(Drawable.createFromPath(localPath))
+                        )
                         .into(myViewHolder.questionImg);
                 myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -331,8 +338,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.btnUserAnswer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<ScienceQuestionChoice> userAns = new ArrayList<>();
-                        String ans = result.getUserAnswer();
+                        List<ScienceQuestionChoice> userAns = result.getUserAnsList();
+                        /*String ans = result.getUserAnswer();
                         String[] ansArr = ans.split(",");
                         for (int i = 0; i < ansArr.length; i++) {
                             for (int j = 0; j < scienceQuestionChoice.size(); j++) {
@@ -340,7 +347,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                                     userAns.add(scienceQuestionChoice.get(j));
                                 }
                             }
-                        }
+                        }*/
                         ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, userAns, scienceQuestionChoice);
                         showAnswerDialog.show();
                     }
@@ -728,7 +735,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             Glide.with(context).asGif()
                     .load(path)
                     .apply(new RequestOptions()
-                            .placeholder(Drawable.createFromPath(localPath)))
+                            .placeholder(Drawable.createFromPath(localPath))
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true))
                     .into(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -739,12 +748,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                 }
             });
-        } else if (extension.equalsIgnoreCase("jpg") ||extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
+        } else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
             prevView = view;
             Glide.with(context)
                     .load(path)
                     .apply(new RequestOptions()
-                            .placeholder(Drawable.createFromPath(localPath)))
+                            .placeholder(Drawable.createFromPath(localPath))
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true))
                     .into(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

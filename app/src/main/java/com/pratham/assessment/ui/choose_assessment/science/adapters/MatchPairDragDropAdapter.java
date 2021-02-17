@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -122,7 +123,7 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
             } else {
                 holder.rl_img.setVisibility(View.GONE);
                 if (scienceQuestionChoice.getMatchingname() != null && !scienceQuestionChoice.getMatchingname().equalsIgnoreCase(""))
-                    holder.mTitle.setText(scienceQuestionChoice.getMatchingname());
+                    holder.mTitle.setText(Html.fromHtml(scienceQuestionChoice.getMatchingname()));
             }
 
             holder.mTitle.setOnTouchListener(new View.OnTouchListener() {

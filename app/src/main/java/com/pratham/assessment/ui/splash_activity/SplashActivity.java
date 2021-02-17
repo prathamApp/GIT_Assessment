@@ -34,6 +34,8 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -44,8 +46,6 @@ import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment_;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity_;
-import com.pratham.assessment.constants.APIs;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.SplashSupportActivity;
@@ -59,6 +59,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,7 +157,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
             if (!isPermissionsGranted(SplashActivity.this, permissionArray)) {
-                askCompactPermissionsInSplash(permissionArray, SplashActivity.this,context);
+                askCompactPermissionsInSplash(permissionArray, SplashActivity.this, context);
             } else {
                 splashPresenter.checkVersion();
             }
@@ -355,7 +360,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 //        progressDialog.setMessage(getString(R.string.loading_please_wait));
         progressDialog.setMessage("Loading… Please wait…");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (isActivityRunning && progressDialog != null && !progressDialog.isShowing())
+            progressDialog.show();
     }
 
     @Override
@@ -426,35 +432,31 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     please_grant_the_permissions.dismiss();
 
 
-            BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
-                if(isActivityRunning &&!bottomStudentsFragment.isVisible()&&!bottomStudentsFragment.isAdded())
-
-            {
-                bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                    bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                }
             }
-        }
-    });
+        });
 
-        restart_btn.setOnClickListener(new View.OnClickListener()
+        restart_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String curSession = AppDatabase.getDatabaseInstance(SplashActivity.this).getStatusDao().getValue("CurrentSession");
+                String toDateTemp = AppDatabase.getDatabaseInstance(SplashActivity.this).getSessionDao().getToDate(curSession);
 
-    {
-        @Override
-        public void onClick (View v){
-        String curSession = AppDatabase.getDatabaseInstance(SplashActivity.this).getStatusDao().getValue("CurrentSession");
-        String toDateTemp = AppDatabase.getDatabaseInstance(SplashActivity.this).getSessionDao().getToDate(curSession);
+                Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
 
-        Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
+                if (toDateTemp != null) {
+                    if (toDateTemp.equalsIgnoreCase("na"))
+                        AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
+                }
+                dialog.dismiss();
+                finishAffinity();
 
-        if (toDateTemp != null) {
-            if (toDateTemp.equalsIgnoreCase("na"))
-                AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
-        }
-        dialog.dismiss();
-        finishAffinity();
-
+            }
+        });
     }
-    });
-}
 
 
     @Override
@@ -469,7 +471,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         please_grant_the_permissions.setAction("GRANT", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                askCompactPermissionsInSplash(permissionArray, SplashActivity.this,context);
+                askCompactPermissionsInSplash(permissionArray, SplashActivity.this, context);
             }
         });
         please_grant_the_permissions.show();
@@ -512,10 +514,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        showButton();
-                        //populateMenu();
                     }
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -526,11 +527,45 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                         AppDatabase.class, AppDatabase.DB_NAME)
                         .allowMainThreadQueries()
                         .build();*/
-                showButton();
+//                showButton();
 //                getSdCardPath();
+            }
+            String offlineDBPath = Assessment_Utility.getExternalPath(this) + "/.Assessment/offline_assessment_database.db";
+            File f = new File(offlineDBPath);
+            if (f.exists()) {
+                File sd = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups");
+                if (!sd.exists())
+                    sd.mkdir();
+                File offlineDB = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups/offline_assessment_database.db");
+
+//                File off = new File(internalPath + "/offline_assessment_database.db");
+//                String offPath = internalPath + "/offline_assessment_database.db";
+                copyFileUsingStream(f, offlineDB);
+                splashPresenter.copySDCardDB();
+            } else {
+                showButton();
+                //populateMenu();
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    private static void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
         }
     }
 

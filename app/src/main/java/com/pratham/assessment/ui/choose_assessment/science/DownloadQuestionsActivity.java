@@ -654,7 +654,8 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                         scienceQuestions = AppDatabase.getDatabaseInstance(context).
                                 getScienceQuestionDao().getQuestionListByPattern(Assessment_Constants.SELECTED_LANGUAGE,
                                 subjectId, assessmentPatternDetails.get(j).getTopicid(),
-                                assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(), noOfQues);
+                                assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(),
+                                 noOfQues,"");
                     /*} else {
                         scienceQuestions = AppDatabase.getDatabaseInstance(context).
                                 getScienceQuestionDao().getQuestionListByPatternRandomly(Assessment_Constants.SELECTED_LANGUAGE,

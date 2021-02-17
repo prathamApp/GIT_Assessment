@@ -125,7 +125,6 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 .activity(CatchoActivity_.class)
                 .recipients("ankita.lakhamade27@gmail.com")
                 .build();
-
         Log.d("@path@@", AssessmentApplication.assessPath);
 
         String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,

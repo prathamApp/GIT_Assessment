@@ -10,15 +10,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
+import com.pratham.assessment.domain.CertificateTopicList;
 import com.pratham.assessment.domain.ResultModalClass;
 import com.pratham.assessment.domain.ResultOuterModalClass;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -96,9 +97,8 @@ public class ResultFragment extends Fragment implements ResultListener {
 */
         String studentName = presenter.getStudent(studentId);
         tv_name.setText(studentName);
-
-        btn_done.setVisibility(View.GONE);
-        //todo uncomment
+        if (resultList.size() > 2)
+            btn_done.setVisibility(View.GONE);
         if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
             rl_thanks.setVisibility(View.GONE);
 
@@ -115,16 +115,17 @@ public class ResultFragment extends Fragment implements ResultListener {
             resultAdapter.notifyDataSetChanged();
 
 
+//            Lambency Women's PU Leather Regular Fit Jacket (Black)
+
         } else {
-            rl_result.setVisibility(View.GONE);
+            onDoneClick();
+          /*  rl_result.setVisibility(View.GONE);
 //            mAppBarLayout.setVisibility(View.GONE);
             btn_done.setVisibility(View.GONE);
             Bundle bundle = new Bundle();
             bundle.putString("studentName", studentName);
             Assessment_Utility.showFragment(getActivity(), new ThankYouFragment_(), R.id.frame_thanks, bundle, ThankYouFragment.class.getName());
-
-
-
+*/
         }
     }
   /*  @Override
@@ -202,18 +203,24 @@ public class ResultFragment extends Fragment implements ResultListener {
     public void onDoneClick() {
 
         AssessmentPaperPattern paperPattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao().getAllAssessmentPaperPatternsBySubIdAndExamId(subjectId, examId);
-        if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
-            if (paperPattern.getNoofcertificateq() != null) {
-                if (paperPattern.getNoofcertificateq().equalsIgnoreCase("") || Integer.parseInt(paperPattern.getNoofcertificateq()) == 0) {
-                    Objects.requireNonNull(getActivity()).finish();
-                } else {
-                    AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
-                    Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
-                }
-            } else Objects.requireNonNull(getActivity()).finish();
-        } else Objects.requireNonNull(getActivity()).finish();
+
+//        if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
+//            if (paperPattern.getNoofcertificateq() != null) {
+//                if (paperPattern.getNoofcertificateq().equalsIgnoreCase("") || Integer.parseInt(paperPattern.getNoofcertificateq()) == 0) {
+
+
+            List<CertificateTopicList> certificateTopicLists = AppDatabase.getDatabaseInstance(getActivity()).getCertificateTopicListDao().getQuestionsByExamIdSubId(examId, subjectId);
+
+            if (certificateTopicLists == null || certificateTopicLists.size() < 1) {
+                Objects.requireNonNull(getActivity()).finish();
+            } else {
+                AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
+                Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+            }
+//            } else Objects.requireNonNull(getActivity()).finish();
+//        } else Objects.requireNonNull(getActivity()).finish();
     }
 
     @Override

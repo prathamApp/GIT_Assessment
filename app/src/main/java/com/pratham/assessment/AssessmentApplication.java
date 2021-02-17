@@ -12,10 +12,10 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
-import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.custom.font.FontChanger;
 import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.custom.font.FontChanger;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.io.File;
@@ -40,6 +40,7 @@ public class AssessmentApplication extends Application {
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
     public static String uploadScienceUrl = APIs.baseAzureURL + "api/pushassessment/AssessmentPushData";
     public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/question/pushFiles";
+    public static String UploadJsonZipURL = APIs.baseAzureURL+"api/pushzip/pushfiles";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
     public static WiseFy wiseF;
@@ -55,6 +56,7 @@ public class AssessmentApplication extends Application {
     public static String MUSIC_PATH;
     public static String FILE_PATH;
     public static String assessPath = "";
+    public static String SDCardPathForOffline = "";
 //    OkHttpClient okHttpClient;
 
     static {
@@ -77,7 +79,7 @@ public class AssessmentApplication extends Application {
 
         sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
         assessPath = Assessment_Utility.getInternalPath(this);
-
+        SDCardPathForOffline = Assessment_Utility.getExternalPath(this);
         if (assessPath != null) {
             File mydir = null;
             mydir = new File(assessPath + "/.Assessment");

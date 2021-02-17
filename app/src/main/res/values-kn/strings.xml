@@ -300,7 +300,7 @@
     <string name="done">ಮುಗಿದಿದೆ</string>
     <string name="name">ಹೆಸರು</string>
     <string name="next">ಮುಂದೆ</string>
-    <string name="image">ಚಿತ್ರ</string>
+    <string name="image">ಚಿತ್ರ : </string>
     <string name="please_download_language_packs_offline_for_better_performance">ಉತ್ತಮ ಕಾರ್ಯಕ್ಷಮತೆಗಾಗಿ ದಯವಿಟ್ಟು ಭಾಷಾ ಪ್ಯಾಕ್‌ಗಳನ್ನು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
     <string name="record_audio">ಆಡಿಯೋ ರೆಕಾರ್ಡ್ ಮಾಡಿ</string>
     <string name="your_answer">ನಿಮ್ಮ ಉತ್ತರ</string>

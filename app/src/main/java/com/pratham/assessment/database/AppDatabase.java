@@ -14,7 +14,9 @@ import com.pratham.assessment.dao.AssessmentPaperForPushDao;
 import com.pratham.assessment.dao.AssessmentPaperPatternDao;
 import com.pratham.assessment.dao.AssessmentPatternDetailsDao;
 import com.pratham.assessment.dao.AssessmentTestDao;
+import com.pratham.assessment.dao.AssessmentTopicDao;
 import com.pratham.assessment.dao.AttendanceDao;
+import com.pratham.assessment.dao.CertificateKeywordRatingDao;
 import com.pratham.assessment.dao.CertificateTopicListDao;
 import com.pratham.assessment.dao.ContentTableDao;
 import com.pratham.assessment.dao.CrlDao;
@@ -43,6 +45,8 @@ import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.AssessmentToipcsModal;
 import com.pratham.assessment.domain.Attendance;
+import com.pratham.assessment.domain.CertificateKeywordRating;
+import com.pratham.assessment.domain.CertificateTopicList;
 import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.domain.DownloadMedia;
@@ -67,7 +71,8 @@ import com.pratham.assessment.domain.Village;
         ScienceQuestionChoice.class, AssessmentSubjects.class, AssessmentLanguages.class,
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
-        SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class, NIOSExam.class, NIOSExamTopics.class}, version = 11/*,exportSchema = false*/)
+        SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class,
+        NIOSExam.class, NIOSExamTopics.class, CertificateTopicList.class, CertificateKeywordRating.class}, version = 14/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -95,7 +100,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract StatusDao getStatusDao();
 
-//    public abstract AssessmentTopicDao getAssessmentTopicDao();
+    public abstract AssessmentTopicDao getAssessmentTopicDao();
 
     public abstract ScienceQuestionDao getScienceQuestionDao();
 
@@ -125,6 +130,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract NIOSExamTopicDao getNiosExamTopicDao();
 
+    public abstract CertificateKeywordRatingDao getCertificateKeywordRatingDao();
+
 
 
    /* public static AppDatabase getDatabaseInstance(Context context) {
@@ -144,7 +151,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "assessment_database")
                         .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
                                 MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8,
-                                MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+                                MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12,
+                                MIGRATION_12_13,MIGRATION_13_14)
                         .allowMainThreadQueries().build();
 
             }
@@ -364,44 +372,6 @@ public abstract class AppDatabase extends RoomDatabase {
     };
 
 
-    static final Migration MIGRATION_11_12 = new Migration(11, 12) {
-
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            Log.d("$$$", "MIGRATION_11_11");
-            try {
-
-                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExam_NEW` (`studentid` TEXT NOT NULL," +
-                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
-                        " `subjectid` TEXT, `languagename` TEXT," +
-                        " PRIMARY KEY(`studentid`,`examid`))");
-                database.execSQL("INSERT INTO NIOSExam_NEW (studentid, subjectname, examname,examid," +
-                        "languageid,subjectid,languagename) SELECT studentid, subjectname, examname,examid," +
-                        "languageid,subjectid,languagename FROM NIOSExam");
-                database.execSQL("DROP TABLE NIOSExam");
-                database.execSQL("ALTER TABLE NIOSExam_NEW RENAME TO NIOSExam");
-
-
-              /*  database.execSQL("ALTER TABLE NIOSExamTopics add COLUMN studentid TEXT NOT NULL");
-
-                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExamTopics_NEW` (`studentid` TEXT NOT NULL," +
-                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
-                        " `subjectid` TEXT, `languagename` TEXT," + " `topicid` TEXT, `topicname` TEXT," +
-                        " PRIMARY KEY(`studentid`,`examid`))");
-                database.execSQL("INSERT INTO NIOSExamTopics_NEW (studentid, subjectname, examname,examid," +
-                        "languageid,subjectid,languagename,topicid,topicname) SELECT studentid, subjectname, examname,examid," +
-                        "languageid,subjectid,languagename,topicid,topicname FROM NIOSExamTopics");
-                database.execSQL("DROP TABLE NIOSExamTopics");
-                database.execSQL("ALTER TABLE NIOSExamTopics_NEW RENAME TO NIOSExamTopics");
-
-*/
-                Log.d("$$$", "after MIGRATION_10_11");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
     static final Migration MIGRATION_10_11 = new Migration(10, 11) {
 
         @Override
@@ -438,6 +408,79 @@ public abstract class AppDatabase extends RoomDatabase {
                 e.printStackTrace();
             }
 
+        }
+    };
+    static final Migration MIGRATION_11_12 = new Migration(11, 12) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_11_12");
+            try {
+
+                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExam_NEW` (`studentid` TEXT NOT NULL," +
+                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
+                        " `subjectid` TEXT, `languagename` TEXT," +
+                        " PRIMARY KEY(`studentid`,`examid`))");
+                database.execSQL("INSERT INTO NIOSExam_NEW (studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename) SELECT studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename FROM NIOSExam");
+                database.execSQL("DROP TABLE NIOSExam");
+                database.execSQL("ALTER TABLE NIOSExam_NEW RENAME TO NIOSExam");
+
+
+              /*  database.execSQL("ALTER TABLE NIOSExamTopics add COLUMN studentid TEXT NOT NULL");
+
+                database.execSQL("CREATE TABLE IF NOT EXISTS `NIOSExamTopics_NEW` (`studentid` TEXT NOT NULL," +
+                        " `subjectname` TEXT, `examname` TEXT, `examid` TEXT NOT NULL, `languageid` TEXT," +
+                        " `subjectid` TEXT, `languagename` TEXT," + " `topicid` TEXT, `topicname` TEXT," +
+                        " PRIMARY KEY(`studentid`,`examid`))");
+                database.execSQL("INSERT INTO NIOSExamTopics_NEW (studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename,topicid,topicname) SELECT studentid, subjectname, examname,examid," +
+                        "languageid,subjectid,languagename,topicid,topicname FROM NIOSExamTopics");
+                database.execSQL("DROP TABLE NIOSExamTopics");
+                database.execSQL("ALTER TABLE NIOSExamTopics_NEW RENAME TO NIOSExamTopics");
+
+*/
+                Log.d("$$$", "after MIGRATION_11_12");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+    static final Migration MIGRATION_12_13 = new Migration(12, 13) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_12_13");
+            try {
+                database.execSQL("ALTER TABLE ScienceQuestion add COLUMN IsQuestionFromSDCard INTEGER not null DEFAULT 0");
+                database.execSQL("ALTER TABLE TempScienceQuestion add COLUMN IsQuestionFromSDCard INTEGER not null DEFAULT 0");
+                Log.d("$$$", "after MIGRATION_12_13");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    static final Migration MIGRATION_13_14 = new Migration(13, 14) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_13_14");
+            try {
+                database.execSQL("CREATE TABLE `CertificateTopicList` (`certificatequestionid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `certificatequestion` TEXT, `certificatekeyword` TEXT,`subjectid` TEXT,`examid` TEXT)");
+                database.execSQL("CREATE TABLE `CertificateKeywordRating` (`keywordRatingId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `paperId` TEXT, `certificatequestion` TEXT, `certificatekeyword` TEXT, `rating` TEXT,`subjectId` TEXT,`examId` TEXT,`studentId` TEXT,`languageId` TEXT,`sentFlag` INTEGER NOT NULL)");
+                database.execSQL("ALTER TABLE AssessmentPatternDetails add COLUMN keyworddetail TEXT");
+                database.execSQL("ALTER TABLE ScienceQuestion add COLUMN revisitedStartTime TEXT");
+                database.execSQL("ALTER TABLE ScienceQuestion add COLUMN revisitedEndTime TEXT");
+                database.execSQL("ALTER TABLE Score add COLUMN revisitedStartDateTime TEXT");
+                database.execSQL("ALTER TABLE Score add COLUMN revisitedEndDateTime TEXT");
+
+                Log.d("$$$", "after MIGRATION_13_14");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     };
 }

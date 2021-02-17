@@ -24,6 +24,8 @@ import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.GetLatestVersion;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.custom_dialogs.PushDataDialog;
 import com.pratham.assessment.database.AppDatabase;
@@ -32,8 +34,6 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
-import com.pratham.assessment.constants.APIs;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.EBean;
@@ -464,7 +464,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                             } else
 //                                Toast.makeText(context, R.string.no_subjects, Toast.LENGTH_SHORT).show();
 //                        Assessment_Utility.showDialog(context,context.getString(R.string.no_subjects));
-                            assessView.showNoExamLayout(true);
+                                assessView.showNoExamLayout(true);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -641,33 +641,34 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
             e.printStackTrace();
         }
         // Force Update Code
-        if ((!currentVersion.equals(latestVersion)) && latestVersion != null) {
-            PushDataDialog pushDialog = new PushDataDialog(context);
+        if (latestVersion != null) {
+            if ((!currentVersion.equals(latestVersion))) {
+                PushDataDialog pushDialog = new PushDataDialog(context);
 
-            pushDialog.setContentView(R.layout.app_push_data_dialog);
-            Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            pushDialog.setCancelable(false);
-            pushDialog.setCanceledOnTouchOutside(false);
-            pushDialog.show();
-            TextView txt_push_dialog_msg;
-            Button ok_btn, eject_btn;
-            txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
-            ok_btn = pushDialog.findViewById(R.id.ok_btn);
-            eject_btn = pushDialog.findViewById(R.id.eject_btn);
-            ok_btn.setVisibility(View.VISIBLE);
-            eject_btn.setVisibility(View.VISIBLE);
-            ok_btn.setText(R.string.update);
-            eject_btn.setText(R.string.cancel);
-            txt_push_dialog_msg.setText(R.string.this_app_version_is_older_please_update_the_app);
-            ok_btn.setOnClickListener(view -> {
-                pushDialog.dismiss();
-                updateApp();
-            });
-            eject_btn.setOnClickListener(view -> {
-                pushDialog.dismiss();
-                Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
-            });
-            pushDialog.show();
+                pushDialog.setContentView(R.layout.app_push_data_dialog);
+                Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                pushDialog.setCancelable(false);
+                pushDialog.setCanceledOnTouchOutside(false);
+                pushDialog.show();
+                TextView txt_push_dialog_msg;
+                Button ok_btn, eject_btn;
+                txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
+                ok_btn = pushDialog.findViewById(R.id.ok_btn);
+                eject_btn = pushDialog.findViewById(R.id.eject_btn);
+                ok_btn.setVisibility(View.VISIBLE);
+                eject_btn.setVisibility(View.VISIBLE);
+                ok_btn.setText(R.string.update);
+                eject_btn.setText(R.string.cancel);
+                txt_push_dialog_msg.setText(R.string.this_app_version_is_older_please_update_the_app);
+                ok_btn.setOnClickListener(view -> {
+                    pushDialog.dismiss();
+                    updateApp();
+                });
+                eject_btn.setOnClickListener(view -> {
+                    pushDialog.dismiss();
+                    Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+                });
+                pushDialog.show();
            /* AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog);
             dialogBuilder.setCancelable(false);*/
 //            dialogBuilder.setIcon(R.drawable.ic_warning);
@@ -694,6 +695,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
             AlertDialog b = dialogBuilder.create();
             b.show();*/
+            }
         } else {
             Toast.makeText(context, "Version mismatch", Toast.LENGTH_SHORT).show();
         }

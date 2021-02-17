@@ -285,7 +285,7 @@ public class TopicFragment extends Fragment {
                                 progressDialog.dismiss();
                             }
                             for (int i = 0; i < assessmentTests.size(); i++) {
-                                if (assessmentTests.get(i).getExamtype() != null && assessmentTests.get(i).getExamtype().equalsIgnoreCase("public"))
+//                                if (assessmentTests.get(i).getExamtype() != null && assessmentTests.get(i).getExamtype().equalsIgnoreCase("public"))
                                     assessmentPublicTests.add(assessmentTests.get(i));
                             }
                         }
@@ -369,7 +369,7 @@ public class TopicFragment extends Fragment {
         List<AssessmentTest> assessmentPublicTests = new ArrayList<>();
         if (assessmentTests.size() > 0) {
             for (int i = 0; i < assessmentTests.size(); i++) {
-                if (assessmentTests.get(i).getExamtype() != null && assessmentTests.get(i).getExamtype().equalsIgnoreCase("public"))
+//                if (assessmentTests.get(i).getExamtype() != null && assessmentTests.get(i).getExamtype().equalsIgnoreCase("public"))
                     assessmentPublicTests.add(assessmentTests.get(i));
             }
         }

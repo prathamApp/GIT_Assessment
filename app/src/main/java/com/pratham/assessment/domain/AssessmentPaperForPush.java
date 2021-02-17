@@ -11,32 +11,33 @@ import java.util.ArrayList;
 @Entity
 public class AssessmentPaperForPush implements Serializable {
 
-    String languageId;
-    String subjectId;
-    String examId;
-    String examName;
+    private String languageId;
+    private String subjectId;
+    private String examId;
+    private String examName;
     @NonNull
     @PrimaryKey
-    String paperId;
-    String paperStartTime;
-    String paperEndTime;
-    String examTime;
-    String outOfMarks;
-    String totalMarks;
-    String studentId;
-    int CorrectCnt;
-    int wrongCnt;
-    int SkipCnt;
-    String question1Rating;
-    String question2Rating;
-    String question3Rating;
-    String question4Rating;
-    String question5Rating;
-    String question6Rating;
-    String question7Rating;
-    String question8Rating;
-    String question9Rating;
-    String question10Rating;
+    private String paperId;
+    private String paperStartTime;
+    private String paperEndTime;
+    private String examTime;
+    private String outOfMarks;
+    private String totalMarks;
+    private String studentId;
+    private int CorrectCnt;
+    private int wrongCnt;
+    private int SkipCnt;
+    private String question1Rating;
+    private String question2Rating;
+    private String question3Rating;
+    private String question4Rating;
+    private String question5Rating;
+    private String question6Rating;
+    private String question7Rating;
+    private String question8Rating;
+    private String question9Rating;
+    private String question10Rating;
+//    String certificateQuestionRatings;
 
     private String FullName;
     private String Gender;
@@ -299,4 +300,12 @@ public class AssessmentPaperForPush implements Serializable {
     public void setIsniosstudent(String isniosstudent) {
         this.isniosstudent = isniosstudent;
     }
+
+   /* public String getCertificateQuestionRatings() {
+        return certificateQuestionRatings;
+    }
+
+    public void setCertificateQuestionRatings(String certificateQuestionRatings) {
+        this.certificateQuestionRatings = certificateQuestionRatings;
+    }*/
 }

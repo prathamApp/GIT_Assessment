@@ -106,7 +106,8 @@ public class APIs {
     public static final String UPpullCrlsURL = "http://www.swap.prathamcms.org/api/UserList?programId=6&statecode=";
 */
 
-    /*public static final String ECE = "ECE";
+    /*public static final String ECE = "ECE";`
+
     public static final String ECEpullVillagesURL = "http://www.hlearning.openiscool.org/api/village/get?programId=8&state=";
     public static final String ECEpullGroupsURL = "http://www.devtab.openiscool.org/api/Group?programid=8&villageId=";
     public static final String ECEpullStudentsURL = "http://www.devtab.openiscool.org/api/student?programid=8&villageId=";
@@ -209,12 +210,11 @@ public class APIs {
             */
 
 
-    //Azure APIs
+    //Azure APIs live
     public static String baseAzureURL = "http://www.prathamassessment.org:8085/";
+    //dev API
+//    public static String baseAzureURL = "http://www.apiassessment.openiscool.org/";
 
-
-//    public static String devBaseAzureURL = "http://www.apiassessment.openiscool.org/";
-//    public static String baseAzureURL = "http://delhigovt.centralindia.cloudapp.azure.com:8081/";
     public static String AssessmentLanguageAPI = baseAzureURL + "api/language/GetLanguage";
     public static String AssessmentSubjectAPI = baseAzureURL + "api/subject/GetSubjectv2?languageid=";
     public static String AssessmentQuestionAPI = baseAzureURL + "api/question/GetQuestion?";
@@ -230,6 +230,7 @@ public class APIs {
 
     //kolibri
     public static final String KOLIBRI_STATE = ",state:";
+
     public static final String SERVER_STATE = "&state=";
     public static final String KOLIBRI_VILLAGE = ",villageid:";
     public static final String SERVER_VILLAGE = "&villageId=";
@@ -245,3 +246,4 @@ public class APIs {
 
 
 }
+

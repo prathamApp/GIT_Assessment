@@ -20,6 +20,9 @@ public interface AssessmentPaperPatternDao {
     @Query("DELETE FROM AssessmentPaperPattern")
     public void deletePaperPatterns();
 
+    @Query("DELETE FROM AssessmentPaperPattern where examid=:examId")
+    public void deletePaperPatternByExamId(String examId);
+
     @Query("select * from AssessmentPaperPattern")
     public List<AssessmentPaperPattern> getAllAssessmentPaperPatterns();
 
@@ -45,6 +48,9 @@ public interface AssessmentPaperPatternDao {
             "or certificateQuestion9!=''  " +
             "or certificateQuestion10 !='')")
     public List<AssessmentPaperPattern> getAllAssessmentPaperPatternsBySubId(String subId);
+
+    @Query("select * from AssessmentPaperPattern where subjectid=:subId" )
+    public List<AssessmentPaperPattern> getAllAssessmentPaperPatternsBySubjectId(String subId);
 
     @Query("select * from AssessmentPaperPattern where subjectid=:subId and noofcertificateq!=0")
     public List<AssessmentPaperPattern> getAllAssessmentPaperPatternsBySubIdNoCertificates(String subId);

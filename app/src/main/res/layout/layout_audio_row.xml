@@ -131,17 +131,7 @@
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/main_card_bg"
             android:elevation="@dimen/_3sdp"
-            android:padding="@dimen/_10sdp">
-
-            <TextView
-                android:id="@+id/tv_your_ans"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginHorizontal="@dimen/_3sdp"
-                android:fontFamily="@font/quicksand_bold"
-                android:text="@string/your_answer"
-                android:textSize="@dimen/_14sdp" />
+            android:padding="@dimen/_2sdp">
 
             <!--    <ImageView
                     android:id="@+id/iv_start_audio"
@@ -157,6 +147,34 @@
                     android:src="@drawable/ic_mic_24dp"
                     android:visibility="visible" />-->
 
+            <RelativeLayout
+                android:id="@+id/rl_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/main_card_bg"
+                android:padding="@dimen/_3sdp">
+
+                <TextView
+                    android:id="@+id/tv_your_ans"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_3sdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:text="@string/your_answer"
+                    android:textSize="@dimen/_15sdp" />
+
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_your_ans"
+                    android:layout_marginHorizontal="@dimen/_3sdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:padding="@dimen/_3sdp"
+                    android:text="00.00"
+                    android:textSize="@dimen/_10sdp" />
+            </RelativeLayout>
+
             <ImageView
                 android:id="@+id/iv_answer_audio"
                 android:layout_width="@dimen/_40sdp"
@@ -164,7 +182,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginHorizontal="@dimen/_3sdp"
                 android:layout_toLeftOf="@+id/iv_close"
-                android:layout_toRightOf="@+id/tv_your_ans"
+                android:layout_toRightOf="@+id/rl_title"
                 android:src="@drawable/ic_play_circle" />
 
 
@@ -172,6 +190,7 @@
                 android:id="@+id/iv_close"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
+                android:padding="@dimen/_3sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_close_black_24dp" />

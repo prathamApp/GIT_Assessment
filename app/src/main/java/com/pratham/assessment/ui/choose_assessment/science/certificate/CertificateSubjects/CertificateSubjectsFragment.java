@@ -18,7 +18,6 @@ import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.ExpandableRecyclerAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.SubjectAdapter;
-import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -85,25 +84,24 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
     public void setSubjectToSpinner() {
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 
-//        List<String> languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLang(Assessment_Constants.currentStudentID);
-        List<String> distinctExamIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersCertificatequestionsNotNull(currentStudentID);
+        List<String> distinctExamIds = AppDatabase.getDatabaseInstance(getActivity()).getCertificateKeywordRatingDao().getQuestionsByExamIdSubId(currentStudentID);
         List<String> examIdsForPracticeMode = new ArrayList<>();
 
         for (int i = 0; i < distinctExamIds.size(); i++) {
             AssessmentPaperPattern pattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao()
-                    .getAssessmentPaperPatternsByExamIdQNotNull(distinctExamIds.get(i));
+                    .getAssessmentPaperPatternsByExamId(distinctExamIds.get(i));
             if (pattern != null)
-                if (pattern.getExammode() != null)
-                    if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE)) {
-                        examIdsForPracticeMode.add(pattern.getExamid());
-                    }
+//                if (pattern.getExammode() != null)
+//                    if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE)) {
+                examIdsForPracticeMode.add(pattern.getExamid());
+//                    }
         }
         List<String> languageIds = new ArrayList<>();
 
         for (int j = 0; j < examIdsForPracticeMode.size(); j++) {
             List<String> langId = AppDatabase.getDatabaseInstance(getActivity())
-                    .getAssessmentPaperForPushDao()
-                    .getAssessmentPapersByUniqueLangCertificatequestionsNotNull(currentStudentID, examIdsForPracticeMode.get(j));
+                    .getCertificateKeywordRatingDao()
+                    .getDistinctLangByExamIdStudentId(currentStudentID, examIdsForPracticeMode.get(j));
 
             if (langId != null && langId.size() > 0 && !langId.contains(langId))
                 languageIds.addAll(langId);
@@ -124,8 +122,8 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
                     if (view != null) {
                         TextView lang = (TextView) view;
                         selectedLang = lang.getText().toString();
-                        presenter.getSubjectsFromDB(selectedLang);
-                    } else presenter.getSubjectsFromDB(selectedLang);
+                    }
+                    presenter.getSubjectsFromDB(selectedLang);
                 }
 
                 @Override

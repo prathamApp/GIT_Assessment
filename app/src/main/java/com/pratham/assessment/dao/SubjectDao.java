@@ -7,7 +7,6 @@ import android.arch.persistence.room.Query;
 
 import com.pratham.assessment.domain.AssessmentSubjects;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -23,6 +22,9 @@ public interface SubjectDao {
 
     @Query("DELETE FROM AssessmentSubjects where languageid=:langId")
     public void deleteSubjectsByLangId(String langId);
+
+    @Query("DELETE FROM AssessmentSubjects where subjectid=:subId and languageid=:langId")
+    public void deleteSubjectsByLangIdSubId(String subId, String langId);
 
     @Query("SELECT * FROM AssessmentSubjects ")
     public List<AssessmentSubjects> getAllSubjects();

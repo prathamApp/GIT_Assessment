@@ -45,8 +45,11 @@ public interface DownloadMediaDao {
     @Query("DELETE FROM DownloadMedia where paperId=:paperId and qId=:qid")
     int deleteByPaperIdAndQid(String paperId, String qid);
 
-  @Query("DELETE FROM DownloadMedia where paperId=:paperId and qtId=:qtid")
+    @Query("DELETE FROM DownloadMedia where paperId=:paperId and qtId=:qtid")
     int deleteByPaperIdAndQtid(String paperId, String qtid);
+
+    @Query("DELETE FROM DownloadMedia where qId=:qId and qtId=:qtid")
+    int deleteByQIdAndQtid(String qId, String qtid);
 
 
     @Query("select * from DownloadMedia WHERE qId=:qid")

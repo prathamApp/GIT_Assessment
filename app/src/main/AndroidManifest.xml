@@ -33,6 +33,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".async.SyncDataActivity_"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent">
+            <intent-filter>
+                <action android:name="com.pratham.assessment.async.SyncDataActivity_" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.choose_assessment.science.DownloadQuestionsActivity"></activity>
         <activity
             android:name=".CatchoActivity_"

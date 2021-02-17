@@ -1,6 +1,7 @@
 package com.pratham.assessment.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ResultModalClass implements Serializable {
 
@@ -10,7 +11,7 @@ public class ResultModalClass implements Serializable {
     String correctAnswer;
     String userAnswer;
     String userAnswerId;
-
+    List<ScienceQuestionChoice> userAnsList;
     boolean isCorrect;
     boolean isAttempted;
 
@@ -77,5 +78,13 @@ public class ResultModalClass implements Serializable {
 
     public void setQuestionImg(String questionImg) {
         QuestionImg = questionImg;
+    }
+
+    public List<ScienceQuestionChoice> getUserAnsList() {
+        return userAnsList;
+    }
+
+    public void setUserAnsList(List<ScienceQuestionChoice> userAnsList) {
+        this.userAnsList = userAnsList;
     }
 }

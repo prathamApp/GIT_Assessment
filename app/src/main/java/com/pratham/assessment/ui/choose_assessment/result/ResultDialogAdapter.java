@@ -16,12 +16,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
-import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView text;
         ImageView image, iv_zoom_eye;
-        RelativeLayout rl_img;
+        RelativeLayout rl_img, rl_root;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -42,6 +43,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
             image = itemView.findViewById(R.id.iv_choice_image);
             iv_zoom_eye = itemView.findViewById(R.id.iv_zoom_eye);
             rl_img = itemView.findViewById(R.id.rl_img);
+            rl_root = itemView.findViewById(R.id.rl_root);
         }
     }
 
@@ -79,16 +81,44 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                 Glide.with(context).asBitmap().
                         load(path).apply(new RequestOptions()
                         .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
                         .placeholder(Drawable.createFromPath(localPath))
                         .format(DecodeFormat.PREFER_ARGB_8888)
                         .override(Target.SIZE_ORIGINAL))
                         .into(myViewHolder.image);
+
+                myViewHolder.iv_zoom_eye.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("QQQ", "choice clicked....");
+                        String path = ""  /*Assessment_Constants.loadOnlineImagePath +*/;
+                        String fileName = "";
+                        String localPath = "";
+
+                        if (type.equalsIgnoreCase("que")) {
+                            path = scienceQuestionChoice.getChoiceurl();
+                            fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+                            localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+                        } else if (type.equalsIgnoreCase("ans")) {
+                            path = scienceQuestionChoice.getMatchingurl();
+                            fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getMatchingurl());
+                            localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+                        }
+                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
+                    }
+                });
+
             } else {
                 myViewHolder.rl_img.setVisibility(View.GONE);
                 myViewHolder.text.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));
             }
         } else {
             if (type.equalsIgnoreCase("ans")) {
+               /* if (scienceQuestionChoice.getMyIscorrect().equalsIgnoreCase("true"))
+                    myViewHolder.rl_root.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.green_bg));
+                else myViewHolder.rl_root.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.red_bg));*/
+
                 if (!scienceQuestionChoice.getMatchingurl().equalsIgnoreCase("")) {
                     myViewHolder.rl_img.setVisibility(View.VISIBLE);
                     myViewHolder.image.setVisibility(View.VISIBLE);
@@ -100,10 +130,11 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                     final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 
-
                     Glide.with(context).asBitmap().
                             load(path).apply(new RequestOptions()
                             .fitCenter()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
                             .placeholder(Drawable.createFromPath(localPath))
                             .format(DecodeFormat.PREFER_ARGB_8888)
                             .override(Target.SIZE_ORIGINAL))
@@ -126,7 +157,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
                                 fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getMatchingurl());
                                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
                             }
-                            Assessment_Utility.showZoomDialog(context, path, localPath,"");
+                            Assessment_Utility.showZoomDialog(context, path, localPath, "");
                         }
                     });
                 } else {
