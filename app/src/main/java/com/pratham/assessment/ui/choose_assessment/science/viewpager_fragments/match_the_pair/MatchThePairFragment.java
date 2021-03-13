@@ -283,7 +283,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
         //INSERT CUSTOM CODE HERE
         String para = "";
         if (scienceQuestion != null) {
-            scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(scienceQuestion.getQid());
+            ScienceQuestion scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(this.scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());

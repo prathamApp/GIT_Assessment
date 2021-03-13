@@ -19,10 +19,10 @@ public interface ScoreDao {
     @Insert
     long insert(Score score);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertAll(Score... scores);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertAllScores(List<Score> scores);
 
     @Update

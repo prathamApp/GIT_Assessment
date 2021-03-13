@@ -97,10 +97,11 @@
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/record_audio"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_15sdp"
+                android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/iv_start_audio"
+                android:id="@+id/iv_record_audio"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"
                 android:layout_below="@+id/tv_rec"
@@ -110,7 +111,40 @@
                 android:elevation="@dimen/_5sdp"
                 android:padding="@dimen/_5sdp"
                 android:src="@drawable/ic_mic_24dp"
-                android:visibility="visible" />
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_rec"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_2sdp">
+
+                <Button
+                    android:id="@+id/btn_record_audio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center"
+                    android:padding="@dimen/_7sdp"
+                    android:text="@string/record_audio"
+                    android:textSize="@dimen/_13sdp" />
+
+                <Button
+                    android:id="@+id/btn_show_recorded_audio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center"
+                    android:padding="@dimen/_7sdp"
+                    android:text="@string/audio"
+                    android:textSize="@dimen/_13sdp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -131,7 +165,8 @@
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/main_card_bg"
             android:elevation="@dimen/_3sdp"
-            android:padding="@dimen/_2sdp">
+            android:padding="@dimen/_2sdp"
+            android:visibility="gone">
 
             <!--    <ImageView
                     android:id="@+id/iv_start_audio"
@@ -190,9 +225,9 @@
                 android:id="@+id/iv_close"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:padding="@dimen/_3sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:padding="@dimen/_3sdp"
                 android:src="@drawable/ic_close_black_24dp" />
         </RelativeLayout>
         <!--        </android.support.v7.widget.CardView>-->

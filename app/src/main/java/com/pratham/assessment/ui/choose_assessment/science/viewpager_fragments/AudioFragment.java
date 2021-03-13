@@ -1,9 +1,16 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -12,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,13 +27,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.custom.custom_dialogs.ChooseImageDialog;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.domain.DownloadMedia;
 import com.pratham.assessment.domain.ScienceQuestion;
+import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 import com.pratham.assessment.utilities.AudioUtil;
+import com.pratham.assessment.utilities.PermissionUtils;
+import com.pratham.assessment.utilities.RealPathUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -35,7 +49,12 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
+import static com.pratham.assessment.utilities.Assessment_Utility.formatMilliSeccond;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
@@ -54,12 +73,14 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     ImageView iv_question_audio;
     @ViewById(R.id.rl_question_audio)
     RelativeLayout rl_question_audio;
-    @ViewById(R.id.iv_start_audio)
+    @ViewById(R.id.iv_record_audio)
     ImageView iv_start_audio;
     @ViewById(R.id.rl_answer_audio)
     RelativeLayout rl_answer_audio;
-   /* @ViewById(R.id.cv_answer_audio)
-    CardView cv_answer_audio;*/
+    @ViewById(R.id.btn_record_audio)
+    Button btn_record_audio;
+    @ViewById(R.id.btn_show_recorded_audio)
+    Button btn_show_recorded_audio;
 
     @ViewById(R.id.iv_answer_audio)
     ImageView iv_answer_audio;
@@ -72,7 +93,9 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     Button btn_view_hint;
 
     String fileName;
+    String answerPath;
     String localPath;
+    public List imageList;
 
     private static final String POS = "pos";
     private static final String SCIENCE_QUESTION = "scienceQuestion";
@@ -80,7 +103,12 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     private int pos;
     private ScienceQuestion scienceQuestion;
     AssessmentAnswerListener assessmentAnswerListener;
+    public static final int RECORD_AUDIO = 0;
+    public static final int PICK_AUDIO_FROM_GALLERY = 1;
+    public static final int SHOW_DIALOG = 2;
+    int capturedImageCnt = 0;
 
+    boolean recClick;
 
     public AudioFragment() {
         // Required empty public constructor
@@ -146,8 +174,38 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         }
         assessmentAnswerListener.setParagraph(para, scienceQuestion.isParaQuestion());
 */
+        imageList = new ArrayList();
 
         setOdiaFont(getActivity(), question);
+        if (scienceQuestion.getIsAttempted() && scienceQuestion.getMatchingNameList() != null) {
+            if (scienceQuestion.getMatchingNameList().size() > 0) {
+                for (int i = 0; i < scienceQuestion.getMatchingNameList().size(); i++) {
+                    imageList.add(scienceQuestion.getMatchingNameList().get(i).getQcid());
+
+                }
+            }
+            btn_show_recorded_audio.setVisibility(View.VISIBLE);
+        }
+       /* if (scienceQuestion.getUserAnswer() != null) {
+            if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
+                try {
+                    rl_answer_audio.setVisibility(View.VISIBLE);
+                    MediaPlayer mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setDataSource(scienceQuestion.getUserAnswer());
+                    mediaPlayer.prepare();
+                    int finalTime = mediaPlayer.getDuration();
+                    String dur = formatMilliSeccond(finalTime);
+                    Log.d("finalTime", "onAnswerPlayClick: " + dur);
+//            assessmentAnswerListener.setAudio(path, isAudioRecording);
+                    tv_duration.setText(dur);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                rl_answer_audio.setVisibility(View.GONE);
+            }
+        }*/
+
 
         if (scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             rl_question_audio.setVisibility(View.GONE);
@@ -155,8 +213,10 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             rl_question_audio.setVisibility(View.VISIBLE);
         }
 
+        iv_start_audio.setVisibility(View.GONE);
+        btn_record_audio.setVisibility(View.VISIBLE);
+
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
-        rl_answer_audio.setVisibility(View.GONE);
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 
@@ -225,10 +285,6 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
         } else questionImage.setVisibility(View.GONE);
 
-        if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
-            rl_answer_audio.setVisibility(View.VISIBLE);
-        }
-
 
         try {
 
@@ -249,7 +305,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
                         iv_start_audio.setImageResource(R.drawable.ic_play_circle);
 
                     } else {
-                        isAudioRecording = true;
+                        isAudioRec1ording = true;
                         iv_start_audio.setImageResource(R.drawable.ic_pause);
 
                     }
@@ -286,35 +342,103 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         }
     }
 
-    @Click(R.id.iv_start_audio)
+    @Click(R.id.btn_record_audio)
+    public void recAudio() {
+        ChooseImageDialog chooseImageDialog = new ChooseImageDialog(getActivity());
+        chooseImageDialog.btn_take_photo.setText(R.string.record_audio);
+        chooseImageDialog.btn_take_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImageDialog.dismiss();
+                iv_start_audio.setVisibility(View.VISIBLE);
+                btn_record_audio.setVisibility(View.GONE);
+                btn_show_recorded_audio.setVisibility(View.GONE);
+                startAudio();
+            }
+        });
+
+        chooseImageDialog.btn_choose_from_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImageDialog.dismiss();
+                if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                    String[] permissionArray = new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE};
+
+                    if (!((ScienceAssessmentActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
+                        Toast.makeText(getActivity(), R.string.give_storage_permissions, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent_upload = new Intent();
+                        intent_upload.setType("audio/*");
+                        intent_upload.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(intent_upload, PICK_AUDIO_FROM_GALLERY);
+                    }
+                } else {
+                    Intent intent_upload = new Intent();
+                    intent_upload.setType("audio/*");
+                    intent_upload.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent_upload, PICK_AUDIO_FROM_GALLERY);
+                }
+            }
+        });
+        chooseImageDialog.show();
+
+    }
+
+    @Click(R.id.btn_show_recorded_audio)
+    public void onViewCaptured() {
+        if (imageList.size() > 0) {
+            showImageThumbnailDialog(imageList, false);
+        } else {
+            Toast.makeText(getActivity(),"Nothing to show.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showImageThumbnailDialog(List imageList, boolean showButton) {
+//        ImageListDialog imageListDialog = new ImageListDialog(getActivity(), imageList);
+//        imageListDialog.show();
+        Intent intent = new Intent(getActivity(), ImageListDialog_.class);
+        intent.putParcelableArrayListExtra("imageList", (ArrayList<? extends Parcelable>) imageList);
+        intent.putExtra("showDeleteButton", showButton);
+        intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
+        startActivityForResult(intent, SHOW_DIALOG);
+    }
+
+
+    @Click(R.id.iv_record_audio)
     public void startAudio() {
         try {
             if (isAnsPlaying) {
                 isAnsPlaying = false;
                 iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+                btn_record_audio.setVisibility(View.GONE);
                 AudioUtil.stopPlayingAudio();
 
             }
 
-            String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + ".mp3";
+            String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + "_" + capturedImageCnt + ".mp3";
 
 //            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
-            String path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
+            answerPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
+
             if (isAudioRecording) {
                 isAudioRecording = false;
                 iv_start_audio.setImageResource(R.drawable.ic_mic_24dp);
                 iv_start_audio.setElevation(5);
                 AudioUtil.stopRecording();
+                scienceQuestion.setUserAnswer(answerPath);
+                imageList.add(answerPath);
+                showImageThumbnailDialog(imageList, true);
+                rl_answer_audio.setVisibility(View.GONE);
+                iv_start_audio.setVisibility(View.GONE);
+                btn_record_audio.setVisibility(View.VISIBLE);
 
-                scienceQuestion.setUserAnswer(path);
-                rl_answer_audio.setVisibility(View.VISIBLE);
-                assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
+//                assessmentAnswerListener.setAnswerInActivity("", answerPath, scienceQuestion.getQid(), null);
 
 
             } else {
                 isAudioRecording = true;
                 iv_start_audio.setImageResource(R.drawable.ic_stop_black_24dp);
-                AudioUtil.startRecording(path);
+                AudioUtil.startRecording(answerPath);
                 iv_start_audio.setElevation(5);
                 rl_answer_audio.setVisibility(View.GONE);
 
@@ -322,10 +446,10 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             }
 //            assessmentAnswerListener.setAudio(path, isAudioRecording);
             MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(path);
+            mediaPlayer.setDataSource(answerPath);
             mediaPlayer.prepare();
             int finalTime = mediaPlayer.getDuration();
-            String dur = formateMilliSeccond(finalTime);
+            String dur = formatMilliSeccond(finalTime);
             Log.d("finalTime", "onAnswerPlayClick: " + dur);
 //            assessmentAnswerListener.setAudio(path, isAudioRecording);
             tv_duration.setText(dur);
@@ -338,73 +462,44 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
     @Click(R.id.iv_answer_audio)
     public void onAnswerPlayClick() {
         try {
-            String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + ".mp3";
-            String path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
-            if (isAnsPlaying) {
-                isAnsPlaying = false;
-                iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
-                AudioUtil.stopPlayingAudio();
+            // String fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO + ".mp3";
+            // String path = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + fileName;
+            String path = scienceQuestion.getUserAnswer();
+            DownloadMedia media = AppDatabase.getDatabaseInstance(getActivity()).getDownloadMediaDao().getMediaByQidAndPaperId(scienceQuestion.getQid(), scienceQuestion.getPaperid(), DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
+            if (media != null) path = media.getPhotoUrl();
+            if (path != null && !path.equalsIgnoreCase("")) {
+                if (isAnsPlaying) {
+                    isAnsPlaying = false;
+                    iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+                    AudioUtil.stopPlayingAudio();
 
-            } else {
-                isAnsPlaying = true;
-                iv_answer_audio.setImageResource(R.drawable.ic_pause);
-                AudioUtil.playRecording(path, this);
+                } else {
+                    isAnsPlaying = true;
+                    iv_answer_audio.setImageResource(R.drawable.ic_pause);
+                    AudioUtil.playRecording(path, this);
 
 
+                }
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Function to convert milliseconds time to
-     * Timer Format
-     * Hours:Minutes:Seconds
-     */
-    public static String formateMilliSeccond(long milliseconds) {
-        String finalTimerString = "";
-        String secondsString = "";
-
-        // Convert total duration into time
-        int hours = (int) (milliseconds / (1000 * 60 * 60));
-        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
-        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
-
-        // Add hours if there
-        if (hours > 0) {
-            finalTimerString = hours + " : ";
-        }
-
-        // Prepending 0 to seconds if it is one digit
-        if (seconds < 10) {
-            secondsString = "0" + seconds;
-        } else {
-            secondsString = "" + seconds;
-        }
-
-        finalTimerString = finalTimerString + minutes + " : " + secondsString;
-
-        //      return  String.format("%02d Min, %02d Sec",
-        //                TimeUnit.MILLISECONDS.toMinutes(milliseconds),
-        //                TimeUnit.MILLISECONDS.toSeconds(milliseconds) -
-        //                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
-
-        // return timer string
-        return finalTimerString;
-    }
 
     @Override
     public void stopPlayer() {
-        if (isAnsPlaying)
+        if (isAnsPlaying) {
+            isAnsPlaying = false;
             if (iv_answer_audio != null)
                 iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
-        if (isPlaying)
+        }
+        if (isPlaying) {
             if (iv_question_audio != null)
                 iv_question_audio.setImageResource(R.drawable.ic_play_circle);
-
+            isPlaying = false;
+        }
     }
 
     @Override
@@ -422,8 +517,8 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             iv_start_audio.setElevation(5);
             AudioUtil.stopRecording();
             scienceQuestion.setUserAnswer(path);
-            rl_answer_audio.setVisibility(View.VISIBLE);
-            assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
+            rl_answer_audio.setVisibility(View.GONE);
+//            assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
 
 
         }
@@ -453,7 +548,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         //INSERT CUSTOM CODE HERE
         String para = "";
         if (scienceQuestion != null) {
-            scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(scienceQuestion.getQid());
+            ScienceQuestion scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(this.scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 btn_view_hint.setVisibility(View.VISIBLE);
 //                para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
@@ -477,10 +572,153 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             isAnsPlaying = false;
             AudioUtil.stopPlayingAudio();
         }
-        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), null);
+/*        if (new File(scienceQuestion.getUserAnswer()).exists())
+            new File(scienceQuestion.getUserAnswer()).delete();*/
+//        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), null);
         rl_answer_audio.setVisibility(View.GONE);
+        iv_start_audio.setVisibility(View.GONE);
+        btn_record_audio.setVisibility(View.VISIBLE);
+    }
+
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (resultCode == -1 && requestCode == PICK_AUDIO_FROM_GALLERY) {
+                Uri selectedImage = data.getData();
+                String path;
+                path = RealPathUtil.getUriRealPathAboveKitkat(getActivity(), selectedImage);
+                if (path.equalsIgnoreCase("")) {
+                    path = RealPathUtil.getRealPathFromURI_API19(getActivity(), selectedImage);
+                }
+
+//                path = getRealPathFromURI_API19(getActivity(), selectedImage);
+                imageList.add(selectedImage);
+                showImageThumbnailDialog(imageList, true);
+
+                scienceQuestion.setUserAnswer(path);
+//                assessmentAnswerListener.setAnswerInActivity("", path, scienceQuestion.getQid(), null);
+
+                if (imageList.size() > 0) {
+                    btn_show_recorded_audio.setVisibility(View.VISIBLE);
+                } else btn_show_recorded_audio.setVisibility(View.GONE);
+
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setDataSource(path);
+                mediaPlayer.prepare();
+                int finalTime = mediaPlayer.getDuration();
+                String dur = formatMilliSeccond(finalTime);
+                Log.d("finalTime", "onAnswerPlayClick: " + dur);
+//            assessmentAnswerListener.setAudio(path, isAudioRecording);
+                tv_duration.setText(dur);
+                rl_answer_audio.setVisibility(View.GONE);
+            } else if (resultCode == -1 && requestCode == RECORD_AUDIO) {
+//                Bitmap photo = (Bitmap) data.getExtras().get("data");
+//                Uri selectedImage = data.getData();
+              /*  fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
+
+                String file = answerPath + "/" + fileName;*/
+                imageList.add(answerPath);
+                showImageThumbnailDialog(imageList, true);
+//                setImage(capturedImageUri);
+//                if (currentFragment instanceof ImageAnswerFragment)
+//                    ((ImageAnswerFragment) currentFragment).setImage(photo);
+//                selectedImage.setImageBitmap(photo);
+                // String selectedImagePath = getPath(photo);
+//                setImage();
+//                createDirectoryAndSaveFile(photo, fileName);
+                if (imageList.size() > 0) {
+                    btn_show_recorded_audio.setVisibility(View.VISIBLE);
+//                    for (int i = 0; i < imageList.size(); i++) {
+                    /*ScienceQuestionChoice answer = new ScienceQuestionChoice();
+                    fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
+
+                    answer.setQcid(path + "/" + fileName);
+                    answers.add(answer);*/
+//                    }
+                } else btn_show_recorded_audio.setVisibility(View.GONE);
+
+//                path + "/" + fileName
+           /*     if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
+                    assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getUserAnswer(), scienceQuestion.getQid(), null);
+                else*/
+//                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+                capturedImageCnt++;
+            } else if (resultCode == 2 && requestCode == SHOW_DIALOG) {
+                try {
+                    List<ScienceQuestionChoice> answers = new ArrayList<>();
+
+                    List imageList = data.getParcelableArrayListExtra("imageList");
+//                    for (int j = 0; j < imageList.size(); j++) {
+//                        for (int k = 0; k < newImageList.size(); k++) {
+                 /*   Iterator<List> iterator = imageList.iterator();
+                    while (iterator.hasNext()) {
+//                        ScienceQuestion scienceQuestion = (ScienceQuestion) iterator.next();
+                        if (!newImageList.contains(iterator.next()))
+                            iterator.remove();
+                    }*/
+
+
+//                        }
+//                    }
+                    if (imageList.size() > 0) {
+                        for (int i = 0; i < imageList.size(); i++) {
+                            ScienceQuestionChoice answer = new ScienceQuestionChoice();
+                            if (imageList.get(i) instanceof String) {
+//                                fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
+                                answer.setQcid((String) imageList.get(i));
+                            }
+//                            if (imageList.get(i) instanceof Uri) {
+                            else {
+                                String path;
+                                path = RealPathUtil.getUriRealPathAboveKitkat(getActivity(), (Uri) imageList.get(i));
+                                if (path.equalsIgnoreCase("")) {
+                                    path = RealPathUtil.getRealPathFromURI_API19(getActivity(), (Uri) imageList.get(i));
+                                }
+                                answer.setQcid(path);
+//                                answer.setQcid(path);
+                            }
+
+//                            }
+                            answers.add(answer);
+
+                        }
+
+                        Log.d("TAG", "onActivityResult: " + imageList.size());
+
+                        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+
+                    }
+                    this.imageList = imageList;
+                    if (imageList.size() > 0) {
+                        btn_show_recorded_audio.setVisibility(View.VISIBLE);
+                    } else btn_show_recorded_audio.setVisibility(View.GONE);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+        }
 
     }
+
 
     @Click(R.id.btn_view_hint)
     public void showPara() {

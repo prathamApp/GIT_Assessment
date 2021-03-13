@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
+import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
 
 @EActivity(R.layout.activity_splash)
 public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying {
@@ -552,22 +553,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     }
 
 
-    private static void copyFileUsingStream(File source, File dest) throws IOException {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = new FileInputStream(source);
-            os = new FileOutputStream(dest);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
-        } finally {
-            is.close();
-            os.close();
-        }
-    }
 
     private boolean checkDataBase() {
         SQLiteDatabase checkDB = null;

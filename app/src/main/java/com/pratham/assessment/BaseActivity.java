@@ -36,6 +36,7 @@ import com.google.android.play.core.install.model.ActivityResult;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.tasks.Task;
 import com.pratham.assessment.async.CopyDbToOTG;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.custom_dialogs.CustomLodingDialog;
 import com.pratham.assessment.database.AppDatabase;
@@ -44,7 +45,6 @@ import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.STTService;
 import com.pratham.assessment.services.TTSService;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 
@@ -110,6 +110,8 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
         audioManager = (AudioManager) getSystemService(this.AUDIO_SERVICE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        ButtonClickSound = MediaPlayer.create(this, R.raw.click);//new MediaPlayer instance
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ttsService = new TTSService(getApplication());
         ttsService.setActivity(this);
@@ -296,7 +298,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     public void askCompactPermissions(String permissions[], PermissionResult permissionResult) {
         permissionsAsk = permissions;
         this.permissionResult = permissionResult;
-        internalRequestPermission(permissionsAsk,this);
+        internalRequestPermission(permissionsAsk, this);
 
     }
 
@@ -730,7 +732,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
 
-    private void internalRequestPermission(String[] permissionAsk,Context context) {
+    private void internalRequestPermission(String[] permissionAsk, Context context) {
         String arrayPermissionNotGranted[];
         ArrayList<String> permissionsNotGranted = new ArrayList<>();
 
@@ -802,19 +804,21 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     public void askCompactPermission(String permission, PermissionResult permissionResult) {
         permissionsAsk = new String[]{permission};
         this.permissionResult = permissionResult;
-        internalRequestPermission(permissionsAsk,this);
+        internalRequestPermission(permissionsAsk, this);
 
     }
 
-    /** @param permissions      String[] permissions ask
+    /**
+     * @param permissions      String[] permissions ask
      * @param permissionResult callback PermissionResult
      */
-    public void askCompactPermissionsInSplash(String permissions[], PermissionResult permissionResult,Context context) {
+    public void askCompactPermissionsInSplash(String permissions[], PermissionResult permissionResult, Context context) {
         permissionsAsk = permissions;
         this.permissionResult = permissionResult;
-        internalRequestPermission(permissionsAsk,context);
+        internalRequestPermission(permissionsAsk, context);
 
     }
+
     public void openSettingsApp(Context context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {

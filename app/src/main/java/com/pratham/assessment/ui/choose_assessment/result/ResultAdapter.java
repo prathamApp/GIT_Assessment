@@ -3,11 +3,13 @@ package com.pratham.assessment.ui.choose_assessment.result;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +35,14 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.pratham.assessment.constants.Assessment_Constants.ARRANGE_SEQUENCE;
 import static com.pratham.assessment.constants.Assessment_Constants.AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
 import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK;
 import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK_WITH_OPTION;
 import static com.pratham.assessment.constants.Assessment_Constants.IMAGE_ANSWER;
@@ -51,7 +56,6 @@ import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
-import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHolder> implements AudioPlayerInterface {
     Context context;
@@ -558,6 +562,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     }
                 }
                 break;
+
+            case AUDIO:
+            case VIDEO:
             case IMAGE_ANSWER:
                 myViewHolder.image_you_answered.setVisibility(View.GONE);
                 myViewHolder.image_correct_ans.setVisibility(View.GONE);
@@ -582,19 +589,31 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.btnUserAnswer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (result.getUserAnswer() != null && !result.getUserAnswer().equalsIgnoreCase("")) {
+                        if (result.getUserAnsList() != null && result.getUserAnsList().size() > 0) {
                             List imageList = new ArrayList();
-                            List imgs = Arrays.asList(result.getUserAnswer().split(","));
-                            imageList.addAll(imgs);
+                            for (int j = 0; j < result.getUserAnsList().size(); j++) {
+                                Uri uri = Uri.parse(result.getUserAnsList().get(j).getQcid());
+                                Log.d("Uri", "onClick: " + uri);
+                                // TODO: 13-Mar-21 check this ri issue
+                                imageList.add(result.getUserAnsList().get(j).getQcid());
+                            }
+//                            List imgs = Arrays.asList(result.getUserAnswer().split(","));
+//                            imageList.addAll(imgs);
                             Intent intent = new Intent(context, ImageListDialog_.class);
                             intent.putParcelableArrayListExtra("imageList", (ArrayList<? extends Parcelable>) imageList);
+                            if (scienceQuestion.getQtid().equalsIgnoreCase(VIDEO))
+                                intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
+                            else if (scienceQuestion.getQtid().equalsIgnoreCase(AUDIO))
+                                intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
+                            else if (scienceQuestion.getQtid().equalsIgnoreCase(IMAGE_ANSWER))
+                                intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
                             intent.putExtra("showDeleteButton", false);
                             context.startActivity(intent);
                         }
                     }
                 });
                 break;
-            case VIDEO:
+           /* case VIDEO:
                 if (result.getQuestion().equalsIgnoreCase(""))
                     myViewHolder.question.setText(R.string.video);
                 if (result.isAttempted()) {
@@ -673,7 +692,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                 }
                 break;
-
+*/
             case TRUE_FALSE:
                 myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                 myViewHolder.btnUserAnswer.setVisibility(View.GONE);

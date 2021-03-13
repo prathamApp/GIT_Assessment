@@ -1,11 +1,14 @@
 package com.pratham.assessment.utilities;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 
 import java.io.IOException;
+import java.net.URI;
 
 public class AudioUtil {
 
@@ -42,7 +45,35 @@ public class AudioUtil {
         mRecorder = null;
     }
 
-    public static void playRecording(String filePath, final AudioPlayerInterface activity) {
+    public static void playRecording(Uri filePath, final AudioPlayerInterface activity, Context context) {
+        try {
+            if (mPlayer != null && mPlayer.isPlaying())
+                mPlayer.stop();
+
+            mPlayer = new MediaPlayer();
+            audioPlayerInterface = activity;
+            mPlayer.setDataSource(context,filePath);
+            mPlayer.prepare();
+            mPlayer.start();
+
+            mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlayingAudio();
+                 /*   if (activity instanceof LanguageActivity)
+                        ((LanguageActivity) activity).audioStopped();
+                    if (activity instanceof EnglishActivity)
+                        ((EnglishActivity) activity).audioStopped();
+                    if (activity instanceof MathActivity)
+                        ((MathActivity) activity).audioStopped();*/
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+public static void playRecording(String filePath, final AudioPlayerInterface activity) {
         try {
             if (mPlayer != null && mPlayer.isPlaying())
                 mPlayer.stop();

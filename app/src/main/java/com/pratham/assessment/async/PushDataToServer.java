@@ -934,7 +934,6 @@ public class PushDataToServer {
 
                         @Override
                         public void onResponse(String response) {
-                            //todo delete file
                             if (new File(filepathstr + ".zip").exists())
                                 new File(filepathstr + ".zip").delete();
                             Log.d("PUSH_STATUS", "Data pushed successfully");
@@ -942,19 +941,7 @@ public class PushDataToServer {
                             pushSupervisorImages();
                             createMediaFileToPush();
                             CreateFilesForVideoMonitoring();
-                            //todo push on main thread
                             dataPushed = true;
-
-                            if (!autoPush) {
-//                                String msg = "Data pushed successfully. " + pushCnt + " paper(s) pushed.";
-                              /*  if (!dataPushed) {
-                                    icon = context.getResources().getDrawable(R.drawable.ic_warning);
-                                    msg = "Science data pushed successfully. ECE data push failed";
-                                }*/
-
-//                                onPostExecute();
-                            }
-
                             setPushFlag();
                         }
 

@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
 
-class DeleteSensitiveTablesFromBackupDB {
-    static void deleteTables() {
+public class DeleteSensitiveTablesFromBackupDB {
+   public static void deleteTables() {
         new AsyncTask<Void, Integer, Void>() {
 
             @Override

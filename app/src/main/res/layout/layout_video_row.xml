@@ -6,7 +6,7 @@
     app:cardBackgroundColor="@android:color/transparent"
     app:cardElevation="0dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_2sdp"
@@ -16,32 +16,34 @@
             android:id="@+id/tv_question"
             style="@style/CustomQuestionStyle"
             android:layout_margin="@dimen/_2sdp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.4"
             app:autoSizeMaxTextSize="@dimen/_20sdp"
             app:autoSizeMinTextSize="@dimen/_15sdp"
             app:autoSizeTextType="uniform" />
+
         <Button
             android:id="@+id/btn_view_hint"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight=".1"
-            android:layout_margin="@dimen/_2sdp"
-            android:background="@drawable/correct_bg"
-            android:text="@string/view_hint"
-            android:elevation="@dimen/_2sdp"
-            android:textSize="@dimen/_10sdp"
-            android:padding="@dimen/_3sdp"
             android:layout_gravity="center"
-            android:textColor="@color/black" />
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight=".1"
+            android:background="@drawable/correct_bg"
+            android:elevation="@dimen/_2sdp"
+            android:padding="@dimen/_3sdp"
+            android:text="@string/view_hint"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10sdp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/_3sdp"
-            android:layout_weight="0.35"
+            android:layout_weight="0.5"
             android:background="@drawable/main_card_bg"
-            android:padding="@dimen/_3sdp">
+            android:padding="@dimen/_3sdp"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/iv_question_image"
@@ -90,16 +92,47 @@
             android:layout_height="0dp"
             android:layout_weight="0.3">
 
-            <Button
-                android:id="@+id/btn_capture_video"
-                android:layout_width="wrap_content"
+            <!-- <Button
+                 android:id="@+id/btn_capture_video"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerInParent="true"
+                 android:layout_margin="@dimen/_5sdp"
+                 android:background="@drawable/ripple_effect"
+                 android:padding="@dimen/_5sdp"
+                 android:text="@string/capture_video"
+                 android:textSize="@dimen/_15sdp" />-->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_margin="@dimen/_5sdp"
-                android:background="@drawable/ripple_effect"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/capture_video"
-                android:textSize="@dimen/_15sdp" />
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_2sdp">
+
+                <Button
+                    android:id="@+id/btn_record_video"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center"
+                    android:padding="@dimen/_7sdp"
+                    android:text="@string/capture_video"
+                    android:textSize="@dimen/_13sdp" />
+
+                <Button
+                    android:id="@+id/btn_show_recorded_video"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center"
+                    android:padding="@dimen/_7sdp"
+                    android:text="@string/video"
+                    android:textSize="@dimen/_13sdp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
 
         </RelativeLayout>
@@ -138,7 +171,8 @@
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="0.4"
             android:background="@drawable/main_card_bg"
-            android:padding="@dimen/_5sdp">
+            android:padding="@dimen/_5sdp"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/iv_answer_image_play_icon"

@@ -33,7 +33,7 @@ public class BackupDatabase {
             } /*else {
                 //EventBus.getDefault().post(PermissionUtils.WRITE_PERMISSION);
             }*/
-            DeleteSensitiveTablesFromBackupDB.deleteTables();
+//            DeleteSensitiveTablesFromBackupDB.deleteTables();
         } catch (Exception e) {
             e.printStackTrace();
         }

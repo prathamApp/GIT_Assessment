@@ -86,6 +86,8 @@
             android:layout_weight="1"
             android:fadeScrollbars="false"
             android:scrollbarSize="7dp"
+            android:scrollbarThumbVertical="@drawable/scroll_bar_color"
+            android:scrollbarTrackVertical="@drawable/scroll_bg"
             android:scrollbars="vertical">
 
             <RelativeLayout

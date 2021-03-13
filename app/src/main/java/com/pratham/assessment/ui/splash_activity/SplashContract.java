@@ -26,7 +26,7 @@ public interface SplashContract {
     interface SplashPresenter {
         void checkVersion();
 
-        void doInitialEntries(AppDatabase appDatabase);
+//        void doInitialEntries(AppDatabase appDatabase);
 
         void versionObtained(String latestVersion);
 

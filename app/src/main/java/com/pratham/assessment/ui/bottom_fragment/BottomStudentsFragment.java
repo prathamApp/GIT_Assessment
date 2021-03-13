@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -28,8 +27,8 @@ import android.widget.Button;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.dao.StatusDao;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Attendance;
@@ -45,7 +44,6 @@ import com.pratham.assessment.ui.bottom_fragment.add_student.AddStudentFragment;
 import com.pratham.assessment.ui.bottom_fragment.add_student.EnrollmentNoFragment;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -63,6 +61,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static com.pratham.assessment.ui.splash_activity.SplashPresenter.doInitialEntries;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -309,7 +308,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             protected Void doInBackground(Void... voids) {
                 try {
                     if (!FastSave.getInstance().getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
-                        doInitialEntries(AppDatabase.appDatabase);
+                        doInitialEntries(getActivity());
 //                    if (!FastSave.getInstance().getBoolean(Assessment_Constants.KEY_MENU_COPIED, false))
                     populateMenu();
                 } catch (Exception e) {
@@ -387,26 +386,95 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         }
     }
 
-    public void doInitialEntries(AppDatabase appDatabase) {
+   /* public void doInitialEntries(AppDatabase appDatabase) {
         try {
             Status status;
             status = new Status();
-            status.setStatusKey("DeviceId");
-            status.setValue("" + Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
-            status.setDescription("" + Build.SERIAL);
-            appDatabase.getStatusDao().insert(status);
 
-            status = new Status();
-            status.setStatusKey("CRLID");
-            status.setValue("default");
-            appDatabase.getStatusDao().insert(status);
+            String key = "DeviceId",
+                    value = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+            setStatusTableEntries(status, key, value);
+           *//* if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("DeviceId") != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("DeviceId").equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status.setStatusKey(key);
+                status.setValue("" + value);
+                status.setDescription("" + Build.SERIAL);
+                appDatabase.getStatusDao().insert(status);
+            }*//*
 
-            status = new Status();
-            status.setStatusKey("DeviceName");
-            status.setValue(Assessment_Utility.getDeviceName());
-            appDatabase.getStatusDao().insert(status);
+            key = "CRLID";
+            value = "default";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
 
-            status = new Status();
+*//*
+            key = "DeviceName";
+            value = Assessment_Utility.getDeviceName();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+              *//*  status = new Status();
+                status.setStatusKey("DeviceName");
+                status.setValue(Assessment_Utility.getDeviceName());
+                appDatabase.getStatusDao().insert(status);
+*//*
+
+            key = "gpsFixDuration";
+            value = "";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+
+*//*
+
+            key = "prathamCode";
+            value = "";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+
+*//*
+
+
+
+
+          *//*  status = new Status();
             status.setStatusKey("gpsFixDuration");
             status.setValue("");
             appDatabase.getStatusDao().insert(status);
@@ -415,16 +483,243 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             status.setStatusKey("prathamCode");
             status.setValue("");
             appDatabase.getStatusDao().insert(status);
+*//*
+            key = "apkType";
+            if (AssessmentApplication.isTablet)
+                value = "Tablet";
+            else value = "Smart phone";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
 
-            status = new Status();
+*//*
+
+         *//*   status = new Status();
             status.setStatusKey("apkType");
             if (AssessmentApplication.isTablet)
                 status.setValue("Tablet");
             else status.setValue("Smart phone");
 
             appDatabase.getStatusDao().insert(status);
+*//*
+            key = "Latitude";
+            value = "";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }*//*
+            key = "Longitude";
+            value = "";
+            setStatusTableEntries(status, key, value);
 
-            status = new Status();
+         *//*   if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }*//*
+
+
+            key = "GPSDateTime";
+            value = "";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "CurrentSession";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+
+*//*
+
+
+            key = "SdCardPath";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "AppLang";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "AppStartDateTime";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "ActivatedForGroups";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "programId";
+            value = "1";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "group1";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+            key = "group2";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+            key = "group3";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+
+            key = "group4";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+            key = "group5";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+
+*//*
+
+       *//*     status = new Status();
             status.setStatusKey("Latitude");
             status.setValue("");
             appDatabase.getStatusDao().insert(status);
@@ -494,8 +789,129 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             status.setStatusKey("group5");
             status.setValue("NA");
             appDatabase.getStatusDao().insert(status);
+*//*
 
-            status = new Status();
+            key = "village";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+            *//*if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "ActivatedDate";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "AssessmentSession";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "AndroidID";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "DBVersion";
+            value = "NA";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "SerialID";
+            value = Assessment_Utility.getDeviceSerialID();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "OsVersionName";
+            value = Assessment_Utility.getOSVersion();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "OsVersionNum";
+            value = Assessment_Utility.getOSVersionNo();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+
+*//*
+
+        *//*    status = new Status();
             status.setStatusKey("village");
             status.setValue("NA");
             appDatabase.getStatusDao().insert(status);
@@ -535,7 +951,116 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             status.setStatusKey("OsVersionNum");
             status.setValue(Assessment_Utility.getOSVersionNo() + "");
             appDatabase.getStatusDao().insert(status);
+*//*
 
+            key = "AvailableStorage";
+            value = Assessment_Utility.getAvailableStorage();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+            key = "ScreenResolution";
+            value = Assessment_Utility.getScreenResolution((AppCompatActivity) getActivity());
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "Manufacturer";
+            value = Assessment_Utility.getManufacturer();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "Model";
+            value = Assessment_Utility.getModel();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "ApiLevel";
+            value = Assessment_Utility.getApiLevel() + "";
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            key = "InternalStorageSize";
+            value = Assessment_Utility.getInternalStorageSize();
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+            WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wInfo = wifiManager.getConnectionInfo();
+            String macAddress = wInfo.getMacAddress();
+            key = "wifiMAC";
+            value = macAddress;
+            setStatusTableEntries(status, key, value);
+*//*
+            if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                appDatabase.getStatusDao().insert(status);
+            }
+*//*
+
+*//*
             status = new Status();
             status.setStatusKey("AvailableStorage");
             status.setValue(Assessment_Utility.getAvailableStorage());
@@ -571,64 +1096,87 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             String macAddress = wInfo.getMacAddress();
             status.setStatusKey("wifiMAC");
             status.setValue(macAddress);
-            appDatabase.getStatusDao().insert(status);
+            appDatabase.getStatusDao().insert(status);*//*
 
             setAppName(status);
             setAppVersion(status);
-            BackupDatabase.backup(getActivity());
 
-            addStartTime();
+            addStartTime(status);
 //            getSdCardPath();
             requestLocation();
 
-            //todo uncomment
-//            FastSave.getInstance().saveBoolean(Assessment_Constants.INITIAL_ENTRIES, true);
+            FastSave.getInstance().saveBoolean(Assessment_Constants.INITIAL_ENTRIES, true);
+            BackupDatabase.backup(getActivity());
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+*/
     private void setAppName(Status status) {
         String appname = "";
-        if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("appName") == null) {
-            CharSequence c = "";
-            ActivityManager am = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
-            List l = am.getRunningAppProcesses();
-            Iterator i = l.iterator();
-            PackageManager pm = getActivity().getPackageManager();
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
-            try {
-                c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
-                appname = c.toString();
-                Log.w("LABEL", c.toString());
-            } catch (Exception e) {
-            }
+        CharSequence c;
+        ActivityManager am = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
+        List l = am.getRunningAppProcesses();
+        Iterator i = l.iterator();
+        PackageManager pm = getActivity().getPackageManager();
+        ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
+        try {
+            c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
+            appname = c.toString();
+            Log.w("LABEL", c.toString());
+        } catch (Exception e) {
+        }
 
-            status = new Status();
+
+        String key = "appName";
+        String value = appname;
+        setStatusTableEntries(status, key, value);
+      /*  if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                    && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+            } else {
+                status = new Status();
+                status.setStatusKey(key);
+                status.setValue(value);
+                AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().insert(status);
+            }*/
+
+           /* status = new Status();
             status.setStatusKey("appName");
             status.setValue(appname);
-            AppDatabase.appDatabase.getStatusDao().insert(status);
+            AppDatabase.appDatabase.getStatusDao().insert(status);*/
 
+   /* } else
+
+    {
+
+        String key = "appName";
+        String value = appname;
+        if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
+                && AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
+            AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
         } else {
-            CharSequence c;
-            ActivityManager am = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
-            List l = am.getRunningAppProcesses();
-            Iterator i = l.iterator();
-            PackageManager pm = getActivity().getPackageManager();
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
-            try {
-                c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
-                appname = c.toString();
-                Log.w("LABEL", c.toString());
-            } catch (Exception e) {
-            }
             status = new Status();
             status.setStatusKey("appName");
             status.setValue(appname);
             AppDatabase.appDatabase.getStatusDao().insert(status);
         }
+    }*/
+
+    }
+
+    private void setStatusTableEntries(Status status, String key, String value) {
+
+        if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null) {
+            AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
+        } else {
+            status.setStatusKey(key);
+            status.setValue(value);
+            AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().insert(status);
+        }
+
     }
 
     private void requestLocation() {
@@ -636,18 +1184,22 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
     }
 
     private void setAppVersion(Status status) {
-        if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("apkVersion") == null) {
+        PackageInfo pInfo = null;
+        String verCode = "";
+        try {
+            pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            verCode = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        setStatusTableEntries(status, "apkVersion", verCode);
+
+     /*   if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("apkVersion") == null) {
             status = new Status();
 
             status.setStatusKey("apkVersion");
-            PackageInfo pInfo = null;
-            String verCode = "";
-            try {
-                pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-                verCode = pInfo.versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+
             status.setValue(verCode);
             AppDatabase.appDatabase.getStatusDao().insert(status);
 
@@ -663,19 +1215,20 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                 e.printStackTrace();
             }
             status.setValue(verCode);
-            AppDatabase.appDatabase.getStatusDao().insert(status);
+            AppDatabase.appDatabase.getStatusDao()
+                    .updateValue(AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("apkVersion"), verCode);
 
-        }
+        }*/
     }
 
-    private void addStartTime() {
+    private void addStartTime(Status status) {
         new AsyncTask<Object, Void, Object>() {
             @Override
             protected Object doInBackground(Object[] objects) {
                 try {
                     String appStartTime = AssessmentApplication.getCurrentDateTime();
-                    StatusDao statusDao = AppDatabase.appDatabase.getStatusDao();
-                    statusDao.updateValue("AppStartDateTime", appStartTime);
+//                    StatusDao statusDao = AppDatabase.appDatabase.getStatusDao();
+                    setStatusTableEntries(status, "AppStartDateTime", appStartTime);
                     BackupDatabase.backup(getActivity());
                     return null;
                 } catch (Exception e) {
@@ -817,7 +1370,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 
     @Override
-    public void onStudentClick(final String studentName, final String studentId, String groupId, String isniosstudent) {
+    public void onStudentClick(final String studentName, final String studentId, String
+            groupId, String isniosstudent) {
 
         new AsyncTask<Object, Void, Object>() {
 
@@ -887,6 +1441,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
                 dismissProgressDialog();
+                BackupDatabase.backup(getActivity());
 //                Assessment_Constants.ASSESSMENT_TYPE = "";
                 if (getActivity() != null) {
                     startActivity(new Intent(getActivity(), ChooseAssessmentActivity_.class));
